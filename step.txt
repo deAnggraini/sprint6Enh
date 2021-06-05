@@ -1,0 +1,20 @@
+instal dependency
+    npm i
+
+run local
+    ng serve
+
+run dengan dev env
+    ng serve --configuration=dev
+
+run dengan prod env
+    ng serve --configuration=dev
+
+build
+    ng build
+
+build untuk prod
+    ng build --prod
+
+
+untuk dummy backend checkout project pakar dymmy backend nodeJS
