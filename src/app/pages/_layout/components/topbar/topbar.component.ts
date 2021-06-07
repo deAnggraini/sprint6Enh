@@ -69,9 +69,10 @@ export class TopbarComponent implements OnInit, AfterViewInit {
     // check login as admin
     this.user$.subscribe(u => {
       const aliasNameArr: string[] = [u.firstname, u.lastname];
-
-      this.showExtraButton = u.roles.find(d => d === 1 || d === 2 || d === 3) ? true : false;
       this.aliasName = aliasNameArr.map(d => d ? d[0] : '').join('');
+
+      const role = u.roles[0];
+      this.showExtraButton = ["ADMIN", "EDITOR", "PUBLISHER"].includes(role);
     });
   }
 

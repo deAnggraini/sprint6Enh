@@ -113,12 +113,6 @@ export class ListComponent implements OnInit {
   }
 
   refreshCountries() {
-    // console.log({
-    //   page: this.page,
-    //   pageSize: this.pageSize,
-    //   collectionSize: this.collectionSize,
-    //   length: this.countries.length
-    // });
     this.countries = COUNTRIES
       .map((country, i) => ({ id: i + 1, ...country }))
       .slice((this.page - 1) * this.pageSize, (this.page - 1) * this.pageSize + this.pageSize);

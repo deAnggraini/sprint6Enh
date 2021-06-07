@@ -6,8 +6,7 @@ import { AuthModel } from '../_models/auth.model';
 import { AuthHTTPService } from './auth-http';
 import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
-import { CommonHttpResponse } from 'src/app/utils/http-response';
-import { ApiServiceService } from 'src/app/utils/_services/api-service.service';
+import { ApiService } from 'src/app/utils/_services/api-service.service';
 
 @Injectable({
   providedIn: 'root',
@@ -36,7 +35,7 @@ export class AuthService implements OnDestroy {
   constructor(
     private authHttpService: AuthHTTPService,
     private router: Router,
-    private apiService: ApiServiceService
+    private apiService: ApiService
   ) {
     this.isLoadingSubject = new BehaviorSubject<boolean>(false);
     this.currentUserSubject = new BehaviorSubject<UserModel>(undefined);

@@ -2,11 +2,13 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LayoutComponent } from './_layout/layout.component';
 import { HomepageComponent } from './homepage/homepage.component';
+import { AuthGuard } from '../modules/auth/_services/auth.guard';
 
 const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
+    canActivateChild: [AuthGuard],
     children: [
       {
         path: 'homepage',
@@ -19,13 +21,14 @@ const routes: Routes = [
       },
       {
         path: 'dashboard',
-        loadChildren: () =>
-          import('./dashboard/dashboard.module').then((m) => m.DashboardModule),
+        loadChildren: () => import('./dashboard/dashboard.module').then((m) => m.DashboardModule),
       },
       {
         path: 'builder',
-        loadChildren: () =>
-          import('./builder/builder.module').then((m) => m.BuilderModule),
+        loadChildren: () => import('./builder/builder.module').then((m) => m.BuilderModule),
+        data: {
+          allowedRoles: ['ADMIN', 'PUBLISHER']
+        }
       },
       {
         path: '',
