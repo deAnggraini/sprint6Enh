@@ -32,7 +32,8 @@ export class TopbarComponent implements OnInit, AfterViewInit {
   extrasLanguagesDisplay: boolean;
   extrasUserDisplay: boolean;
   extrasUserLayout: 'offcanvas' | 'dropdown';
-  showExtraButton: boolean = false;
+  showSettingButton: boolean = false;
+  showAddButton: boolean = false;
   aliasName: string = 'AA';
 
   constructor(private layout: LayoutService, private auth: AuthService) {
@@ -72,7 +73,8 @@ export class TopbarComponent implements OnInit, AfterViewInit {
       this.aliasName = aliasNameArr.map(d => d ? d[0] : '').join('');
 
       const role = u.roles[0];
-      this.showExtraButton = ["ADMIN", "EDITOR", "PUBLISHER"].includes(role);
+      this.showSettingButton = ["SUPERADMIN"].includes(role);
+      this.showAddButton = ["ADMIN", "EDITOR", "PUBLISHER"].includes(role);
     });
   }
 

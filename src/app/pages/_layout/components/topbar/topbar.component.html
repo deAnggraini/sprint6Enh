@@ -1,4 +1,16 @@
-<!--begin::Topbar-->
+<!-- Tombol tambah halaman -->
+<ng-container *ngIf="showAddButton || showSettingButton">
+  <div class="topbar-item">
+    <div class="btn btn-icon btn-clean btn-dropdown btn-sm mr-1" id="kt_quick_cart_toggle" style="width: unset;">
+      <span [inlineSVG]="'./assets/media/svg/icons/Shopping/Cart3.svg'" cacheSVG="true"
+        class="svg-icon svg-icon-xl mr-1 ml-1"></span>
+      Tambah Halaman&nbsp;&nbsp;
+      <span [inlineSVG]="'./assets/media/svg/icons/Navigation/Angle-down.svg'" cacheSVG="true"
+        class="svg-icon mr-1"></span>
+    </div>
+  </div>
+</ng-container>
+
 <ng-container *ngIf="extraSearchDisplay">
   <ng-container *ngIf="extrasSearchLayout === 'offcanvas'">
     <!--begin::Search-->
@@ -28,41 +40,6 @@
       </div>
       <!--end::Dropdown-->
     </div>
-  </ng-container>
-</ng-container>
-
-<!-- Custom by HQ, cart gunakan untuk admin setting -->
-<ng-container *ngIf="extrasCartDisplay && showExtraButton">
-  <ng-container *ngIf="extrasCartLayout === 'offcanvas'">
-    <!--begin::Cart-->
-    <div class="topbar-item">
-      <div class="btn btn-icon btn-clean btn-dropdown btn-sm mr-1" id="kt_quick_cart_toggle">
-        <span [inlineSVG]="'./assets/media/svg/icons/Shopping/Cart3.svg'" cacheSVG="true"
-          class="svg-icon svg-icon-xl"></span>
-      </div>
-    </div>
-    <!--end::Cart-->
-  </ng-container>
-  <ng-container *ngIf="extrasCartLayout === 'dropdown'">
-    <!--begin::Cart-->
-    <div class="dropdown" ngbDropdown placement="bottom">
-      <!--begin::Toggle-->
-      <div class="topbar-item" data-toggle="dropdown" data-offset="10px,0px" ngbDropdownToggle>
-        <div class="btn btn-icon btn-clean btn-dropdown btn-sm mr-1">
-          <span [inlineSVG]="'./assets/media/svg/icons/Code/Settings4.svg'" cacheSVG="true"
-            class="svg-icon svg-icon-xl"></span>
-        </div>
-      </div>
-      <!--end::Toggle-->
-      <!--begin::Dropdown-->
-      <div ngbDropdownMenu class="dropdown-menu p-0 m-0 dropdown-menu-xl dropdown-menu-anim-up">
-        <form>
-          <app-cart-dropdown-inner></app-cart-dropdown-inner>
-        </form>
-      </div>
-      <!--end::Dropdown-->
-    </div>
-    <!--end::Cart-->
   </ng-container>
 </ng-container>
 
@@ -153,6 +130,8 @@
   <app-language-selector style="margin-top: 10px;"></app-language-selector>
 </ng-container>
 
+<div class="my-4 mx-3" style="width: 1px; border-right: 1px solid white;"></div>
+
 <ng-container *ngIf="extrasUserDisplay">
   <ng-container *ngIf="extrasUserLayout === 'offcanvas'">
     <ng-container *ngIf="user$ | async as _user">
@@ -161,7 +140,7 @@
         <div class="btn btn-icon btn-icon-mobile w-auto btn-clean d-flex align-items-center btn-sm px-2"
           id="kt_quick_user_toggle">
           <span class="symbol symbol-lg-25 symbol-25 symbol-light-success mr-3">
-            <span class="symbol-label font-size-h5 font-weight-bold rounded-xl ">{{aliasName}}</span>
+            <span class="symbol-label font-size-h7 font-weight-bold rounded-xl px-2 ">{{aliasName}}</span>
           </span>
           <span class="font-weight-bolder font-size-base d-none d-md-inline"
             style="text-transform: uppercase;">{{ _user.fullname }}</span>
@@ -200,4 +179,39 @@
   </ng-container>
 </ng-container>
 
-<!--end::Topbar-->
+
+<!-- Custom by HQ, cart gunakan untuk admin setting -->
+<ng-container *ngIf="extrasCartDisplay && showSettingButton">
+  <div class="my-4 mx-3" style="width: 1px; border-right: 1px solid white;"></div>
+  <ng-container *ngIf="extrasCartLayout === 'offcanvas'">
+    <!--begin::Cart-->
+    <div class="topbar-item">
+      <div class="btn btn-icon btn-clean btn-dropdown btn-sm mr-1" id="kt_quick_cart_toggle">
+        <span [inlineSVG]="'./assets/media/svg/icons/Code/Settings4.svg'" cacheSVG="true"
+          class="svg-icon svg-icon-xl"></span>
+      </div>
+    </div>
+    <!--end::Cart-->
+  </ng-container>
+  <ng-container *ngIf="extrasCartLayout === 'dropdown'">
+    <!--begin::Cart-->
+    <div class="dropdown" ngbDropdown placement="bottom">
+      <!--begin::Toggle-->
+      <div class="topbar-item" data-toggle="dropdown" data-offset="10px,0px" ngbDropdownToggle>
+        <div class="btn btn-icon btn-clean btn-dropdown btn-sm mr-1">
+          <span [inlineSVG]="'./assets/media/svg/icons/Code/Settings4.svg'" cacheSVG="true"
+            class="svg-icon svg-icon-xl"></span>
+        </div>
+      </div>
+      <!--end::Toggle-->
+      <!--begin::Dropdown-->
+      <div ngbDropdownMenu class="dropdown-menu p-0 m-10 dropdown-menu-xl dropdown-menu-anim-up">
+        <form>
+          <app-cart-dropdown-inner></app-cart-dropdown-inner>
+        </form>
+      </div>
+      <!--end::Dropdown-->
+    </div>
+    <!--end::Cart-->
+  </ng-container>
+</ng-container>
