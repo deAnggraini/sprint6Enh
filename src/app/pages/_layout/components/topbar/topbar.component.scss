@@ -1,0 +1,14 @@
+:host {
+  ::ng-deep {
+
+    .btn.btn-clean .svg-icon svg g [fill] {
+      transition: fill 0.3s ease;
+      fill: white;
+    }
+
+    .btn.btn-clean {
+        color: white;
+    }
+
+  }
+}

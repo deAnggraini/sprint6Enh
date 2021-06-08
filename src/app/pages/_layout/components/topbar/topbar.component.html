@@ -3,9 +3,9 @@
   <ng-container *ngIf="extrasSearchLayout === 'offcanvas'">
     <!--begin::Search-->
     <div class="topbar-item">
-      <div class="btn btn-icon btn-clean btn-lg mr-1" id="kt_quick_search_toggle">
+      <div class="btn btn-icon btn-clean btn-sm mr-1" id="kt_quick_search_toggle">
         <span [inlineSVG]="'./assets/media/svg/icons/General/Search.svg'" cacheSVG="true"
-          class="svg-icon svg-icon-xl svg-icon-primary"></span>
+          class="svg-icon svg-icon-xl"></span>
       </div>
     </div>
     <!--end::Search-->
@@ -15,9 +15,9 @@
     <div class="dropdown" id="kt_quick_search_toggle" autoClose="outside" ngbDropdown>
       <!--begin::Toggle-->
       <div class="topbar-item" ngbDropdownToggle>
-        <div class="btn btn-icon btn-clean btn-lg btn-dropdown mr-1">
+        <div class="btn btn-icon btn-clean btn-sm btn-dropdown mr-1">
           <span [inlineSVG]="'./assets/media/svg/icons/General/Search.svg'" cacheSVG="true"
-            class="svg-icon svg-icon-xl svg-icon-primary"></span>
+            class="svg-icon svg-icon-xl"></span>
         </div>
       </div>
       <!--end::Toggle-->
@@ -36,9 +36,9 @@
   <ng-container *ngIf="extrasCartLayout === 'offcanvas'">
     <!--begin::Cart-->
     <div class="topbar-item">
-      <div class="btn btn-icon btn-clean btn-dropdown btn-lg mr-1" id="kt_quick_cart_toggle">
+      <div class="btn btn-icon btn-clean btn-dropdown btn-sm mr-1" id="kt_quick_cart_toggle">
         <span [inlineSVG]="'./assets/media/svg/icons/Shopping/Cart3.svg'" cacheSVG="true"
-          class="svg-icon svg-icon-xl svg-icon-primary"></span>
+          class="svg-icon svg-icon-xl"></span>
       </div>
     </div>
     <!--end::Cart-->
@@ -48,9 +48,9 @@
     <div class="dropdown" ngbDropdown placement="bottom">
       <!--begin::Toggle-->
       <div class="topbar-item" data-toggle="dropdown" data-offset="10px,0px" ngbDropdownToggle>
-        <div class="btn btn-icon btn-clean btn-dropdown btn-lg mr-1">
+        <div class="btn btn-icon btn-clean btn-dropdown btn-sm mr-1">
           <span [inlineSVG]="'./assets/media/svg/icons/Code/Settings4.svg'" cacheSVG="true"
-            class="svg-icon svg-icon-xl svg-icon-primary"></span>
+            class="svg-icon svg-icon-xl"></span>
         </div>
       </div>
       <!--end::Toggle-->
@@ -69,9 +69,9 @@
 <ng-container *ngIf="extrasQuickPanelDisplay">
   <!--begin::Quick panel-->
   <div class="topbar-item">
-    <div class="btn btn-icon btn-clean btn-lg mr-1" id="kt_quick_panel_toggle">
+    <div class="btn btn-icon btn-clean btn-sm mr-1" id="kt_quick_panel_toggle">
       <span [inlineSVG]="'./assets/media/svg/icons/Code/Info-circle.svg'" cacheSVG="true"
-        class="svg-icon svg-icon-xl svg-icon-primary"></span>
+        class="svg-icon svg-icon-xl"></span>
     </div>
   </div>
   <!--end::Quick panel-->
@@ -81,10 +81,10 @@
   <ng-container *ngIf="extrasNotificationsLayout === 'offcanvas'">
     <!--begin::Notifications-->
     <div class="topbar-item">
-      <div class="btn btn-icon btn-icon-mobile btn-clean btn-lg mr-1 pulse pulse-primary"
+      <div class="btn btn-icon btn-icon-mobile btn-clean btn-sm mr-1 pulse pulse-primary"
         id="kt_quick_notifications_toggle">
         <span [inlineSVG]="'./assets/media/svg/icons/General/Notifications1.svg'" cacheSVG="true"
-          class="svg-icon svg-icon-xl svg-icon-primary"></span>
+          class="svg-icon svg-icon-xl"></span>
         <span class="pulse-ring"></span>
       </div>
     </div>
@@ -96,9 +96,9 @@
     <div class="dropdown" ngbDropdown placement="bottom">
       <!--begin::Toggle-->
       <div class="topbar-item" data-toggle="dropdown" data-offset="10px,0px" ngbDropdownToggle>
-        <div class="btn btn-icon btn-clean btn-dropdown btn-lg mr-1 pulse pulse-primary">
+        <div class="btn btn-icon btn-clean btn-dropdown btn-sm mr-1 pulse pulse-primary">
           <span [inlineSVG]="'./assets/media/svg/icons/General/Notifications1.svg'" cacheSVG="true"
-            class="svg-icon svg-icon-xl svg-icon-primary"></span>
+            class="svg-icon svg-icon-xl"></span>
           <span class="pulse-ring"></span>
         </div>
       </div>
@@ -121,9 +121,9 @@
   <ng-container *ngIf="extrasQuickActionsLayout === 'offcanvas'">
     <!--begin::Quick Actions-->
     <div class="topbar-item">
-      <div class="btn btn-icon btn-clean btn-dropdown btn-lg mr-1" id="kt_quick_actions_toggle">
+      <div class="btn btn-icon btn-clean btn-dropdown btn-sm mr-1" id="kt_quick_actions_toggle">
         <span [inlineSVG]="'./assets/media/svg/icons/General/Bookmark.svg'" cacheSVG="true"
-          class="svg-icon svg-icon-xl svg-icon-primary"></span>
+          class="svg-icon svg-icon-xl"> </span>
       </div>
     </div>
     <!--end::Quick Actions-->
@@ -133,9 +133,9 @@
     <div class="dropdown" ngbDropdown placement="bottom">
       <!--begin::Toggle-->
       <div class="topbar-item" data-toggle="dropdown" data-offset="10px,0px" ngbDropdownToggle>
-        <div class="btn btn-icon btn-clean btn-dropdown btn-lg mr-1">
+        <div class="btn btn-icon btn-clean btn-dropdown btn-sm mr-1">
           <span [inlineSVG]="'./assets/media/svg/icons/General/Bookmark.svg'" cacheSVG="true"
-            class="svg-icon svg-icon-xl svg-icon-primary"></span>
+            class="svg-icon svg-icon-xl"></span>
         </div>
       </div>
       <!--end::Toggle-->
@@ -158,12 +158,12 @@
     <ng-container *ngIf="user$ | async as _user">
       <!--begin::User-->
       <div class="topbar-item">
-        <div class="btn btn-icon btn-icon-mobile w-auto btn-clean d-flex align-items-center btn-lg px-2"
+        <div class="btn btn-icon btn-icon-mobile w-auto btn-clean d-flex align-items-center btn-sm px-2"
           id="kt_quick_user_toggle">
-          <span class="symbol symbol-lg-35 symbol-25 symbol-light-success mr-3">
+          <span class="symbol symbol-lg-25 symbol-25 symbol-light-success mr-3">
             <span class="symbol-label font-size-h5 font-weight-bold rounded-xl ">{{aliasName}}</span>
           </span>
-          <span class="text-dark-50 font-weight-bolder font-size-base d-none d-md-inline"
+          <span class="font-weight-bolder font-size-base d-none d-md-inline"
             style="text-transform: uppercase;">{{ _user.fullname }}</span>
         </div>
       </div>
@@ -176,7 +176,7 @@
     <ng-container *ngIf="user$ | async as _user">
       <div class="dropdown" ngbDropdown placement="bottom-right">
         <div class="topbar-item" data-toggle="dropdown" data-offset="0px,0px" ngbDropdownToggle>
-          <div class="btn btn-icon w-auto btn-clean d-flex align-items-center btn-lg px-2">
+          <div class="btn btn-icon w-auto btn-clean d-flex align-items-center btn-sm px-2">
             <span class="text-muted font-weight-bold font-size-base d-none d-md-inline mr-1">Hi,</span>
             <span
               class="text-dark-50 font-weight-bolder font-size-base d-none d-md-inline mr-3">{{ _user.fullname }}</span>

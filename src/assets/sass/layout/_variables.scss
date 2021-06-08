@@ -28,12 +28,12 @@ $header-config: (
 	desktop: (
 		// Default Mode
 		default: (
-			height: 65px
+			height: 55px
 		),
 		// Fixed Mode
 		fixed: (
 			zindex: 97,
-			height: 65px
+			height: 55px
 		)
 	),
 
@@ -1632,7 +1632,8 @@ $aside-menu-config: (
 				default: (
 					// Container
 					self: (
-						bg-color: get($layout-themes, dark)
+						// bg-color: get($layout-themes, dark)
+						bg-color: white
 					),
 
 					// Item
@@ -1653,10 +1654,10 @@ $aside-menu-config: (
 							self: (
 								bg-color: (
 									default: transparent,
-									open: #1b1b28,
-									here: #1b1b28,
-									active: #1b1b28,
-									hover: #1b1b28
+									open: #EFF2FC,
+									here: #1995D1,
+									active: #1995D1,
+									hover: #EFF2FC
 								)
 							),
 
@@ -1666,7 +1667,7 @@ $aside-menu-config: (
 									default: #494b74,
 									open: $primary,
 									here: $primary,
-									active: $primary,
+									active: #ffffff,
 									hover: $primary
 								),
 							),
@@ -1678,7 +1679,7 @@ $aside-menu-config: (
 										default: #5c5e81,
 										open: $primary,
 										here: $primary,
-										active: $primary,
+										active: #ffffff,
 										hover: $primary
 									)
 								),
@@ -1688,7 +1689,7 @@ $aside-menu-config: (
 										default: #5c5e81,
 										open: $primary,
 										here: $primary,
-										active: $primary,
+										active: #ffffff,
 										hover: $primary
 									)
 								)
@@ -1698,10 +1699,10 @@ $aside-menu-config: (
 							text:	(
 								font-color:	(
 									default: #a2a3b7,
-									open: #ffffff,
+									open: $primary,
 									here: #ffffff,
 									active: #ffffff,
-									hover: #ffffff
+									hover: $primary
 								)
 							),
 
@@ -1709,10 +1710,10 @@ $aside-menu-config: (
 							arrow:	(
 								font-color:	(
 									default: #5c5e81,
-									open: #ffffff,
+									open: $primary,
 									here: #ffffff,
 									active: #ffffff,
-									hover: #ffffff
+									hover: $primary
 								)
 							)
 						),
@@ -1747,10 +1748,10 @@ $aside-menu-config: (
 									self: (
 										bg-color: (
 											default: transparent,
-											open: #1b1b28,
-											here: #1b1b28,
-											active: #1b1b28,
-											hover: #1b1b28
+											open: #EFF2FC,
+											here: #1995D1,
+											active: #1995D1,
+											hover: #EFF2FC
 										)
 									),
 									// Icon
@@ -1787,10 +1788,11 @@ $aside-menu-config: (
 									// Text
 									text: (
 										font-color:	(
-											default: #9899ac,
-											open: #ffffff,
+											default: #a2a3b7,
+											open: $primary,
+											here: #ffffff,
 											active: #ffffff,
-											hover: #ffffff
+											hover: $primary
 										)
 									),
 									// Arrow

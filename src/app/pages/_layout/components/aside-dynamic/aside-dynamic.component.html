@@ -1,24 +1,19 @@
-<!--begin::Brand-->
-<div class="brand flex-column-auto" id="kt_brand" [ngClass]="brandClasses">
-  <!--begin::Logo-->
+<div class="brand flex-column-auto" id="kt_brand" [ngClass]="brandClasses"
+style="background: #1995D1; border-right: 1px solid #dddddd;">
   <a routerLink="/" class="brand-logo">
     <img alt="Logo" [attr.src]="headerLogo" />
   </a>
-  <!--end::Logo-->
 
   <ng-container *ngIf="asideSelfMinimizeToggle">
     <button class="brand-toggle btn btn-sm px-0" id="kt_aside_toggle">
       <span
-        [inlineSVG]="
-          './assets/media/svg/icons/Text/Menu.svg'
-        "
+        [inlineSVG]="'./assets/media/svg/icons/Text/Menu.svg'"
         cacheSVG="true"
-        class="svg-icon svg-icon-xl"
+        class="svg-icon svg-icon-xl svg-icon-white"
       ></span>
     </button>
   </ng-container>
 </div>
-<!--end::Brand-->
 
 <!--begin::Aside Menu-->
 <div class="aside-menu-wrapper flex-column-fluid" id="kt_aside_menu_wrapper">

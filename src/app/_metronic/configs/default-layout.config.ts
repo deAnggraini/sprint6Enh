@@ -75,7 +75,7 @@ export const DefaultLayoutConfig = {
     self: {
       display: true,
       width: 'fluid', // fixed|fluid,
-      theme: 'light', // light|dark
+      theme: 'dark', // light|dark
       fixed: {
         desktop: true,
         mobile: true,
@@ -95,7 +95,7 @@ export const DefaultLayoutConfig = {
         arrow: true,
         toggle: 'click',
         submenu: {
-          theme: 'light',
+          theme: 'dark',
           arrow: true,
         },
       },
@@ -136,7 +136,7 @@ export const DefaultLayoutConfig = {
   // Aside
   aside: {
     self: {
-      theme: 'light', // light/dark
+      theme: 'dark', // light/dark
       display: true,
       fixed: true,
       minimize: {
@@ -189,7 +189,7 @@ export const DefaultLayoutConfig = {
     // Notifications
     notifications: {
       display: true,
-      layout: 'dropdown', // offcanvas, dropdown,
+      layout: 'offcanvas', // offcanvas, dropdown,
       dropdown: {
         style: 'dark', // light|dark
       },
@@ -201,7 +201,7 @@ export const DefaultLayoutConfig = {
     // Quick Actionss
     quickActions: {
       display: true,
-      layout: 'dropdown', // offcanvas, dropdown,
+      layout: 'offcanvas', // offcanvas, dropdown,
       dropdown: {
         style: 'dark', // light|dark
       },

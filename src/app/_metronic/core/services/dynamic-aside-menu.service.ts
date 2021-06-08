@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { DynamicAsideMenuConfig } from '../../configs/dynamic-aside-menu.config';
 import { ApiService } from 'src/app/utils/_services/api-service.service';
 import { environment } from 'src/environments/environment';
-import { map, first } from 'rxjs/operators';
+import { AuthService, UserModel } from 'src/app/modules/auth';
 
 interface Menu {
   id?: number,
@@ -17,82 +17,6 @@ interface Menu {
   section?: string
 }
 
-const dummy_category = [
-  {
-    id: 1,
-    title: 'Aplikasi Mesin',
-    level: 0,
-    desc: '',
-    menus: [
-      {
-        id: 2,
-        title: 'Pendukung Transaksi Umum',
-        level: 1,
-        desc: '',
-        menus: [
-          {
-            id: 121,
-            title: 'ABACAS',
-            level: 1,
-            desc: '',
-          },
-          {
-            id: 122,
-            title: 'Aplikasi customized report',
-            level: 1,
-            desc: '',
-          }
-        ]
-      },
-      {
-        id: 3,
-        title: 'Pendukung Transaksi Internasional',
-        level: 1,
-        desc: '',
-        menus: [
-          {
-            id: 131,
-            title: 'Andy',
-            level: 1,
-            desc: '',
-          },
-          {
-            id: 132,
-            title: 'BDS-OR',
-            level: 1,
-            desc: '',
-          }
-        ]
-      }
-    ]
-  },
-  {
-    id: 11,
-    title: 'Others',
-    level: 0,
-    menus: [
-      {
-        id: 12,
-        title: 'About',
-        level: 1,
-        desc: '',
-      },
-      {
-        id: 13,
-        title: 'Contact',
-        level: 1,
-        desc: '',
-      }
-    ]
-  },
-  {
-    id: 21,
-    title: 'Test Footer',
-    level: 0,
-    desc: '',
-  }
-];
-
 const emptyMenuConfig = {
   items: []
 };
@@ -104,10 +28,18 @@ export class DynamicAsideMenuService {
 
   private _base_url = `${environment.apiUrl}/master`;
   private menuConfigSubject = new BehaviorSubject<any>(emptyMenuConfig);
-  private unsubscribe: Subscription[] = [];
+  // private unsubscribe: Subscription[] = [];
   menuConfig$: Observable<any>;
+  user$: Observable<UserModel>;
+  login: UserModel;
 
-  constructor(private apiService: ApiService) {
+  constructor(
+    private apiService: ApiService,
+    private auth: AuthService
+  ) {
+    this.auth.currentUserSubject.asObservable().subscribe((user) => {
+      this.login = user;
+    });
     this.menuConfig$ = this.menuConfigSubject.asObservable();
     // this.loadMenu();
     this.populateCategoryArticle();
@@ -153,7 +85,7 @@ export class DynamicAsideMenuService {
   }
 
   private populateCategoryArticle() {
-    const categories = this.apiService.get(`${this._base_url}/category-article`)
+    this.apiService.get(`${this._base_url}/category-article`)
       .subscribe(
         (_articles: any[]) => {
           this.loadMenu(this.parseToMenu(_articles));
@@ -162,11 +94,31 @@ export class DynamicAsideMenuService {
       );
   }
 
+  private menuByRoles() {
+    const { roles } = this.login;
+    const config = DynamicAsideMenuConfig;
+    if (roles.includes("SUPERADMIN")) {
+      return config.super_admin;
+    } else if (roles.includes('ADMIN')) {
+      return config.super_admin;
+    } else if (roles.includes('EDITOR')) {
+      return config.editor;
+    } else if (roles.includes('PUBLISHER')) {
+      return config.publisher;
+    }
+    return [];
+  }
+
   // Here you able to load your menu from server/data-base/localStorage
   // Default => from DynamicAsideMenuConfig
   private loadMenu(_server) {
     const config = DynamicAsideMenuConfig;
-    const items = [].concat(config.items).concat(_server);
+    const items = [].concat(config.items)
+      .concat(this.menuByRoles())
+      .concat(_server)
+      .concat(config.footer)
+      .concat({ section: ' ' }) // agar menu tidak terlalu mepet kebawah
+      ;
     this.setMenu({ items });
   }
 
