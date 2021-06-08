@@ -34,6 +34,23 @@
         "phone": "456669067892"
     },
     {
+        "id": 100,
+        "username": "super",
+        "email" : "super@admin.host",
+        "password" : "12345",
+        "authToken": "POIUasdaqYHJKLMNHGBJa902asd",
+        "refreshToken" : "",
+        "expiresIn": "",
+        "roles": ["SUPERADMIN"],
+        "pic": "./assets/media/users/default.jpg",
+        "fullname": "Super Admin",
+        "firstname": "Super",
+        "lastname": "Admin",
+        "occupation": "ADMIN",
+        "companyName": "BCA",
+        "phone": "456669067892"
+    },
+    {
         "id": 3,
         "username": "editor",
         "email" : "editor@local.host",
