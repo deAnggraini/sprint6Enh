@@ -31,6 +31,24 @@ const categories = [
                         level: 1,
                         desc: '',
                     },
+                    {
+                        id: 114,
+                        title: 'Simpanan Pelajar',
+                        level: 1,
+                        desc: '',
+                    },
+                    {
+                        id: 115,
+                        title: 'TabunganKu',
+                        level: 1,
+                        desc: '',
+                    },
+                    {
+                        id: 116,
+                        title: 'Tahapan Berjangka siMuda',
+                        level: 1,
+                        desc: '',
+                    },
                 ]
             },
             {
@@ -39,6 +57,78 @@ const categories = [
                 level: 1,
                 desc: '',
                 sort: 1,
+                menus: [
+                    {
+                        id: 121,
+                        title: 'Bancassurance',
+                        level: 2,
+                        desc: '',
+                    },
+                    {
+                        id: 122,
+                        title: 'DBMM',
+                        level: 2,
+                        desc: '',
+                    },
+                    {
+                        id: 123,
+                        title: 'Reksadana',
+                        level: 2,
+                        desc: '',
+                    },
+                    {
+                        id: 124,
+                        title: 'Obligasi Korporasi',
+                        level: 2,
+                        desc: '',
+                    },
+                    {
+                        id: 125,
+                        title: 'Obligasi Negara',
+                        level: 2,
+                        desc: '',
+                        menus: [
+                            {
+                                id: 1251,
+                                title: 'Obligasi Negara Ritel (ORI)',
+                                level: 3,
+                                desc: '',
+                            },
+                            {
+                                id: 1252,
+                                title: 'Obligasi Negara Valas (INDON)',
+                                level: 3,
+                                desc: '',
+                            },
+                            {
+                                id: 1253,
+                                title: 'Obligasi Negara Valas Syariah (INDOIS)',
+                                level: 3,
+                                desc: '',
+                            },
+                        ]
+                    },
+                    {
+                        id: 126,
+                        title: 'Sertifikat Berharga BI',
+                        level: 2,
+                        desc: '',
+                        menus: [
+                            {
+                                id: 1261,
+                                title: 'Surat Berharga BI dalam Valas (SBBI Valas)',
+                                level: 3,
+                                desc: '',
+                            },
+                            {
+                                id: 1262,
+                                title: 'Sertifikat Bank Indonesia (SBI)',
+                                level: 3,
+                                desc: '',
+                            },
+                        ]
+                    }
+                ]
             },
             {
                 id: 130,
@@ -212,20 +302,6 @@ const categories = [
         title: 'Others',
         level: 0,
         sort: 3,
-        menus: [
-            {
-                id: 12,
-                title: 'About',
-                level: 1,
-                desc: '',
-            },
-            {
-                id: 13,
-                title: 'Contact',
-                level: 1,
-                desc: '',
-            }
-        ]
     }
 ];
 
