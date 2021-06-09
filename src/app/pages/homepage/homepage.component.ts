@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ThemeService } from 'src/app/modules/_services/theme.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-homepage',
@@ -7,7 +9,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomepageComponent implements OnInit {
 
-  constructor() { }
+  background_image: string;
+  constructor(private theme: ThemeService) {
+    const img = this.theme.getConfig().homepage.bg_img_top;
+    const img_url = `${environment.apiUrl}/themes/homepage/${img}`;
+    this.background_image = img_url;
+  }
 
   ngOnInit(): void {
   }

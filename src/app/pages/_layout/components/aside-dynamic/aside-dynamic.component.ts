@@ -3,6 +3,7 @@ import { Router, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { LayoutService, DynamicAsideMenuService } from '../../../../_metronic/core';
+import { ThemeService } from 'src/app/modules/_services/theme.service';
 
 @Component({
   selector: 'app-aside-dynamic',
@@ -25,12 +26,14 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
   asideSelfMinimizeToggle = false;
 
   currentUrl: string;
+  headerBackground: string;
 
   constructor(
     private layout: LayoutService,
     private router: Router,
     private menu: DynamicAsideMenuService,
-    private cdr: ChangeDetectorRef) { }
+    private cdr: ChangeDetectorRef,
+    private theme: ThemeService) { }
 
   ngOnInit(): void {
     // load view settings
@@ -64,6 +67,12 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
       this.cdr.detectChanges();
     });
     this.subscriptions.push(menuSubscr);
+
+    this.setTheme();
+  }
+
+  private setTheme() {
+    this.headerBackground = this.theme.getConfig().header.background;
   }
 
   private getLogo() {

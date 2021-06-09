@@ -1,12 +1,27 @@
 <!-- Tombol tambah halaman -->
 <ng-container *ngIf="showAddButton || showSettingButton">
-  <div class="topbar-item">
-    <div class="btn btn-icon btn-clean btn-dropdown btn-sm mr-1" id="kt_quick_cart_toggle" style="width: unset;">
-      <span [inlineSVG]="'./assets/media/svg/icons/Shopping/Cart3.svg'" cacheSVG="true"
-        class="svg-icon svg-icon-xl mr-1 ml-1"></span>
-      Tambah Halaman&nbsp;&nbsp;
-      <span [inlineSVG]="'./assets/media/svg/icons/Navigation/Angle-down.svg'" cacheSVG="true"
-        class="svg-icon mr-1"></span>
+  <div class="dropdown" id="kt_quick_search_toggle" autoClose="outside" ngbDropdown>
+    <div class="topbar-item" ngbDropdownToggle>
+      <div class="btn btn-icon btn-clean btn-dropdown btn-sm mr-1" id="kt_quick_cart_toggle" style="width: unset;">
+        <span [inlineSVG]="'./assets/media/svg/icons/Files/File-plus.svg'" cacheSVG="true"
+          class="svg-icon svg-icon-xl mr-1 ml-1"></span>
+        Tambah Halaman&nbsp;&nbsp;
+        <span [inlineSVG]="'./assets/media/svg/icons/Navigation/Angle-down.svg'" cacheSVG="true"
+          class="svg-icon mr-1"></span>
+      </div>
+    </div>
+    <div class="dropdown-menu p-0 m-0 dropdown-menu-right dropdown-menu-anim-up dropdown-menu-lg" ngbDropdownMenu>
+      <ul class="navi navi-hover">
+        <li class="navi-item">
+          <a routerLink="/article/add" class="navi-link cursor-pointer"><span class="navi-text">Artikel</span></a>
+        </li>
+        <li class="navi-item">
+          <a routerLink="/article/add" class="navi-link cursor-pointer"><span class="navi-text">Virtual Page</span></a>
+        </li>
+        <li class="navi-item">
+          <a routerLink="/article/add" class="navi-link cursor-pointer"><span class="navi-text">Formulir</span></a>
+        </li>
+      </ul>
     </div>
   </div>
 </ng-container>

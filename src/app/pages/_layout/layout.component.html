@@ -54,9 +54,9 @@
           [ngClass]="contentClasses"
         >
           <!-- begin:: Content Head -->
-          <ng-container *ngIf="subheaderDisplay">
+          <!-- <ng-container *ngIf="subheaderDisplay">
             <app-subheader-wrapper></app-subheader-wrapper>
-          </ng-container>
+          </ng-container> -->
           <!-- end:: Content Head -->
 
           <!-- begin:: Content Body -->
@@ -68,7 +68,8 @@
             <!--begin::Entry-->
             <div class="d-flex flex-column-fluid">
               <!--begin::Container-->
-              <div [ngClass]="contentContainerClasses">
+              <!-- [ngClass]="contentContainerClasses" -->
+              <div data-a="iki">
                 <router-outlet></router-outlet>
                 <!--end::Container-->
               </div>

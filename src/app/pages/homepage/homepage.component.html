@@ -1,32 +1,5 @@
-<div class="container-homepage" style="padding: 15px;">
-    <div class="card card-custom">
-        <div class="card-header border-0">
-            <h3 class="card-title align-items-start flex-column">
-                <span class="font-weight-bolder text-dark">Selamat datang di PAKAR</span>
-                <span class="text-muted mt-3 font-weight-bold font-size-sm">Apa yang ingin kamu cari?</span>
-            </h3>
-        </div>
-        <div class="card-body pt-0">
-            <div class="input-group">
-                <input class="form-control border-end-0 border rounded-pill" type="text" value="Cari di PAKAR..."
-                    id="example-search-input">
-                <span class="input-group-append">
-                    <button class="btn btn-outline-secondary bg-white border-start-0 border rounded-pill ms-n3"
-                        type="button">
-                        <i class="fa fa-search"></i>
-                    </button>
-                </span>
-            </div>
-            <div style="margin-top: 10px;"></div>
-            <div class="input-group mb-3">
-                <input type="text" class="form-control" placeholder="Cari di PAKAR..." aria-label="Cari di PAKAR..."
-                    aria-describedby="basic-addon2">
-                <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" type="button"><i class="fa fa-search"></i></button>
-                </div>
-            </div>
-        </div>
-    </div>
+<div class="container-homepage" style="background-image: url('{{background_image}}');">
+    <app-search></app-search>
 
     <div class="card card-custom" style="margin-top: 20px;">
         <div class="card-header border-0 py-5">

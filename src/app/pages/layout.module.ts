@@ -22,6 +22,7 @@ import { SubheaderModule } from '../_metronic/partials/layout/subheader/subheade
 import { AsideDynamicComponent } from './_layout/components/aside-dynamic/aside-dynamic.component';
 import { HeaderMenuDynamicComponent } from './_layout/components/header/header-menu-dynamic/header-menu-dynamic.component';
 import { HomepageComponent } from './homepage/homepage.component';
+import { SearchComponent } from './homepage/search/search.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { HomepageComponent } from './homepage/homepage.component';
     AsideDynamicComponent,
     HeaderMenuDynamicComponent,
     HomepageComponent,
+    SearchComponent,
   ],
   imports: [
     CommonModule,

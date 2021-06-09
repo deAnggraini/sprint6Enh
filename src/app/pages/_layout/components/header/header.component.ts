@@ -19,6 +19,7 @@ import KTLayoutHeader from '../../../../../assets/js/layout/base/header';
 import KTLayoutHeaderMenu from '../../../../../assets/js/layout/base/header-menu';
 import { KTUtil } from '../../../../../assets/js/components/util';
 import { Subscription, Observable, BehaviorSubject } from 'rxjs';
+import { ThemeService } from 'src/app/modules/_services/theme.service';
 
 @Component({
   selector: 'app-header',
@@ -36,6 +37,9 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   headerMenuHTMLAttributes: any = {};
   routerLoaderTimout: any;
 
+  // header
+  headerBackground: string;
+
   @ViewChild('ktHeaderMenu', { static: true }) ktHeaderMenu: ElementRef;
   loader$: Observable<number>;
 
@@ -44,7 +48,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   );
   private unsubscribe: Subscription[] = []; // Read more: => https://brianflove.com/2016/12/11/anguar-2-unsubscribe-observables/
 
-  constructor(private layout: LayoutService, private router: Router) {
+  constructor(private layout: LayoutService, private router: Router, private theme : ThemeService) {
     this.loader$ = this.loaderSubject;
     // page progress bar percentage
     const routerSubscription = this.router.events.subscribe((event) => {
@@ -69,7 +73,12 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
         }, 300);
       }
     });
+    this.setTheme();
     this.unsubscribe.push(routerSubscription);
+  }
+
+  private setTheme(){
+    this.headerBackground = this.theme.getConfig().header.background;
   }
 
   ngOnInit(): void {

@@ -1,0 +1,17 @@
+// ::ng-deep {
+//   div.content {
+//     background-image: url('http://localhost:8080/themes/homepage/detault_top.svg');
+//     background-repeat: no-repeat;
+//     margin-top: -2px;
+//     margin-left: -1px;
+//   }
+// }
+:host {
+  .container-homepage {
+    // background-image: url('http://localhost:8080/themes/homepage/detault_top.svg');
+    background-repeat: no-repeat;
+    margin-top: -2px;
+    margin-left: -1px;
+    padding: 10rem;
+  }
+}

@@ -16,6 +16,7 @@ import { HighlightModule, HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
 import { SplashScreenModule } from './_metronic/partials/layout/splash-screen/splash-screen.module';
 // #fake-start#
 import { FakeAPIService } from './_fake/fake-api.service';
+import { ThemeService } from './modules/_services/theme.service';
 // #fake-end#
 
 function appInitializer(authService: AuthService) {
@@ -55,6 +56,14 @@ function appInitializer(authService: AuthService) {
       useFactory: appInitializer,
       multi: true,
       deps: [AuthService],
+    },
+    {
+      provide: APP_INITIALIZER,
+      // Provide the APP_INITIALIZER, wait until the theming configuration is fetched and set up correctly
+      useFactory: (themingService: ThemeService) =>
+        () => themingService.populate(),
+      deps: [ThemeService],
+      multi: true
     },
     {
       provide: HIGHLIGHT_OPTIONS,
