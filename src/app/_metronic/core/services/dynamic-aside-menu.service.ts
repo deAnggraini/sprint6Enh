@@ -14,7 +14,10 @@ interface Menu {
   svg?: string,
   page?: string,
   submenu?: Menu[],
-  section?: string
+  section?: string,
+  isFunction?: boolean,
+  parent?: Menu,
+  showMore?: boolean
 }
 
 const emptyMenuConfig = {
@@ -28,6 +31,7 @@ export class DynamicAsideMenuService {
 
   private _base_url = `${environment.apiUrl}/master`;
   private menuConfigSubject = new BehaviorSubject<any>(emptyMenuConfig);
+  private categories: any[] = [];
   // private unsubscribe: Subscription[] = [];
   menuConfig$: Observable<any>;
   user$: Observable<UserModel>;
@@ -41,7 +45,6 @@ export class DynamicAsideMenuService {
       this.login = user;
     });
     this.menuConfig$ = this.menuConfigSubject.asObservable();
-    // this.loadMenu();
     this.populateCategoryArticle();
   }
 
@@ -78,8 +81,27 @@ export class DynamicAsideMenuService {
     const items = [];
     articles.map(item => {
       items.push({ section: item.title });
-      if (item.menus && item.menus.length)
-        item.menus.forEach((d: any) => { items.push(readChild(d) as any) });
+      if (item.menus && item.menus.length) {
+        const maxLoop = item.showLess ? 2 : item.menus.length;
+        for (let i = 0; i < maxLoop; i++) {
+          const menu = item.menus[i];
+          if (menu) {
+            items.push(readChild(menu) as any);
+          }
+        }
+        if (item.menus.length > 2) {
+          let title = 'Lihat Lebih Sedikit'
+          if (item.showLess) {
+            title = 'Lihat Semua';
+          }
+          items.push({
+            isFunction: true,
+            title,
+            page: '/lihatsemua/title',
+            data: item,
+          });
+        }
+      }
     })
     return items;
   }
@@ -88,8 +110,9 @@ export class DynamicAsideMenuService {
     this.apiService.get(`${this._base_url}/category-article`)
       .subscribe(
         (_articles: any[]) => {
+          _articles.map(d => d.showLess = true);
+          this.categories = JSON.parse(JSON.stringify(_articles));
           this.loadMenu(this.parseToMenu(_articles));
-          return _articles;
         }
       );
   }
@@ -128,5 +151,13 @@ export class DynamicAsideMenuService {
 
   private getMenu(): any {
     return this.menuConfigSubject.value;
+  }
+
+  updateMenu(item: any) {
+    const found = this.categories.find(d => d.id == item.data.id);
+    if (found) {
+      found.showLess = !found.showLess;
+    }
+    this.loadMenu(this.parseToMenu(this.categories));
   }
 }

@@ -28,12 +28,12 @@ $header-config: (
 	desktop: (
 		// Default Mode
 		default: (
-			height: 55px
+			height: 50px
 		),
 		// Fixed Mode
 		fixed: (
 			zindex: 97,
-			height: 55px
+			height: 50px
 		)
 	),
 
@@ -41,12 +41,12 @@ $header-config: (
 	tablet-and-mobile: (
 		// Default Mode
 		default: (
-			height: 55px,
+			height: 50px,
 		),
 		// Fixed Mode
 		fixed: (
 			zindex: 97,
-			height: 55px
+			height: 50px
 		)
 	)
 ) !default;
@@ -1212,10 +1212,12 @@ $header-topbar-config: (
 $aside-config: (
 	// Aside
 	base: (
-		width: 265px,
-		minimized-width: 70px,
+		width: 310px,
+		minimized-width: 50px,
 		zindex: 98,
-		scrollbar-width: 4px
+		scrollbar-width: 4px,
+		shadow: 0px 1px 9px -3px rgba(0,0,0,0.75),
+		overlay-bg-color: rgba(#000000, 0.1)
 	),
 
 	// Offcanvas Mobile
@@ -1259,8 +1261,8 @@ $aside-menu-config: (
 					link: (
 						// Link
 						self: (
-							height: 44px,
-							padding: 9px 25px
+							height: 35px,
+							padding: 5px 15px
 						),
 
 						// Icon
@@ -1325,7 +1327,7 @@ $aside-menu-config: (
 							link: (
 								// Link
 								self: (
-									height: 40px,
+									height: 35px,
 									padding: 0 25px,
 									padding-x: 25px
 								),

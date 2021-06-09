@@ -34,8 +34,7 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // load view settings
-    this.disableAsideSelfDisplay =
-      this.layout.getProp('aside.self.display') === false;
+    this.disableAsideSelfDisplay = this.layout.getProp('aside.self.display') === false;
     this.brandSkin = this.layout.getProp('brand.self.theme');
     this.headerLogo = this.getLogo();
     this.ulCSSClasses = this.layout.getProp('aside_menu_nav');
@@ -89,6 +88,10 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
     }
 
     return false;
+  }
+
+  updateMenu(params) {
+    this.menu.updateMenu(params);
   }
 
   ngOnDestroy() {
