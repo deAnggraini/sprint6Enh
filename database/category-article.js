@@ -3,7 +3,7 @@ const categories = [
         id: 100,
         title: 'Produk Untuk Nasabah',
         level: 0,
-        desc: '',
+        desc: 'Daftar operasional cabang yang dikategorikan berdasarkan tugasnya.',
         sort: 0,
         menus: [
             {
@@ -178,7 +178,7 @@ const categories = [
         id: 200,
         title: 'Aktivitas Cabang',
         level: 0,
-        desc: '',
+        desc: 'Produk BCA yang digunakan langsung oleh nasabah seperti tabungan e-banking dll.',
         sort: 1,
         menus: [
             {
@@ -222,7 +222,7 @@ const categories = [
         id: 1,
         title: 'Aplikasi Mesin',
         level: 0,
-        desc: '',
+        desc: 'Daftar operasional cabang yang dikategorikan berdasarkan tugasnya.',
         sort: 2,
         menus: [
             {
@@ -296,12 +296,6 @@ const categories = [
                 sort: 5,
             },
         ]
-    },
-    {
-        id: 11,
-        title: 'Others',
-        level: 0,
-        sort: 3,
     }
 ];
 
