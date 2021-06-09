@@ -1,0 +1,18 @@
+:host {
+  .container-search {
+    box-shadow: 0px 4px 8px 0px #0000001A;
+    color: #004578;
+    background-image: url('/assets/media/svg/bca/homepage/girl-lop.svg'), url('/assets/media/svg/bca/homepage/bg1.svg');
+    background-repeat: no-repeat, no-repeat;
+    background-position: right bottom, right bottom;
+    height: 274px;
+
+    .text-welcome {
+      font-size: 24px;
+    }
+    .text-cari {
+        font-size: 32px;
+        font-weight: bold;
+    }
+  }
+}
