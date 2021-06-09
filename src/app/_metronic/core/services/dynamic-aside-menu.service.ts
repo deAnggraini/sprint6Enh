@@ -31,6 +31,8 @@ export class DynamicAsideMenuService {
 
   private _base_url = `${environment.apiUrl}/master`;
   private menuConfigSubject = new BehaviorSubject<any>(emptyMenuConfig);
+  private categoriesObject = new BehaviorSubject<any[]>([]);
+  private categories$: Observable<any[]>;
   private categories: any[] = [];
   // private unsubscribe: Subscription[] = [];
   menuConfig$: Observable<any>;
@@ -45,6 +47,7 @@ export class DynamicAsideMenuService {
       this.login = user;
     });
     this.menuConfig$ = this.menuConfigSubject.asObservable();
+    this.categories$ = this.categoriesObject.asObservable();
     this.populateCategoryArticle();
   }
 
@@ -112,6 +115,7 @@ export class DynamicAsideMenuService {
         (_articles: any[]) => {
           _articles.map(d => d.showLess = true);
           this.categories = JSON.parse(JSON.stringify(_articles));
+          this.categoriesObject.next(this.categories);
           this.loadMenu(this.parseToMenu(_articles));
         }
       );
@@ -159,5 +163,9 @@ export class DynamicAsideMenuService {
       found.showLess = !found.showLess;
     }
     this.loadMenu(this.parseToMenu(this.categories));
+  }
+
+  getCategory(): Observable<any> {
+    return this.categories$;
   }
 }

@@ -23,6 +23,7 @@ import { AsideDynamicComponent } from './_layout/components/aside-dynamic/aside-
 import { HeaderMenuDynamicComponent } from './_layout/components/header/header-menu-dynamic/header-menu-dynamic.component';
 import { HomepageComponent } from './homepage/homepage.component';
 import { SearchComponent } from './homepage/search/search.component';
+import { KategoriMenuComponent } from './homepage/kategori-menu/kategori-menu.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { SearchComponent } from './homepage/search/search.component';
     HeaderMenuDynamicComponent,
     HomepageComponent,
     SearchComponent,
+    KategoriMenuComponent,
   ],
   imports: [
     CommonModule,

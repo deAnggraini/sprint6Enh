@@ -59,9 +59,8 @@ function appInitializer(authService: AuthService) {
     },
     {
       provide: APP_INITIALIZER,
-      // Provide the APP_INITIALIZER, wait until the theming configuration is fetched and set up correctly
       useFactory: (themingService: ThemeService) =>
-        () => themingService.populate(),
+        () => themingService.initialize(),
       deps: [ThemeService],
       multi: true
     },
