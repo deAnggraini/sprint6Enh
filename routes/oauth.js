@@ -19,7 +19,6 @@ router.post('/getAccessToken', function (req, res) {
         headers: { 'Accept': 'application/json' }
     })
         .then(function (resp) {
-            console.log({ body: resp.data });
             if (resp.data.access_token) {
                 req.session.token = resp.data.access_token;
             }
@@ -34,9 +33,7 @@ router.post('/getAccessToken', function (req, res) {
 
 router.post('/login', (req, res) => {
     const { username, password } = req.body;
-    console.log({ users });
     const found = users.find(d => d.username == username && d.password == password);
-    console.log({ username, password, found });
     if (found) {
         res.send({ error: false, msg: "", data: Object.assign({}, found, { password: null }) });
     } else {
@@ -46,7 +43,6 @@ router.post('/login', (req, res) => {
 
 router.post('/getUserByToken', (req, res) => {
     const { authToken, username } = req.body;
-    console.log({ authToken, username });
     const found = users.find(d => {
         if (d.username == username && d.authToken == authToken)
             return true;

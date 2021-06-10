@@ -1,10 +1,14 @@
 const express = require('express');
 const router = express.Router();
 
-const articles = require('../database/articles');
+const {search, articles} = require('../database/articles');
 
 router.get('/all', (req, res) => {
     res.send({ error: false, msg: "", data: articles });
+});
+
+router.post('/search', (req, res) => {
+    res.send({ error: false, msg: "", data: search });
 });
 
 router.get('/recomendation', (req, res) => {
