@@ -5,6 +5,7 @@ import { PagesRoutingModule } from './pages-routing.module';
 import {
   NgbDropdownModule,
   NgbProgressbarModule,
+  NgbModule,
 } from '@ng-bootstrap/ng-bootstrap';
 import { TranslationModule } from '../modules/i18n/translation.module';
 import { LayoutComponent } from './_layout/layout.component';
@@ -44,6 +45,7 @@ import { KategoriMenuComponent } from './homepage/kategori-menu/kategori-menu.co
   ],
   imports: [
     CommonModule,
+    NgbModule,
     PagesRoutingModule,
     TranslationModule,
     InlineSVGModule,
