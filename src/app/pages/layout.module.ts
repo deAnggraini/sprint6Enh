@@ -26,6 +26,7 @@ import { HomepageComponent } from './homepage/homepage.component';
 import { SearchComponent } from './homepage/search/search.component';
 import { KategoriMenuComponent } from './homepage/kategori-menu/kategori-menu.component';
 import { TerbaruComponent } from './homepage/terbaru/terbaru.component';
+import { RecommendationComponent } from './homepage/recommendation/recommendation.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { TerbaruComponent } from './homepage/terbaru/terbaru.component';
     SearchComponent,
     KategoriMenuComponent,
     TerbaruComponent,
+    RecommendationComponent,
   ],
   imports: [
     CommonModule,
