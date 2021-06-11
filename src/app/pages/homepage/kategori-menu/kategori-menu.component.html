@@ -1,0 +1,30 @@
+<div class="kategori-menu-card mt-10">
+    <div>
+        <div class="font-weight-bolder text-dark font-size-lg">Kategori Menu</div>
+        <div class="text-muted font-weight-bold font-size-sm">
+            Baca seluruh artikle PAKAR sesuai kategori menu yang ada
+        </div>
+    </div>
+    <div class="row m-0 mt-5">
+        <div class="col-lg-6 col-xxl-4 mb-7" *ngFor="let item of listData;let i = index">
+            <div class="text-center">
+                <img src="./assets/media/svg/bca/homepage/{{listSvg[i]}}">
+            </div>
+            <div class="card-shadow border-1 rounded-sm mt-n15 pt-18 px-8 pb-8">
+                <div><a routerLink="/article/list/{{item.id}}" class="text-warning font-weight-bold font-size-h6">{{item.title}}</a></div>
+                <small>{{item.desc}}</small>
+                <ul class="navi navi-hover">
+                    <li class="navi-item p-"  *ngFor="let link of item.menus | slice:0:3">
+                        <a routerLink="/article/list/{{link.id}}" class="navi-link cursor-pointer">
+                            <span class="navi-text">{{link.title}}</span></a>
+                    </li>
+                    <!-- <li class="navi-item"><a routerLink="" class="navi-link cursor-pointer">Bagian Unit Cabang</a></li>
+                    <li class="navi-item"><a routerLink="" class="navi-link cursor-pointer">Aktivitas Unit Cabang</a></li> -->
+                    <li class="navi-item">
+                        <a routerLink="/article/list/{{item.id}}" class="navi-link cursor-pointer">Lihat Semua ></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

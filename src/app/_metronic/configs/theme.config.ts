@@ -10,9 +10,9 @@ export interface ThemeConfig {
 
 export const DefaultThemeConfig = {
     header: {
-        background: '#1995D1',
+        background: 'red',
     },
     homepage: {
-        bg_img_top: 'default_top.svg',
+        bg_img_top: 'newsdefault_top.svg',
     }
 }

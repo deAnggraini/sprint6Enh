@@ -5,6 +5,7 @@ import { PagesRoutingModule } from './pages-routing.module';
 import {
   NgbDropdownModule,
   NgbProgressbarModule,
+  NgbModule,
 } from '@ng-bootstrap/ng-bootstrap';
 import { TranslationModule } from '../modules/i18n/translation.module';
 import { LayoutComponent } from './_layout/layout.component';
@@ -23,8 +24,10 @@ import { AsideDynamicComponent } from './_layout/components/aside-dynamic/aside-
 import { HeaderMenuDynamicComponent } from './_layout/components/header/header-menu-dynamic/header-menu-dynamic.component';
 import { HomepageComponent } from './homepage/homepage.component';
 import { SearchComponent } from './homepage/search/search.component';
+import { KategoriMenuComponent } from './homepage/kategori-menu/kategori-menu.component';
+import { TerbaruComponent } from './homepage/terbaru/terbaru.component';
+import { RecommendationComponent } from './homepage/recommendation/recommendation.component';
 import { PopularComponent } from './homepage/popular/popular.component';
-
 @NgModule({
   declarations: [
     LayoutComponent,
@@ -40,10 +43,12 @@ import { PopularComponent } from './homepage/popular/popular.component';
     HeaderMenuDynamicComponent,
     HomepageComponent,
     SearchComponent,
-    PopularComponent,
-  ],
+    KategoriMenuComponent,
+    TerbaruComponent,
+    RecommendationComponent,    PopularComponent,  ],
   imports: [
     CommonModule,
+    NgbModule,
     PagesRoutingModule,
     TranslationModule,
     InlineSVGModule,

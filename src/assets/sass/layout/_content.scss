@@ -5,12 +5,7 @@
 // Desktop Mode
 @include media-breakpoint-up(lg) {
   .content {
-	padding: 0;
-    // padding: 0;
-    // background-image: url('http://localhost:8080/themes/homepage/detault_top.svg');
-    // background-repeat: no-repeat;
-    // margin-top: -2px;
-    // margin-left: -1px;
+    padding: 0;
 
     // Fixed Footer Mode
     .footer-fixed & {
@@ -22,7 +17,7 @@
 // Tablet & Mobile Modes
 @include media-breakpoint-down(md) {
   .content {
-    padding: 0 get($page-padding, tablet-and-mobile);
+    padding: 0;
 
     // Subheader Enabled & Subheader Transparent Modes
     .subheader-enabled.subheader-transparent & {

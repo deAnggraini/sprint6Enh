@@ -35,14 +35,18 @@ body {
   }
 
   // Container
-  .container,
+  .container {
+    padding: 0px;
+    max-width: none;
+  }
+
   .container-fluid {
     padding: 0 get($page-padding, desktop);
   }
 
-  .content-container {
-    padding: get($page-padding, desktop);
-  }
+  // .content-container {
+  //   padding: get($page-padding, desktop);
+  // }
 }
 
 // Tablet & Mobile Modes
@@ -63,7 +67,10 @@ body {
   }
 
   // Container
-  .container,
+  .container{
+    max-width: none;
+    padding: 0;
+  }
   .container-fluid {
     max-width: none;
     padding: 0 get($page-padding, tablet-and-mobile);

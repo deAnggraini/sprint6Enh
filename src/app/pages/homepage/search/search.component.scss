@@ -1,0 +1,79 @@
+::ng-deep {
+  .fount-text {
+    color: red;
+  }
+}
+
+:host {
+  .container-search {
+    box-shadow: 0px 4px 8px 0px #0000001A;
+    color: #004578;
+    background-image: url('/assets/media/svg/bca/homepage/girl-lop.svg'), url('/assets/media/svg/bca/homepage/bg1.svg');
+    background-repeat: no-repeat, no-repeat;
+    background-position: right bottom, right bottom;
+    height: 274px;
+
+
+    .text-welcome {
+      font-size: 24px;
+    }
+
+    .text-cari {
+      font-size: 32px;
+      font-weight: bold;
+    }
+
+    .input-group.show {
+      input {
+        border-radius: 20px 0px 0px 0px;
+      }
+
+      .btn {
+        border-radius: 0px 20px 0px 0px;
+      }
+    }
+
+    .input-group {
+      input {
+        border-color: #0F5EA9;
+        border-radius: 100px 0px 0px 100px;
+        padding-left: 15px;
+      }
+
+      .btn {
+        border-color: #0F5EA9;
+        background: #0F5EA9;
+        border-radius: 0px 100px 100px 0px;
+
+        .fa {
+          color: white;
+        }
+      }
+
+      .btn:hover {
+        background-color: white;
+
+        .fa {
+          color: #0F5EA9;
+        }
+      }
+    }
+
+    .my-data {
+      padding: 8px;
+      background-color: white;
+      z-index: 100;
+      position: relative;
+      border: 1px solid #0F5EA9;
+      border-top-width: 0px;
+      border-radius: 0px 0px 20px 20px;
+
+      .header-top {
+        display: flex;
+        justify-content: space-between;
+      }
+
+    }
+
+  }
+}

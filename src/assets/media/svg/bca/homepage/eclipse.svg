@@ -1,0 +1,23 @@
+<svg width="1465" height="538" viewBox="0 0 1465 538" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0)">
+<mask id="mask0" mask-type="alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="1465" height="538">
+<ellipse cx="732.5" cy="268.562" rx="732.5" ry="268.562" fill="url(#paint0_linear)"/>
+</mask>
+<g mask="url(#mask0)">
+<rect x="1457.96" y="604" width="1440" height="383.206" transform="rotate(-180 1457.96 604)" fill="url(#paint1_linear)"/>
+</g>
+</g>
+<defs>
+<linearGradient id="paint0_linear" x1="732.5" y1="349.237" x2="732.5" y2="573.216" gradientUnits="userSpaceOnUse">
+<stop stop-color="#F2FAFC"/>
+<stop offset="1" stop-color="#F2FAFC"/>
+</linearGradient>
+<linearGradient id="paint1_linear" x1="2177.47" y1="675.121" x2="2177.47" y2="956.422" gradientUnits="userSpaceOnUse">
+<stop stop-color="#D8EFFF"/>
+<stop offset="0.720033" stop-color="#D8EFFF" stop-opacity="0"/>
+</linearGradient>
+<clipPath id="clip0">
+<rect width="1465" height="537.125" fill="white" transform="translate(1465 537.125) rotate(-180)"/>
+</clipPath>
+</defs>
+</svg>

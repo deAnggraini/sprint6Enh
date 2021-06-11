@@ -1,0 +1,26 @@
+:host ::ng-deep .carousel {
+  .carousel-control-next {
+    background-color: yellowgreen !important;
+    color: darkblue !important;
+    width: 20px;
+    right: -10px;
+    margin-bottom: 20px;
+  }
+}
+// .my-recomendation {
+//   //   background-color: blueviolet;
+// }
+
+// .carousel {
+//   //   background-color: yellow;
+
+//   .carousel-control-next {
+//     background-color: yellowgreen !important;
+//     color: darkblue !important;
+//   }
+// }
+
+// .carousel a.carousel-control-next {
+//   background-color: red !important;
+//   color: darkblue !important;
+// }
