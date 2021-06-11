@@ -14,4 +14,9 @@ export class ArticleService {
   search(keyword: string) {
     return this.apiService.post(`${this._base_url}/search`, { keyword });
   }
+
+  news(){
+    return this.apiService.post(`${this._base_url}/news`, {});
+  }
+  
 }
