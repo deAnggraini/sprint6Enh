@@ -25,6 +25,7 @@ import { HeaderMenuDynamicComponent } from './_layout/components/header/header-m
 import { HomepageComponent } from './homepage/homepage.component';
 import { SearchComponent } from './homepage/search/search.component';
 import { KategoriMenuComponent } from './homepage/kategori-menu/kategori-menu.component';
+import { RecommendationComponent } from './homepage/recommendation/recommendation.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { KategoriMenuComponent } from './homepage/kategori-menu/kategori-menu.co
     HomepageComponent,
     SearchComponent,
     KategoriMenuComponent,
+    RecommendationComponent,
   ],
   imports: [
     CommonModule,
