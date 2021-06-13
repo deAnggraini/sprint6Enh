@@ -12,6 +12,7 @@ export class RecommendationComponent implements OnInit {
   constructor(private config: NgbCarouselConfig) {
     config.showNavigationArrows = true;
     config.showNavigationIndicators = false;
+    config.interval = 0;
   }
 
   ngOnInit(): void {
