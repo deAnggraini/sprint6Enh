@@ -78,7 +78,7 @@ public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
 
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-		clients.inMemory().withClient("javainuse-client").secret(passwordEncoder.encode("javainuse-secret"))
+		clients.inMemory().withClient(clientId).secret(passwordEncoder.encode(clientSecret))
 				.authorizedGrantTypes("password", "refresh_token")
 				.accessTokenValiditySeconds(Integer.parseInt(accessTokenValiditySeconds))
 				.refreshTokenValiditySeconds(Integer.parseInt(refreshTokenValiditySeconds)).scopes("read", "write");
