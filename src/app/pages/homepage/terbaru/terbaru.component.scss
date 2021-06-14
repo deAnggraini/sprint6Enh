@@ -27,8 +27,18 @@
   //   }
   // }
 
-  .carousel-control-prev{
+  .carousel-control-prev {
     visibility: hidden;
+  }
+
+  .text-desc {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    // white-space: nowrap;
+    // width: 210px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
   }
 
 }

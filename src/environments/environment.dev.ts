@@ -7,7 +7,8 @@ export const environment = {
   appVersion: 'v726demo1',
   USERDATA_KEY: 'authf649fc9a5f55',
   isMockEnabled: true,
-  apiUrl: 'https://pakar.ogya.co.id:8080',
+  apiUrl: 'https://pakar.ogya.co.id:8080/api',
+  backend_img: 'https://pakar.ogya.co.id:8080/images',
 };
 
 /*

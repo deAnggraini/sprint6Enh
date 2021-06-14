@@ -1,18 +1,21 @@
-// ::ng-deep {
-//   div.content {
-//     background-image: url('http://localhost:8080/themes/homepage/detault_top.svg');
-//     background-repeat: no-repeat;
-//     margin-top: -2px;
-//     margin-left: -1px;
-//   }
-// }
-:host {
+:host ::ng-deep {
   .container-homepage {
     // background-image: url('http://localhost:8080/themes/homepage/detault_top.svg');
     background-repeat: no-repeat;
     margin-top: -2px;
     margin-left: -1px;
     background-color: white;
+  }
+
+  @media (max-width: 992px) {
+    .pt-25 {
+      padding-top: 10px !important;
+    }
+
+    .px-40 {
+      padding-left: 15px !important;
+      padding-right: 15px !important;
+    }
   }
 }
 

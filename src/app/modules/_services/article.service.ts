@@ -6,7 +6,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class ArticleService {
-  
+
   private _base_url = `${environment.apiUrl}/article`;
 
   constructor(private apiService: ApiService) { }
@@ -15,8 +15,12 @@ export class ArticleService {
     return this.apiService.post(`${this._base_url}/search`, { keyword });
   }
 
-  news(){
+  news() {
     return this.apiService.post(`${this._base_url}/news`, {});
   }
-  
+
+  recommendation() {
+    return this.apiService.post(`${this._base_url}/recommendation`, {});
+  }
+
 }

@@ -8,6 +8,7 @@ export const environment = {
   USERDATA_KEY: 'authf649fc9a5f55',
   isMockEnabled: true,
   apiUrl: 'http://localhost:8080',
+  backend_img: 'http://localhost:8080/images',
 };
 
 /*

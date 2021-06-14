@@ -7,10 +7,11 @@
   .content {
     padding: 0;
 
+    // HQ no footer
     // Fixed Footer Mode
-    .footer-fixed & {
-      padding-bottom: get($footer-config, fixed, height);
-    }
+    // .footer-fixed & {
+      // padding-bottom: get($footer-config, fixed, height);
+    // }
   }
 }
 
