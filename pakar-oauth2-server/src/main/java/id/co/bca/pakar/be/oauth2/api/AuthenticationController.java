@@ -36,7 +36,7 @@ public class AuthenticationController {
 	@Value("${spring.security.oauth2.server.url}")
 	private String uri;
 
-	@PostMapping(value = "/api/login", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
+	@PostMapping(value = "/api/auth/login", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<OAuthTokenDto> loginTest(@RequestBody CredentialDto dto) {
 		OAuthCredential cred = new OAuthCredential();
