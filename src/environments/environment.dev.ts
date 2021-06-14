@@ -7,8 +7,8 @@ export const environment = {
   appVersion: 'v726demo1',
   USERDATA_KEY: 'authf649fc9a5f55',
   isMockEnabled: true,
-  apiUrl: 'http://36.89.25.220:12080',
-  backend_img: 'http://36.89.25.220:12080/images',
+  apiUrl: '/api',
+  backend_img: '/images',
 };
 
 /*
