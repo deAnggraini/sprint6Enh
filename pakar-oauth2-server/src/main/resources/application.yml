@@ -19,13 +19,13 @@ spring:
           connection: 60000
       clientId: javainuse-client
       clientSecret: javainuse-secret
-      authorize-grant-type: password, refresh_token
-      accessTokenValiditySeconds: 600
-      refreshTokenValiditySeconds: 21600
+      authorize-grant-type: password,refresh_token
+      accessTokenValiditySeconds: 43200
+      refreshTokenValiditySeconds: 2592000
     jwt:
       signingkey: pakar123
   dataSource: 
-    driver-class-name: org.postgresql.Driver
+    driverClassName: org.postgresql.Driver
     url: jdbc:postgresql://192.168.100.48:5432/postgres
     username: postgres
     password: password
