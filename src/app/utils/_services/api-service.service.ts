@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { concatMap, catchError } from 'rxjs/operators';
+import { concatMap, catchError, switchMap } from 'rxjs/operators';
 import { CommonHttpResponse } from '../http-response';
 import { environment } from 'src/environments/environment';
 
@@ -35,7 +35,7 @@ export class ApiService {
     withCredentials?: boolean;
   }): Observable<any> {
     return this.http.post(url, body, this.httpOptions).pipe(
-      concatMap((res: CommonHttpResponse) => {
+      switchMap((res: CommonHttpResponse) => {
         if (res.error === true) throw Error(res.msg);
         const { data } = res;
         return of(data);
@@ -60,7 +60,7 @@ export class ApiService {
     withCredentials?: boolean;
   }): Observable<any> {
     return this.http.get(url, this.httpOptions).pipe(
-      concatMap((res: CommonHttpResponse) => {
+      switchMap((res: CommonHttpResponse) => {
         if (res.error === true) throw Error(res.msg);
         const { data } = res;
         return of(data);
