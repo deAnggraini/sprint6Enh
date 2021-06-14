@@ -20,7 +20,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
             "/configuration/security",
             "/swagger-ui.html",
             "/webjars/**",
-            "/api/login",
+            "/api/auth/login",
 //            "/login/**",
             "/api/v1//getActiveRole"
             // other public endpoints of your API may be appended to this array
