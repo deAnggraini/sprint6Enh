@@ -35,13 +35,13 @@ public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
 	private String clientId;
 	@Value("${spring.security.oauth2.clientSecret}")
 	private String clientSecret;
-	@Value("${spring.security.oauth2.authorize-grant-type}")
+	@Value("${spring.security.oauth2.authorize-grant-type:password,refresh_token}")
 	private String[] authorizedGrantTypes;
 	@Value("${spring.security.jwt.signingkey}")
 	private String signingKey;
-	@Value("${spring.security.oauth2.accessTokenValiditySeconds}")
+	@Value("${spring.security.oauth2.accessTokenValiditySeconds:43200}")
 	private String accessTokenValiditySeconds;
-	@Value("${spring.security.oauth2.refreshTokenValiditySeconds}")
+	@Value("${spring.security.oauth2.refreshTokenValiditySeconds:2592000}")
 	private String refreshTokenValiditySeconds;
 
 	@Autowired
@@ -79,7 +79,7 @@ public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 		clients.inMemory().withClient(clientId).secret(passwordEncoder.encode(clientSecret))
-				.authorizedGrantTypes("password", "refresh_token")
+				.authorizedGrantTypes(authorizedGrantTypes)
 				.accessTokenValiditySeconds(Integer.parseInt(accessTokenValiditySeconds))
 				.refreshTokenValiditySeconds(Integer.parseInt(refreshTokenValiditySeconds)).scopes("read", "write");
 	}
