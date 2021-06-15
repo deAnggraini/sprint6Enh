@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pakar-oauth-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pakar-oauth-server
+  template:
+    metadata:
+      labels: 
+        name: pakar-oauth-server
+        app: pakar-oauth-server
+    spec:
+      containers:
+      - name: pakar-oauth-server
+        image: pakar-oauth-server:0.1
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8083
