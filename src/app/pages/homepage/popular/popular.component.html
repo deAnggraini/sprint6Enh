@@ -11,50 +11,17 @@
             </span>
         </div>
     </div>
-    <div class="col-lg-8 col-xxl-8 rounded-sm p-0" style="border: 1px solid #DDD; background-color: white;">
+    <div class="card-shadow col-lg-7 col-xxl-7 rounded-sm p-0" style="border: 1px solid #DDD; background-color: white;">
         <ul class="navi navi-hover">
-            <li class="navi-item">
-                <a routerLink="/homepage" class="navi-link cursor-pointer">
-                    <span class="navi-text">Ketentuan Pembukaan Rekening Tahapan</span>
-                    <b class="menu-arrow"></b>
-                </a>
-            </li>
-            <li class="navi-item">
-                <a routerLink="/homepage" class="navi-link cursor-pointer">
-                    <span class="navi-text">Ketentuan Umum Pemberian Kredit Komersial</span>
-                    <b class="menu-arrow"></b>
-                </a>
-            </li>
-            <li class="navi-item">
-                <a routerLink="/homepage" class="navi-link cursor-pointer">
-                    <span class="navi-text">Ketentuan Penutupan Rekening Tahapan</span>
-                    <b class="menu-arrow"></b>
-                </a>
-            </li>
-            <li class="navi-item">
-                <a routerLink="/homepage" class="navi-link cursor-pointer">
-                    <span class="navi-text">Ketentuan Pengajuan Time Loan - SME</span>
-                    <b class="menu-arrow"></b>
-                </a>
-            </li>
-            <li class="navi-item">
-                <a routerLink="/homepage" class="navi-link cursor-pointer">
-                    <span class="navi-text">Ketentuan Penawaran , Analisis dan Keputusan Pemberian Kartu Kredit Selected ...</span>
-                    <b class="menu-arrow"></b>
-                </a>
-            </li>
+            <ng-container *ngFor="let item of dataList">
+                <li class="navi-item">
+                    <a routerLink="/homepage" class="navi-link cursor-pointer">
+                        <span class="navi-text">{{item.title}}</span>
+                        <b class="menu-arrow"></b>
+                    </a>
+                </li>
+                <li class="separator"></li>
+            </ng-container>
         </ul>
-        <!-- <div class="example-button-row">
-            <div class="card-title align-self-end flex-column">
-                <span href="#" class="navi-link cursor-pointer text-primary font-weight-bold font-size-sm">
-                    Ketentuan Pengajuan Time Loan - SME >
-                </span>
-            </div>
-            <div class="card-title align-self-end flex-column">
-                <span href="#" class="navi-link cursor-pointer text-primary font-weight-bold font-size-sm">
-                    Ketentuan Penawaran , Analisis dan Keputusan Pemberian Kartu Kredit Selected ... >
-                </span>
-            </div>
-        </div> -->
     </div>
 </div>

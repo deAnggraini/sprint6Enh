@@ -1,13 +1,16 @@
 :host ::ng-deep .navi {
-  li.navi-item {
-    border-bottom: 1px dotted #F3F2F1;
-    padding: 0;
-    margin: 10px 30px;
+  li.navi-item:hover {
+    .menu-arrow {
+      &:before {
+        color: black !important;
+      }
+    }
   }
 
-  a.navi-link {
-      padding-left: 0;
-      padding-right: 0;
+  li.separator {
+    height: 1;
+    border-bottom: 1px dotted #DDD;
+    margin: 0 20px;
   }
 
   .menu-arrow {
@@ -19,11 +22,9 @@
     font-size: 1rem;
 
     &:before {
-      //   transition: get($item, link, arrow, transition);
-      //   @include ki(get($ki-types, arrowNext));
-      //   [direction="rtl"] & {
       content: '>' !important;
-      //   }
+      color: #0078D4;
     }
+
   }
 }

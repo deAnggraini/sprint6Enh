@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { ArticleService } from 'src/app/modules/_services/article.service';
 
 @Component({
   selector: 'app-popular',
@@ -6,15 +7,15 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./popular.component.scss']
 })
 export class PopularComponent implements OnInit {
-  lblKetentuanPopular = String;
 
-  constructor() { }
+  dataList: any[] = [];
+  constructor(private articleService: ArticleService, private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(): void {
+    this.articleService.popular().subscribe(resp => {
+      this.dataList = resp;
+      setTimeout(() => this.changeDetectorRef.detectChanges(), 0);
+    })
   }
 
-  buttonPopular(event : any) {
-    console.log("event = " , event);
-    
-  }
 }
