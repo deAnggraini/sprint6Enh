@@ -1,25 +1,18 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: oauth-server-ingress
+  name: pakar-oauth-server-ingress
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /$1
 spec:
   rules:
-    - host: hello-world.info
+    - host: pakar.bca.co.id
       http:
         paths:
-          - path: /
+          - path: /api/doc
             pathType: Prefix
             backend:
               service:
-                name: pakar-oauth-server
+                name: pakar-doc-server
                 port:
-                  number: 8083
-          - path: /v2
-            pathType: Prefix
-            backend:
-              service:
-                name: web2
-                port:
-                  number: 9090
+                  number: 12802
