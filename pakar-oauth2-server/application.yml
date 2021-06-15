@@ -1,5 +1,5 @@
 server:
-  port: ${port:12081}
+  port: ${port:8081}
 spring:
   eai:
     ad:
@@ -37,18 +37,10 @@ spring:
 ## Hibernate ddl auto (create, create-drop, update)
   jpa:
     hibernate:
-      ddl-auto: update
-      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy  
+      ddl-auto: create-drop
     generate-ddl: true
     show-sql: true
     database-platform: org.hibernate.dialect.PostgreSQL10Dialect
-#
-## Use spring.jpa.properties.* for Hibernate native properties (the prefix is
-## stripped before adding them to the entity manager)
-#
-## The SQL dialect makes Hibernate generate better SQL for the chosen database
-##spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.MySQL5Dialect
-##  spring:
-##    datasource:
-##      driver-class-name=org.hibernate.dialect.PostgreSQL10Dialect
-#      
+    properties:
+      hibernate:
+        dialect:org.hibernate.dialect.PostgreSQL10Dialect   
