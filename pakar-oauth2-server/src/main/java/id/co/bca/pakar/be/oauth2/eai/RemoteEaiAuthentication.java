@@ -58,8 +58,8 @@ public class RemoteEaiAuthentication {
 
 		EaiLoginResponse eaiLoginResponse = (EaiLoginResponse) JSONMapperAdapter.jsonToObject(response,
 				EaiLoginResponse.class);
-		logger.info("erro status response ------ " + eaiLoginResponse.getOutputSchema().getStatus());
-		logger.info("erro code response ------ " + eaiLoginResponse.getErrorSchema().getErroCode());
+		logger.info("error status response ------ " + eaiLoginResponse.getOutputSchema().getStatus());
+		logger.info("error code response ------ " + eaiLoginResponse.getErrorSchema().getErroCode());
 		return eaiLoginResponse;
 	}
 }
