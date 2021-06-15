@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import id.co.bca.pakar.be.oauth2.model.Role;
+import id.co.bca.pakar.be.oauth2.model.UserRole;
 
 @Repository
 public interface RoleRepository extends CrudRepository<Role, String>{
