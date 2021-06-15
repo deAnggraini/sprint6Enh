@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: pakar-wf-server-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+spec:
+  rules:
+    - host: pakar.bca.co.id
+      http:
+        paths:
+          - path: /api/doc
+            pathType: Prefix
+            backend:
+              service:
+                name: pakar-wf-server
+                port:
+                  number: 12803

@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pakar-wf-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pakar-wf-server
+  template:
+    metadata:
+      labels: 
+        name: pakar-wf-server
+        app: pakar-wf-server
+    spec:
+      containers:
+      - name: pakar-wf-server
+        image: pakar-wf-server:0.1
+        imagePullPolicy: Never

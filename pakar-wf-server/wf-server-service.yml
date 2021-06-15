@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: pakar-wf-server
+  labels:
+    app: pakar-wf-server
+spec:
+  selector:
+    app: pakar-wf-server
+  ports:
+  - name: port-wf-server
+    protocol: TCP
+    port: 12083
+    targetPort: 12083
