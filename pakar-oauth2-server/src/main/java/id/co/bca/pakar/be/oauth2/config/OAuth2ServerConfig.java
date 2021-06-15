@@ -66,14 +66,17 @@ public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
 //		endpoints.authenticationManager(authenticationManager);
 		// add jwt token as token generator
-		endpoints.authenticationManager(authenticationManager)
+		endpoints
+			.authenticationManager(authenticationManager)
 			.tokenStore(tokenStore)
 			.accessTokenConverter(accessTokenConverter);
 	}
 
 	@Override
 	public void configure(final AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
-		oauthServer.tokenKeyAccess("permitAll()").checkTokenAccess("isAuthenticated()");
+		oauthServer
+			.tokenKeyAccess("permitAll()")
+			.checkTokenAccess("isAuthenticated()");
 	}
 
 	@Override
@@ -132,6 +135,7 @@ public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
 	public DefaultTokenServices tokenService(final ClientDetailsService clientDetailsService) {
 		DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
 		defaultTokenServices.setTokenStore(tokenStore);
+		defaultTokenServices.setTokenEnhancer(accessTokenConverter);
 		defaultTokenServices.setSupportRefreshToken(true);
 		defaultTokenServices.setClientDetailsService(clientDetailsService);
 		defaultTokenServices.setAuthenticationManager(authenticationManager);

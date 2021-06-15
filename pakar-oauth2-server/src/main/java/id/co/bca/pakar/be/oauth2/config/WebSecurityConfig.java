@@ -1,7 +1,5 @@
 package id.co.bca.pakar.be.oauth2.config;
 
-import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,9 +20,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private CustomAuthenticationProvider authenticationProvider;
 	
-	private DataSource dataSource;
-//	@Autowired
-//	private PasswordEncoder passwordEncoder;
+//	private DataSource dataSource;
+
 
 //	@Override
 //	protected void configure(HttpSecurity httpSecurity) {
@@ -40,9 +37,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //		}
 //	}
 
-	public WebSecurityConfig(DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
+//	public WebSecurityConfig(DataSource dataSource) {
+//        this.dataSource = dataSource;
+//    }
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -53,11 +50,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	public AuthenticationProvider getAuthenticationProvider() throws Exception {
 		return new CustomAuthenticationProvider();
 	}
-
-//	@Bean
-//	public PasswordEncoder getPassworEncoder() {
-//		return new BCryptPasswordEncoder();
-//	}
 	
 	@Bean
     public BCryptPasswordEncoder passwordEncoder(){
