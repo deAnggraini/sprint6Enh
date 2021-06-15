@@ -14,7 +14,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.common.exceptions.BadClientCredentialsException;
-//import org.springframework.security.oauth2.common.exceptions.BadClientCredentialsException;
 import org.springframework.stereotype.Component;
 
 import id.co.bca.pakar.be.oauth2.dto.EaiLoginResponse;
@@ -36,15 +35,19 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		EaiLoginResponse response = remoteEaiAuthentication.authenticate();
 
 		logger.info("---- authentication ---- " + authentication);
-//		if (name.equals("javainuse-user") && password.equals("javainuse-pass")) {
-		if (response.getOutputSchema().getStatus().equals("0")) {
-			logger.info("login success ");
-			final List<GrantedAuthority> grantedAuths = new ArrayList<>();
-			grantedAuths.add(new SimpleGrantedAuthority("ROLE_USER"));
+		if (name != null && password != null) {
+			if (response.getOutputSchema().getStatus().equals("0")) {
+				logger.info("login success ");
+				final List<GrantedAuthority> grantedAuths = new ArrayList<>();
+				grantedAuths.add(new SimpleGrantedAuthority("ROLE_USER"));
 //			UserDetails principal = new SecUserDto(name, password, grantedAuths);
-			final Authentication auth = new UsernamePasswordAuthenticationToken(name, password,
-					Arrays.asList(new SimpleGrantedAuthority("ROLE_USER")));
-			return auth;
+				final Authentication auth = new UsernamePasswordAuthenticationToken(name, password,
+						Arrays.asList(new SimpleGrantedAuthority("ROLE_USER")));
+				return auth;
+			} else {
+				logger.info("user / password salah ");
+				return (Authentication) new BadClientCredentialsException();
+			}			
 		} else {
 			logger.info("user / password salah ");
 			return (Authentication) new BadClientCredentialsException();
