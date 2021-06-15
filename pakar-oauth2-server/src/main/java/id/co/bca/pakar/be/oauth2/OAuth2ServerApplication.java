@@ -1,12 +1,12 @@
 package id.co.bca.pakar.be.oauth2;
 
-import java.util.Arrays;
+import java.security.Principal;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -28,9 +28,9 @@ public class OAuth2ServerApplication {
 //        logger.info("###### Number beans provided by Spring Boot: [{}]"+ beanNames.length);
 	}
 
-//	@RequestMapping("/validateUser")
-//	public Principal user(Principal user) {
-//		return user;
-//	}
+	@RequestMapping("/validateUser")
+	public Principal user(Principal user) {
+		return user;
+	}
 
 }
