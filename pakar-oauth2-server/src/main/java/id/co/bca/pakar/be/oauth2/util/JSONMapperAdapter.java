@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JSONMapperAdapter {
-	public static String objectToJson(Object obj) {
+	public static <T> String objectToJson(T obj) {
 		ObjectMapper mapper = new ObjectMapper();
 	    // Java object to JSON string
 	    String jsonString = null;
@@ -18,7 +18,7 @@ public class JSONMapperAdapter {
 	    return jsonString;
 	}
 	
-	public static Object jsonToObject(String str, Class clazz) {
+	public static <T> Object jsonToObject(String str, Class clazz) {
 		ObjectMapper mapper = new ObjectMapper();
 		Object obj = null;
 		try {
