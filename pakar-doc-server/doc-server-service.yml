@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: pakar-doc-server
+  labels:
+    app: pakar-doc-server
+spec:
+  selector:
+    app: pakar-doc-server
+  ports:
+  - name: port-doc-server
+    protocol: TCP
+    port: 12082
+    targetPort: 12082

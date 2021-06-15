@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pakar-doc-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pakar-doc-server
+  template:
+    metadata:
+      labels: 
+        name: pakar-doc-server
+        app: pakar-doc-server
+    spec:
+      containers:
+      - name: pakar-doc-server
+        image: pakar-doc-server:0.1
+        imagePullPolicy: Never
