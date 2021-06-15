@@ -1,9 +1,9 @@
 server:
-  port: ${port:8083}
+  port: ${port:12081}
 spring:
   eai:
     ad:
-      loginUri: http://localhost:9093/ad-gateways/verify1
+      loginUri: http://192.168.100.48:9093/ad-gateways/verify1
       clientId: 8C21EBEEB1AA3FBFE05400144FFBD319
       applicationID: PRJ1
       userId: ibofdev01
@@ -12,7 +12,7 @@ spring:
   security:
     oauth2:
       server: 
-        url: http://192.168.100.48:8083/oauth/token
+        url: http://127.0.0.1:12081/oauth/token
       rest:
         timeout:
           read: 60000
@@ -25,7 +25,7 @@ spring:
     jwt:
       signingkey: pakar123
   dataSource: 
-    driverClassName: org.postgresql.Driver
+    driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://192.168.100.48:5432/postgres
     username: postgres
     password: password
