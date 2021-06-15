@@ -1,3 +1,3 @@
 #!/bin/bash
 clear
-java -Dspring.config.location=application.yml -jar target/pakar-oauth-server.jar
+java -jar -Dport=12081 -Dspring.config.location=application.yml target/pakar-oauth-server.jar
