@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { search, articles, recommendation, news } = require('../database/articles');
+const { search, articles, recommendation, news, popular } = require('../database/articles');
 
 router.get('/all', (req, res) => {
     res.send({ error: false, msg: "", data: articles });
@@ -16,9 +16,9 @@ router.post('/recommendation', (req, res) => {
     res.send({ error: false, msg: "", data: recommendation });
 });
 
-router.get('/popular', (req, res) => {
+router.post('/popular', (req, res) => {
     const { page, offset, limit } = req.body;
-    res.send({ error: false, msg: "", data: articles });
+    res.send({ error: false, msg: "", data: popular });
 });
 
 router.post('/news', (req, res) => {

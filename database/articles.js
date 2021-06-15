@@ -371,5 +371,6 @@ module.exports.search = [
 
 module.exports.recommendation = JSON.parse(JSON.stringify(articles));
 module.exports.news = JSON.parse(JSON.stringify(articles)).reverse();
+module.exports.popular = JSON.parse(JSON.stringify(articles)).slice(5, 10);
 
 module.exports.articles = articles;
