@@ -36,7 +36,8 @@
 
 		// Minimized Aside Mode
 		.aside-minimize:not(.aside-minimize-hover) & {
-			width: get($aside-config, base, minimized-width);
+			// width: get($aside-config, base, minimized-width);
+			width: 0;
 		}
 
 		// Scrollbar Width
