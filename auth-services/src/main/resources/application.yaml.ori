@@ -1,0 +1,19 @@
+server:
+  port: 9094
+  shutdown: graceful
+spring:
+  application:
+    name: auth-services
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://192.168.100.48:5432/postgres
+    username: postgres
+    password: password
+    hikari:
+      connection-timeout: 20000
+      maximum-pool-size: 5
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    generate-ddl: true

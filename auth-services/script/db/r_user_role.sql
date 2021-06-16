@@ -1,0 +1,1 @@
+INSERT INTO r_user_role(created_by,created_date, modify_by, modify_date, deleted, user_id, role_id) VALUES ('READER', 'system', now()::TIMESTAMP, NULL, NULL, 'f','role reader' );

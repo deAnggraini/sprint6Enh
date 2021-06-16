@@ -1,0 +1,4 @@
+INSERT INTO r_role(role_id, created_by,created_date, modify_by, modify_date, deleted, description) VALUES ('READER', 'system', now()::TIMESTAMP, NULL, NULL, 'f','role reader' );
+INSERT INTO r_role(role_id, created_by,created_date, modify_by, modify_date, deleted, description) VALUES ('EDITOR', 'system', now()::TIMESTAMP, NULL, NULL, 'f','role editor' );
+INSERT INTO r_role(role_id, created_by,created_date, modify_by, modify_date, deleted, description) VALUES ('PUBLISHER', 'system', now()::TIMESTAMP, NULL, NULL, 'f','role publisher' );
+INSERT INTO r_role(role_id, created_by,created_date, modify_by, modify_date, deleted, description) VALUES ('SUPERADMIN', 'system', now()::TIMESTAMP, NULL, NULL, 'f','role super admin' );

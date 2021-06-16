@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-services
+  labels:
+    app: auth-services
+spec:
+  selector:
+    app: auth-services
+  ports:
+  - name: port-auth-services
+    protocol: TCP
+    port: 9094
+    targetPort: 9094
+    nodePort: 31200
+  type: NodePort
+  externalTrafficPolicy: Cluster
