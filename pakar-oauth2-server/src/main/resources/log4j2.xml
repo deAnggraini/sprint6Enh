@@ -10,7 +10,7 @@
 			<PatternLayout pattern="${LOG_PATTERN}" />
 		</Console>
 		<RollingFile name="appLog"
-			fileName="${APP_LOG_ROOT}/oauth2.log"
+			fileName="oauth2.log"
 			filePattern="${APP_LOG_ROOT}/oauth2-%d{yyyy-MM-dd}-%i.log">
 			<PatternLayout pattern="${LOG_PATTERN}" />
 			<Policies>
@@ -21,6 +21,14 @@
 	</Appenders>
 	<Loggers>
 		<Logger name="id.co.bca.pakar.be.oauth2" additivity="false">
+			<AppenderRef ref="appLog" />
+			<AppenderRef ref="Console" />
+		</Logger>
+		<Logger name="org.springframework.security.oauth2.config" additivity="false">
+			<AppenderRef ref="appLog" />
+			<AppenderRef ref="Console" />
+		</Logger>
+		<Logger name="org.springframework.security.oauth2.provider" additivity="false">
 			<AppenderRef ref="appLog" />
 			<AppenderRef ref="Console" />
 		</Logger>
