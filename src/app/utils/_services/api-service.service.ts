@@ -12,14 +12,6 @@ import { AuthModel } from 'src/app/modules/auth/_models/auth.model';
 export class ApiService {
 
   private authLocalStorageToken = `${environment.appVersion}-${environment.USERDATA_KEY}`;
-  // private httpOptions = {
-  //   headers: new HttpHeaders(
-  //     {
-  //       'Content-Type': 'application/json',
-  //       'Authorization': `Bearer empty`
-  //     }
-  //   )
-  // };
 
   constructor(private http: HttpClient) { }
 
@@ -28,13 +20,13 @@ export class ApiService {
     const str = localStorage.getItem(this.authLocalStorageToken);
     if (str) {
       const auth: AuthModel = JSON.parse(str);
-      token = auth.authToken;
+      token = `Bearer ${auth.authToken}`;
     }
     return {
       headers: new HttpHeaders(
         {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          'Authorization': token
         }
       )
     }

@@ -141,7 +141,7 @@ export const DefaultLayoutConfig = {
       fixed: true,
       minimize: {
         toggle: true, // allow toggle
-        default: false, // default state
+        default: true, // default state
         hoverable: false, // allow hover
       },
     },
