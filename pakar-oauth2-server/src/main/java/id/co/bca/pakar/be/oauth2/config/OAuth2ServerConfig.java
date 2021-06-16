@@ -85,24 +85,15 @@ public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
 
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-		logger.info("configure ClientDetailsServiceConfigurer");
-		//		clients.inMemory().withClient(clientId).secret(passwordEncoder.encode(clientSecret))
-		//				.authorizedGrantTypes(authorizedGrantTypes)
-		//				.accessTokenValiditySeconds(Integer.parseInt(accessTokenValiditySeconds))
-		//				.refreshTokenValiditySeconds(Integer.parseInt(refreshTokenValiditySeconds)).scopes("read", "write");
-
-		clients.jdbc(dataSource).passwordEncoder(passwordEncoder);
-
-		//		clients.jdbc(dataSource).withClient(clientId).secret(passwordEncoder.encode(clientSecret))
-		//		.authorizedGrantTypes(authorizedGrantTypes)
-		//		.accessTokenValiditySeconds(Integer.parseInt(accessTokenValiditySeconds))
-		//		.refreshTokenValiditySeconds(Integer.parseInt(refreshTokenValiditySeconds)).scopes("read", "write").autoApprove(true);
+		logger.info("configure ClientDetailsServiceConfigurer");		
+		clients.jdbc(dataSource)
+			.passwordEncoder(passwordEncoder);
 	}
 
 	@Bean
 	public TokenStore tokenStore() {
 		//		return new JwtTokenStore(accessTokenConverter());
-		logger.info("------create bean TokenStore ------ ");
+		logger.info("------ create bean TokenStore ------ ");
 		/**
 		 * set token to database
 		 */
@@ -114,7 +105,7 @@ public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
 
 	@Bean
 	public JwtAccessTokenConverter accessTokenConverter() {
-		logger.info("------create bean JwtAccessConverter ------ ");
+		logger.info("------ create bean JwtAccessConverter ------ ");
 		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
 		converter.setSigningKey(signingKey);
 		return converter;

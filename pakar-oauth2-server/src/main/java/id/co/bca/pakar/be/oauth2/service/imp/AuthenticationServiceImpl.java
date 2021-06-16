@@ -1,8 +1,6 @@
 package id.co.bca.pakar.be.oauth2.service.imp;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.codec.binary.Base64;
@@ -15,18 +13,18 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import id.co.bca.pakar.be.oauth2.dao.RoleRepository;
+import id.co.bca.pakar.be.oauth2.dao.UserProfileRepository;
 import id.co.bca.pakar.be.oauth2.dto.CredentialDto;
 import id.co.bca.pakar.be.oauth2.dto.LoggedinDto;
 import id.co.bca.pakar.be.oauth2.dto.OAuthCredential;
 import id.co.bca.pakar.be.oauth2.dto.OAuthTokenDto;
+import id.co.bca.pakar.be.oauth2.model.UserProfile;
+import id.co.bca.pakar.be.oauth2.model.UserRole;
 import id.co.bca.pakar.be.oauth2.service.AuthenticationService;
 
 @Service
@@ -40,8 +38,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	private String clientId;
 	@Value("${spring.security.oauth2.clientSecret}")
 	private String clientSecret;
+	@Value("${spring.security.oauth2.authorize-grant-type}")
+	private String[] grantTypes;
 	@Value("${spring.security.oauth2.server.url}")
 	private String uri;
+	
+	@Autowired
+	private UserProfileRepository userProfileRepository;
+	
+	@Autowired
+	private RoleRepository roleRepository;
 	
 	@Override
 	public LoggedinDto authenticate(CredentialDto dto) {
@@ -66,7 +72,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		access_token_url += "&password=" + cred.getPassword();
 		access_token_url += "&grant_type=" + cred.getGrant_type();
 
-		logger.info("authenticate oauth to ------ "+uri);
+		logger.debug("authenticate user to --- "+access_token_url);
 		ResponseEntity<OAuthTokenDto> response = null;
 		LoggedinDto loggedinDto = new LoggedinDto();
 		try {
@@ -75,8 +81,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			logger.info("http status response  --------- " + ((ResponseEntity<OAuthTokenDto>) response).getStatusCode());
 			logger.info("generated oauth2 token --------- " + response.getBody());
 
-//			OAuthTokenDto oAuthToken = (OAuthTokenDto) JSONMapperAdapter.jsonToObject(response.getBody(),  OAuthTokenDto.class);
-
 			loggedinDto.setUsername(cred.getUsername());
 			loggedinDto.setAccess_token(response.getBody().getAccess_token());
 			loggedinDto.setRefresh_token(response.getBody().getRefresh_token());
@@ -84,14 +88,29 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			loggedinDto.setScope(response.getBody().getScope());
 			loggedinDto.setToken_type(response.getBody().getToken_type());
 			
-			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-			Collection<GrantedAuthority> authorities = (Collection<GrantedAuthority>) authentication.getAuthorities();
+//			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//			Collection<GrantedAuthority> authorities = (Collection<GrantedAuthority>) authentication.getAuthorities();
+//			
+//			List<GrantedAuthority> listAuthorities = new ArrayList<GrantedAuthority>();
+//			listAuthorities.addAll(authorities);
+//			for(GrantedAuthority ga : listAuthorities) {
+//				loggedinDto.getRoleDtos().add(ga.getAuthority());
+//			}	
+			// get user role
+			List<UserRole> uRoles = roleRepository.findUserRolesByUsername(cred.getUsername());
+			for(UserRole ur : uRoles) {
+				loggedinDto.getRoleDtos().add(ur.getRole().getId());
+			}
 			
-			List<GrantedAuthority> listAuthorities = new ArrayList<GrantedAuthority>();
-			listAuthorities.addAll(authorities);
-			for(GrantedAuthority ga : listAuthorities) {
-				loggedinDto.getRoleDtos().add(ga.getAuthority());
-			}			
+			// get user profile
+			UserProfile profile = userProfileRepository.findByUsername(cred.getUsername());
+			loggedinDto.setFirstname(profile.getFirstname());
+			loggedinDto.setLastname(profile.getLastname());
+			loggedinDto.setFullname(profile.getFullname());
+			loggedinDto.setEmail(profile.getEmail());
+			loggedinDto.setPhone(profile.getPhone());
+			loggedinDto.setCompanyName(profile.getCompanyName());
+			loggedinDto.setOccupation(profile.getOccupation());
 		} catch (RestClientException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

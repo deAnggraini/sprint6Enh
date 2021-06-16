@@ -33,6 +33,8 @@ public class UserProfile extends EntityBase {
 	private String occupation;
 	@Column(name = "company_name")
 	private String companyName;
+	@Column(name = "pic")
+	private String pic;
 	public Long getId() {
 		return id;
 	}

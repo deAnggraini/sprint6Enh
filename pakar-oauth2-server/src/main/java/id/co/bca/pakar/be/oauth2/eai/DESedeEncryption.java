@@ -118,7 +118,7 @@ public class DESedeEncryption {
 	public static void main(String args[]) throws Exception {
 		DESedeEncryption myEncryptor = new DESedeEncryption("123456789012345678901234");
 
-		String stringToEncrypt = "123!";
+		String stringToEncrypt = "12345";
 		
 		String encrypted = myEncryptor.encrypt(stringToEncrypt);
 		String encryptedHex = myEncryptor.encryptToHex(stringToEncrypt);
