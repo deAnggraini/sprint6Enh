@@ -1,6 +1,10 @@
 server:
   port: ${port:8081}
 spring:
+  rest:
+    timeout:
+      read: 60000
+      connection: 60000
   eai:
     ad:
       loginUri: http://192.168.100.48:9093/ad-gateways/verify1
@@ -13,10 +17,6 @@ spring:
     oauth2:
       server: 
         url: http://127.0.0.1:12081/oauth/token
-      rest:
-        timeout:
-          read: 60000
-          connection: 60000
       clientId: javainuse-client
       clientSecret: javainuse-secret
       authorize-grant-type: password,refresh_token
