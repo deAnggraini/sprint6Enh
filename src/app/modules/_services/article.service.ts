@@ -8,7 +8,7 @@ import { of } from 'rxjs';
 })
 export class ArticleService {
 
-  private _base_url = `${environment.apiUrl}/article`;
+  private _base_url = `${environment.apiUrl}/doc`;
   private empty_search: any[] = [
     { state: 0, text: 'Ketentuan Time Loan' },
     { state: 0, text: 'Prosedur Giro' },
