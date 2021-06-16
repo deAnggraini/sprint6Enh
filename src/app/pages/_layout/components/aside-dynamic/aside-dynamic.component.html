@@ -1,6 +1,7 @@
 <div class="brand flex-column-auto" id="kt_brand" [ngClass]="brandClasses"
   style="background: {{headerBackground}}; border-right: 1px solid #dddddd;">
-  <a routerLink="/" class="brand-logo">
+  <!-- routerLink="/"  -->
+  <a class="brand-logo cursor-pointer" (click)="showMenu()">
     <img alt="Logo" [attr.src]="headerLogo" />
   </a>
 
@@ -45,7 +46,6 @@
   </ng-container>
 </div>
 <!--end::Aside Menu-->
-
 
 <!-- begin::1 Level -->
 <ng-template #menu1LevelTemplate let-item="item">

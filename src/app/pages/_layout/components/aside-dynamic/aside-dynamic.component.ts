@@ -36,6 +36,7 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
     private theme: ThemeService) { }
 
   ngOnInit(): void {
+    console.log('layout', this.layout.getConfig());
     // load view settings
     this.disableAsideSelfDisplay = this.layout.getProp('aside.self.display') === false;
     this.brandSkin = this.layout.getProp('brand.self.theme');
@@ -69,6 +70,14 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
     this.subscriptions.push(menuSubscr);
 
     this.setTheme();
+  }
+
+  showMenu() {
+    console.log('show menu called');
+    const config = this.layout.getConfig();
+    config.aside.self.minimize.default = !config.aside.self.minimize.default;
+    this.layout.setConfig(config);
+    this.cdr.detectChanges();
   }
 
   private setTheme() {

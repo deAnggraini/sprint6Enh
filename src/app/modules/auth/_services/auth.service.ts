@@ -15,7 +15,7 @@ export class AuthService implements OnDestroy {
   // private fields
   private unsubscribe: Subscription[] = []; // Read more: => https://brianflove.com/2016/12/11/anguar-2-unsubscribe-observables/
   private authLocalStorageToken = `${environment.appVersion}-${environment.USERDATA_KEY}`;
-  private oauth_url = `${environment.apiUrl}/oauth`;
+  private oauth_url = `${environment.apiUrl}/auth`;
 
   // public fields
   currentUser$: Observable<UserModel>;
@@ -76,7 +76,7 @@ export class AuthService implements OnDestroy {
     this.isLoadingSubject.next(true);
     const { authToken, username } = auth;
     const params = { authToken, username };
-    return this.apiService.post(`${this.oauth_url}/getUserByToken`, params).pipe(
+    return this.apiService.post(`${this.oauth_url}/getUser`, params).pipe(
       map((user: UserModel) => {
         if (user) {
           this.currentUserSubject = new BehaviorSubject<UserModel>(user);
@@ -87,25 +87,6 @@ export class AuthService implements OnDestroy {
       }),
       finalize(() => this.isLoadingSubject.next(false))
     );
-    // return this.http.post(`${this.oauth_url}/getUserByToken`, params, httpOptions)
-    //   .pipe(
-    //     concatMap((res: CommonHttpResponse) => {
-    //       if (res.error === true) throw Error(res.msg);
-    //       const { data } = res;
-    //       return of(data);
-    //     }),
-    //   );
-    // return this.authHttpService.getUserByToken(auth.authToken).pipe(
-    //   map((user: UserModel) => {
-    //     if (user) {
-    //       this.currentUserSubject = new BehaviorSubject<UserModel>(user);
-    //     } else {
-    //       this.logout();
-    //     }
-    //     return user;
-    //   }),
-    //   finalize(() => this.isLoadingSubject.next(false))
-    // );
   }
 
   // need create new user then login
