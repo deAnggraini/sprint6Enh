@@ -6,7 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "r_role", schema = "pakar")
+@Table(name = "r_role")
 public class Role extends EntityBase {
 	@Id
 	@Column(name = "role_id", nullable = false, unique = true)

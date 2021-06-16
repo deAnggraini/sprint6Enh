@@ -10,10 +10,10 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "r_menu", schema ="pakar")
+@Table(name = "r_menu")
 public class Menu extends EntityBase {
 	@Id
-	@SequenceGenerator(name = "menuSeqGen", sequenceName = "pakar.menuSeq", initialValue = 1, allocationSize = 1, schema="pakar")
+	@SequenceGenerator(name = "menuSeqGen", sequenceName = "menuSeq", initialValue = 1, allocationSize = 1)
 	@GeneratedValue(generator = "menuSeqGen")
 	private Long id;
 	@Column(name = "menu_name")

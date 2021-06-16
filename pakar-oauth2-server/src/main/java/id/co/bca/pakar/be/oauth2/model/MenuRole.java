@@ -1,6 +1,5 @@
 package id.co.bca.pakar.be.oauth2.model;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -10,45 +9,33 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "r_user_role")
-public class UserRole extends EntityBase {
+@Table(name = "r_menu_role")
+public class MenuRole extends EntityBase {
 	@Id
-	@SequenceGenerator(name = "userRoleSeqGen", sequenceName = "userRoleSeq", initialValue = 1, allocationSize = 1)
-	@GeneratedValue(generator = "userRoleSeqGen")
+	@SequenceGenerator(name = "userMenuRoleSeqGen", sequenceName = "userMenuRoleSeq", initialValue = 1, allocationSize = 1)
+	@GeneratedValue(generator = "userMenuRoleSeqGen")
 	private Long id;
 	@ManyToOne
-	@JoinColumn(name = "username", nullable = false)
-	private User user;
+	@JoinColumn(name = "menu_id", nullable = false)
+	private Menu menu;
 	@ManyToOne
 	@JoinColumn(name = "role_id", nullable = false)
 	private Role role;
-
 	public Long getId() {
 		return id;
 	}
-
 	public void setId(Long id) {
 		this.id = id;
 	}
-
-	public User getUser() {
-		return user;
+	public Menu getMenu() {
+		return menu;
 	}
-
-	public void setUser(User user) {
-		this.user = user;
+	public void setMenu(Menu menu) {
+		this.menu = menu;
 	}
-
-	/**
-	 * @return the role
-	 */
 	public Role getRole() {
 		return role;
 	}
-
-	/**
-	 * @param role the role to set
-	 */
 	public void setRole(Role role) {
 		this.role = role;
 	}
