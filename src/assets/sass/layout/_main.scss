@@ -30,7 +30,8 @@ body {
 
     // Minimize Aside
     .aside-fixed.aside-minimize:not(.aside-minimize-hover) & {
-      padding-left: get($aside-config, base, minimized-width);
+      // padding-left: get($aside-config, base, minimized-width);
+      padding-left: 0;
     }
   }
 
