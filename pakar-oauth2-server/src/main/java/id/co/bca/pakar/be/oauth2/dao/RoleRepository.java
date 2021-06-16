@@ -12,6 +12,6 @@ import id.co.bca.pakar.be.oauth2.model.UserRole;
 
 @Repository
 public interface RoleRepository extends CrudRepository<Role, String>{
-	@Query("SELECT m FROM UserRole m WHERE m.username=:username")
+	@Query("SELECT m FROM UserRole m WHERE m.user.username=:username")
 	List<UserRole> findUserRolesByUsername(@Param("username") String username);
 }
