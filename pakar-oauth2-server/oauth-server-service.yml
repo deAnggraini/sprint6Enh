@@ -10,8 +10,8 @@ spec:
   ports:
   - name: port-oauth-server
     protocol: TCP
-    port: 8083
-    targetPort: 8083
-    nodePort: 31200
+    port: 8081
+    targetPort: 8081
+    nodePort: 12081
   type: NodePort
   externalTrafficPolicy: Cluster
