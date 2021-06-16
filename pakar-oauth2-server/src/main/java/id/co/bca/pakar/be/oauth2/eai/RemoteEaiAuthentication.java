@@ -27,17 +27,13 @@ public class RemoteEaiAuthentication {
 	private String clientId;
 	@Value("${spring.eai.ad.applicationID}")
 	private String applicationId;
-	@Value("${spring.eai.ad.userId}")
-	private String userId;
-	@Value("${spring.eai.ad.password}")
-	private String password;
 	@Value("${spring.eai.ad.key}")
-	private String key;
+	private String encryptionKey;
 
 	@Autowired
 	private RestTemplate restTemplate;
 
-	public EaiLoginResponse authenticate() {
+	public EaiLoginResponse authenticate(String username, String password) {
 		logger.info("authenticate to EAI system");
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
@@ -47,8 +43,16 @@ public class RemoteEaiAuthentication {
 		String access_token_url = loginUri;
 
 		EaiCredential eaiCred = new EaiCredential();
-		eaiCred.setUserId(userId);
-		eaiCred.setPassword(password);
+		eaiCred.setUserId(username);
+		String encryptedPassword = "";
+		try {
+			logger.info("encrypt password using 3DES ECB Mode");
+			encryptedPassword = new DESedeEncryption(encryptionKey).encryptToHex(password);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		eaiCred.setPassword(encryptedPassword);
 		eaiCred.setApplicationId(applicationId);
 		HttpEntity<EaiCredential> entity = new HttpEntity<EaiCredential>(eaiCred, headers);
 
