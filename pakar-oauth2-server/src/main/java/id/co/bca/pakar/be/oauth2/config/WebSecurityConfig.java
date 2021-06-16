@@ -20,9 +20,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private CustomAuthenticationProvider authenticationProvider;
 	
-//	private DataSource dataSource;
-
-
 //	@Override
 //	protected void configure(HttpSecurity httpSecurity) {
 //		try {
@@ -37,10 +34,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //		}
 //	}
 
-//	public WebSecurityConfig(DataSource dataSource) {
-//        this.dataSource = dataSource;
-//    }
-	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.anonymous().disable().csrf().disable().cors();
