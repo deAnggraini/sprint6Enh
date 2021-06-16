@@ -1,7 +1,16 @@
 const express = require('express');
 const router = express.Router();
-
+const categoryArticle = require('../database/category-article');
 const { search, articles, recommendation, news, popular } = require('../database/articles');
+const theme = require('../database/themes');
+
+router.get('/theme', function (req, res) {
+    res.send({ error: false, msg: '', data: theme });
+});
+
+router.get('/category-article', (req, res) => {
+    res.send({ error: false, msg: "", data: categoryArticle });
+});
 
 router.get('/all', (req, res) => {
     res.send({ error: false, msg: "", data: articles });
