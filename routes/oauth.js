@@ -41,7 +41,7 @@ router.post('/login', (req, res) => {
     }
 });
 
-router.post('/getUserByToken', (req, res) => {
+router.post('/getUser', (req, res) => {
     const { authToken, username } = req.body;
     const found = users.find(d => {
         if (d.username == username && d.authToken == authToken)
