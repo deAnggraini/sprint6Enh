@@ -23,4 +23,8 @@ export class ArticleService {
     return this.apiService.post(`${this._base_url}/recommendation`, {});
   }
 
+  popular() {
+    return this.apiService.post(`${this._base_url}/popular`, {});
+  }
+
 }

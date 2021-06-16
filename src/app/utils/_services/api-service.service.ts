@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { concatMap, catchError, switchMap } from 'rxjs/operators';
+import { catchError, switchMap } from 'rxjs/operators';
 import { CommonHttpResponse } from '../http-response';
 import { environment } from 'src/environments/environment';
+import { AuthModel } from 'src/app/modules/auth/_models/auth.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,16 +12,33 @@ import { environment } from 'src/environments/environment';
 export class ApiService {
 
   private authLocalStorageToken = `${environment.appVersion}-${environment.USERDATA_KEY}`;
-  private httpOptions = {
-    headers: new HttpHeaders(
-      {
-        'Content-Type': 'application/json',
-        'X-TOKEN': 'blablablabla'
-      }
-    )
-  };
+  // private httpOptions = {
+  //   headers: new HttpHeaders(
+  //     {
+  //       'Content-Type': 'application/json',
+  //       'Authorization': `Bearer empty`
+  //     }
+  //   )
+  // };
 
   constructor(private http: HttpClient) { }
+
+  private getHeaders() {
+    let token = 'empty';
+    const str = localStorage.getItem(this.authLocalStorageToken);
+    if (str) {
+      const auth: AuthModel = JSON.parse(str);
+      token = auth.authToken;
+    }
+    return {
+      headers: new HttpHeaders(
+        {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      )
+    }
+  }
 
   post(url: string, body: any | null, options?: {
     headers?: HttpHeaders | {
@@ -34,7 +52,7 @@ export class ApiService {
     responseType?: 'json';
     withCredentials?: boolean;
   }): Observable<any> {
-    return this.http.post(url, body, this.httpOptions).pipe(
+    return this.http.post(url, body, this.getHeaders()).pipe(
       switchMap((res: CommonHttpResponse) => {
         if (res.error === true) throw Error(res.msg);
         const { data } = res;
@@ -59,7 +77,7 @@ export class ApiService {
     responseType?: 'json';
     withCredentials?: boolean;
   }): Observable<any> {
-    return this.http.get(url, this.httpOptions).pipe(
+    return this.http.get(url, this.getHeaders()).pipe(
       switchMap((res: CommonHttpResponse) => {
         if (res.error === true) throw Error(res.msg);
         const { data } = res;
