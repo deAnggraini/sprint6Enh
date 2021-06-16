@@ -49,6 +49,14 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-log4j2</artifactId>
 		</dependency>
+		<!-- need by log4j2 -->
+		<!--
+			jackson data format needed by log4j2
+		 -->
+		<dependency>
+	        <groupId>com.fasterxml.jackson.dataformat</groupId>
+	        <artifactId>jackson-dataformat-yaml</artifactId>
+	    </dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
@@ -117,5 +125,14 @@
 
 		</plugins>
 	</build>
+
+	<profiles>
+	    <profile>
+	        <id>local</id>
+	        <build>
+	            <directory>${dir}</directory>
+	        </build>
+	    </profile>
+	</profiles>
 
 </project>
