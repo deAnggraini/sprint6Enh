@@ -357,6 +357,9 @@ module.exports.search = [
             { id: 1, title: 'Tahapan' },
             { id: 2, title: 'Tahapan Gold' },
             { id: 3, title: 'TAHAKA' },
+            { id: 4, title: 'Xpresi' },
+            { id: 5, title: 'Time Loan SME' },
+            { id: 5, title: 'GIRO' },
         ]
     },
     {
