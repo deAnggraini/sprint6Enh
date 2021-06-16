@@ -1,11 +1,14 @@
 INSERT INTO public.oauth_client_details
 (client_id, resource_ids, client_secret, "scope", authorized_grant_types, web_server_redirect_uri, authorities, access_token_validity, refresh_token_validity, additional_information, autoapprove)
-VALUES('8C21EBEEB1AA3FBFE05400144FFBD319', '', '$2a$10$g/mjcT64cjnvcwud.LRD8e2iHenTiSyKoUJlqiW99X41zUbzDmduu', 'read,write', 'password,refresh_token', '', '', 43200, 2592000, '{}', 'read,write');
+VALUES('8C21EBEEB1AA3FBFE05400144FFBD319', '', '$2a$10$g/mjcT64cjnvcwud.LRD8e2iHenTiSyKoUJlqiW99X41zUbzDmduu', 'read,write', 'password,refresh_token', '', '', 43200, 2592000, '{}', 'true');
 
 ---- user ---
 INSERT INTO public.r_user
 (created_by, created_date, deleted, username, password, enabled)
 VALUES('system',now()::DATE, 'f','editor', 'password', 't');
+INSERT INTO public.r_user
+(created_by, created_date, deleted, username, password, enabled)
+VALUES('system',now()::DATE, 'f','reader', 'password', 't');
 
 ---- user profile ---
 INSERT INTO public.r_user_profile
@@ -15,7 +18,16 @@ VALUES(1, 'system',now()::DATE, 'f','editor', 'Editor', 'Baru', 'Editor Baru', '
 ---- role ---
 INSERT INTO public.r_role
 (created_by, created_date, deleted, role_id, description)
+VALUES('system',now()::DATE, 'f','READER', '');
+INSERT INTO public.r_role
+(created_by, created_date, deleted, role_id, description)
 VALUES('system',now()::DATE, 'f','EDITOR', '');
+INSERT INTO public.r_role
+(created_by, created_date, deleted, role_id, description)
+VALUES('system',now()::DATE, 'f','PUBLISHER', '');
+INSERT INTO public.r_role
+(created_by, created_date, deleted, role_id, description)
+VALUES('system',now()::DATE, 'f','SUPERADMIN', '');
 
 ---- user role ---
 INSERT INTO public.r_user_role
