@@ -13,18 +13,33 @@ public class ArticleController {
 		return "test resource server";
 	}
 
-//	@GetMapping("/")
-//	public String index(@AuthenticationPrincipal Jwt jwt) {
-//		return String.format("Hello, %s!", jwt.getSubject());
-//	}
-
-	@GetMapping("/message")
-	public String message() {
+	@GetMapping("/api/doc/theme")
+	public String theme() {
 		return "secret message";
 	}
 
-	@PostMapping("/message")
-	public String createMessage(@RequestBody String message) {
+	@GetMapping("/api/doc/categori-article")
+	public String categoriArticle(@RequestBody String message) {
+		return String.format("Message was created. Content: %s", message);
+	}
+	
+	@PostMapping("/api/doc/recomendation")
+	public String recomendation(@RequestBody String message) {
+		return String.format("Message was created. Content: %s", message);
+	}
+	
+	@PostMapping("/api/doc/news")
+	public String news(@RequestBody String message) {
+		return String.format("Message was created. Content: %s", message);
+	}
+	
+	@PostMapping("/api/doc/popular")
+	public String popular(@RequestBody String message) {
+		return String.format("Message was created. Content: %s", message);
+	}
+	
+	@PostMapping("/api/doc/search")
+	public String search(@RequestBody String message) {
 		return String.format("Message was created. Content: %s", message);
 	}
 }
