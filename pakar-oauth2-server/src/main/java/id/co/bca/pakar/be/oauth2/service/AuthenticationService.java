@@ -1,8 +1,8 @@
 package id.co.bca.pakar.be.oauth2.service;
 
 import id.co.bca.pakar.be.oauth2.dto.CredentialDto;
-import id.co.bca.pakar.be.oauth2.dto.OAuthTokenDto;
+import id.co.bca.pakar.be.oauth2.dto.LoggedinDto;
 
 public interface AuthenticationService {
-	OAuthTokenDto authenticate(CredentialDto dto);
+	LoggedinDto authenticate(CredentialDto dto);
 }
