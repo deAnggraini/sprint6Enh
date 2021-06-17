@@ -1,5 +1,7 @@
 package id.co.bca.pakar.be.doc.api;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -56,4 +58,12 @@ public abstract class BaseController {
 			return new ResponseEntity<>(new RestResponse<>(data, errorCode, errorMessage), HttpStatus.OK);
 		}
 	}
+	
+	protected <T> ResponseEntity<RestResponse<List<T>>> createResponse(List<T> dataList, String errorCode, String errorMessage) {
+        if(errorCode.equals("00")) {
+			return new ResponseEntity<>(new RestResponse<>(dataList, errorCode, errorMessage), HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(new RestResponse<>(dataList, errorCode, errorMessage), HttpStatus.OK);
+		}
+    }
 }
