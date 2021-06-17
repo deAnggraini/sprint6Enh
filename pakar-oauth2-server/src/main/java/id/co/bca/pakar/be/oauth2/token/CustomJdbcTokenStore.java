@@ -71,6 +71,8 @@ public class CustomJdbcTokenStore extends JdbcTokenStore {
 	private static final String DEFAULT_ACCESS_TOKENS_FROM_USERNAME_AND_CLIENT_SELECT_STATEMENT = "select token_id, token from oauth_access_token where user_name = ? and client_id = ?";
 
 	private static final String DEFAULT_ACCESS_TOKENS_FROM_USERNAME_SELECT_STATEMENT = "select token_id, token from oauth_access_token where user_name = ?";
+	
+	private static final String DEFAULT_ACCESS_TOKENS_FROM_TOKEN_AND_USERNAME_SELECT_STATEMENT = "select token_id, token, username from oauth_access_token where token_id = ? AND user_name = ?";
 
 	private static final String DEFAULT_ACCESS_TOKENS_FROM_CLIENTID_SELECT_STATEMENT = "select token_id, token from oauth_access_token where client_id = ?";
 
@@ -97,6 +99,8 @@ public class CustomJdbcTokenStore extends JdbcTokenStore {
 	private String selectAccessTokensFromUserNameAndClientIdSql = DEFAULT_ACCESS_TOKENS_FROM_USERNAME_AND_CLIENT_SELECT_STATEMENT;
 
 	private String selectAccessTokensFromUserNameSql = DEFAULT_ACCESS_TOKENS_FROM_USERNAME_SELECT_STATEMENT;
+	
+	private String selectAccessTokensFromTokenAndUserNameSql = DEFAULT_ACCESS_TOKENS_FROM_TOKEN_AND_USERNAME_SELECT_STATEMENT;
 
 	private String selectAccessTokensFromClientIdSql = DEFAULT_ACCESS_TOKENS_FROM_CLIENTID_SELECT_STATEMENT;
 
@@ -184,6 +188,28 @@ public class CustomJdbcTokenStore extends JdbcTokenStore {
 					return deserializeAccessToken(rs.getBytes(2));
 				}
 			}, extractTokenKey(tokenValue));
+		}
+		catch (EmptyResultDataAccessException e) {
+			if (LOG.isInfoEnabled()) {
+				LOG.info("Failed to find access token");
+			}
+		}
+		catch (IllegalArgumentException e) {
+			LOG.warn("Failed to deserialize access token", e);
+			removeAccessToken(tokenValue);
+		}
+
+		return accessToken;
+	}
+	
+	public OAuth2AccessToken readAccessToken(String tokenValue, String username) {
+		OAuth2AccessToken accessToken = null;
+		try {			
+			accessToken = jdbcTemplate.queryForObject(selectAccessTokensFromTokenAndUserNameSql, new RowMapper<OAuth2AccessToken>() {
+				public OAuth2AccessToken mapRow(ResultSet rs, int rowNum) throws SQLException {
+					return deserializeAccessToken(rs.getBytes(2));
+				}
+			}, extractTokenKey(tokenValue), username);
 		}
 		catch (EmptyResultDataAccessException e) {
 			if (LOG.isInfoEnabled()) {
