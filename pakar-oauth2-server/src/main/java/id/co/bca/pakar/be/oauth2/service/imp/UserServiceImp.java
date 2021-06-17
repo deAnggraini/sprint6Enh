@@ -72,13 +72,20 @@ public class UserServiceImp implements UserService {
 		}
 		return null;
 	}
+	
+	/**
+	 * find token by token id and username
+	 */
 	@Override
 	public LoggedinDto findUserByToken(String token, String username) {
-		// TODO Auto-generated method stub
 		LoggedinDto loggedinDto = new LoggedinDto();
 		try {
-			OAuth2AccessToken accessToken = tokenStore.readAccessToken(token);
+//			OAuth2AccessToken accessToken = tokenStore.readAccessToken(token);
+			OAuth2AccessToken accessToken = tokenStore.readAccessToken(token, username);			
 			logger.info("access_token value from db "+accessToken);
+			if(accessToken == null) {
+				return loggedinDto;
+			}
 //			tokenStore.removeAccessToken(accessToken);
 			loggedinDto.setAccess_token(token);
 //
@@ -112,7 +119,6 @@ public class UserServiceImp implements UserService {
 			
 			return loggedinDto;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			logger.error("exception ", e);
 		}
 		return loggedinDto;
