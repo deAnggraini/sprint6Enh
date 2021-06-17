@@ -5,8 +5,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
-import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 
+@SuppressWarnings("deprecation")
 @Configuration
 @EnableResourceServer
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
@@ -22,8 +22,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
             "/webjars/**",
             "/api/auth/login",
             "/api/auth/logout",
-//            "/login/**",
-            "/api/v1//getActiveRole"
+//            "/login/**"
             // other public endpoints of your API may be appended to this array
     };
 
@@ -33,7 +32,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(AUTH_WHITELIST).permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .antMatchers("/api/v1/**").authenticated();
+                .antMatchers("/api/v1/**").authenticated()
+                .antMatchers("/api/auth/get**").authenticated();
 
     }
 
