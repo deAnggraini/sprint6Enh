@@ -5,36 +5,52 @@
     </div>
     <div class="card-body">
         <div class="col-lg-9 col-xxl-9">
-            <div class="input-group {{show ? 'show' : ''}}">
+            <div class="input-group {{show ? 'show' : ''}}" (click)="$event.stopPropagation()">
                 <input type="text" class="form-control" placeholder="Cari di PAKAR..." aria-label="Cari di PAKAR..."
-                    aria-describedby="basic-addon2" [ngbTypeahead]="search" #inputSearch>
-                <div class="input-group-append">
+                    aria-describedby="basic-addon2" [ngbTypeahead]="search" [(ngModel)]="keyword"
+                    (focus)="setKeyword(keyword)" #inputSearch>
+                <div class="form-control-clear btn btn-icon btn-clean" *ngIf="keyword" (click)="setKeyword('')">
+                    <span [inlineSVG]="'./assets/media/svg/icons/Navigation/Close.svg'" cacheSVG="true"
+                        class="hidden svg-icon mr-1 ml-1"></span>
+                </div>
+                <span class="input-group-btn">
                     <button class="btn btn-outline-secondary btn-success" type="button"
                         (click)="btnSearch(inputSearch)">
                         <i class="fa fa-search"></i>
                     </button>
-                </div>
-                <span *ngIf="searching">searching...</span>
+                </span>
             </div>
-            <div class="dropdown show my-data" *ngIf="show">
-                <div class="header-top">
-                    <div>Hasil Pencarian '<b>{{keyword}}</b>'</div>
-                    <a data-toggle="collapse" data-target=".my-data" class="btn btn-sm btn-primary"
-                        (click)="hideResult()">X</a>
+            <div class="show my-data" *ngIf="show" (click)="$event.stopPropagation()">
+                <div class="search-scroll">
+                    <ng-container *ngIf="!emptySearch; else tmpEmptySearch">
+                        <div class="header-top mx-3 mb-5">
+                            <div>Hasil Pencarian '<b>{{keyword}}</b>'</div>
+                        </div>
+                        <div class="mx-3" *ngFor="let item of data;">
+                            <span class="navi-text"><b>{{item.parent}}</b></span>
+                            <ul class="navi result navi-hover">
+                                <li class="navi-item" *ngFor="let row of item.items;">
+                                    <a reouterLink="" class="navi-link cursor-pointer">
+                                        <span class="navi-text" [innerHTML]="formatter(row.title, keyword)"></span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </ng-container>
                 </div>
-                <ul class="navi navi-hover">
-                    <li class="navi-item" *ngFor="let item of data;">
-                        <span class="navi-text"><b>{{item.parent}}</b></span>
-                        <ul class="navi navi-hover">
-                            <li class="navi-item pl-3" *ngFor="let row of item.items;">
-                                <a reouterLink="" class="navi-link">
-                                    <span class="navi-text" [innerHTML]="formatter(row.title, keyword)"></span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
             </div>
         </div>
     </div>
 </div>
+
+<ng-template #tmpEmptySearch>
+    <ul class="navi navi-hover">
+        <li class="navi-item" *ngFor="let item of data;">
+            <a class="navi-link cursor-pointer" (click)="setKeyword(item.text)">
+                <span class="svg-icon svg-icon-sm navi-icon"
+                    [inlineSVG]="'./assets/media/svg/bca/homepage/empty_search.svg'" cacheSVG="true"></span>
+                <span class="navi-text">{{item.text}}</span>
+            </a>
+        </li>
+    </ul>
+</ng-template>

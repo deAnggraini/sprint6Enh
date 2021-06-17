@@ -17,6 +17,7 @@ import { SplashScreenModule } from './_metronic/partials/layout/splash-screen/sp
 // #fake-start#
 import { FakeAPIService } from './_fake/fake-api.service';
 import { ThemeService } from './modules/_services/theme.service';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 // #fake-end#
 
 function appInitializer(authService: AuthService) {
@@ -49,6 +50,8 @@ function appInitializer(authService: AuthService) {
     AppRoutingModule,
     InlineSVGModule.forRoot(),
     NgbModule,
+    FormsModule,
+    ReactiveFormsModule,
   ],
   providers: [
     {

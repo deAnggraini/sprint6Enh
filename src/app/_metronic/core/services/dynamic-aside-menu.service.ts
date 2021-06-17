@@ -29,7 +29,7 @@ const emptyMenuConfig = {
 })
 export class DynamicAsideMenuService {
 
-  private _base_url = `${environment.apiUrl}/master`;
+  private _base_url = `${environment.apiUrl}/doc`;
   private menuConfigSubject = new BehaviorSubject<any>(emptyMenuConfig);
   private categoriesObject = new BehaviorSubject<any[]>([]);
   private categories$: Observable<any[]>;

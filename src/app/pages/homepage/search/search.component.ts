@@ -1,6 +1,6 @@
-import { Component, OnInit, NgZone, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, HostListener } from '@angular/core';
 import { ArticleService } from 'src/app/modules/_services/article.service';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, tap, switchMap } from 'rxjs/operators';
 
 @Component({
@@ -10,16 +10,21 @@ import { debounceTime, distinctUntilChanged, map, tap, switchMap } from 'rxjs/op
 })
 export class SearchComponent implements OnInit {
 
-  public model: any;
-  public show: boolean = false;
+  show: boolean = false;
   searching: boolean = false;
   keyword: string = '';
   data: any[] = [];
+  emptySearch: boolean = false;
 
   formatter = (title: string, keyword) => {
     const regEx = new RegExp(keyword, "ig");
     const replace = `<span style="color: red;" class="fount-text">${keyword}</span>`;
     return title.replace(regEx, replace);
+  }
+
+  @HostListener('document:click', ['$event'])
+  clickout() {
+    this.show = false;
   }
 
   constructor(private apiArticle: ArticleService,
@@ -29,20 +34,30 @@ export class SearchComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  btnSearch(input: HTMLInputElement) {
-    this.keyword = input.value;
-    this.apiArticle.search(this.keyword).subscribe(
-      (res) => {
-        this.data = res;
-        this.show = true;
-        console.log({ show: this.show, data: this.data });
-        setTimeout(_ => { this.changeDetectorRef.detectChanges() }, 0);
-      }
+  setKeyword(value: string) {
+    this.populateData(value || '');
+  }
+
+  private populateData(keyword: string) {
+    this.keyword = keyword;
+    this.apiArticle.search(keyword).subscribe(
+      res => this.setData(res)
     )
+  }
+
+  btnSearch(input: HTMLInputElement) {
+    this.populateData(input.value);
   }
 
   hideResult() {
     this.show = false;
+  }
+
+  private setData(data: any[]) {
+    this.emptySearch = data.length && data[0].hasOwnProperty('state');
+    this.data = data;
+    this.show = true;
+    setTimeout(_ => { this.changeDetectorRef.detectChanges() }, 0);
   }
 
   search = (text$: Observable<string>) =>
@@ -55,12 +70,7 @@ export class SearchComponent implements OnInit {
       }),
       switchMap(term =>
         this.apiArticle.search(term).pipe(
-          map(res => {
-            this.data = res;
-            this.show = true;
-            setTimeout(_ => { this.changeDetectorRef.detectChanges() }, 0);
-            // return sesuatu kalo ingin dropdown bawaan
-          })
+          map(res => this.setData(res))
         )
       ),
       tap(() => this.searching = false)

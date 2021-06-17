@@ -10,7 +10,7 @@ import { tap } from 'rxjs/operators';
 })
 export class ThemeService {
 
-  private _base_url = `${environment.apiUrl}/theme`;
+  private _base_url = `${environment.apiUrl}/doc`;
   private theme: any = DefaultThemeConfig;
   private currentTheme: Subject<ThemeConfig> = new Subject();
 
@@ -26,7 +26,7 @@ export class ThemeService {
   }
 
   private populate() {
-    this.apiService.get(this._base_url).subscribe(resp => {
+    this.apiService.get(`${this._base_url}/theme`).subscribe(resp => {
       this.theme = resp;
     })
   }

@@ -28,6 +28,7 @@ import { KategoriMenuComponent } from './homepage/kategori-menu/kategori-menu.co
 import { TerbaruComponent } from './homepage/terbaru/terbaru.component';
 import { RecommendationComponent } from './homepage/recommendation/recommendation.component';
 import { PopularComponent } from './homepage/popular/popular.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 @NgModule({
   declarations: [
     LayoutComponent,
@@ -45,10 +46,13 @@ import { PopularComponent } from './homepage/popular/popular.component';
     SearchComponent,
     KategoriMenuComponent,
     TerbaruComponent,
-    RecommendationComponent,    PopularComponent,  ],
+    RecommendationComponent,
+    PopularComponent,],
   imports: [
     CommonModule,
     NgbModule,
+    FormsModule,
+    ReactiveFormsModule,
     PagesRoutingModule,
     TranslationModule,
     InlineSVGModule,
