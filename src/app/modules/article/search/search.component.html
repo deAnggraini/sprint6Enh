@@ -27,8 +27,10 @@
             </div>
         </div>
 
-        <ul ngbNav #nav="ngbNav" [(activeId)]="active" [destroyOnHide]="false" class="nav-tabs">
-            <li [ngbNavItem]="1" [destroyOnHide]="true">
+        <!-- [(activeId)]="active" [destroyOnHide]="false" -->
+        <ul ngbNav #nav="ngbNav"  class="nav-tabs">
+            <!-- [destroyOnHide]="true" -->
+            <li [ngbNavItem]="1" >
                 <a ngbNavLink>
                     <i class="fa fa-search mr-2"></i> PAKAR ({{pakar.total}})
                 </a>

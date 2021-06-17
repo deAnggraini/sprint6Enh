@@ -29,15 +29,15 @@
     <div class="col rounded-sm mr-7 mb-7" style="border: 1px solid #DDD; box-shadow: 0px 4px 8px 0px #0000001A;">
         <div class="row">
             <div class="col-md-auto p-0">
-                <img src="{{backend_img}}/articles/{{item.img}}" width="130px" height="130px"
+                <img class="img-show" src="{{backend_img}}/articles/{{item.img}}" width="100%" height="130px"
                     background-position:center>
             </div>
             <div class="col p-0 px-2">
-                <div class="mb-2"><a
-                        class="text-muted font-weight-bold font-size-sm">{{item.created_date | date: "dd MMMM yyyy"}}</a>
+                <div class="mb-2">
+                    <a class="text-muted font-weight-bold font-size-sm">{{item.created_date | date: "dd MMMM yyyy"}}</a>
                 </div>
                 <div class="mb-2">
-                    <a class="text-dark font-weight-bold font-size-h7">{{item.title}}</a>
+                    <a class="text-dark font-weight-bold font-size-h7 cursor-pointer">{{item.title}}</a>
                 </div>
                 <p class="text-desc mb-1">
                     {{item.desc}}
