@@ -7,15 +7,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class SearchHistoryDto {
 	@JsonProperty("id")
-	private Long id;
+	private String id;
 	@JsonProperty("parent")
 	private String parent;
 	@JsonProperty("items")
 	private List<SearchHistoryItem> items = new ArrayList<SearchHistoryItem>();
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	public String getParent() {
