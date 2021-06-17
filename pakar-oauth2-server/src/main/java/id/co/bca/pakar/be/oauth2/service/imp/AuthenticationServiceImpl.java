@@ -50,13 +50,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	private RoleRepository roleRepository;
 	
 	@Override
-	public LoggedinDto authenticate(CredentialDto dto) {
+	public LoggedinDto authenticate(CredentialDto dto) throws Exception {
 		OAuthCredential cred = new OAuthCredential();
 		cred.setUsername(dto.getUsername());
 		cred.setPassword(dto.getPassword());
 		cred.setGrant_type("password");
 
-		logger.info("received credential --------- " + cred.toString());
+		logger.info("received credential --- " + dto.toString());
 		String credentials = clientId + ":" + clientSecret;
 		String encodedCredentials = new String(Base64.encodeBase64(credentials.getBytes()));
 
@@ -78,8 +78,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		try {
 			response = restTemplate.exchange(access_token_url, HttpMethod.POST, request, OAuthTokenDto.class);
 			
-			logger.info("http status response  --------- " + ((ResponseEntity<OAuthTokenDto>) response).getStatusCode());
-			logger.info("generated oauth2 token --------- " + response.getBody());
+			logger.info("http status response  --- " + ((ResponseEntity<OAuthTokenDto>) response).getStatusCode());
+//			logger.info("generated token oauth2 ---" + response.getBody());
 
 			loggedinDto.setUsername(cred.getUsername());
 			loggedinDto.setAccess_token(response.getBody().getAccess_token());
@@ -104,17 +104,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			
 			// get user profile
 			UserProfile profile = userProfileRepository.findByUsername(cred.getUsername());
-			loggedinDto.setFirstname(profile.getFirstname());
-			loggedinDto.setLastname(profile.getLastname());
-			loggedinDto.setFullname(profile.getFullname());
-			loggedinDto.setEmail(profile.getEmail());
-			loggedinDto.setPhone(profile.getPhone());
-			loggedinDto.setCompanyName(profile.getCompanyName());
-			loggedinDto.setOccupation(profile.getOccupation());
+			if(profile != null) {
+				loggedinDto.setFirstname(profile.getFirstname());
+				loggedinDto.setLastname(profile.getLastname());
+				loggedinDto.setFullname(profile.getFullname());
+				loggedinDto.setEmail(profile.getEmail());
+				loggedinDto.setPhone(profile.getPhone());
+				loggedinDto.setCompanyName(profile.getCompanyName());
+				loggedinDto.setOccupation(profile.getOccupation());
+			}
 		} catch (RestClientException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			logger.error("failed login");
+			logger.error("login failed with exception", e);
+			throw new Exception("failed login\n", e);
 		}
 		return loggedinDto;
 	}
