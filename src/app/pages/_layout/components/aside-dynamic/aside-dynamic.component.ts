@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { config, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { LayoutService, DynamicAsideMenuService } from '../../../../_metronic/core';
 import { ThemeService } from 'src/app/modules/_services/theme.service';
@@ -24,6 +24,7 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
   brandClasses: string;
   asideMenuScroll = 1;
   asideSelfMinimizeToggle = false;
+  showAside = false;
 
   currentUrl: string;
   headerBackground: string;
@@ -114,5 +115,9 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscriptions.forEach(sb => sb.unsubscribe());
+  }
+
+  asideShow() {
+    this.showAside = !this.showAside;
   }
 }

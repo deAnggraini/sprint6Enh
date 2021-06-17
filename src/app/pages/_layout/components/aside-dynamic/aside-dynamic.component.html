@@ -1,21 +1,25 @@
 <div class="brand flex-column-auto" id="kt_brand" [ngClass]="brandClasses"
-  style="background: {{headerBackground}}; border-right: 1px solid #dddddd;">
+  style="background: {{headerBackground}};"
+  [ngStyle]="showAside ? {'box-shadow': '0px 4px 8px 0px #0202027b'} : {}"
+  >
   <!-- routerLink="/"  -->
-  <a class="brand-logo cursor-pointer" (click)="showMenu()">
-    <img alt="Logo" [attr.src]="headerLogo" />
+  <a class="brand-logo cursor-pointer" *ngIf="showAside">
+    <app-header-menu></app-header-menu>
   </a>
 
   <ng-container *ngIf="asideSelfMinimizeToggle">
     <button class="brand-toggle btn btn-sm px-0" id="kt_aside_toggle">
-      <span [inlineSVG]="'./assets/media/svg/icons/Text/Menu.svg'" cacheSVG="true"
-        class="svg-icon svg-icon-xl svg-icon-white"></span>
+      <span [inlineSVG]="'./assets/media/svg/icons/Text/Menu.svg'" cacheSVG="true" *ngIf="!showAside"
+        class="svg-icon svg-icon-xl svg-icon-white" (click)="asideShow()"></span>
+      <span [inlineSVG]="'./assets/media/svg/icons/Navigation/Close.svg'" cacheSVG="true" *ngIf="showAside"
+        class="svg-icon svg-icon-xl svg-icon-white" (click)="asideShow()"></span>
       <!-- <small>Menu</small> -->
     </button>
   </ng-container>
 </div>
 
 <!--begin::Aside Menu-->
-<div class="aside-menu-wrapper flex-column-fluid" id="kt_aside_menu_wrapper" style="border-right: 1px solid #dddddd;">
+<div class="aside-menu-wrapper flex-column-fluid" id="kt_aside_menu_wrapper" style="box-shadow: 0px 4px 8px 0px #0202027b;">
   <ng-container *ngIf="disableAsideSelfDisplay">
     <!--begin::Header Logo-->
     <a routerLink="/">

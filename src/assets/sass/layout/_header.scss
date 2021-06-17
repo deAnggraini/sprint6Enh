@@ -24,7 +24,8 @@
 		// Aside Enabled Mode
 		.aside-enabled & {
 			&.header-fixed {
-				left: get($aside-config, base, width);
+				// left: get($aside-config, base, width);
+				left: 0;
 			}
 		}
 
