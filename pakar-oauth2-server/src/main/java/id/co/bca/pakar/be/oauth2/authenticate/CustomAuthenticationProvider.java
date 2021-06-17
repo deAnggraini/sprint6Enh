@@ -29,26 +29,31 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 	@SuppressWarnings({ "deprecation", "deprecation" })
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-		String name = authentication.getName();
-		String password = authentication.getCredentials().toString();
-		logger.info("---- authentication ---- " + authentication);
-		if (name != null && password != null) {
-			logger.info("----- authenticate user to remote eai system -----");
-			EaiLoginResponse response = remoteEaiAuthentication.authenticate(name, password);
+		try {
+			String name = authentication.getName();
+			String password = authentication.getCredentials().toString();
+			logger.info("---- authentication ---- " + authentication);
+			if (name != null && password != null) {
+				logger.info("authenticate user to remote EAI system");
+				EaiLoginResponse response = remoteEaiAuthentication.authenticate(name, password);
 
-			if (response.getOutputSchema().getStatus().equals("0")) {
-				logger.info("login success ");
-				List<GrantedAuthority> grantedAuths = new ArrayList<>();
-				grantedAuths.add(new SimpleGrantedAuthority("ROLE_USER"));
+				if (response.getOutputSchema().getStatus().equals("0")) {
+					logger.info("login success ");
+					List<GrantedAuthority> grantedAuths = new ArrayList<>();
+					grantedAuths.add(new SimpleGrantedAuthority("ROLE_USER"));
 //			UserDetails principal = new SecUserDto(name, password, grantedAuths);
-				final Authentication auth = new UsernamePasswordAuthenticationToken(name, password, grantedAuths);
-				return auth;
+					final Authentication auth = new UsernamePasswordAuthenticationToken(name, password, grantedAuths);
+					return auth;
+				} else {
+					logger.info("user / password salah ");
+					throw new BadCredentialsException("");
+				}
 			} else {
 				logger.info("user / password salah ");
 				throw new BadCredentialsException("");
 			}
-		} else {
-			logger.info("user / password salah ");
+		} catch (Exception e) {
+			logger.error("user / password salah with exception", e);
 			throw new BadCredentialsException("");
 		}
 	}
