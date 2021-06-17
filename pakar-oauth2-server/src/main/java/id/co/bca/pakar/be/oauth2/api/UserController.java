@@ -2,25 +2,59 @@ package id.co.bca.pakar.be.oauth2.api;
 
 import java.util.Arrays;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
-import id.co.bca.pakar.be.oauth2.dto.UserDto;
+import id.co.bca.pakar.be.oauth2.dto.LoggedinDto;
+import id.co.bca.pakar.be.oauth2.service.UserService;
 
 @RestController
-public class UserController {
-	@PostMapping(value = "/api/auth/user", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
+public class UserController extends BaseController {
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	
+	@Autowired
+	private UserService userService;
+	/**
+	 * 
+	 * @param get user profile by token
+	 * @return
+	 */
+	@PostMapping(value = "/api/auth/getUser", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<UserDto> user() {
-//		logger.info("received credential --------- " + dto.toString());
-		HttpHeaders headers = new HttpHeaders();
-		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-//		logger.info("authenticate process -----");
-//		OAuthTokenDto oAuthToken = authenticationService.authenticate(dto);
-		UserDto dto = new UserDto();
-		return ResponseEntity.accepted().headers(headers).body(dto);
+	public ResponseEntity<RestResponse<LoggedinDto>> getUser(@RequestHeader (name="Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username) {
+		try {
+			logger.info("received token bearer --- " + authorization);
+			String tokenValue = "";
+			if (authorization != null && authorization.contains("Bearer")) {
+	            tokenValue = authorization.replace("Bearer", "").trim();
+
+	            logger.info("token value request header --- "+tokenValue);
+	            logger.info("username request header --- "+username);
+	        }
+			HttpHeaders headers = new HttpHeaders();
+			headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+			logger.info("get user by token ");
+			LoggedinDto loggedInDto = userService.findUserByToken(tokenValue, username);
+//			RestResponse<LoggedinDto> tResponse = new RestResponse(loggedInDto);
+////			return ResponseEntity.accepted().headers(headers).body(tResponse);
+//			return new ResponseEntity<RestResponse<LoggedinDto>>(tResponse, HttpStatus.OK);
+			return createResponse(loggedInDto, "00",  "SUCCESS");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			logger.error("exception", e);
+			HttpHeaders headers = new HttpHeaders();
+			headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+			RestResponse<LoggedinDto> tResponse = new RestResponse(new LoggedinDto(), "01", "FAILED LOGIN");
+//			return ResponseEntity.accepted().headers(headers).body(tResponse);
+			return new ResponseEntity<RestResponse<LoggedinDto>>(tResponse, HttpStatus.OK);
+		}
 	}
 }
