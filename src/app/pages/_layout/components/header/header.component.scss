@@ -17,6 +17,11 @@
       height: 100%;
     }
 
+    .symbol-label{
+      background-color: #004E8C;
+      color: #FFFFFF;
+    }
+
     @media (min-width: 1025px) {
       .topbar,
       .topbar-item-wrapper {
@@ -24,4 +29,8 @@
       }
     }
   }
+}
+
+#kt_header_menu{
+  margin-top: -10px;
 }
