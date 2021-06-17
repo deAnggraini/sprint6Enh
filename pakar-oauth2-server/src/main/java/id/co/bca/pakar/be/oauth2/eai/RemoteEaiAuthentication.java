@@ -11,6 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import id.co.bca.pakar.be.oauth2.dto.EaiCredential;
@@ -33,7 +34,7 @@ public class RemoteEaiAuthentication {
 	@Autowired
 	private RestTemplate restTemplate;
 
-	public EaiLoginResponse authenticate(String username, String password) {
+	public EaiLoginResponse authenticate(String username, String password) throws Exception{
 		logger.info("authenticate to EAI system");
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
@@ -49,21 +50,28 @@ public class RemoteEaiAuthentication {
 			logger.info("encrypt password using 3DES ECB Mode");
 			encryptedPassword = new DESedeEncryption(encryptionKey).encryptToHex(password);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("fail encrypt password before send to to EAI system", e);
+			throw new Exception("fail encrypt password before send to to EAI system");
 		}
 		eaiCred.setPassword(encryptedPassword);
 		eaiCred.setApplicationId(applicationId);
 		HttpEntity<EaiCredential> entity = new HttpEntity<EaiCredential>(eaiCred, headers);
 
-		logger.info("call eai system ------ " + access_token_url);
-		String response = restTemplate.exchange(access_token_url, HttpMethod.POST, entity, String.class).getBody();
-		logger.info("response from eai login ------ " + response);
+		logger.info("call EAI system via url --- " + access_token_url);
+		String response = null;
+		EaiLoginResponse eaiLoginResponse = new EaiLoginResponse();
+		try {
+			response = restTemplate.exchange(access_token_url, HttpMethod.POST, entity, String.class).getBody();
+			logger.info("response from eai login --- " + response);
+			eaiLoginResponse = (EaiLoginResponse) JSONMapperAdapter.jsonToObject(response,
+					EaiLoginResponse.class);
+		} catch (RestClientException e) {
+			logger.error("failed verify user to EAI system with exception", e);
+			throw new RestClientException("failed verify user to EAI system");
+		}
 
-		EaiLoginResponse eaiLoginResponse = (EaiLoginResponse) JSONMapperAdapter.jsonToObject(response,
-				EaiLoginResponse.class);
-		logger.info("error status response ------ " + eaiLoginResponse.getOutputSchema().getStatus());
-		logger.info("error code response ------ " + eaiLoginResponse.getErrorSchema().getErroCode());
+		logger.info("error status response --- " + eaiLoginResponse.getOutputSchema().getStatus());
+		logger.info("error code response --- " + eaiLoginResponse.getErrorSchema().getErroCode());
 		return eaiLoginResponse;
 	}
 }
