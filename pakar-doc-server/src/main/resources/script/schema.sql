@@ -1,0 +1,1 @@
+create table r_article_category (id int8 not null, created_by varchar(255) not null, created_date timestamp not null, deleted boolean not null, modify_by varchar(255), modify_date timestamp, description varchar(255), title varchar(255) not null, primary key (id));
