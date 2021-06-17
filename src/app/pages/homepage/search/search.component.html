@@ -5,10 +5,11 @@
     </div>
     <div class="card-body">
         <div class="col-lg-9 col-xxl-9">
+            <!--  -->
             <div class="input-group {{show ? 'show' : ''}}" (click)="$event.stopPropagation()">
                 <input type="text" class="form-control" placeholder="Cari di PAKAR..." aria-label="Cari di PAKAR..."
-                    aria-describedby="basic-addon2" [ngbTypeahead]="search" [(ngModel)]="keyword"
-                    (focus)="setKeyword(keyword)" #inputSearch>
+                    aria-describedby="basic-addon2" maxlength="2048" [(ngModel)]="keyword" [ngbTypeahead]="search" 
+                    (focus)="setKeyword(keyword)" (keyup.enter)="setKeyword(keyword, true)" #inputSearch>
                 <div class="form-control-clear btn btn-icon btn-clean" *ngIf="keyword" (click)="setKeyword('')">
                     <span [inlineSVG]="'./assets/media/svg/icons/Navigation/Close.svg'" cacheSVG="true"
                         class="hidden svg-icon mr-1 ml-1"></span>
@@ -30,7 +31,7 @@
                             <span class="navi-text"><b>{{item.parent}}</b></span>
                             <ul class="navi result navi-hover">
                                 <li class="navi-item" *ngFor="let row of item.items;">
-                                    <a reouterLink="" class="navi-link cursor-pointer">
+                                    <a (click)="setKeyword(row.title, true)" class="navi-link cursor-pointer">
                                         <span class="navi-text" [innerHTML]="formatter(row.title, keyword)"></span>
                                     </a>
                                 </li>
@@ -46,7 +47,7 @@
 <ng-template #tmpEmptySearch>
     <ul class="navi navi-hover">
         <li class="navi-item" *ngFor="let item of data;">
-            <a class="navi-link cursor-pointer" (click)="setKeyword(item.text)">
+            <a class="navi-link cursor-pointer" (click)="setKeyword(item.text, true)">
                 <span class="svg-icon svg-icon-sm navi-icon"
                     [inlineSVG]="'./assets/media/svg/bca/homepage/empty_search.svg'" cacheSVG="true"></span>
                 <span class="navi-text">{{item.text}}</span>

@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef, HostListener } from '@angular/cor
 import { ArticleService } from 'src/app/modules/_services/article.service';
 import { Observable, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, tap, switchMap } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-search',
@@ -28,25 +29,31 @@ export class SearchComponent implements OnInit {
   }
 
   constructor(private apiArticle: ArticleService,
-    private changeDetectorRef: ChangeDetectorRef) {
+    private changeDetectorRef: ChangeDetectorRef, private router: Router) {
   }
 
   ngOnInit(): void {
+    this.keyword = this.apiArticle.keyword$.value;
   }
 
-  setKeyword(value: string) {
-    this.populateData(value || '');
+  setKeyword(value: string, goto: boolean = false) {
+    this.populateData(value || '', goto);
   }
 
-  private populateData(keyword: string) {
+  private populateData(keyword: string, goto: boolean = false) {
+    this.apiArticle.keyword$.next(keyword);
     this.keyword = keyword;
-    this.apiArticle.search(keyword).subscribe(
-      res => this.setData(res)
-    )
+    if (goto) {
+      this.router.navigate(['/article/search', { keyword }]);
+    } else {
+      this.apiArticle.suggestion(keyword).subscribe(
+        res => this.setData(res)
+      )
+    }
   }
 
   btnSearch(input: HTMLInputElement) {
-    this.populateData(input.value);
+    this.populateData(input.value, true);
   }
 
   hideResult() {
@@ -69,7 +76,7 @@ export class SearchComponent implements OnInit {
         this.keyword = keyword;
       }),
       switchMap(term =>
-        this.apiArticle.search(term).pipe(
+        this.apiArticle.suggestion(term).pipe(
           map(res => this.setData(res))
         )
       ),

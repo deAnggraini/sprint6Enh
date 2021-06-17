@@ -17,9 +17,12 @@ export class HomepageComponent implements OnInit {
     const img_url = `${environment.apiUrl}/themes/homepage/${img}`;
     this.background_image = img_url;
     this.background_category_menu = 'eclipse.svg';
+
+    console.log('Homepage constructor called');
   }
 
   ngOnInit(): void {
+    console.log('Homepage ngOnInit called');
   }
 
 }

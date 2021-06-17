@@ -1,0 +1,126 @@
+:host ::ng-deep .nav-tabs {
+  .nav-link.active {
+    border-color: transparent;
+    background-color: transparent;
+    border-bottom: 2px solid #0078D4;
+
+    .fa,
+    .far {
+      color: #0078D4;
+    }
+  }
+
+}
+
+:host ::ng-deep .tab-content {
+  .nav-link {
+    padding: 0.75rem 0;
+
+    .nav-text-article {
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .nav-text-pdf {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+  }
+
+  .text-muted a {
+    color: #B5B5C3;
+  }
+
+  .text-muted a:hover {
+    color: #3699FF;
+  }
+
+  a.nav-link.active:hover {
+    color: #ddd;
+
+    span.svg {
+      fill-opacity: .7;
+    }
+  }
+}
+
+:host ::ng-deep .input-search {
+  padding: 0;
+
+  .input-group {
+    border: 1px solid #0F5EA9;
+    border-radius: 20px;
+    padding-left: 15px;
+    overflow: hidden;
+
+    .form-control-clear.btn-clean {
+      background-color: transparent;
+      border-color: transparent;
+    }
+
+    input {
+      border: none;
+    }
+
+    .btn {
+      border-color: #0F5EA9;
+      background: #0F5EA9;
+      border-radius: 0;
+
+      .fa {
+        color: white;
+      }
+    }
+
+    .btn:hover {
+      background-color: #ddd;
+      border-color: #ddd;
+
+      .fa {
+        color: #0F5EA9;
+      }
+    }
+
+    .btn-clean:hover {
+      background-color: transparent;
+      border-color: transparent;
+    }
+  }
+}
+
+:host {
+  .back-panel {
+
+    a,
+    .fa,
+    .far,
+    .fas {
+      color: white;
+    }
+
+    a:hover {
+      color: #0078D4;
+
+      .fa,
+      .far,
+      .fas {
+        color: #0078D4;
+      }
+    }
+  }
+
+  .text-suggestion {
+    font-style: inherit;
+    font-weight: 600;
+    color: #0078D4;
+  }
+
+  .text-desc {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+}

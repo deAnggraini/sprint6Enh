@@ -8,7 +8,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CoreModule } from 'src/app/_metronic/core';
 import { ArticleComponent } from './article.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { MatInputModule} from '@angular/material/input';
+import { MatInputModule } from '@angular/material/input';
+import { SearchComponent } from './search/search.component';
+import { InlineSVGModule } from 'ng-inline-svg';
 
 const routes: Routes = [
   {
@@ -18,6 +20,7 @@ const routes: Routes = [
       { path: 'list', component: ListComponent, },
       { path: 'list/:category', component: ListComponent, },
       { path: 'add', component: AddComponent, },
+      { path: 'search', component: SearchComponent, },
       { path: '', redirectTo: 'list', pathMatch: 'full' },
       { path: '**', redirectTo: 'list', pathMatch: 'full' },
     ],
@@ -28,7 +31,8 @@ const routes: Routes = [
   declarations: [
     ListComponent,
     AddComponent,
-    ArticleComponent
+    ArticleComponent,
+    SearchComponent
   ],
   imports: [
     CommonModule,
@@ -38,7 +42,8 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     ReactiveFormsModule,
     MatInputModule,
-    FormsModule
+    FormsModule,
+    InlineSVGModule
   ]
 })
 export class ArticleModule { }
