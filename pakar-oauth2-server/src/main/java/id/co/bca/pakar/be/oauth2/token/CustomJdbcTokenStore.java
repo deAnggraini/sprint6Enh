@@ -72,7 +72,7 @@ public class CustomJdbcTokenStore extends JdbcTokenStore {
 
 	private static final String DEFAULT_ACCESS_TOKENS_FROM_USERNAME_SELECT_STATEMENT = "select token_id, token from oauth_access_token where user_name = ?";
 	
-	private static final String DEFAULT_ACCESS_TOKENS_FROM_TOKEN_AND_USERNAME_SELECT_STATEMENT = "select token_id, token, username from oauth_access_token where token_id = ? AND user_name = ?";
+	private static final String DEFAULT_ACCESS_TOKENS_FROM_TOKEN_AND_USERNAME_SELECT_STATEMENT = "select token_id, token, user_name from oauth_access_token where token_id = ? AND user_name = ?";
 
 	private static final String DEFAULT_ACCESS_TOKENS_FROM_CLIENTID_SELECT_STATEMENT = "select token_id, token from oauth_access_token where client_id = ?";
 
