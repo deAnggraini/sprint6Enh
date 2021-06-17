@@ -446,7 +446,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        img: 'duitt.jpeg',
+        img: 'deposito.jpeg',
         attactments: [
             {
                 file: '',
@@ -481,7 +481,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        img: 'duitt.jpeg',
+        img: 'kredit-lokal-sme.jpeg',
         attactments: [
             {
                 file: '',
