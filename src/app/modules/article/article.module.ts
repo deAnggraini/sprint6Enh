@@ -12,6 +12,7 @@ import { MatInputModule } from '@angular/material/input';
 import { SearchComponent } from './search/search.component';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { RecommendationComponent } from './recommendation/recommendation.component';
+import { TerbaruComponent } from './terbaru/terbaru.component';
 
 const routes: Routes = [
   {
@@ -23,6 +24,7 @@ const routes: Routes = [
       { path: 'add', component: AddComponent, },
       { path: 'search', component: SearchComponent, },
       { path: 'recommendation', component: RecommendationComponent, },
+      { path: 'terbaru', component: TerbaruComponent, },
       { path: '', redirectTo: 'list', pathMatch: 'full' },
       { path: '**', redirectTo: 'list', pathMatch: 'full' },
     ],
@@ -35,7 +37,8 @@ const routes: Routes = [
     AddComponent,
     ArticleComponent,
     SearchComponent,
-    RecommendationComponent
+    RecommendationComponent,
+    TerbaruComponent
   ],
   imports: [
     CommonModule,

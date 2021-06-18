@@ -1,21 +1,21 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
 import { ArticleService } from '../../_services/article.service';
 import { Location } from '@angular/common';
-import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: 'app-recommendation',
-  templateUrl: './recommendation.component.html',
-  styleUrls: ['./recommendation.component.scss']
+  selector: 'app-terbaru',
+  templateUrl: './terbaru.component.html',
+  styleUrls: ['./terbaru.component.scss']
 })
-export class RecommendationComponent implements OnInit {
+export class TerbaruComponent implements OnInit {
 
   dataList: any[] = [];
   total: number = 0;
   length: number = 0;
   backend_img: string = environment.backend_img;
-  keyword: string = '';
+  keyword: string = ''
 
   constructor(
     private router: Router,
@@ -25,7 +25,7 @@ export class RecommendationComponent implements OnInit {
 
   ngOnInit(): void {
     this.keyword = this.articleService.keyword$.value;
-    this.articleService.recommendation().subscribe(
+    this.articleService.news().subscribe(
       resp => {
         this.dataList = resp;
         this.total = Math.floor(Math.random() * 100 + 10);
@@ -35,7 +35,7 @@ export class RecommendationComponent implements OnInit {
       }
     );
   }
-
+  
   back() {
     this.location.back();
   }
