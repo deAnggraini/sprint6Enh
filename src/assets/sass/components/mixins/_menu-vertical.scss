@@ -597,7 +597,9 @@
 			// general section
 			.menu-section {
 				display: flex;
-				padding: get($layout, default, section, self, padding);
+				flex-direction: column;
+				// padding: get($layout, default, section, self, padding);
+				padding: 15px;
 
 				&.menu-section-first {
 					margin-top: 0 !important;
@@ -608,12 +610,15 @@
 					margin: 0;
 					padding: 0;
 					align-items: center;
+					flex-grow: 1;
 				}
 
 				.menu-icon {
-					display: none;
+					display: flex;
 					align-items: center;
-					justify-content: center;
+					justify-content: left;
+					line-height: 0;
+					flex-grow: 0.2;
 				}
 			}
 

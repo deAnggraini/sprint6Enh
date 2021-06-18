@@ -21,7 +21,7 @@ export class TerbaruComponent implements OnInit {
 
   ngOnInit(): void {
     this.articleService.news().subscribe(resp => {
-      this.parsePer3(resp);
+      this.parsePer3(resp.slice(0, 6));
       setTimeout(() => this.changeDetectorRef.detectChanges(), 0);
     });
   }

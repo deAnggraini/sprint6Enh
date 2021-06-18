@@ -6,8 +6,11 @@
         </div>
     </h3>
     <div class="d-flex align-items-end">
-        <a routerLink="/article/recommendation" class="navi-link cursor-pointer text-primary font-weight-bold font-size-sm">
-            Lihat semua >
+        <!-- <a routerLink="/article/recommendation" class="navi-link cursor-pointer text-primary font-weight-bold font-size-sm"> Lihat semua > -->
+        <a class="navi-link" href="#">
+            <a routerLink="/article/recommendation" class="navi-text cursor-pointer font-weight-bold font-size-sm">
+                Lihat semua >
+            </a>
         </a>
     </div>
 </div>
@@ -37,7 +40,8 @@
                     <span class="text-muted font-weight-bold font-size-sm">{{item.created_date | date: "dd MMMM yyyy"}}</span>
                 </div>
                 <div class="mb-2">
-                    <a class="text-dark font-weight-bold font-size-h7" href="#" routerLink="/article/recommendation">{{item.title}}</a>
+                    <!-- <a class="text-dark font-weight-bold font-size-h7" href="#" routerLink="/article/recommendation">{{item.title}}</a> -->
+                    <a class="title text-dark font-weight-bold font-size-h7" href="#" routerLink="/article/recommendation">{{item.title}}</a>
                 </div>
                 <p class="text-desc mb-1">
                     {{item.desc}}

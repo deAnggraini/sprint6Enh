@@ -27,7 +27,11 @@
     -webkit-box-orient: vertical;
   }
   
-  a:hover {
+  a:hover.title{
+    color: #0078D4 !important;
+  }
+
+  span:hover{
     color: #0078D4 !important;
   }
 
