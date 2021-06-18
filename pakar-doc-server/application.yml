@@ -1,0 +1,41 @@
+server:
+  port: ${port:8082}
+#security:
+#  oauth2:
+#    resource:
+#      userInfoUri: http://localhost:8083/validateUser
+spring:
+  rest:
+    timeout:
+      read: 60000
+      connection: 60000
+  security:
+    oauth2:
+      resourceserver:
+        jwt:  
+          jwk-set-uri: https://login.domain.com/xxx/keys # JSON Web Key URI to use to verify the JWT token.
+          issuer-uri: http://localhost:12081/validateUser
+        token-info-uri: http://localhost:12081/oauth/check_token 
+      server: 
+        url: http://127.0.0.1:12081/oauth/token
+      clientId: 8C21EBEEB1AA3FBFE05400144FFBD319
+      clientSecret: da82edc6dcc1af30
+    jwt:
+      signingkey: pakar123
+  dataSource: 
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://192.168.100.48:5432/postgres
+    username: postgres
+    password: password
+    hikari:
+      connectionTimeout: 20000
+      maximumPoolSize: 5   
+
+## Hibernate ddl auto (create, create-drop, update)
+  jpa:
+    hibernate:
+      ddl-auto: update
+      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy  
+    generate-ddl: true
+    show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQL10Dialect  
