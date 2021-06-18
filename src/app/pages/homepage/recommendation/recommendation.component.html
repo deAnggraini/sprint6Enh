@@ -6,9 +6,9 @@
         </div>
     </h3>
     <div class="d-flex align-items-end">
-        <span href="#" class="navi-link cursor-pointer text-primary font-weight-bold font-size-sm">
+        <a routerLink="/article/recommendation" class="navi-link cursor-pointer text-primary font-weight-bold font-size-sm">
             Lihat semua >
-        </span>
+        </a>
     </div>
 </div>
 
@@ -33,11 +33,11 @@
                     background-position:center>
             </div>
             <div class="col p-0 px-2">
-                <div class="mb-2"><a
-                        class="text-muted font-weight-bold font-size-sm">{{item.created_date | date: "dd MMMM yyyy"}}</a>
+                <div class="mb-2">
+                    <span class="text-muted font-weight-bold font-size-sm">{{item.created_date | date: "dd MMMM yyyy"}}</span>
                 </div>
                 <div class="mb-2">
-                    <a class="text-dark font-weight-bold font-size-h7" href="#" routerLink="/">{{item.title}}</a>
+                    <a class="text-dark font-weight-bold font-size-h7" href="#" routerLink="/article/recommendation">{{item.title}}</a>
                 </div>
                 <p class="text-desc mb-1">
                     {{item.desc}}

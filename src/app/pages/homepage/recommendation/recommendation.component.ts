@@ -21,7 +21,7 @@ export class RecommendationComponent implements OnInit {
 
   ngOnInit(): void {
     this.articleService.recommendation().subscribe(resp => {
-      this.parsePer3(resp);
+      this.parsePer3(resp.slice(0, 6));
       setTimeout(() => this.changeDetectorRef.detectChanges(), 0);
     });
   }

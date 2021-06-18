@@ -11,6 +11,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { SearchComponent } from './search/search.component';
 import { InlineSVGModule } from 'ng-inline-svg';
+import { RecommendationComponent } from './recommendation/recommendation.component';
 
 const routes: Routes = [
   {
@@ -21,6 +22,7 @@ const routes: Routes = [
       { path: 'list/:category', component: ListComponent, },
       { path: 'add', component: AddComponent, },
       { path: 'search', component: SearchComponent, },
+      { path: 'recommendation', component: RecommendationComponent, },
       { path: '', redirectTo: 'list', pathMatch: 'full' },
       { path: '**', redirectTo: 'list', pathMatch: 'full' },
     ],
@@ -32,7 +34,8 @@ const routes: Routes = [
     ListComponent,
     AddComponent,
     ArticleComponent,
-    SearchComponent
+    SearchComponent,
+    RecommendationComponent
   ],
   imports: [
     CommonModule,
