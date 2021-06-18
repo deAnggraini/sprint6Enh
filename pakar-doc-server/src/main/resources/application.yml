@@ -5,6 +5,10 @@ server:
 #    resource:
 #      userInfoUri: http://localhost:8083/validateUser
 spring:
+  rest:
+    timeout:
+      read: 60000
+      connection: 60000
   security:
     oauth2:
       resourceserver:
@@ -14,10 +18,6 @@ spring:
         token-info-uri: http://localhost:8083/oauth/check_token 
 #      server: 
 #        url: http://127.0.0.1:8083/oauth/token
-      rest:
-        timeout:
-          read: 60000
-          connection: 60000
       clientId: javainuse-client
       clientSecret: javainuse-secret
 #      authorize-grant-type: password,refresh_token
