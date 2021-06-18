@@ -136,11 +136,13 @@
 
 @mixin burger-icon-theme($default, $hover, $active) {
 	span {
- 		background-color: $default;
+ 		// background-color: $default;
+ 		background-color: white;
 
   		&::before,
   		&::after {
-		  	background-color: $default;
+		  	// background-color: $default;
+		  	background-color: white;
   		}
 	}
 

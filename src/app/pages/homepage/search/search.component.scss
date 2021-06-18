@@ -13,7 +13,6 @@
 }
 
 :host {
-
   .container-search {
     box-shadow: 0px 4px 8px 0px #0000001A;
     color: #004578;
@@ -22,14 +21,21 @@
     background-position: right 23px center, right -12px bottom -12px;
     height: 274px;
 
-
-    .text-welcome {
-      font-size: 24px;
+    @media (max-width: 992px) {
+      background-image: url('/assets/media/svg/bca/homepage/bg1.svg');
+      background-repeat: no-repeat;
+      background-position: right -12px bottom -12px;
     }
 
-    .text-cari {
-      font-size: 32px;
-      font-weight: bold;
+    @media (min-width: 1400px) {
+      .text-welcome {
+        font-size: 24px;
+      }
+
+      .text-cari {
+        font-size: 32px;
+        font-weight: bold;
+      }
     }
 
     .input-group.show {
@@ -115,5 +121,27 @@
       border-radius: 30px;
     }
 
+  }
+}
+
+:host ::ng-deep {
+  @media (max-width: 992px) {
+    .text-welcome {
+      margin-bottom: 5px;
+    }
+
+    .text-cari {
+      margin-bottom: 5px;
+    }
+
+    .p-10 {
+      padding: 2rem !important;
+    }
+
+    .col-lg-9,
+    .col-xxl-9 {
+      padding-right: 5px;
+      padding-left: 5px;
+    }
   }
 }

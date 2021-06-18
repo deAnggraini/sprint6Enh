@@ -1,0 +1,132 @@
+<div class="background-search" style="
+    background-image: url('./assets/media/images/search_result_bg.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 184px;
+"></div>
+<div class="mx-15 mt-n40">
+    <div class="mb-10 back-panel">
+        <a (click)="back()" class="cursor-pointer">
+            <i class="fas fa-angle-left mr-2"></i> Kembali ke Halaman Utama PAKAR
+        </a>
+    </div>
+    <div class="card card-custom p-10" style="overflow-x: hidden;">
+        <div class="col-lg-6 col-xxl-6 input-search my-5">
+            <div class="input-group" (click)="$event.stopPropagation()">
+                <!-- [ngbTypeahead]="search"  (focus)="setKeyword(keyword)" -->
+                <input type="text" class="form-control" placeholder="Cari di PAKAR..." aria-label="Cari di PAKAR..."
+                    aria-describedby="basic-addon2" maxlength="2048" [(ngModel)]="keyword" (keyup.enter)="search()"
+                    #inputSearch>
+                <div class="form-control-clear btn btn-icon btn-clean" *ngIf="keyword" (click)="keyword='';">
+                    <span [inlineSVG]="'./assets/media/svg/icons/Navigation/Close.svg'" cacheSVG="true"
+                        class="hidden svg-icon mr-1 ml-1"></span>
+                </div>
+                <button class="btn btn-outline-secondary btn-success" type="button" (click)="search()">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- [(activeId)]="active" [destroyOnHide]="false" -->
+        <ul ngbNav #nav="ngbNav"  class="nav-tabs">
+            <!-- [destroyOnHide]="true" -->
+            <li [ngbNavItem]="1" >
+                <a ngbNavLink>
+                    <i class="fa fa-search mr-2"></i> PAKAR ({{pakar.total}})
+                </a>
+                <ng-template ngbNavContent class="data-item">
+                    <div *ngIf="pakar.data.length == 0">
+                        <div class="my-5">Pencarian Kamu terkait '<b>{{keyword}}</b>'' tidak dapat ditemukan</div>
+                        <div>Saran:</div>
+                        <ul>
+                            <li>Pastikan Kata kunci yang Kamu ketik sudah benar</li>
+                            <li>Coba kata kunci lain yang lebih umum</li>
+                        </ul>
+                    </div>
+                    <div *ngIf="pakar.data.length">
+                        <div class="mt-3">Hasil Pencarian {{pakar.total}} Informasi terkait</div>
+                        <div class="mt-3" *ngIf="suggestion">
+                            <span>Apakah yang Kamu maksut </span>
+                            <span class="text-suggestion">{{suggestion}}</span>
+                        </div>
+                        <ul class="nav">
+                            <li class="nav-item mt-5 col-xx-lg" style="width: 75%;" *ngFor="let item of pakar.data">
+                                <ng-container [ngTemplateOutlet]="tmpRowItem" [ngTemplateOutletContext]="{item:item}">
+                                </ng-container>
+                        </ul>
+                    </div>
+                </ng-template>
+            </li>
+            <li [ngbNavItem]="2">
+                <a ngbNavLink><i class="far fa-question-circle mr-2"></i> FAQ ({{faq.total}})</a>
+                <ng-template ngbNavContent class="data-item">
+                    <div *ngIf="pakar.data.length == 0">
+                        <div class="my-5">Pencarian Kamu terkait '<b>{{keyword}}</b>'' tidak dapat ditemukan</div>
+                        <div>Saran:</div>
+                        <ul>
+                            <li>Pastikan Kata kunci yang Kamu ketik sudah benar</li>
+                            <li>Coba kata kunci lain yang lebih umum</li>
+                        </ul>
+                    </div>
+                    <div *ngIf="pakar.data.length">
+                        <div class="mt-3">Hasil Pencarian {{faq.total}} Informasi terkait</div>
+                        <div class="mt-3" *ngIf="suggestion">
+                            <span>Apakah yang Kamu maksut </span>
+                            <span class="text-suggestion">{{suggestion}}</span>
+                        </div>
+                        <ul class="nav">
+                            <li class="nav-item mt-5 col-xx-lg" style="width: 75%;" *ngFor="let item of faq.data">
+                                <ng-container [ngTemplateOutlet]="tmpRowItem" [ngTemplateOutletContext]="{item:item}">
+                                </ng-container>
+                        </ul>
+                    </div>
+                </ng-template>
+            </li>
+        </ul>
+        <div [ngbNavOutlet]="nav" class="mt-2"></div>
+
+        <div class="d-flex justify-content-center align-items-center flex-wrap mt-5" *ngIf="pakar.data.length">
+            <div class="d-flex flex-wrap py-2 mr-3">
+                <a href="#" class="btn btn-icon btn-sm btn-light-primary mr-2 my-1"><i
+                        class="ki ki-bold-double-arrow-back icon-xs"></i></a>
+                <a href="#" class="btn btn-icon btn-sm btn-light-primary mr-2"><i
+                        class="ki ki-bold-arrow-back icon-xs"></i></a>
+
+                <a href="#" class="btn btn-icon btn-sm border-0 btn-hover-primary mr-2 my-1">...</a>
+                <a href="#" class="btn btn-icon btn-sm border-0 btn-hover-primary mr-2 my-1">23</a>
+                <a href="#" class="btn btn-icon btn-sm border-0 btn-hover-primary active mr-2 my-1">24</a>
+                <a href="#" class="btn btn-icon btn-sm border-0 btn-hover-primary mr-2 my-1">25</a>
+                <a href="#" class="btn btn-icon btn-sm border-0 btn-hover-primary mr-2 my-1">26</a>
+                <a href="#" class="btn btn-icon btn-sm border-0 btn-hover-primary mr-2 my-1">27</a>
+                <a href="#" class="btn btn-icon btn-sm border-0 btn-hover-primary mr-2 my-1">28</a>
+                <a href="#" class="btn btn-icon btn-sm border-0 btn-hover-primary mr-2 my-1">...</a>
+
+                <a href="#" class="btn btn-icon btn-sm btn-light-primary mr-2 my-1"><i
+                        class="ki ki-bold-arrow-next icon-xs"></i></a>
+                <a href="#" class="btn btn-icon btn-sm btn-light-primary mr-2 my-1"><i
+                        class="ki ki-bold-double-arrow-next icon-xs"></i></a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<ng-template #tmpRowItem let-item="item">
+    <li class="nav-item mt-5 col-xx-lg" style="width: 80%;">
+        <a class="nav-link active cursor-pointer">
+            <span class="svg mr-2" [inlineSVG]="'./assets/media/svg/bca/icon/'+item.type+'.svg'" cacheSVG="true"></span>
+            <span class="nav-text-article">{{item.title}}</span>
+        </a>
+        <div class="text-muted mb-2 font-size-sm" [innerHTML]="formatterCategory(item.category)">&nbsp;</div>
+        <div class="text-desc">{{item.desc}}</div>
+    </li>
+</ng-template>
+
+<ng-template #tmpEmptyData>
+    <div>Pencarian Kamu terkait <b>{{keyword}}</b> tidak dapat ditemukan</div>
+    <div>Saran:</div>
+    <ul>
+        <li>Pastikan Kata kunci yang Kamu ketik sudah benar</li>
+        <li>Coba kata kunci lain yang lebih umum</li>
+    </ul>
+</ng-template>

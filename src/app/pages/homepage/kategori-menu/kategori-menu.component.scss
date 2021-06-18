@@ -1,5 +1,16 @@
 :host {
-    .kategori-menu-card {
-        box-shadow: 0px 4px 8px 0px #0000001A;
-    }
+  .kategori-menu-card {
+    box-shadow: 0px 4px 8px 0px #0000001A;
+  }
+}
+
+:host ::ng-deep .navi {
+  .navi-item .navi-link {
+    color: #3699FF;
+    padding: 0.75rem .5rem;
+  }
+  .navi-item .navi-link:hover {
+    color: darkblue;
+    padding: 0.75rem .5rem;
+  }
 }

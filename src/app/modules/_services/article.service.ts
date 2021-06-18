@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from 'src/app/utils/_services/api-service.service';
 import { environment } from 'src/environments/environment';
-import { of } from 'rxjs';
+import { of, BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -17,12 +17,21 @@ export class ArticleService {
     { state: 0, text: 'Flazz' },
   ]
 
+  // share state
+  keyword$: BehaviorSubject<string> = new BehaviorSubject<string>('');
+
   constructor(private apiService: ApiService) { }
 
-  search(keyword: string) {
+
+
+  suggestion(keyword) {
     if (keyword === "") {
       return of(this.empty_search);
     }
+    return this.apiService.post(`${this._base_url}/suggestion`, { keyword });
+  }
+
+  search(keyword: string) {
     return this.apiService.post(`${this._base_url}/search`, { keyword });
   }
 

@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { LayoutService, LayoutInitService } from '../../_metronic/core';
 import KTLayoutContent from '../../../assets/js/layout/base/content';
+import { ThemeService } from 'src/app/modules/_services/theme.service';
 
 @Component({
   selector: 'app-layout',
@@ -42,14 +43,19 @@ export class LayoutComponent implements OnInit, AfterViewInit {
   @ViewChild('ktHeaderMobile', { static: true }) ktHeaderMobile: ElementRef;
   @ViewChild('ktHeader', { static: true }) ktHeader: ElementRef;
 
+  // custom header background
+  background: string = ''
+
   constructor(
     private initService: LayoutInitService,
     private layout: LayoutService,
+    private themes : ThemeService
   ) {
     this.initService.init();
   }
 
   ngOnInit(): void {
+    this.background = this.themes.getConfig().header.background;
     // build view by layout config settings
     this.selfLayout = this.layout.getProp('self.layout');
     this.asideSelfDisplay = this.layout.getProp('aside.self.display');
