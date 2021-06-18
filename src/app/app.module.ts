@@ -30,7 +30,9 @@ function appInitializer(authService: AuthService) {
 
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [
+    AppComponent,
+  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

@@ -30,6 +30,7 @@ import { RecommendationComponent } from './homepage/recommendation/recommendatio
 import { PopularComponent } from './homepage/popular/popular.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
+import { UtilsModule } from '../utils/utils.module';
 @NgModule({
   declarations: [
     LayoutComponent,
@@ -48,7 +49,8 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
     KategoriMenuComponent,
     TerbaruComponent,
     RecommendationComponent,
-    PopularComponent,],
+    PopularComponent,
+  ],
   imports: [
     CommonModule,
     NgbModule,
@@ -62,7 +64,8 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
     NgbProgressbarModule,
     CoreModule,
     SubheaderModule,
-    SlickCarouselModule
+    SlickCarouselModule,
+    UtilsModule
   ],
 })
 export class LayoutModule { }
