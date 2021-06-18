@@ -78,23 +78,23 @@ public class ArticleController extends BaseController {
 //				+ "    }\r\n"
 //				+ "]";
 		
-		
+		// next change to db
 		List<SearchHistoryDto> list = new ArrayList<SearchHistoryDto>();
 		SearchHistoryDto searcHistoryDto = new SearchHistoryDto();
 		searcHistoryDto.setId("1");
 		searcHistoryDto.setParent("PAKAR");
-		searcHistoryDto.getItems().add(new SearchHistoryItem("1", "title: Tahapan"));
-		searcHistoryDto.getItems().add(new SearchHistoryItem("2", "title: Tahapan Gold"));
-		searcHistoryDto.getItems().add(new SearchHistoryItem("3", "title: TAHAKA"));
-		searcHistoryDto.getItems().add(new SearchHistoryItem("5", "title: Xpresi"));
-		searcHistoryDto.getItems().add(new SearchHistoryItem("5", "title: Time Loan SME"));
-		searcHistoryDto.getItems().add(new SearchHistoryItem("6", "title: GIRO"));
+		searcHistoryDto.getItems().add(new SearchHistoryItem("1", "Tahapan"));
+		searcHistoryDto.getItems().add(new SearchHistoryItem("2", "Tahapan Gold"));
+		searcHistoryDto.getItems().add(new SearchHistoryItem("3", "TAHAKA"));
+		searcHistoryDto.getItems().add(new SearchHistoryItem("5", "Xpresi"));
+		searcHistoryDto.getItems().add(new SearchHistoryItem("5", "Time Loan SME"));
+		searcHistoryDto.getItems().add(new SearchHistoryItem("6", "GIRO"));
 		list.add(searcHistoryDto);
 		searcHistoryDto = new SearchHistoryDto();
 		searcHistoryDto.setId("2");
 		searcHistoryDto.setParent("FAQ");
-		searcHistoryDto.getItems().add(new SearchHistoryItem("1", "title: Bagaimana solusi ketika Teller melakukan input kode penalti pada nasabah"));
-		searcHistoryDto.getItems().add(new SearchHistoryItem("2", "title: 'Apakah bisa membuka Deposito dari Data RTGS Masuk?"));
+		searcHistoryDto.getItems().add(new SearchHistoryItem("1", "Bagaimana solusi ketika Teller melakukan input kode penalti pada nasabah"));
+		searcHistoryDto.getItems().add(new SearchHistoryItem("2", "Apakah bisa membuka Deposito dari Data RTGS Masuk?"));
 		list.add(searcHistoryDto);
 		String jsonString = JSONMapperAdapter.objectToJson(list);
 		logger.info("json input value "+jsonString);
