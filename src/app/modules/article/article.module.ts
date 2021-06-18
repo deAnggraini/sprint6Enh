@@ -13,6 +13,7 @@ import { SearchComponent } from './search/search.component';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { RecommendationComponent } from './recommendation/recommendation.component';
 import { TerbaruComponent } from './terbaru/terbaru.component';
+import { UtilsModule } from 'src/app/utils/utils.module';
 
 const routes: Routes = [
   {
@@ -49,7 +50,8 @@ const routes: Routes = [
     ReactiveFormsModule,
     MatInputModule,
     FormsModule,
-    InlineSVGModule
+    InlineSVGModule,
+    UtilsModule
   ]
 })
 export class ArticleModule { }

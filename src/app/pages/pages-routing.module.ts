@@ -27,7 +27,7 @@ const routes: Routes = [
         path: 'builder',
         loadChildren: () => import('./builder/builder.module').then((m) => m.BuilderModule),
         data: {
-          allowedRoles: ['ADMIN', 'PUBLISHER']
+          allowedRoles: ['SUPERADMIN', 'ADMIN', 'PUBLISHER']
         }
       },
       {

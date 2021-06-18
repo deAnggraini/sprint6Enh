@@ -27,7 +27,7 @@ export class RecommendationComponent implements OnInit {
     this.keyword = this.articleService.keyword$.value;
     this.articleService.recommendation().subscribe(
       resp => {
-        this.dataList = resp;
+        this.dataList = resp.slice(0, 12);
         this.total = Math.floor(Math.random() * 100 + 10);
         this.length = resp.length;
         setTimeout(() => this.changeDetectorRef.detectChanges(), 0);

@@ -33,28 +33,30 @@
                 Kamu</div>
         </div>
 
-        <div class="pr-10">
-
+        <div class="pr-0">
             <div class="row m-0 p-0">
-                <div class="col-3 card-article mr-7 mb-7 rounded-lg" *ngFor="let item of dataList">
-                    <div class="row">
-                        <div class="col-md-auto p-0">
+                <div class="col-lg-6 col-xxl-4" *ngFor="let item of dataList">
+                    <div class="card-article mr-7 mb-7 rounded-lg cursor-pointer"
+                        onmouseover="this.style.border ='1px groove #1995D1';"
+                        onmouseout="this.style.border ='1px solid #DDD';">
+                        <!-- <div class="row"> -->
+                        <div class="p-0">
                             <img class="img-show" src="{{backend_img}}/articles/{{item.img}}" width="100%"
-                                height="130px" style="background-position:center;">
+                                height="112px" style="background-position:center;">
                         </div>
-                        <div class="col p-0 px-2">
-                            <div class="my-2">
-                                <span
-                                    class="text-muted font-weight-bold font-size-sm">{{item.created_date | date: "dd MMMM yyyy"}}</span>
+                        <div class="p-4">
+                            <div class="mb-2">
+                                <span class="font-size-sm">{{item.created_date | date: "dd MMMM yyyy"}}</span>
                             </div>
                             <div class="mb-2">
-                                <a class="text-dark font-weight-bold font-size-h7" href="#"
-                                    routerLink="/article/recommendation">{{item.title}}</a>
+                                <a class="text-dark text-ellipsis-2 font-weight-bolder font-size-h7" href="#"
+                                    routerLink="/article/recommendation">{{item.title | maxLength: 70}}</a>
                             </div>
-                            <p class="text-desc mb-10">
-                                {{item.desc}}
+                            <p class="text-ellipsis-2 mb-10">
+                                {{item.desc | maxLength: 90}}
                             </p>
                         </div>
+                        <!-- </div> -->
                     </div>
                 </div>
             </div>
