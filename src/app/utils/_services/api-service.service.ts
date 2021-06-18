@@ -17,16 +17,19 @@ export class ApiService {
 
   private getHeaders() {
     let token = 'empty';
+    let username = 'empty';
     const str = localStorage.getItem(this.authLocalStorageToken);
     if (str) {
       const auth: AuthModel = JSON.parse(str);
       token = `Bearer ${auth.authToken}`;
+      username = auth.username
     }
     return {
       headers: new HttpHeaders(
         {
           'Content-Type': 'application/json',
-          'Authorization': token
+          'Authorization': token,
+          'X-USERNAME': username
         }
       )
     }
