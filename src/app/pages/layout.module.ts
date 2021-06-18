@@ -29,6 +29,7 @@ import { TerbaruComponent } from './homepage/terbaru/terbaru.component';
 import { RecommendationComponent } from './homepage/recommendation/recommendation.component';
 import { PopularComponent } from './homepage/popular/popular.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SlickCarouselModule } from 'ngx-slick-carousel';
 @NgModule({
   declarations: [
     LayoutComponent,
@@ -61,6 +62,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     NgbProgressbarModule,
     CoreModule,
     SubheaderModule,
+    SlickCarouselModule
   ],
 })
 export class LayoutModule { }

@@ -9,6 +9,11 @@
 @import "~highlight.js/styles/googlecode.css";
 @import "~perfect-scrollbar/css/perfect-scrollbar.css";
 
+// Slick Carousel
+$slick-font-path: "~slick-carousel/slick/fonts/";
+$slick-loader-path: "~slick-carousel/slick/";
+@import '~slick-carousel/slick/slick', '~slick-carousel/slick/slick-theme';
+
 // Global fonts
 @import "~socicon/css/socicon.css";
 @import "~@fortawesome/fontawesome-free/css/all.min.css";

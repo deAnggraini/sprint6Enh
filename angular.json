@@ -39,7 +39,9 @@
             ],
             "scripts": [
               "node_modules/apexcharts/dist/apexcharts.min.js",
-              "node_modules/clipboard/dist/clipboard.js"
+              "node_modules/clipboard/dist/clipboard.js",
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/slick-carousel/slick/slick.min.js"
             ]
           },
           "configurations": {

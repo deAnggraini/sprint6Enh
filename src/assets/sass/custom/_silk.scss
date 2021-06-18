@@ -1,0 +1,12 @@
+button.slick-next.slick-arrow {
+//   background-color: red;
+}
+
+button.slick-next.slick-arrow:before, button.slick-prev.slick-arrow:before  {
+  color: #0078D4;
+//   opacity: .9;
+}
+
+button.slick-next.slick-disabled, button.slick-prev.slick-disabled  {
+    display: none !important;
+}
