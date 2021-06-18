@@ -31,7 +31,7 @@ import id.co.bca.pakar.be.oauth2.token.CustomJdbcTokenStore;
  *
  */
 @Service
-public class UserServiceImp implements UserService {
+public class UserServiceImpl implements UserService {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 //	private DataSource dataSource;

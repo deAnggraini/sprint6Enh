@@ -3,8 +3,12 @@ package id.co.bca.pakar.be.doc.api;
 import java.util.ArrayList;
 import java.util.List;
 
+import id.co.bca.pakar.be.doc.dto.ThemeDto;
+import id.co.bca.pakar.be.doc.model.Theme;
+import id.co.bca.pakar.be.doc.service.ThemeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,15 +24,35 @@ import id.co.bca.pakar.be.doc.util.JSONMapperAdapter;
 public class ArticleController extends BaseController {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
-	@RequestMapping("/api/doc/test")
+	/*@RequestMapping("/api/doc/test")
 	public String user() {
 		return "test resource server";
-	}
+	}*/
+
+	@Autowired
+	private ThemeService themeService;
 
 	@GetMapping("/api/doc/theme")
-	public String theme() {
-		return "secret message";
+	public ResponseEntity<RestResponse<ThemeDto>> theme() {
+		logger.info("theme process");
+
+		/*String jsonString = "header: {\n" +
+				"        background: '#1995D1',\n" +
+				"        //background: 'darkblue',\n" +
+				"        color: 'white',\n" +
+				"        hover: 'red',\n" +
+				"    },\n" +
+				"    homepage: {\n" +
+				"        bg_img_top: 'default_top.svg',\n" +
+				"        //bg_img_top: 'news.svg',\n" +
+				"    }";
+
+		ThemeDto themeDto = (ThemeDto) JSONMapperAdapter.jsonToObject(jsonString, SearchHistoryDto.class);*/
+		ThemeDto themeDto = themeService.getThemeList();
+
+		return createResponse(themeDto, "OO", "SUCCESS");
 	}
+
 
 	// pindah ke service menu
 //	@GetMapping("/api/doc/categori-article")
