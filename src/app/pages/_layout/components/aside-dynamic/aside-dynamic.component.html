@@ -1,6 +1,6 @@
 <div class="brand flex-column-auto" id="kt_brand" [ngClass]="brandClasses"
   style="background: {{headerBackground}};"
-  [ngStyle]="showAside ? {'box-shadow': '0px 4px 8px 0px #0202027b'} : {}"
+  [ngStyle]="showAside ? {'box-shadow': '0px 4px 8px 0px #0202027b'} : {'box-shadow': '-2px 4px 8px 0px #0000001A'}"
   >
   <!-- routerLink="/"  -->
   <a class="brand-logo cursor-pointer" *ngIf="showAside">
@@ -79,7 +79,7 @@
         <span class="menu-text" [translate]="item.translate">{{
           item.title
         }}</span>
-        <i class="menu-arrow"></i>
+        <!-- <i class="menu-arrow"></i> -->
       </a>
       <div class="menu-submenu">
         <i class="menu-arrow"></i>
@@ -170,8 +170,14 @@
 <!-- begin::Section -->
 <ng-template #menuItemSectionTemplate let-item="item">
   <li class="menu-section">
-    <h4 class="menu-text" [translate]="item.translate">{{ item.section }}</h4>
-    <i class="menu-icon flaticon-more-v2"></i>
+    <a style="display: flex;  flex-grow: 1; align-items: stretch; position: relative;">
+      <span [inlineSVG]="item.svg" cacheSVG="true" class="svg-icon menu-icon">
+        <i class="fa fa-university text-dark mr-1"></i>
+      </span>
+      <span class="menu-text" [translate]="item.translate">{{ item.section }}</span>
+    </a>
+    <!-- <h4 class="menu-text" [translate]="item.translate">{{ item.section }}</h4> -->
+    <!-- <i class="menu-icon flaticon-more-v2"></i> -->
   </li>
 </ng-template>
 <!-- end::Section -->

@@ -60,7 +60,8 @@ export class DynamicAsideMenuService {
     const parseItem = (item: any): Menu => {
       const { id, title, desc } = item;
       const icon = 'flaticon2-list-2';
-      const svg = './assets/media/svg/icons/Layout/Layout-right-panel-2.svg';
+      // const svg = './assets/media/svg/icons/Layout/Layout-right-panel-2.svg';
+      const svg = './assets/media/svg/icons/Navigation/Angle-right.svg';
       const page = `/article/list/${id}`;
       let res: Menu = Object.assign({}, dumm_template, { id, title, icon, svg, page, submenu: [] });
       return res;
@@ -95,7 +96,7 @@ export class DynamicAsideMenuService {
         if (item.menus.length > 2) {
           let title = 'Lihat Lebih Sedikit'
           if (item.showLess) {
-            title = 'Lihat Semua';
+            title = 'Lihat Semua' + item.title;
           }
           items.push({
             isFunction: true,
@@ -144,7 +145,7 @@ export class DynamicAsideMenuService {
       .concat(this.menuByRoles())
       .concat(_server)
       .concat(config.footer)
-      .concat({ section: ' ' }) // agar menu tidak terlalu mepet kebawah
+      // .concat({ section: ' ' }) // agar menu tidak terlalu mepet kebawah
       ;
     this.setMenu({ items });
   }
