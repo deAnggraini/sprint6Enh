@@ -6,9 +6,11 @@
         </div>
     </h3>
     <div class="d-flex align-items-end">
-        <span href="#" class="navi-link cursor-pointer text-primary font-weight-bold font-size-sm">
-            Lihat semua >
-        </span>
+        <a class="navi-link" href="#">
+            <span class="navi-text cursor-pointer font-weight-bold font-size-sm">
+                Lihat semua >
+            </span>
+        </a>
     </div>
 </div>
 
@@ -37,7 +39,7 @@
                     <a class="text-muted font-weight-bold font-size-sm">{{item.created_date | date: "dd MMMM yyyy"}}</a>
                 </div>
                 <div class="mb-2">
-                    <a class="text-dark font-weight-bold font-size-h7 cursor-pointer">{{item.title}}</a>
+                    <a class="title text-dark font-weight-bold font-size-h7 cursor-pointer">{{item.title}}</a>
                 </div>
                 <p class="text-desc mb-1">
                     {{item.desc}}
