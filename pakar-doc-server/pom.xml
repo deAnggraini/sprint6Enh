@@ -108,12 +108,14 @@
 			<resource>
 				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
-				<!-- <excludes>
+				<excludes>
+					<exclude>application.yml</exclude>
+					<!-- 
 					<exclude>log4j2.xml</exclude>
 					<exclude>log4j2-spring.xml</exclude>
-					<exclude>application.yml</exclude>
 					<exclude>script/*.*</exclude>
-				</excludes> -->
+					-->
+				</excludes>
 			</resource>
 		</resources>
 		<plugins>
