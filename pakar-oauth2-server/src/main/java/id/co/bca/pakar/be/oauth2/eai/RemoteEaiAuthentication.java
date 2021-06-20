@@ -17,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import id.co.bca.pakar.be.oauth2.dto.EaiCredential;
 import id.co.bca.pakar.be.oauth2.dto.EaiLoginResponse;
 import id.co.bca.pakar.be.oauth2.util.JSONMapperAdapter;
+import id.co.bca.pakar.be.oauth2.util.TrippleDesEncryption;
 
 @Service
 public class RemoteEaiAuthentication {
@@ -48,7 +49,8 @@ public class RemoteEaiAuthentication {
 		String encryptedPassword = "";
 		try {
 			logger.info("encrypt password using 3DES ECB Mode");
-			encryptedPassword = new DESedeEncryption(encryptionKey).encryptToHex(password);
+//			encryptedPassword = new DESedeEncryption(encryptionKey).encryptToHex(password);
+			encryptedPassword = (new TrippleDesEncryption(encryptionKey.getBytes())).encrypt(password);
 		} catch (Exception e) {
 			logger.error("fail encrypt password before send to to EAI system", e);
 			throw new Exception("fail encrypt password before send to to EAI system");

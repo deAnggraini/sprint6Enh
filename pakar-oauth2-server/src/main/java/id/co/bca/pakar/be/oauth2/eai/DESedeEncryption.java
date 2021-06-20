@@ -11,7 +11,7 @@ import org.apache.commons.codec.binary.Hex;
 
 public class DESedeEncryption {
 	private static final String UNICODE_FORMAT = "UTF8";
-	public static final String DESEDE_ENCRYPTION_SCHEME = "DESede";
+	public static final String DESEDE_ENCRYPTION_SCHEME = "DESede/ECB/NoPadding";
 	private KeySpec myKeySpec;
 	private SecretKeyFactory mySecretKeyFactory;
 	private Cipher cipher;
@@ -21,11 +21,11 @@ public class DESedeEncryption {
 	SecretKey key;
 
 	public DESedeEncryption() throws Exception {
-		myEncryptionKey = "123456789012345678901234";
+		myEncryptionKey = "123456789013245678901234";
 		myEncryptionScheme = DESEDE_ENCRYPTION_SCHEME;
 		keyAsBytes = myEncryptionKey.getBytes(UNICODE_FORMAT);
 		myKeySpec = new DESedeKeySpec(keyAsBytes);
-		mySecretKeyFactory = SecretKeyFactory.getInstance(myEncryptionScheme);
+		mySecretKeyFactory = SecretKeyFactory.getInstance("DESede");
 		cipher = Cipher.getInstance(myEncryptionScheme);
 		key = mySecretKeyFactory.generateSecret(myKeySpec);
 	}
@@ -35,7 +35,7 @@ public class DESedeEncryption {
 		myEncryptionScheme = DESEDE_ENCRYPTION_SCHEME;
 		keyAsBytes = myEncryptionKey.getBytes(UNICODE_FORMAT);
 		myKeySpec = new DESedeKeySpec(keyAsBytes);
-		mySecretKeyFactory = SecretKeyFactory.getInstance(myEncryptionScheme);
+		mySecretKeyFactory = SecretKeyFactory.getInstance("DESede");
 		cipher = Cipher.getInstance(myEncryptionScheme);
 		key = mySecretKeyFactory.generateSecret(myKeySpec);
 	}
@@ -116,9 +116,10 @@ public class DESedeEncryption {
 	 * Testing The DESede Encryption And Decryption Technique
 	 */
 	public static void main(String args[]) throws Exception {
-		DESedeEncryption myEncryptor = new DESedeEncryption("123456789012345678901234");
+//		DESedeEncryption myEncryptor = new DESedeEncryption("123456789012345678901234");
+		DESedeEncryption myEncryptor = new DESedeEncryption("123456789013245678901234");
 
-		String stringToEncrypt = "123";
+		String stringToEncrypt = "Bca123!";
 		
 		String encrypted = myEncryptor.encrypt(stringToEncrypt);
 		String encryptedHex = myEncryptor.encryptToHex(stringToEncrypt);
