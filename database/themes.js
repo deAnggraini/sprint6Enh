@@ -8,6 +8,13 @@ const DefaultThemeConfig = {
     homepage: {
         bg_img_top: 'default_top.svg',
         //bg_img_top: 'news.svg',
+        component: [
+            'search',
+            'category',
+            'recommendation',
+            'news',
+            'popular',
+        ]
     }
 }
 
