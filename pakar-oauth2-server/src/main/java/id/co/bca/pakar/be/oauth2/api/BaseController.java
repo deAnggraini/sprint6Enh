@@ -55,7 +55,7 @@ public abstract class BaseController {
 		if(errorCode.equals("00")) {
 			return new ResponseEntity<>(new RestResponse<>(data, errorCode, errorMessage), HttpStatus.OK);
 		} else {
-			return new ResponseEntity<>(new RestResponse<>(data, errorCode, errorMessage), HttpStatus.OK);
+			return new ResponseEntity<>(new RestResponse<>(data, errorCode, errorMessage), HttpStatus.BAD_REQUEST);
 		}
 	}
 	
@@ -63,7 +63,7 @@ public abstract class BaseController {
         if(errorCode.equals("00")) {
 			return new ResponseEntity<>(new RestResponse<>(dataList, errorCode, errorMessage), HttpStatus.OK);
 		} else {
-			return new ResponseEntity<>(new RestResponse<>(dataList, errorCode, errorMessage), HttpStatus.OK);
+			return new ResponseEntity<>(new RestResponse<>(dataList, errorCode, errorMessage), HttpStatus.BAD_REQUEST);
 		}
     }
 }
