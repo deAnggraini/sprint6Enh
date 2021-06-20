@@ -25,17 +25,18 @@ spring:
   dataSource: 
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://192.168.100.48:5432/postgres
+    #url: jdbc:postgresql://36.89.25.220:5432/pakardb
     username: postgres
     password: password
-##    hikari:
-##      connectionTimeout: 20000
-##      maximumPoolSize: 5   
+    hikari:
+      connectionTimeout: 20000
+      maximumPoolSize: 5   
 #    
 #
 ## Hibernate ddl auto (create, create-drop, update)
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     generate-ddl: true
     show-sql: true
     database-platform: org.hibernate.dialect.PostgreSQL10Dialect
