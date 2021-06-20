@@ -24,6 +24,9 @@ VALUES('system',now()::DATE, 'f','test', 'password', 't');
 INSERT INTO public.r_user
 (created_by, created_date, deleted, username, password, enabled)
 VALUES('system',now()::DATE, 'f','guest', 'password', 't');
+INSERT INTO public.r_user
+(created_by, created_date, deleted, username, password, enabled)
+VALUES('system',now()::DATE, 'f','test1', 'password', 't');
 
 
 ---- user profile ---
@@ -48,6 +51,9 @@ VALUES(6, 'system',now()::DATE, 'f','superadmin', 'Super', 'Admin', 'Super Admin
 INSERT INTO public.r_user_profile
 (id, created_by, created_date, deleted, username, firstname, lastname, fullname, email, phone, company_name, occupation, pic)
 VALUES(7, 'system',now()::DATE, 'f','reader', 'Reader', 'Saja', 'Reader Saja', 'reader@bca.co.id', '1234567', 'BCA', 'READER', './assets/media/users/default.jpg');
+INSERT INTO public.r_user_profile
+(id, created_by, created_date, deleted, username, firstname, lastname, fullname, email, phone, company_name, occupation, pic)
+VALUES(8, 'system',now()::DATE, 'f','test1', 'Test', '1', 'Test 1', 'reader@bca.co.id', '1234567', 'BCA', 'READER', './assets/media/users/default.jpg');
 
 
 ---- role ---
@@ -89,5 +95,9 @@ INSERT INTO public.r_user_role
 VALUES(6, 'system',now()::DATE, 'f','guest', 'SUPERADMIN');
 INSERT INTO public.r_user_role
 (id, created_by, created_date, deleted, username, role_id)
-VALUES(6, 'system',now()::DATE, 'f','reader', 'READER');
+VALUES(7, 'system',now()::DATE, 'f','reader', 'READER');
+INSERT INTO public.r_user_role
+(id, created_by, created_date, deleted, username, role_id)
+VALUES(8, 'system',now()::DATE, 'f','test1', 'READER');
+
 
