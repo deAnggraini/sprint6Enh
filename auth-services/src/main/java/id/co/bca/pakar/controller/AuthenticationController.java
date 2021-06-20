@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,9 +19,12 @@ import id.co.bca.pakar.dto.AuthenticationDto;
 import id.co.bca.pakar.dto.EaiCredential;
 import id.co.bca.pakar.dto.EaiLoginResponse;
 import id.co.bca.pakar.util.DESedeEncryption;
+import id.co.bca.pakar.util.TrippleDesEncryption;
 
 @RestController
 public class AuthenticationController {
+	private static final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
+	
 	static String keyAlgorithm = "123456789013245678901234";
 
 	@PostMapping(value = "/ad-gateways/verify1", consumes = { MediaType.APPLICATION_JSON_VALUE,
@@ -27,9 +32,9 @@ public class AuthenticationController {
 					MediaType.APPLICATION_XML_VALUE })
 	public String loginEaiSuccess(@RequestHeader Map<String, String> headers, @RequestBody EaiCredential credential) {
 		headers.forEach((key, value) -> {
-			System.out.println(String.format("Header '%s' = %s", key, value));
+			logger.info(String.format("Header '%s' = %s", key, value));
 		});
-		System.out.println("client request " + credential.toString());
+		logger.info("client request " + credential.toString());
 		List<AuthenticationDto> authDtos = new ArrayList<AuthenticationDto>();
 		authDtos.add(new AuthenticationDto("user", "password"));
 		authDtos.add(new AuthenticationDto("test1", "password1"));
@@ -39,25 +44,28 @@ public class AuthenticationController {
 		authDtos.add(new AuthenticationDto("editor", "12345"));
 		authDtos.add(new AuthenticationDto("publisher", "12345"));
 		authDtos.add(new AuthenticationDto("guest", "12345"));
+		authDtos.add(new AuthenticationDto("superadmin", "12345"));
+		authDtos.add(new AuthenticationDto("test", "12345"));
+		authDtos.add(new AuthenticationDto("reader", "12345"));
 		for (AuthenticationDto dto : authDtos) {
-			System.out.println("client request " + dto.getUsername());
+			logger.info("client request " + dto.getUsername());
 		}
 		
 		EaiLoginResponse response = new EaiLoginResponse();
 		boolean loginStatus = false;
 		for (AuthenticationDto dto : authDtos) {
-			System.out.println("username dto "+dto.getUsername());
+			logger.info("username dto "+dto.getUsername());
 			if (dto.getUsername().equals(credential.getUserId())) {
-				System.out.println("userid "+credential.getUserId());
+				logger.info("userid "+credential.getUserId());
 				String password = "";
 				try {
-					password = new DESedeEncryption(keyAlgorithm).decryptFromHex(credential.getPassword());
+					password = new TrippleDesEncryption(keyAlgorithm.getBytes()).decrypt(credential.getPassword());
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
-				System.out.println("password "+password);
+				logger.info("password "+password);
 				if (dto.getPassword().equals(password)) {
 					response.getErrorSchema().setErroCode("ESB-00-000");
 					response.getErrorSchema().getErrorMessage().put("Indonesian", "Berhasil");
@@ -83,7 +91,7 @@ public class AuthenticationController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("return response " + ret);
+		logger.info("return response " + ret);
 		return ret;
 	}
 	
@@ -115,7 +123,7 @@ public class AuthenticationController {
 //			if (dto.getUsername().equals(credential.getUserId())) {
 				String password = "";
 				try {
-					password = new DESedeEncryption("123456789013245678901234").decryptFromHex("7e4ec02231ed5cd4");
+					password = (new TrippleDesEncryption("123456789013245678901234".getBytes())).decrypt("da82edc6dcc1af30");
 					System.out.println(password);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
