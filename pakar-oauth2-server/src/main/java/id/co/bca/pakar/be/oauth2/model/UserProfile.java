@@ -89,4 +89,10 @@ public class UserProfile extends EntityBase {
 	public void setCompanyName(String companyName) {
 		this.companyName = companyName;
 	}
+	public String getPic() {
+		return pic;
+	}
+	public void setPic(String pic) {
+		this.pic = pic;
+	}
 }
