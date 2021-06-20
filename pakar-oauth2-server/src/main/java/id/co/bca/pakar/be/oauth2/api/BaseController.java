@@ -7,8 +7,6 @@ import org.springframework.http.ResponseEntity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import id.co.bca.pakar.be.doc.api.BaseController.RestResponse;
-
 public abstract class BaseController {
 	protected class RestResponse<T> {
 		@JsonProperty("data")
