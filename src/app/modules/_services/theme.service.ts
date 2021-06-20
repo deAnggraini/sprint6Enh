@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { ApiService } from 'src/app/utils/_services/api-service.service';
 import { DefaultThemeConfig, ThemeConfig } from '../../_metronic/configs/theme.config';
-import { of, Subject } from 'rxjs';
+import { of, Subject, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 @Injectable({
@@ -11,8 +11,9 @@ import { tap } from 'rxjs/operators';
 export class ThemeService {
 
   private _base_url = `${environment.apiUrl}/doc`;
-  private theme: any = DefaultThemeConfig;
-  private currentTheme: Subject<ThemeConfig> = new Subject();
+  private theme: ThemeConfig = DefaultThemeConfig;
+  currentTheme: Subject<ThemeConfig> = new Subject();
+  homepageComponent$: BehaviorSubject<string[]> = new BehaviorSubject([]);
 
   constructor(private apiService: ApiService) {
     // this.populate();
@@ -27,7 +28,9 @@ export class ThemeService {
 
   private populate() {
     this.apiService.get(`${this._base_url}/theme`).subscribe(resp => {
-      this.theme = resp;
+      this.theme = resp as ThemeConfig;
+      this.currentTheme.next(this.theme);
+      this.homepageComponent$.next(this.theme.homepage.component);
     })
   }
 

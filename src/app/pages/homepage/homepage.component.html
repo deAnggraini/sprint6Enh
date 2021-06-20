@@ -4,27 +4,37 @@
         background-size: auto;">
         <app-search></app-search>
     </div>
-    <div class="container-homepage px-40" style="
-    background-image: url('./assets/media/svg/bca/homepage/{{background_category_menu}}');
-    background-repeat: no-repeat;
-    background-position: bottom;">
-        <app-kategori-menu></app-kategori-menu>
-    </div>
-    <div class="container-homepage px-40 py-20">
-        <app-recommendation></app-recommendation>
-    </div>
-    <div class="container-homepage px-40 py-10" style="
-    background-image: url('./assets/media/svg/bca/homepage/pakar-new.svg');
-    background-repeat: no-repeat;
-    background-position: bottom;
-    min-height: 286px;
-">
-        <app-terbaru></app-terbaru>
-    </div>
-    <div class="container-homepage px-40" style="
-    background-image: url('./assets/media/svg/bca/homepage/bg-wave.svg');
-    background-repeat: no-repeat;
-    background-position: bottom;">
-        <app-popular></app-popular>
-    </div>
+    <ng-continer *ngFor="let row of sortingList$ | async">
+        <ng-continer *ngIf="row == 'category'">
+            <div class="container-homepage px-40 mt-20" style="
+                background-image: url('./assets/media/svg/bca/homepage/{{background_category_menu}}');
+                background-repeat: no-repeat;
+                background-position: bottom;">
+                <app-kategori-menu></app-kategori-menu>
+            </div>
+        </ng-continer>
+        <ng-continer *ngIf="row == 'recommendation'">
+            <div class="container-homepage px-40 mt-20">
+                <app-recommendation></app-recommendation>
+            </div>
+        </ng-continer>
+        <ng-continer *ngIf="row == 'news'">
+            <div class="container-homepage px-40 mt-20 pt-10" style="
+                background-image: url('./assets/media/svg/bca/homepage/pakar-new.svg');
+                background-repeat: no-repeat;
+                background-position: bottom;
+                min-height: 286px;
+            ">
+                <app-terbaru></app-terbaru>
+            </div>
+        </ng-continer>
+        <ng-continer *ngIf="row == 'popular'">
+            <div class="container-homepage px-40 mt-20" style="
+                background-image: url('./assets/media/svg/bca/homepage/bg-wave.svg');
+                background-repeat: no-repeat;
+                background-position: bottom;">
+                <app-popular></app-popular>
+            </div>
+        </ng-continer>
+    </ng-continer>
 </div>
