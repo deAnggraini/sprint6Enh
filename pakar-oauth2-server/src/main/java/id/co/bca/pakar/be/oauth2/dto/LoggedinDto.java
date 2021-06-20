@@ -25,6 +25,8 @@ public class LoggedinDto {
 	private String companyName;
 	@JsonProperty("phone")
 	private String phone;
+	@JsonProperty("pic")
+	private String picture = "./assets/media/users/default.jpg"; // default value
 	@JsonProperty("authToken")
 	private String access_token;
 	@JsonInclude(JsonInclude.Include.NON_NULL) 
@@ -94,6 +96,12 @@ public class LoggedinDto {
 		this.phone = phone;
 	}
 	
+	public String getPicture() {
+		return picture;
+	}
+	public void setPicture(String picture) {
+		this.picture = picture;
+	}
 	public String getAccess_token() {
 		return access_token;
 	}
