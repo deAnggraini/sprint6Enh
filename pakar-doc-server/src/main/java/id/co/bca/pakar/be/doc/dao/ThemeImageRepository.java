@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 public interface ThemeImageRepository extends CrudRepository<ThemeImage, String> {
     @Query(
             value =
-                    "select bg_image_top where r_theme_image",
+                    "select id, bg_img_top, deleted, created_by, created_date, modify_by, modify_date from r_theme_image",
             nativeQuery = true)
     ThemeImage findAllThemeImage();
 }

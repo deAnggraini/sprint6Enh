@@ -10,11 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import id.co.bca.pakar.be.doc.dto.SearchHistoryDto;
 import id.co.bca.pakar.be.doc.dto.SearchHistoryItem;
@@ -24,31 +20,17 @@ import id.co.bca.pakar.be.doc.util.JSONMapperAdapter;
 public class ArticleController extends BaseController {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
-	/*@RequestMapping("/api/doc/test")
-	public String user() {
-		return "test resource server";
-	}*/
-
 	@Autowired
 	private ThemeService themeService;
 
-	@GetMapping("/api/doc/theme")
-	public ResponseEntity<RestResponse<ThemeDto>> theme() {
+	@GetMapping("/api/v1/doc/theme")
+	public ResponseEntity<RestResponse<ThemeDto>> theme(@RequestHeader("Authorization") String authToken) {
 		logger.info("theme process");
+		logger.info("authToken" +authToken);
 
-		/*String jsonString = "header: {\n" +
-				"        background: '#1995D1',\n" +
-				"        //background: 'darkblue',\n" +
-				"        color: 'white',\n" +
-				"        hover: 'red',\n" +
-				"    },\n" +
-				"    homepage: {\n" +
-				"        bg_img_top: 'default_top.svg',\n" +
-				"        //bg_img_top: 'news.svg',\n" +
-				"    }";
-
-		ThemeDto themeDto = (ThemeDto) JSONMapperAdapter.jsonToObject(jsonString, SearchHistoryDto.class);*/
 		ThemeDto themeDto = themeService.getThemeList();
+
+		logger.info("themeDto" +themeDto);
 
 		return createResponse(themeDto, "OO", "SUCCESS");
 	}

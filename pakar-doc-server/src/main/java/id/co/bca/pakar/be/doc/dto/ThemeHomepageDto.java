@@ -7,6 +7,14 @@ public class ThemeHomepageDto {
     @JsonProperty("bg_img_top")
     private String  bg_img_top;
 
+    public ThemeHomepageDto(){
+        super();
+    }
+    public ThemeHomepageDto(String bg_img_top){
+        super();
+        this.bg_img_top = bg_img_top;
+    }
+
     public String getBg_img_top() {
         return bg_img_top;
     }

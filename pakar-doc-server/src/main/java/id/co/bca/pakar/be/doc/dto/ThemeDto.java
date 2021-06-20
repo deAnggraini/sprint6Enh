@@ -5,22 +5,22 @@ import java.util.List;
 
 public class ThemeDto {
 
-    private List<ThemeHeaderDto> header = new ArrayList<>();
-    private List<ThemeHomepageDto> homepage = new ArrayList<>();
+    private ThemeHeaderDto header;
+    private ThemeHomepageDto homepage;
 
-    public List<ThemeHeaderDto> getHeader() {
+    public ThemeHeaderDto getHeader() {
         return header;
     }
 
-    public void setHeader(List<ThemeHeaderDto> header) {
+    public void setHeader(ThemeHeaderDto header) {
         this.header = header;
     }
 
-    public List<ThemeHomepageDto> getHomepage() {
+    public ThemeHomepageDto getHomepage() {
         return homepage;
     }
 
-    public void setHomepage(List<ThemeHomepageDto> homepage) {
+    public void setHomepage(ThemeHomepageDto homepage) {
         this.homepage = homepage;
     }
 }

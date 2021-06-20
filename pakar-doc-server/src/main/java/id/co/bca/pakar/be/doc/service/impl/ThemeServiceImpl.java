@@ -34,14 +34,22 @@ public class ThemeServiceImpl implements ThemeService {
 
         Theme theme = themeRepository.findAllTheme();
         ThemeImage themeImage = themeImageRepository.findAllThemeImage();
-        logger.info("theme data "+theme.toString());
-        logger.info("theme data image "+themeImage.toString());
-
+        logger.info("theme data "+theme.getBackground());
+        logger.info("theme data "+theme.getColor());
+        logger.info("theme data "+theme.getHover());
+        logger.info("theme data image "+themeImage.getBg_img_top());
 
         themeHeaderDto.setBackground(theme.getBackground());
         themeHeaderDto.setColor(theme.getColor());
         themeHeaderDto.setHover(theme.getHover());
-        themeDto.getHeader();
+        logger.info("themeHeaderDto "+themeHeaderDto);
+
+        themeHomepageDto.setBg_img_top(themeImage.getBg_img_top());
+        logger.info("themeHomepageDto "+themeHomepageDto);
+
+        themeDto.setHeader(themeHeaderDto);
+        themeDto.setHomepage(themeHomepageDto);
+
         return themeDto;
     }
 }
