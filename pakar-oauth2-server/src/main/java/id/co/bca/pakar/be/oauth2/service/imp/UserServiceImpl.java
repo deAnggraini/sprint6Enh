@@ -6,16 +6,11 @@ package id.co.bca.pakar.be.oauth2.service.imp;
 import java.util.Date;
 import java.util.List;
 
-import javax.sql.DataSource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2RefreshToken;
-import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.stereotype.Service;
 
 import id.co.bca.pakar.be.oauth2.dao.RoleRepository;
@@ -92,15 +87,16 @@ public class UserServiceImpl implements UserService {
 			OAuth2RefreshToken refreshToken = accessToken.getRefreshToken();
 //			tokenStore.removeRefreshToken(refreshToken);
 			logger.info("refresh_token value from db "+refreshToken);
+			loggedinDto.setRefresh_token(refreshToken.getValue());
 			
 			int expiresIn = accessToken.getExpiresIn();
 			logger.info("expiresin from db "+expiresIn);
+			loggedinDto.setExpires_in(String.valueOf(expiresIn));
 			
 			Date expiresDate = accessToken.getExpiration();
 			logger.info("expires date from db "+expiresDate);
 			
 			loggedinDto.setUsername(username);
-			loggedinDto.setExpires_in(String.valueOf(expiresIn));
 			
 			List<UserRole> uRoles = roleRepository.findUserRolesByUsername(username);
 			for(UserRole ur : uRoles) {
@@ -109,14 +105,16 @@ public class UserServiceImpl implements UserService {
 			
 			// get user profile
 			UserProfile profile = userProfileRepository.findByUsername(username);
-			loggedinDto.setFirstname(profile.getFirstname());
-			loggedinDto.setLastname(profile.getLastname());
-			loggedinDto.setFullname(profile.getFullname());
-			loggedinDto.setEmail(profile.getEmail());
-			loggedinDto.setPhone(profile.getPhone());
-			loggedinDto.setCompanyName(profile.getCompanyName());
-			loggedinDto.setOccupation(profile.getOccupation());
-			
+			if(profile != null) {
+				loggedinDto.setFirstname(profile.getFirstname());
+				loggedinDto.setLastname(profile.getLastname());
+				loggedinDto.setFullname(profile.getFullname());
+				loggedinDto.setEmail(profile.getEmail());
+				loggedinDto.setPhone(profile.getPhone());
+				loggedinDto.setCompanyName(profile.getCompanyName());
+				loggedinDto.setOccupation(profile.getOccupation());
+				loggedinDto.setPicture(profile.getPic());
+			}
 			return loggedinDto;
 		} catch (Exception e) {
 			logger.error("exception ", e);

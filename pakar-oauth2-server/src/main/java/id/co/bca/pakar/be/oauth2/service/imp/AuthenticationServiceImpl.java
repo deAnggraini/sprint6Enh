@@ -3,6 +3,8 @@ package id.co.bca.pakar.be.oauth2.service.imp;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +15,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.oauth2.common.OAuth2RefreshToken;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -26,13 +30,18 @@ import id.co.bca.pakar.be.oauth2.dto.OAuthTokenDto;
 import id.co.bca.pakar.be.oauth2.model.UserProfile;
 import id.co.bca.pakar.be.oauth2.model.UserRole;
 import id.co.bca.pakar.be.oauth2.service.AuthenticationService;
+import id.co.bca.pakar.be.oauth2.token.CustomJdbcTokenStore;
 
 @Service
+@Transactional
 public class AuthenticationServiceImpl implements AuthenticationService {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
 	private RestTemplate restTemplate;
+	
+	@Autowired
+	private CustomJdbcTokenStore tokenStore;
 
 	@Value("${spring.security.oauth2.clientId}")
 	private String clientId;
@@ -112,6 +121,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 				loggedinDto.setPhone(profile.getPhone());
 				loggedinDto.setCompanyName(profile.getCompanyName());
 				loggedinDto.setOccupation(profile.getOccupation());
+				loggedinDto.setPicture(profile.getPic());
 			}
 		} catch (RestClientException e) {
 			logger.error("login failed with exception", e);
@@ -120,4 +130,30 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		return loggedinDto;
 	}
 
+	/**
+	 * logout oauth2 pakar
+	 */
+	@Override
+	public Boolean logout(String tokenValue) throws Exception {
+		logger.info("--- processing logout ---");
+		try {
+			OAuth2AccessToken accessToken = tokenStore.readAccessToken(tokenValue);			
+			logger.info("access_token value from db "+accessToken);
+			if(accessToken == null) {
+				return Boolean.FALSE;
+			}
+			
+			logger.info("remove access token "+accessToken);
+			tokenStore.removeAccessToken(accessToken);
+			
+			logger.info("remove refresh token "+accessToken);
+			OAuth2RefreshToken refreshToken = accessToken.getRefreshToken();
+			tokenStore.removeRefreshToken(refreshToken);
+
+			return Boolean.TRUE;
+		} catch (Exception e) {
+			logger.error("exception", e);
+			return Boolean.FALSE;
+		}
+	}
 }
