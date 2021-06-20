@@ -144,10 +144,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			}
 			
 			logger.info("remove access token "+accessToken);
-			tokenStore.removeAccessToken(accessToken);
+			tokenStore.removeAccessToken(accessToken);			
 			
-			logger.info("remove refresh token "+accessToken);
 			OAuth2RefreshToken refreshToken = accessToken.getRefreshToken();
+			logger.info("remove refresh token "+refreshToken);
 			tokenStore.removeRefreshToken(refreshToken);
 
 			return Boolean.TRUE;
