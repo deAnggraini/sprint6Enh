@@ -1,5 +1,6 @@
 package id.co.bca.pakar.be.oauth2.api;
 
+import java.security.Principal;
 import java.util.Arrays;
 
 import org.slf4j.Logger;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +24,17 @@ public class UserController extends BaseController {
 	
 	@Autowired
 	private UserService userService;
+	
+	/**
+	 * decode token object to authorization object
+	 * @param principal
+	 * @return
+	 */
+	@GetMapping("/api/auth/me")
+    public ResponseEntity<RestResponse<Principal>> get(final Principal principal) {
+        return createResponse(principal, "00",  "SUCCESS");
+    }
+	
 	/**
 	 * 
 	 * @param get user profile by token
