@@ -6,7 +6,7 @@
         </Console>
         <File name="LogToFile" fileName="/var/bca/logs/app.log">
             <PatternLayout>
-                <Pattern>%d %p %c{1.} :%L [%t] %m%n</Pattern>
+                <Pattern>%d %p [%t] %c{1.}:%L %m%n</Pattern>
             </PatternLayout>
         </File>
     </Appenders>
