@@ -9,7 +9,8 @@ public class ThemeImage extends EntityBase {
         @SequenceGenerator(name = "themeImageSeqGen", sequenceName = "themeImageSeq", initialValue = 1, allocationSize = 1)
         @GeneratedValue(generator = "themeImageSeqGen")
         private Long id;
-        private String bg_img_top;
+        private String image_name;
+        private String imageType;
 
         public Long getId() {
                 return id;
@@ -19,11 +20,19 @@ public class ThemeImage extends EntityBase {
                 this.id = id;
         }
 
-        public String getBg_img_top() {
-                return bg_img_top;
+        public String getImage_name() {
+                return image_name;
         }
 
-        public void setBg_img_top(String bg_img_top) {
-                this.bg_img_top = bg_img_top;
+        public void setImage_name(String image_name) {
+                this.image_name = image_name;
+        }
+
+        public String getImageType() {
+                return imageType;
+        }
+
+        public void setImageType(String imageType) {
+                this.imageType = imageType;
         }
 }
