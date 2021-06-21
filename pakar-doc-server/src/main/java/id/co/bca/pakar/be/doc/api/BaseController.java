@@ -11,10 +11,8 @@ public abstract class BaseController {
 	protected class RestResponse<T> {
 		@JsonProperty("data")
 		private T data;
-		@JsonProperty("error")
-		private String code = "00";
-		@JsonProperty("msg")
-		private String message = "SUCCESS";
+		@JsonProperty("status")
+		private ApiStatus apiStatus;
 
 		public RestResponse(T pData) {
 			this.data = pData;
@@ -22,8 +20,7 @@ public abstract class BaseController {
 
 		public RestResponse(T pData, String errorCode, String errorMessage) {
 			this.data = pData;
-			this.code = errorCode;
-			this.message = errorMessage;
+			this.apiStatus = new ApiStatus(errorCode, errorMessage);
 		}
 
 		public T getData() {
@@ -32,6 +29,31 @@ public abstract class BaseController {
 
 		public void setData(T pData) {
 			this.data = pData;
+		}
+
+		public ApiStatus getApiStatus() {
+			return apiStatus;
+		}
+
+		public void setApiStatus(ApiStatus apiStatus) {
+			this.apiStatus = apiStatus;
+		}
+	}	
+	
+	protected class ApiStatus {
+		@JsonProperty("code")
+		private String code;
+		@JsonProperty("message")
+		private String message;
+
+		public ApiStatus() {
+			super();
+		}
+
+		public ApiStatus(String code, String message) {
+			super();
+			this.code = code;
+			this.message = message;
 		}
 
 		public String getCode() {
@@ -49,7 +71,7 @@ public abstract class BaseController {
 		public void setMessage(String message) {
 			this.message = message;
 		}
-	}	
+	}
 	
 	protected <T> ResponseEntity<RestResponse<T>> createResponse(T data, String errorCode, String errorMessage) {
 		if(errorCode.equals("00")) {
