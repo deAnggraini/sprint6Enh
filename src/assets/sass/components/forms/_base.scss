@@ -69,6 +69,10 @@
 			color: $input-solid-color;
 			transition: $transition-input;
 		}
+
+		&.is-invalid {
+			border-color: red;
+		}
 	}
 }
 

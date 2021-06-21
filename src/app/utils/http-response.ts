@@ -1,5 +1,15 @@
 export class CommonHttpResponse {
-    error: boolean;
-    msg: string;
+    error?: string;
+    msg?: string;
+    status?: {
+        error: string;
+        msg: string;
+    }
     data?: any;
+    paging?: {
+        totalData: number,
+        page: number,
+        maxPage?: number,
+        rowPerPage?: number,
+    }
 }

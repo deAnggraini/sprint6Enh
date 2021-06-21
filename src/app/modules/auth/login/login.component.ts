@@ -13,8 +13,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit, OnDestroy {
   defaultAuth = {
-    username: 'admin',
-    password: '12345',
+    username: '',
+    password: '',
   };
   loginForm: FormGroup;
   hasError: boolean;
@@ -56,16 +56,16 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.defaultAuth.username,
         Validators.compose([
           Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(320),
+          Validators.pattern("^[a-zA-Z0-9]{8}$")
         ]),
       ],
       password: [
         this.defaultAuth.password,
         Validators.compose([
           Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(100),
+          // Validators.minLength(6),
+          // Validators.maxLength(100),
+          Validators.pattern("^[a-zA-Z0-9]{6,}$"),
         ]),
       ],
     });

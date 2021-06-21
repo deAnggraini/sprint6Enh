@@ -1,0 +1,19 @@
+<div class="d-flex flex-wrap py-2 mr-3">
+    <a class="btn btn-icon btn-sm btn-light-primary mr-2 my-1" [ngClass]="paging.page == 1 ? 'disabled' : ''">
+        <i class="ki ki-bold-double-arrow-back icon-xs"></i>
+    </a>
+    <a href="#" class="btn btn-icon btn-sm btn-light-primary mr-2 my-1" [ngClass]="paging.page == 1 ? 'disabled' : ''">
+        <i class="ki ki-bold-arrow-back icon-xs"></i>
+    </a>
+
+    <a *ngFor="let page of [].constructor(paging.rowPage); let i = index;"
+        class="btn btn-icon btn-sm border-0 btn-hover-primary mr-2 my-1" (click)="setPage(i+1)"
+        [ngClass]="paging.page == i+1 ? 'active' : ''">
+        {{i + 1}}
+    </a>
+
+    <a href="#" class="btn btn-icon btn-sm btn-light-primary mr-2 my-1" [ngClass]="paging.page == paging.totalPage ? 'disabled' : ''">
+        <i class="ki ki-bold-arrow-next icon-xs"></i></a>
+    <a href="#" class="btn btn-icon btn-sm btn-light-primary mr-2 my-1" [ngClass]="paging.page == paging.totalPage ? 'disabled' : ''">
+        <i class="ki ki-bold-double-arrow-next icon-xs"></i></a>
+</div>

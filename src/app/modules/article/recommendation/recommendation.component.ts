@@ -1,7 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { ArticleService } from '../../_services/article.service';
-import { Location } from '@angular/common';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -17,11 +16,14 @@ export class RecommendationComponent implements OnInit {
   backend_img: string = environment.backend_img;
   keyword: string = '';
 
+  // pagination
+  dataPerPage: number = 6;
+  page: number = 1;
+
   constructor(
     private router: Router,
     private articleService: ArticleService,
-    private changeDetectorRef: ChangeDetectorRef,
-    private location: Location) { }
+    private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.keyword = this.articleService.keyword$.value;
@@ -34,10 +36,6 @@ export class RecommendationComponent implements OnInit {
 
       }
     );
-  }
-
-  back() {
-    this.location.back();
   }
 
   search() {

@@ -4,21 +4,21 @@
         background-size: auto;">
         <app-search></app-search>
     </div>
-    <ng-continer *ngFor="let row of sortingList$ | async">
-        <ng-continer *ngIf="row == 'category'">
+    <ng-container *ngFor="let row of sortingList$ | async">
+        <ng-container *ngIf="row == 'category'">
             <div class="container-homepage px-40 mt-20" style="
                 background-image: url('./assets/media/svg/bca/homepage/{{background_category_menu}}');
                 background-repeat: no-repeat;
                 background-position: bottom;">
                 <app-kategori-menu></app-kategori-menu>
             </div>
-        </ng-continer>
-        <ng-continer *ngIf="row == 'recommendation'">
+        </ng-container>
+        <ng-container *ngIf="row == 'recommendation'">
             <div class="container-homepage px-40 mt-20">
                 <app-recommendation></app-recommendation>
             </div>
-        </ng-continer>
-        <ng-continer *ngIf="row == 'news'">
+        </ng-container>
+        <ng-container *ngIf="row == 'news'">
             <div class="container-homepage px-40 mt-20 pt-10" style="
                 background-image: url('./assets/media/svg/bca/homepage/pakar-new.svg');
                 background-repeat: no-repeat;
@@ -27,14 +27,14 @@
             ">
                 <app-terbaru></app-terbaru>
             </div>
-        </ng-continer>
-        <ng-continer *ngIf="row == 'popular'">
+        </ng-container>
+        <ng-container *ngIf="row == 'popular'">
             <div class="container-homepage px-40 mt-20" style="
                 background-image: url('./assets/media/svg/bca/homepage/bg-wave.svg');
                 background-repeat: no-repeat;
                 background-position: bottom;">
                 <app-popular></app-popular>
             </div>
-        </ng-continer>
-    </ng-continer>
+        </ng-container>
+    </ng-container>
 </div>

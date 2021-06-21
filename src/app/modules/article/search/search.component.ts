@@ -1,7 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ArticleService } from '../../_services/article.service';
-import { Location } from '@angular/common';
 
 interface Response {
   result?: DataItem,
@@ -44,18 +43,13 @@ export class SearchComponent implements OnInit {
   constructor(
     private route: ActivatedRoute, 
     private articleService: ArticleService, 
-    private changeDetectorRef: ChangeDetectorRef,
-    private location: Location) {
+    private changeDetectorRef: ChangeDetectorRef) {
     this.route.params.subscribe(params => {
       this.keyword = params.keyword
       if (this.keyword) {
         this.search();
       }
     });
-  }
-
-  back() {
-    this.location.back();
   }
 
   emptyDataItem(): DataItem {

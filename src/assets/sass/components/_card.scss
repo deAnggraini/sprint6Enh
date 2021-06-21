@@ -4,8 +4,11 @@
 
 // Base
 .card.card-custom {
-    box-shadow: $card-box-shadow;
-    border: 0;
+    // box-shadow: $card-box-shadow;
+    // border: 0;
+    border: 1px solid #DDD;
+    box-shadow: 0px 4px 8px 0px #0000001A;
+    overflow: hidden;
 
     // Header
     > .card-header {

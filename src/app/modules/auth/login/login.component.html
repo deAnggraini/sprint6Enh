@@ -16,17 +16,12 @@
       </div>
     </ng-container>
 
-    <ng-container *ngIf="hasError">
-      <div class="mb-10 alert alert-custom alert-light-danger alert-dismissible">
-        <div class="alert-text">The login details are incorrect</div>
-      </div>
-    </ng-container>
-
     <div class="form-group">
       <label class="font-size-h6 font-weight-bolder text-dark">User Portal BCA</label>
       <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg" type="text" name="username"
-        formControlName="username" autocomplete="off" [ngClass]="{ 'is-invalid': loginForm.controls['username'].invalid }" 
-        placeholder="Username BCA Portal"/>
+        formControlName="username" autocomplete="off"
+        [ngClass]="{ 'is-invalid': hasError || loginForm.controls['username'].invalid }" 
+        placeholder="Masukkan domain Kamu" />
       <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
           validation: 'required',
           message: 'Username is required',
@@ -38,13 +33,8 @@
           control: loginForm.controls['username']
         }"></ng-container>
       <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-          validation: 'minLength',
-          message: 'Username should have at least 3 symbols',
-          control: loginForm.controls['username']
-        }"></ng-container>
-      <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-          validation: 'maxLength',
-          message: 'Username should have maximum 360 symbols',
+          validation: 'pattern',
+          message: 'Username harus 8 karakter alphanumeric',
           control: loginForm.controls['username']
         }"></ng-container>
     </div>
@@ -61,23 +51,29 @@
       </div>
 
       <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg" type="password" name="password"
-        autocomplete="off" formControlName="password" placeholder="Password"
-        [ngClass]="{ 'is-invalid': loginForm.controls['password'].invalid }" />
+        autocomplete="off" formControlName="password" placeholder="Masukkan password domain Kamu"
+        [ngClass]="{ 'is-invalid': hasError || loginForm.controls['password'].invalid }" />
       <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
           validation: 'required',
           message: 'Password is required',
           control: loginForm.controls['password']
         }"></ng-container>
       <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-          validation: 'minlength',
-          message: 'Password should have at least 3 symbols',
+          validation: 'pattern',
+          message: 'Password minimal 6 karakter alphanumeric',
           control: loginForm.controls['password']
         }"></ng-container>
-      <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
-          validation: 'maxLength',
-          message: 'Password should have maximum 100 symbols',
-          control: loginForm.controls['password']
-        }"></ng-container>
+      <ng-container *ngIf="hasError">
+        <div class="fv-plugins-message-container">
+          <div class="fv-help-block">Incorrect User ID or password</div>
+        </div>
+      </ng-container>
+    </div>
+
+    <div class="form-group">
+      <div class="d-flex justify-content-between mt-n5">
+        <label><input type="checkbox"> Remember me</label>
+      </div>
     </div>
 
     <div class="pb-lg-0 pb-5">
@@ -86,12 +82,12 @@
         Masuk
       </button>
 
-      <button type="button" class="btn btn-light-primary font-weight-bolder px-8 py-4 my-3 font-size-lg">
+      <!-- <button type="button" class="btn btn-light-primary font-weight-bolder px-8 py-4 my-3 font-size-lg">
         <span class="svg-icon svg-icon-md">
           <img src="./assets/media/svg/logos/gitlab.svg" style="width: 20px; height: 20px;" />
         </span>
         Login Portal
-      </button>
+      </button> -->
 
       <ng-container *ngIf="isLoading$ | async">
         <span class="spinner spinner-primary ml-5"></span>
