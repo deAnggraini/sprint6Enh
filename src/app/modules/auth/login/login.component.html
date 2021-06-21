@@ -58,6 +58,7 @@
       <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg" type="password" name="password"
         autocomplete="off" formControlName="password" placeholder="Masukkan password domain Kamu"
         [ngClass]="{ 'is-invalid': hasError || loginForm.controls['password'].invalid }" />
+        {{hasError}}
       <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
           validation: 'required',
           message: 'Password is required',

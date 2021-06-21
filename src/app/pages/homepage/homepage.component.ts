@@ -24,8 +24,6 @@ export class HomepageComponent implements OnInit {
 
   ngOnInit(): void {
     this.sortingList$.subscribe(sorting => {
-      // console.log({ sorting });
-      // this.changeDetectorRef.detectChanges();
     })
   }
 

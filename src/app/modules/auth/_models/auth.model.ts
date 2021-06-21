@@ -8,7 +8,6 @@ export class AuthModel {
   remember: boolean;
 
   setAuth(auth: any) {
-    console.log('set auth', auth);
     this.authToken = auth.authToken;
     this.refreshToken = auth.refreshToken;
     this.expiresIn = auth.expiresIn;
