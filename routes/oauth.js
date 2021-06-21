@@ -76,4 +76,8 @@ router.post('/refreshToken', (req, res) => {
     }
 })
 
+router.post('/logout', (req, res) => {
+    res.send({ error: false, msg: "", data: {} });
+})
+
 module.exports = router;
