@@ -3,11 +3,15 @@ export class AuthModel {
   username: string;
   authToken: string;
   refreshToken: string;
-  expiresIn: Date;
+  expiresIn: number;
+  autoLogout: Date;
+  remember: boolean;
 
   setAuth(auth: any) {
+    console.log('set auth', auth);
     this.authToken = auth.authToken;
     this.refreshToken = auth.refreshToken;
     this.expiresIn = auth.expiresIn;
+    this.remember = auth.remember;
   }
 }

@@ -42,7 +42,7 @@ export class AuthHTTPService {
         const auth = new AuthModel();
         auth.authToken = user.authToken;
         auth.refreshToken = user.refreshToken;
-        auth.expiresIn = new Date(Date.now() + 100 * 24 * 60 * 60 * 1000);
+        auth.expiresIn = 360000;
         return auth;
       })
     );
@@ -52,7 +52,7 @@ export class AuthHTTPService {
     user.roles = ['STAFF']; // Manager
     user.authToken = 'auth-token-' + Math.random();
     user.refreshToken = 'auth-token-' + Math.random();
-    user.expiresIn = new Date(Date.now() + 100 * 24 * 60 * 60 * 1000);
+    user.expiresIn = 360000;
     user.pic = './assets/media/users/default.jpg';
 
     return this.http.post<UserModel>(API_USERS_URL, user);

@@ -7,6 +7,7 @@ import { AuthHTTPService } from './auth-http';
 import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
 import { ApiService } from 'src/app/utils/_services/api-service.service';
+import * as moment from 'moment';
 
 @Injectable({
   providedIn: 'root',
@@ -22,6 +23,7 @@ export class AuthService implements OnDestroy {
   isLoading$: Observable<boolean>;
   currentUserSubject: BehaviorSubject<UserModel>;
   isLoadingSubject: BehaviorSubject<boolean>;
+  logoutWorker: Object = null;
 
 
   get currentUserValue(): UserModel {
@@ -45,13 +47,47 @@ export class AuthService implements OnDestroy {
     this.unsubscribe.push(subscr);
   }
 
+  refreshToken(auth: AuthModel) {
+    this.logoutWorker = null;
+    const params = { refreshToken: auth.refreshToken };
+    this.apiService.post(`${this.oauth_url}/refreshToken`, params).subscribe(
+      resp => {
+        const { authToken, refreshToken, expiresIn } = resp;
+        auth.authToken = authToken;
+        auth.refreshToken = refreshToken;
+        auth.expiresIn = expiresIn;
+        auth.autoLogout = moment().add(expiresIn, 's').toDate();
+        this.setAuthFromLocalStorage(auth);
+        this.setWorker(auth, expiresIn * 1000);
+      }
+    );
+  }
+
+  setWorker(auth: AuthModel, duration: number) {
+    if (this.logoutWorker === null) {
+      setTimeout(() => {
+        if (auth.remember == true) {
+          this.refreshToken(auth);
+        } else {
+          this.logout();
+          location.reload();
+        }
+      }, duration);
+      this.logoutWorker = new Object();
+    }
+  }
+
   // public methods
-  login(username: string, password: string): Observable<UserModel> {
+  login(username: string, password: string, remember: boolean): Observable<UserModel> {
     this.isLoadingSubject.next(true);
-    const params = { username, password };
+    const params = { username, password, remember };
     return this.apiService.post(`${this.oauth_url}/login`, params)
       .pipe(
         map((auth: AuthModel) => {
+          const { expiresIn } = auth;
+          const autoLogout = moment().add(expiresIn, 's').toDate();
+          auth = Object.assign({}, auth, { autoLogout, remember });
+          this.setWorker(auth, auth.expiresIn * 1000);
           this.setAuthFromLocalStorage(auth);
           return auth;
         }),
@@ -61,6 +97,7 @@ export class AuthService implements OnDestroy {
   }
 
   logout() {
+    this.apiService.post(`${this.oauth_url}/logout`, {}).subscribe(resp => console.log({ resp }));
     localStorage.removeItem(this.authLocalStorageToken);
     this.router.navigate(['/auth/login'], {
       queryParams: {},
@@ -73,6 +110,12 @@ export class AuthService implements OnDestroy {
       return of(undefined);
     }
 
+    // check autologout
+    if (auth.autoLogout && this.logoutWorker == null) {
+      const duration = moment(auth.autoLogout);
+      this.setWorker(auth, duration.diff(moment()));
+    }
+
     this.isLoadingSubject.next(true);
     const { authToken, username } = auth;
     const params = { authToken, username };
@@ -80,6 +123,7 @@ export class AuthService implements OnDestroy {
       map((user: UserModel) => {
         if (user) {
           this.currentUserSubject = new BehaviorSubject<UserModel>(user);
+          // this.setWorker();
         } else {
           this.logout();
         }
@@ -96,7 +140,7 @@ export class AuthService implements OnDestroy {
       map(() => {
         this.isLoadingSubject.next(false);
       }),
-      switchMap(() => this.login(user.email, user.password)),
+      switchMap(() => this.login(user.email, user.password, true)),
       catchError((err) => {
         console.error('err', err);
         return of(undefined);

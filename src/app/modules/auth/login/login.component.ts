@@ -13,8 +13,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit, OnDestroy {
   defaultAuth = {
-    username: '',
-    password: '',
+    username: 'admin123',
+    password: '123456',
+    remember: true,
   };
   loginForm: FormGroup;
   hasError: boolean;
@@ -68,13 +69,14 @@ export class LoginComponent implements OnInit, OnDestroy {
           Validators.pattern("^[a-zA-Z0-9]{6,}$"),
         ]),
       ],
+      remember: [this.defaultAuth.remember]
     });
   }
 
   submit() {
     this.hasError = false;
     const loginSubscr = this.authService
-      .login(this.f.username.value, this.f.password.value)
+      .login(this.f.username.value, this.f.password.value, this.f.remember.value)
       .pipe(first())
       .subscribe((user: UserModel) => {
         if (user) {
