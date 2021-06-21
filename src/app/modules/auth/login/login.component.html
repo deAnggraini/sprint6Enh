@@ -2,22 +2,27 @@
 
   <form class="form" [formGroup]="loginForm" novalidate="novalidate" id="kt_login_signin_form" (ngSubmit)="submit()">
 
-    <div class="pb-13 pt-lg-0 pt-5">
+    <div class="pb-3 pt-lg-0 pt-5">
       <h3 class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg">
         Selamat Datang di PAKAR
       </h3>
+      <span>
+        Informasi ketentuan dan prosedur #caridiPAKAR
+      </span>
     </div>
+    <hr>
 
+<!-- 
     <ng-container *ngIf="!hasError">
       <div class="mb-10 alert alert-custom alert-light-info alert-dismissible">
         <div class="alert-text">
           Silahkan login menggunakan <strong>User Portal BCA</strong> anda.
         </div>
       </div>
-    </ng-container>
+    </ng-container> -->
 
-    <div class="form-group">
-      <label class="font-size-h6 font-weight-bolder text-dark">User Portal BCA</label>
+    <div class="form-group pt-4">
+      <label class="font-size-h6 font-weight-bolder text-dark">User ID</label>
       <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg" type="text" name="username"
         formControlName="username" autocomplete="off"
         [ngClass]="{ 'is-invalid': hasError || loginForm.controls['username'].invalid }" 
@@ -41,7 +46,7 @@
     <!--end::Form group-->
 
     <!--begin::Form group-->
-    <div class="form-group">
+    <div class="form-group pt-4">
       <div class="d-flex justify-content-between mt-n5">
         <label class="font-size-h6 font-weight-bolder text-dark pt-5">Password</label>
         <!-- <a routerLink="/auth/forgot-password"
@@ -64,8 +69,8 @@
           control: loginForm.controls['password']
         }"></ng-container>
       <ng-container *ngIf="hasError">
-        <div class="fv-plugins-message-container">
-          <div class="fv-help-block">Incorrect User ID or password</div>
+        <div class="fv-plugins-message-container mt-3">
+          <div class="fv-help-block">Incorrect User ID or password.</div>
         </div>
       </ng-container>
     </div>
@@ -78,9 +83,9 @@
 
     <div class="pb-lg-0 pb-5">
       <button type="submit" id="kt_login_signin_submit"
-        class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-3" [disabled]="loginForm.invalid">
-        Masuk
-      </button>
+        class="btn btn-primary btn-block btn-pill font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-3" [disabled]="loginForm.invalid">
+        Sign In
+      </button> 
 
       <!-- <button type="button" class="btn btn-light-primary font-weight-bolder px-8 py-4 my-3 font-size-lg">
         <span class="svg-icon svg-icon-md">

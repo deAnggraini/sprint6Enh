@@ -2,4 +2,20 @@
 
 :host {
   height: 100%;
+
+  .login {
+    background-image: linear-gradient(#ffffff, #d8efff);
+
+    .login-content {
+      margin-top: 140px;
+      margin-bottom: 140px;
+    }
+
+    .login-aside {
+      max-width: 55%;
+      .aside-img {
+        background-size: 600px, 409.79px;
+      }
+    }
+  }
 }
