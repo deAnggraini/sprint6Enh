@@ -55,10 +55,16 @@
         </a> -->
       </div>
 
-      <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg" type="password" name="password"
+      <div class="input-icon input-icon-right">
+      <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg" type={{typePass}} name="password"
         autocomplete="off" formControlName="password" placeholder="Masukkan password domain Kamu"
         [ngClass]="{ 'is-invalid': hasError || loginForm.controls['password'].invalid }" />
-        {{hasError}}
+        <span (click)="showPassword()">
+          <i class="far fa-eye icon-md" *ngIf="!revealPass" ></i>
+          <i class="far fa-eye-slash icon-md" *ngIf="revealPass"></i>
+        </span>
+      </div>
+      {{hasError}}
       <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
           validation: 'required',
           message: 'Password is required',
