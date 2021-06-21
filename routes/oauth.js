@@ -2,6 +2,9 @@ var express = require('express');
 var router = express.Router();
 const mod = require('../modules').module;
 const users = require('../database/users.json');
+const moment = require('moment');
+
+const EXPIRES_IN = 60 * 10; // 60 second * 10 = 10 minutes
 
 /* GET home page. */
 router.get('/AuthPage', function (req, res, next) {
@@ -32,10 +35,13 @@ router.post('/getAccessToken', function (req, res) {
 });
 
 router.post('/login', (req, res) => {
-    const { username, password } = req.body;
+    const { username, password, remember } = req.body;
     const found = users.find(d => d.username == username && d.password == password);
+    const now = moment();
+    // const expiresIn = now.add(1, 'h');
+    const expiresIn = EXPIRES_IN;
     if (found) {
-        res.send({ error: false, msg: "", data: Object.assign({}, found, { password: null }) });
+        res.send({ error: false, msg: "", data: Object.assign({}, found, { password: null, expiresIn, remember }) });
     } else {
         res.send({ error: true, msg: "Username and password invalid" });
     }
@@ -51,6 +57,20 @@ router.post('/getUser', (req, res) => {
     })
     if (found) {
         res.send({ error: false, msg: "", data: Object.assign({}, found, { password: null }) });
+    } else {
+        res.send({ error: true, msg: "Username and token invalid" });
+    }
+})
+
+router.post('/refreshToken', (req, res) => {
+    const { refreshToken } = req.body;
+    console.log(req.headers);
+    const found = users.find(d => d.refreshToken == refreshToken);
+    if (found) {
+        found.authToken = `${found.authToken}-REFRESH`;
+        found.refreshToken = `${found.authToken}-refreshToken`;
+        const { authToken, refreshToken } = found;
+        res.send({ error: false, msg: "", data: { authToken, refreshToken, expiresIn: EXPIRES_IN } });
     } else {
         res.send({ error: true, msg: "Username and token invalid" });
     }

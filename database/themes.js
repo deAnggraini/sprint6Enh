@@ -15,6 +15,9 @@ const DefaultThemeConfig = {
             'news',
             'popular',
         ]
+    },
+    login: {
+        image: 'default_login.svg'
     }
 }
 
