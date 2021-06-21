@@ -43,6 +43,7 @@ public class ThemeServiceImpl implements ThemeService {
         ThemeDto themeDto = new ThemeDto();
         List<ThemeImage> themeImageList;
         List<ThemeComponentHomepage> themeComponentHomepageList;
+        List<String> listComponent = new ArrayList<>();
 
         Theme theme = themeRepository.findAllTheme();
         themeImageList = themeImageRepository.findAllThemeImage();
@@ -61,10 +62,15 @@ public class ThemeServiceImpl implements ThemeService {
                 }
             }
         }
-        logger.info("Theme Component "+themeComponentHomepageList.size());
-        logger.info("Theme Component "+themeComponentHomepageList.contains("component_name"));
 
-        List<String> listComponent = new ArrayList<>();
+
+        if (themeComponentHomepageList.size() > 0) {
+            for (int i = 0; i < themeComponentHomepageList.size(); i++) {
+                listComponent.add(themeComponentHomepageList.get(i).getComponent_name());
+            }
+        }
+        logger.info("Theme Component "+listComponent);
+        themeHomepageDto.setComponent(listComponent);
 
         themeDto.setHeader(themeHeaderDto);
         themeDto.setHomepage(themeHomepageDto);

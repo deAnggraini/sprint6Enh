@@ -2,11 +2,13 @@ package id.co.bca.pakar.be.doc.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.List;
+
 public class ThemeHomepageDto {
 
     @JsonProperty("bg_img_top")
     private String  bg_img_top;
-    private String[] component;
+    private List<String> component;
 
     public ThemeHomepageDto(){
         super();
@@ -24,11 +26,11 @@ public class ThemeHomepageDto {
         this.bg_img_top = bg_img_top;
     }
 
-    public String[] getComponent() {
+    public List<String> getComponent() {
         return component;
     }
 
-    public void setComponent(String[] component) {
+    public void setComponent(List<String> component) {
         this.component = component;
     }
 }
