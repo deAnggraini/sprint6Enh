@@ -10,6 +10,7 @@ import { CoreModule } from 'src/app/_metronic/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { UtilsModule } from 'src/app/utils/utils.module';
+import { DetailComponent } from './add/detail/detail.component';
 
 const routes: Routes = [
   {
@@ -26,7 +27,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [AddComponent, ListComponent],
+  declarations: [AddComponent, ListComponent, DetailComponent],
   imports: [
     CommonModule,
     GeneralModule,

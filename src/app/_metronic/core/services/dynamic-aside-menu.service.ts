@@ -33,7 +33,7 @@ export class DynamicAsideMenuService {
   private menuConfigSubject = new BehaviorSubject<any>(emptyMenuConfig);
   private categoriesObject = new BehaviorSubject<any[]>([]);
   private categories$: Observable<any[]>;
-  private categories: any[] = [];
+  categories: any[] = [];
   // private unsubscribe: Subscription[] = [];
   menuConfig$: Observable<any>;
   user$: Observable<UserModel>;
@@ -84,7 +84,7 @@ export class DynamicAsideMenuService {
     // loop top level
     const items = [];
     articles.map(item => {
-      items.push({ section: item.title });
+      items.push({ title: item.title, section: item.title, id: item.id, level: 0, root: true });
       if (item.menus && item.menus.length) {
         const maxLoop = item.showLess ? 2 : item.menus.length;
         for (let i = 0; i < maxLoop; i++) {
@@ -103,6 +103,7 @@ export class DynamicAsideMenuService {
             title,
             page: '/lihatsemua/title',
             data: item,
+            level: -1
           });
         }
       }

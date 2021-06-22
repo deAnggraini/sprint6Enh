@@ -1,0 +1,29 @@
+:host ::ng-deep {
+  .detail-header {
+    width: 420px;
+  }
+}
+
+:host ::ng-deep #struktur-tree {
+  .tree-item {
+    display: inline-flex !important;
+    width: calc(100% - 24px);
+  }
+
+  .node-buttons {
+    display: none;
+    position: relative;
+    top: -2px;
+
+    .btn-my {
+      padding: 0;
+      margin: 0;
+      height: 16px;
+    }
+  }
+
+  .jstree-anchor.jstree-hovered .node-buttons,
+  .jstree-anchor.jstree-clicked .node-buttons {
+    display: inline-block;
+  }
+}

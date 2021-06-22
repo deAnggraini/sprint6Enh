@@ -6,6 +6,7 @@
     // Header
     .modal-header {
         align-items: center;
+        border-bottom: unset;
 
         .modal-title {
             font-weight: $modal-title-font-weight;
@@ -49,6 +50,30 @@
                 }
             }
         }
+
+        &:after {
+            position: absolute;
+            content: '';
+            border-bottom: 1px solid #d2d7da;
+            width: 92%;
+            transform: translateX(-50%);
+            top: 63px;
+            left: 50%;
+        }
+    }
+
+    .modal-footer {
+        border-top: unset;
+
+        // &:before {
+        //     position: absolute;
+        //     content: '';
+        //     border-bottom: 1px solid #d2d7da;
+        //     width: 92%;
+        //     transform: translateX(-50%);
+        //     bottom: 80px;
+        //     left: 50%;
+        // }
     }
 
     // Sticky Modal
