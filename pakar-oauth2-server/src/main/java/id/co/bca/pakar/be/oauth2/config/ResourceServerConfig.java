@@ -22,7 +22,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
             "/webjars/**",
             "/api/auth/login",
             "/api/auth/logout",
-//            "/login/**"
+            "/api/auth/refreshToken"
             // other public endpoints of your API may be appended to this array
     };
 
@@ -32,7 +32,6 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(AUTH_WHITELIST).permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .antMatchers("/api/v1/**").authenticated()
                 .antMatchers("/api/auth/get**").authenticated();
 
     }
