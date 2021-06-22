@@ -35,9 +35,9 @@
     },
     {
         "id": 100,
-        "username": "super",
+        "username": "super123",
         "email" : "super@admin.host",
-        "password" : "12345",
+        "password" : "123456",
         "authToken": "POIUasdaqYHJKLMNHGBJa902asd",
         "refreshToken" : "POIUYHJKLMNHGBJ",
         "expiresIn": "",
