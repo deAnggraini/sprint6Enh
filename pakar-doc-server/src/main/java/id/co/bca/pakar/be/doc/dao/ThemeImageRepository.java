@@ -11,7 +11,7 @@ import java.util.List;
 public interface ThemeImageRepository extends CrudRepository<ThemeImage, String> {
     @Query(
             value =
-                    "select id, image_name, image_type, deleted, created_by, created_date, modify_by, modify_date from r_theme_image",
+                    "select id, image_name, image_type, deleted, created_by, created_date, modify_by, modify_date, file_location from r_theme_image",
             nativeQuery = true)
     List<ThemeImage> findAllThemeImage();
 }

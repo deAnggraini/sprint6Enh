@@ -5,8 +5,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import id.co.bca.pakar.be.doc.dto.ThemeDto;
+import id.co.bca.pakar.be.doc.dto.UploadFileDto;
 import id.co.bca.pakar.be.doc.model.Theme;
 import id.co.bca.pakar.be.doc.service.ThemeService;
+import id.co.bca.pakar.be.doc.service.UploadService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import id.co.bca.pakar.be.doc.dto.SearchHistoryDto;
 import id.co.bca.pakar.be.doc.dto.SearchHistoryItem;
 import id.co.bca.pakar.be.doc.util.JSONMapperAdapter;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 public class ArticleController extends BaseController {
@@ -25,6 +28,9 @@ public class ArticleController extends BaseController {
 	
 	@Autowired
 	private ThemeService themeService;
+
+	@Autowired
+	private UploadService uploadService;
 
 	@GetMapping("/api/doc/theme")
 	public ResponseEntity<RestResponse<ThemeDto>> theme(@RequestHeader(name="Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username) {
@@ -39,11 +45,33 @@ public class ArticleController extends BaseController {
 		}
 		HttpHeaders headers = new HttpHeaders();
 		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-		logger.info("get user by token ");
+
 		ThemeDto themeDto = themeService.getThemeList();
 
 		return createResponse(themeDto, "OO", "SUCCESS");
 	}
+
+	@PostMapping("/api/doc/upload")
+	public ResponseEntity<RestResponse<UploadFileDto>> uploadFile(
+			@RequestParam("file") MultipartFile file, @RequestHeader(name="Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @RequestParam String imageType) {
+
+		logger.info("uploadFile process");
+		logger.info("received token bearer --- " + authorization);
+		String tokenValue = "";
+		if (authorization != null && authorization.contains("Bearer")) {
+			tokenValue = authorization.replace("Bearer", "").trim();
+
+			logger.info("token value request header --- "+tokenValue);
+			logger.info("username request header --- "+username);
+		}
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+
+		logger.info("image type "+imageType);
+		UploadFileDto uploadFileDto = uploadService.storeFile(file, imageType);
+		return createResponse(uploadFileDto, "OO", "SUCCESS");
+	}
+
 
 
 	// pindah ke service menu

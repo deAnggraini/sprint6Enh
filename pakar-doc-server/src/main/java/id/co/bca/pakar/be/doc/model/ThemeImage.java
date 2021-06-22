@@ -11,6 +11,7 @@ public class ThemeImage extends EntityBase {
         private Long id;
         private String image_name;
         private String imageType;
+        private String fileLocation;
 
         public Long getId() {
                 return id;
@@ -34,5 +35,13 @@ public class ThemeImage extends EntityBase {
 
         public void setImageType(String imageType) {
                 this.imageType = imageType;
+        }
+
+        public String getFileLocation() {
+                return fileLocation;
+        }
+
+        public void setFileLocation(String fileLocation) {
+                this.fileLocation = fileLocation;
         }
 }
