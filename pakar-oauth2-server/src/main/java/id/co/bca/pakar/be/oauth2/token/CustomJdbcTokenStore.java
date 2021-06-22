@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.sql.DataSource;
+import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,35 +31,13 @@ import org.springframework.stereotype.Component;
 
 @SuppressWarnings("deprecation")
 @Component
+@Transactional
 public class CustomJdbcTokenStore extends JdbcTokenStore {
 	private Logger LOG = LoggerFactory.getLogger(this.getClass());
 	public CustomJdbcTokenStore(DataSource dataSource) {
 		super(dataSource);
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}
-//    public CustomJdbcTokenStore(DataSource dataSource) {
-//        super(dataSource);
-//    }
-
-//    @Override
-//    public OAuth2AccessToken readAccessToken(String tokenValue) {
-//        OAuth2AccessToken accessToken = null;
-//
-//        try {
-//            accessToken = new DefaultOAuth2AccessToken(tokenValue);
-//        }
-//        catch (EmptyResultDataAccessException e) {
-//            if (logger.isInfoEnabled()) {
-//            	logger.info("Failed to find access token for token "+tokenValue);
-//            }
-//        }
-//        catch (IllegalArgumentException e) {
-//        	logger.warn("Failed to deserialize access token for " +tokenValue,e);
-//            removeAccessToken(tokenValue);
-//        }
-//
-//        return accessToken;
-//    }
     
     private static final String DEFAULT_ACCESS_TOKEN_INSERT_STATEMENT = "insert into oauth_access_token (token_id, token, authentication_id, user_name, client_id, authentication, refresh_token) values (?, ?, ?, ?, ?, ?, ?)";
 
@@ -116,15 +95,9 @@ public class CustomJdbcTokenStore extends JdbcTokenStore {
 
 	private String deleteAccessTokenFromRefreshTokenSql = DEFAULT_ACCESS_TOKEN_DELETE_FROM_REFRESH_TOKEN_STATEMENT;
 
-	private AuthenticationKeyGenerator authenticationKeyGenerator = new DefaultAuthenticationKeyGenerator();
+	protected AuthenticationKeyGenerator authenticationKeyGenerator = new DefaultAuthenticationKeyGenerator();
 
-	private final JdbcTemplate jdbcTemplate;
-
-//	public CustomJdbcTokenStore(DataSource dataSource) {
-//		Assert.notNull(dataSource, "DataSource required");
-//		this.jdbcTemplate = new JdbcTemplate(dataSource);
-//		super().
-//	}
+	protected final JdbcTemplate jdbcTemplate;
 
 	public void setAuthenticationKeyGenerator(AuthenticationKeyGenerator authenticationKeyGenerator) {
 		this.authenticationKeyGenerator = authenticationKeyGenerator;
@@ -165,12 +138,19 @@ public class CustomJdbcTokenStore extends JdbcTokenStore {
 		String refreshToken = null;
 		if (token.getRefreshToken() != null) {
 			refreshToken = token.getRefreshToken().getValue();
+			LOG.debug("refresh token value "+refreshToken);
 		}
 		
 		if (readAccessToken(token.getValue())!=null) {
-			removeAccessToken(token.getValue());
+			removeAccessToken(token.getValue());			
+			
 		}
 
+		// delete token before insert
+		final String key = authenticationKeyGenerator.extractKey(authentication);
+		LOG.debug("delete oauth_access_token with authentication id "+key);
+		jdbcTemplate.update("delete from oauth_access_token where authentication_id = ?", key);
+		
 		jdbcTemplate.update(insertAccessTokenSql, new Object[] { extractTokenKey(token.getValue()),
 				new SqlLobValue(serializeAccessToken(token)), authenticationKeyGenerator.extractKey(authentication),
 				authentication.isClientOnly() ? null : authentication.getName(),
@@ -183,6 +163,7 @@ public class CustomJdbcTokenStore extends JdbcTokenStore {
 		OAuth2AccessToken accessToken = null;
 
 		try {
+			LOG.debug("find access token from db with token id "+tokenValue);
 			accessToken = jdbcTemplate.queryForObject(selectAccessTokenSql, new RowMapper<OAuth2AccessToken>() {
 				public OAuth2AccessToken mapRow(ResultSet rs, int rowNum) throws SQLException {
 					return deserializeAccessToken(rs.getBytes(2));
