@@ -27,6 +27,9 @@ VALUES('system',now()::DATE, 'f','guest', 'password', 't');
 INSERT INTO public.r_user
 (created_by, created_date, deleted, username, password, enabled)
 VALUES('system',now()::DATE, 'f','test1', 'password', 't');
+INSERT INTO public.r_user
+(created_by, created_date, deleted, username, password, enabled)
+VALUES('system',now()::DATE, 'f','reader12', 'password', 't');
 
 
 ---- user profile ---
@@ -54,6 +57,10 @@ VALUES(7, 'system',now()::DATE, 'f','reader', 'Reader', 'Saja', 'Reader Saja', '
 INSERT INTO public.r_user_profile
 (id, created_by, created_date, deleted, username, firstname, lastname, fullname, email, phone, company_name, occupation, pic)
 VALUES(8, 'system',now()::DATE, 'f','test1', 'Test', '1', 'Test 1', 'reader@bca.co.id', '1234567', 'BCA', 'READER', './assets/media/users/default.jpg');
+INSERT INTO public.r_user_profile
+(id, created_by, created_date, deleted, username, firstname, lastname, fullname, email, phone, company_name, occupation, pic)
+VALUES(9, 'system',now()::DATE, 'f','reader12', 'Reader12', 'Saja', 'Reader12 Saja', 'reader12@bca.co.id', '1234567', 'BCA', 'READER', './assets/media/users/default.jpg');
+
 
 
 ---- role ---
