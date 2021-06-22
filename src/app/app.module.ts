@@ -18,6 +18,7 @@ import { SplashScreenModule } from './_metronic/partials/layout/splash-screen/sp
 import { FakeAPIService } from './_fake/fake-api.service';
 import { ThemeService } from './modules/_services/theme.service';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { CategoryArticleComponent } from './modules/category-article/category-article.component';
 // #fake-end#
 
 function appInitializer(authService: AuthService) {
@@ -32,6 +33,7 @@ function appInitializer(authService: AuthService) {
 @NgModule({
   declarations: [
     AppComponent,
+    CategoryArticleComponent,
   ],
   imports: [
     BrowserModule,
