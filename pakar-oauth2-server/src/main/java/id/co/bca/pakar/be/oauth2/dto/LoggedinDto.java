@@ -27,6 +27,8 @@ public class LoggedinDto {
 	private String phone;
 	@JsonProperty("pic")
 	private String picture = "./assets/media/users/default.jpg"; // default value
+	@JsonProperty("remember")
+	private Boolean rememberMe = Boolean.FALSE; 
 	@JsonProperty("authToken")
 	private String access_token;
 	@JsonInclude(JsonInclude.Include.NON_NULL) 
@@ -101,6 +103,12 @@ public class LoggedinDto {
 	}
 	public void setPicture(String picture) {
 		this.picture = picture;
+	}
+	public Boolean getRememberMe() {
+		return rememberMe;
+	}
+	public void setRememberMe(Boolean rememberMe) {
+		this.rememberMe = rememberMe;
 	}
 	public String getAccess_token() {
 		return access_token;
