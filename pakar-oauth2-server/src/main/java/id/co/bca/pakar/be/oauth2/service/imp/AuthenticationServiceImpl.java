@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
@@ -27,6 +28,7 @@ import id.co.bca.pakar.be.oauth2.dto.CredentialDto;
 import id.co.bca.pakar.be.oauth2.dto.LoggedinDto;
 import id.co.bca.pakar.be.oauth2.dto.OAuthCredential;
 import id.co.bca.pakar.be.oauth2.dto.OAuthTokenDto;
+import id.co.bca.pakar.be.oauth2.dto.RefreshTokenResponseDto;
 import id.co.bca.pakar.be.oauth2.model.UserProfile;
 import id.co.bca.pakar.be.oauth2.model.UserRole;
 import id.co.bca.pakar.be.oauth2.service.AuthenticationService;
@@ -65,7 +67,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		cred.setPassword(dto.getPassword());
 		cred.setGrant_type("password");
 
-		logger.info("received credential --- " + dto.toString());
+//		logger.info("received credential --- " + dto.toString());
 		String credentials = clientId + ":" + clientSecret;
 		String encodedCredentials = new String(Base64.encodeBase64(credentials.getBytes()));
 
@@ -97,14 +99,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			loggedinDto.setScope(response.getBody().getScope());
 			loggedinDto.setToken_type(response.getBody().getToken_type());
 			
-//			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//			Collection<GrantedAuthority> authorities = (Collection<GrantedAuthority>) authentication.getAuthorities();
-//			
-//			List<GrantedAuthority> listAuthorities = new ArrayList<GrantedAuthority>();
-//			listAuthorities.addAll(authorities);
-//			for(GrantedAuthority ga : listAuthorities) {
-//				loggedinDto.getRoleDtos().add(ga.getAuthority());
-//			}	
 			// get user role
 			List<UserRole> uRoles = roleRepository.findUserRolesByUsername(cred.getUsername());
 			for(UserRole ur : uRoles) {
@@ -154,6 +148,46 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		} catch (Exception e) {
 			logger.error("exception", e);
 			return Boolean.FALSE;
+		}
+	}
+
+	/**
+	 * generate new access token
+	 */
+	@Override
+	public RefreshTokenResponseDto generateNewAccessToken(String refreshToken) throws Exception {
+		logger.info("--- processing generate new token ---");
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+			headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+			String credentials = clientId + ":" + clientSecret;
+			String encodedCredentials = new String(Base64.encodeBase64(credentials.getBytes()));
+			headers.add("Authorization", "Basic " + encodedCredentials);
+
+			HttpEntity<String> request = new HttpEntity<String>(headers);
+
+			String access_token_url = uri;
+			access_token_url += "?grant_type=" + "refresh_token";
+			access_token_url += "&refresh_token=" + refreshToken;
+			ResponseEntity<OAuthTokenDto> response = null;
+			logger.info("refresh token to url "+access_token_url);
+			response = restTemplate.exchange(access_token_url, HttpMethod.POST, request, OAuthTokenDto.class);
+			logger.info("http status response  --- " + ((ResponseEntity<OAuthTokenDto>) response).getStatusCode());
+			logger.info("generated new response oauth2 token ---" + response.getBody());
+			if(((ResponseEntity<OAuthTokenDto>) response).getStatusCode().equals(HttpStatus.OK)) {
+				RefreshTokenResponseDto dto = new RefreshTokenResponseDto();
+				dto.setAccess_token(response.getBody().getAccess_token());
+				dto.setRefresh_token(response.getBody().getRefresh_token());
+				dto.setExpires_in(response.getBody().getExpires_in());		
+				return dto;
+			} else {
+				logger.info("fail refresh token cause http status response from /oauth/token url <> 200 ");
+				return new RefreshTokenResponseDto();
+			}
+		} catch (Exception e) {
+			logger.error("exception when refresh token", e);
+			throw new Exception("generate new token fail");
 		}
 	}
 }
