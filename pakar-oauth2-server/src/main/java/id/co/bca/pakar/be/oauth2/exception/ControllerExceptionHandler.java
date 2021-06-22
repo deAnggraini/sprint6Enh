@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -33,8 +31,6 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 		// Get all errors
 		List<String> errors = ex.getBindingResult().getFieldErrors().stream().map(x -> x.getDefaultMessage())
 				.collect(Collectors.toList());
-//
-//		body.put("errors", errors);
 
 		logger.info("validate failed "+errors);
         HashMap<String, String> responseStatus = new HashMap<>();
