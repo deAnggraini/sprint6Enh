@@ -11,10 +11,6 @@ public abstract class BaseController {
 	protected class RestResponse<T> {
 		@JsonProperty("data")
 		private T data;
-//		@JsonProperty("error")
-//		private String code = "00";
-//		@JsonProperty("msg")
-//		private String message = "SUCCESS";
 		@JsonProperty("status")
 		private ApiStatus apiStatus;
 
@@ -24,8 +20,6 @@ public abstract class BaseController {
 
 		public RestResponse(T pData, String errorCode, String errorMessage) {
 			this.data = pData;
-//			this.code = errorCode;
-//			this.message = errorMessage;
 			this.apiStatus = new ApiStatus(errorCode, errorMessage);
 		}
 
@@ -36,22 +30,6 @@ public abstract class BaseController {
 		public void setData(T pData) {
 			this.data = pData;
 		}
-
-//		public String getCode() {
-//			return code;
-//		}
-//
-//		public void setCode(String code) {
-//			this.code = code;
-//		}
-//
-//		public String getMessage() {
-//			return message;
-//		}
-//
-//		public void setMessage(String message) {
-//			this.message = message;
-//		}
 	}
 
 	protected class ApiStatus {

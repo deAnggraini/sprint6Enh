@@ -37,10 +37,10 @@ public class AuthenticationController extends BaseController {
 			LoggedinDto oAuthToken = authenticationService.authenticate(dto);
 			oAuthToken.setRememberMe(dto.getRememberMe());
 			
-			return this.createResponse(oAuthToken, "00", "SUCCESS");
+			return this.createResponse(oAuthToken, Constant.ApiResponseCode.LOGIN_SUCCEED.getAction()[0], Constant.ApiResponseCode.LOGIN_SUCCEED.getAction()[1]);
 		} catch (Exception e) {
 			logger.error("exception", e);
-			return this.createResponse(new LoggedinDto(), "01", "FAILED LOGIN");
+			return this.createResponse(new LoggedinDto(), Constant.ApiResponseCode.INCORRECT_USERNAME_PASSWORD.getAction()[0], Constant.ApiResponseCode.INCORRECT_USERNAME_PASSWORD.getAction()[1]);
 		}
 	}
 	
@@ -54,14 +54,14 @@ public class AuthenticationController extends BaseController {
 			    String tokenValue = authHeader.replace("Bearer", "").trim();
 			    Boolean logoutStatus = authenticationService.logout(tokenValue);
 			    if(logoutStatus) {
-			    	return this.createResponse("0", "00", "SUCCESS");
+			    	return this.createResponse("0", Constant.ApiResponseCode.LOGOUT_SUCCEED.getAction()[0], Constant.ApiResponseCode.LOGOUT_SUCCEED.getAction()[1]);
 			    } else
-			    	return this.createResponse("-1", "01", "LOGOUT FAILED");			    
+			    	return this.createResponse("-1", Constant.ApiResponseCode.LOGOUT_FAILED.getAction()[0], Constant.ApiResponseCode.LOGOUT_FAILED.getAction()[1]);			    
 			}
-			return this.createResponse("-1", "01", "LOGOUT FAILED");
+			return this.createResponse("-1", Constant.ApiResponseCode.LOGOUT_FAILED.getAction()[0], Constant.ApiResponseCode.LOGOUT_FAILED.getAction()[1]);
 		} catch (Exception e) {
 			logger.error("exception",e);
-			return this.createResponse("-1", "01", "LOGOUT FAILED");
+			return this.createResponse("-1", Constant.ApiResponseCode.LOGOUT_FAILED.getAction()[0], Constant.ApiResponseCode.LOGOUT_FAILED.getAction()[1]);
 		}
 	}
 	
@@ -71,10 +71,10 @@ public class AuthenticationController extends BaseController {
 		try {
 			logger.info("generate new access token with refresh token --- " + dto.getRefreshToken());
 			RefreshTokenResponseDto oAuthToken = authenticationService.generateNewAccessToken(dto.getRefreshToken());
-			return this.createResponse(oAuthToken, "00", "SUCCESS");
+			return this.createResponse(oAuthToken, Constant.ApiResponseCode.REFRESH_TOKEN_SUCCEED.getAction()[0], Constant.ApiResponseCode.REFRESH_TOKEN_SUCCEED.getAction()[1]);
 		} catch (Exception e) {
 			logger.error("exception", e);
-			return this.createResponse(new RefreshTokenResponseDto(), "01", "FAILED GENERATE NEW ACCESS TOKEN");
+			return this.createResponse(new RefreshTokenResponseDto(), Constant.ApiResponseCode.REFRESH_TOKEN_FAILED.getAction()[0], Constant.ApiResponseCode.REFRESH_TOKEN_FAILED.getAction()[1]);
 		}
 	}
 }

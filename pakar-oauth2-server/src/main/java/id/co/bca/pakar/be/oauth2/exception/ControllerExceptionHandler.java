@@ -34,8 +34,8 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
 		logger.info("validate failed "+errors);
         HashMap<String, String> responseStatus = new HashMap<>();
-        responseStatus.put("code", Constant.LoginStatus.INCORRECT_USER_PASSWORD_CODE);
-        responseStatus.put("message", Constant.LoginStatus.INCORRECT_USER_PASSWORD_MESSAGE);
+        responseStatus.put("code", Constant.ApiResponseCode.INCORRECT_USERNAME_PASSWORD.getAction()[0]);
+        responseStatus.put("message", Constant.ApiResponseCode.INCORRECT_USERNAME_PASSWORD.getAction()[1]);
 
         body.put("data", 0);
         body.put("status", responseStatus);
