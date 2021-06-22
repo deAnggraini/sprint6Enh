@@ -1,24 +1,30 @@
 :host {
   width: 100%;
+
+  .btn:disabled {
+    background-color: #a19f9d;
+    border-color: inherit;
+  }
+
+  .btn {
+    background-image: linear-gradient(
+      #1995d1 5.59%,
+      #1485bb 27.39%,
+      #166ec1 52.13%,
+      #0f5ea9 76.06%
+    );
+    border-color: inherit;
+    color: white;
+  }
+
   @media (min-width: 992px) {
     .login-form {
       width: 100%;
-      max-width: 450px;
+      width: 450px;
 
       .mat-form-field {
         width: 100%;
       }
     }
   }
-
-    .btn:disabled {
-      background-color: #A19F9D;
-      border-color: inherit;
-    }
-
-    .btn {
-      background-image: linear-gradient(#1995D1 5.59%, #1485BB 27.39%, #166EC1 52.13%, #0F5EA9 76.06%);
-      border-color: inherit;
-      color: white;
-    }
 }
