@@ -6,6 +6,9 @@ export interface ThemeConfig {
     homepage: {
         bg_img_top: string
         component: string[]
+    },
+    login: {
+        image: string
     }
 }
 
@@ -17,5 +20,8 @@ export const DefaultThemeConfig : ThemeConfig = {
     homepage: {
         bg_img_top: 'newsdefault_top.svg',
         component: [],
+    },
+    login: {
+        image: 'default_login.svg'
     }
 }
