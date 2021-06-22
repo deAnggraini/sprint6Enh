@@ -23,10 +23,12 @@
 
     <div class="form-group pt-4">
       <label class="font-size-h6 font-weight-bolder text-dark">User ID</label>
-      <input class="form-control h-42px py-7 px-6 rounded-lg" type="text" name="username"
-        formControlName="username" autocomplete="off"
-        [ngClass]="{ 'is-invalid': hasError || loginForm.controls['username'].invalid }" 
-        placeholder="Masukkan domain Kamu" />
+      <div class="form-control-iconless">
+        <input class="form-control h-42px py-7 px-6 rounded-lg" type="text" name="username"
+          formControlName="username" autocomplete="off"
+          [ngClass]="{ 'is-invalid': hasError || loginForm.controls['username'].invalid }" 
+          placeholder="Masukkan domain Kamu" />
+      </div>
       <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
           validation: 'required',
           message: 'Username is required',
@@ -55,7 +57,7 @@
         </a> -->
       </div>
 
-      <div class="input-icon input-icon-right">
+      <div class="input-icon input-icon-right form-control-iconless">
       <input class="form-control h-42px py-7 px-6 rounded-lg" type={{typePass}} name="password"
         autocomplete="off" formControlName="password" placeholder="Masukkan password domain Kamu"
         [ngClass]="{ 'is-invalid': hasError || loginForm.controls['password'].invalid }" />
@@ -90,7 +92,7 @@
 
     <div class="pb-lg-0 pb-5">
       <button type="submit" id="kt_login_signin_submit"
-        class="btn btn-primary btn-block btn-pill font-weight-bolder font-size-h6 h-48px px-8 py-4 my-3 mr-3" [disabled]="loginForm.invalid">
+        class="btn btn-block btn-pill font-weight-bolder font-size-h6 h-48px px-8 py-4 my-3 mr-3" [disabled]="loginForm.invalid">
         Sign In
       </button> 
 
