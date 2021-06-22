@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { LayoutService } from 'src/app/_metronic/core';
+import { environment } from 'src/environments/environment';
+import { ThemeService } from '../_services/theme.service';
 
 @Component({
   selector: 'app-auth',
@@ -9,9 +11,16 @@ import { LayoutService } from 'src/app/_metronic/core';
 export class AuthComponent implements OnInit {
 
   today: Date = new Date();
+  login_image: string;
 
-  constructor(private layoutService: LayoutService) {
+  constructor(
+    private theme: ThemeService,
+    private layoutService: LayoutService
+    ) {
     this.layoutService.setConfig(null);
+    const img = this.theme.getConfig().login.image;
+    const img_url = `${environment.apiUrl}/themes/homepage/${img}`;
+    this.login_image = img_url;
   }
 
   ngOnInit(): void {

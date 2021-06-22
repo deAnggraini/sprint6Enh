@@ -21,6 +21,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   hasError: boolean;
   returnUrl: string;
   isLoading$: Observable<boolean>;
+  revealPass: boolean = false;
+  typePass = 'password';
 
   // private fields
   private unsubscribe: Subscription[] = []; // Read more: => https://brianflove.com/2016/12/11/anguar-2-unsubscribe-observables/
@@ -96,5 +98,15 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.unsubscribe.forEach((sb) => sb.unsubscribe());
+  }
+
+  showPassword() {
+    if (this.typePass === "password") {
+      this.typePass = "text";
+      this.revealPass = true;
+    } else {
+      this.typePass = "password";
+      this.revealPass = false;
+    }
   }
 }
