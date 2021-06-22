@@ -28,7 +28,7 @@ public class LoggedinDto {
 	@JsonProperty("pic")
 	private String picture = "./assets/media/users/default.jpg"; // default value
 	@JsonProperty("remember")
-	private Boolean rememberMe = Boolean.FALSE; 
+	private Boolean rememberMe = Boolean.TRUE; 
 	@JsonProperty("authToken")
 	private String access_token;
 	@JsonInclude(JsonInclude.Include.NON_NULL) 
