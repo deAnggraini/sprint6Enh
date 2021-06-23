@@ -18,7 +18,8 @@ public class Constant {
 		REFRESH_TOKEN_SUCCEED(new String[] { "00", "New Access Token Has Generated" }),
 		REFRESH_TOKEN_FAILED(new String[] { "01", "Fail to Generate new access token" }),
 		EXIST_USER_PROFILE(new String[] { "00", "User Profile Exist" }),
-		USER_PROFILE_NOT_FOUND(new String[] { "01", "User Profile Not Found" });
+		USER_PROFILE_NOT_FOUND(new String[] { "01", "User Profile Not Found" }),
+		MENU_PROFILE_SUCCESS(new String[] { "00", "Menu Success Load" });
 
 		// declaring private variable for getting values
 		private String action[];
