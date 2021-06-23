@@ -16,17 +16,18 @@
 <ngx-slick-carousel class="carousel" #slickModal="slick-carousel" [config]="slideConfig">
     <div ngxSlickItem *ngFor="let item of slides" class="slide my-3">
         <div class="mx-2">
-            <div class="col rounded-sm" style="border: 1px solid #DDD; box-shadow: 0px 4px 8px 0px #0000001A;"
-                onmouseover="this.style.border ='1px groove #1995D1';"
-                onmouseout="this.style.border ='1px solid #DDD';">
+            <div class="col rounded-sm"
+                style="background-color: white; border: 1px solid transparent; box-shadow: 0px 4px 8px 0px #0000001A;"
+                onmouseover="this.style.border ='1px solid #1995D1';"
+                onmouseout="this.style.border ='1px solid #FFFF';">
                 <div class="row">
                     <div class="col-md-auto p-0">
                         <img class="img-show" src="{{backend_img}}/articles/{{item.img}}" width="100%" height="130px"
                             background-position:center>
                     </div>
-                    <div class="col p-0 px-2">
-                        <div class="mb-2">
-                            <span class="text-muted font-weight-bold font-size-sm">{{item.created_date | date: "dd MMMM yyyy"}}</span>
+                    <div class="col p-0 px-2 rounded-sm">
+                        <div class="mb-2 my-3">
+                            <span class="font-size-sm" style="color: #605E5C">{{item.created_date | date: "dd MMMM yyyy"}}</span>
                         </div>
                         <div class="mb-2 text-ellipsis-1">
                             <a routerLink="/article/terbaru" class="title text-dark font-weight-bold font-size-h7 cursor-pointer">
