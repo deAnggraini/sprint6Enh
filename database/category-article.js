@@ -172,7 +172,10 @@ const categories = [
                 desc: '',
                 sort: 7,
             },
-        ]
+        ],
+        icon: '/menus/coin.svg',
+        image: '/struktur/100.svg',
+        uri: null,
     },
     {
         id: 200,
@@ -216,7 +219,10 @@ const categories = [
                 desc: '',
                 sort: 4,
             },
-        ]
+        ],
+        icon: '/menus/content.svg',
+        image: '/struktur/200.svg',
+        uri: null,
     },
     {
         id: 1,
@@ -295,7 +301,10 @@ const categories = [
                 desc: '',
                 sort: 5,
             },
-        ]
+        ],
+        icon: '/menus/mypage.svg',
+        image: '/struktur/300.svg',
+        uri: null,
     }
 ];
 

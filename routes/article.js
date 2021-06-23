@@ -73,4 +73,12 @@ router.post('/news', (req, res) => {
     res.send({ error: false, msg: "", data: news });
 });
 
+router.post('/struktur-save', (req, res) => {
+    const { body, files } = req;
+    console.log({ body });
+    console.log({ files });
+    res.send({ error: true, msg: "", data: {} });
+});
+
+
 module.exports = router;
