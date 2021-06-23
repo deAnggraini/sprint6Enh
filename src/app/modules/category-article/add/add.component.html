@@ -65,20 +65,27 @@
             </div>
             <div class="form-group">
                 <label>Icon Menu *</label>
-                <input class="form-control" type="file" placeholder="Pilih Gambar" required formControlName="icon"
-                    autocomplete="off" [ngClass]="{ 'is-invalid': hasError }"
-                    onchange="console.log(event.target.files)">
+                <!-- formControlName="icon" -->
+                <input class="form-control" type="file" placeholder="Pilih Gambar" required autocomplete="off"
+                    [ngClass]="{ 'is-invalid': hasError }" (change)="onImageChange($event, 'icon')" accept="image/*">
                 <small>Icon diperlukan untuk kebutuhan navigasi menu kiri.</small>
                 <ng-container [ngTemplateOutlet]="formError"
                     [ngTemplateOutletContext]="{ control: dataForm.controls['icon']}"></ng-container>
+                <div class="preview" *ngIf="iconFile">
+                    <img [src]="iconFile" style="width:25px; height:25px">
+                </div>
             </div>
             <div class="form-group">
                 <label>Gambar Menu *</label>
-                <input class="form-control" type="file" placeholder="Pilih Gambar" required formControlName="image"
-                    autocomplete="off" [ngClass]="{ 'is-invalid': hasError}">
+                <!-- formControlName="image" -->
+                <input class="form-control" type="file" placeholder="Pilih Gambar" required autocomplete="off"
+                    [ngClass]="{ 'is-invalid': hasError}" (change)="onImageChange($event, 'image')" accept="image/*">
                 <small>Gambar diperlukan untuk kebutuhan homepage.</small>
                 <ng-container [ngTemplateOutlet]="formError"
                     [ngTemplateOutletContext]="{ control: dataForm.controls['image']}"></ng-container>
+                <div class="preview" *ngIf="imageFile">
+                    <img [src]="imageFile" style="width:100px; height:100px">
+                </div>
             </div>
             <div class="form-group">
                 <label>Deskripsi Menu *</label>
