@@ -12,30 +12,21 @@ export class TerbaruComponent implements OnInit {
   
   public dataList: any[] = [];
   public backend_img: string = environment.backend_img;
+  slides = [];
+  slideConfig = {
+    "slidesToShow": 3,
+    "slidesToScroll": 1,
+    "infinite": false,
+  };
 
-  constructor(private config: NgbCarouselConfig, private articleService: ArticleService, private changeDetectorRef: ChangeDetectorRef) {
-    config.showNavigationArrows = true;
-    config.showNavigationIndicators = false;
-    config.interval = 0;
+  constructor(private articleService: ArticleService, private changeDetectorRef: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
     this.articleService.news().subscribe(resp => {
-      this.parsePer3(resp.slice(0, 6));
+      this.slides = (resp.slice(0, 6));
       setTimeout(() => this.changeDetectorRef.detectChanges(), 0);
     });
-  }
-
-  parsePer3(dataList: any[]) {
-    const per = 3;
-    const len = dataList.length;
-    const loop = Math.ceil(len / per);
-    for (let i = 0; i < loop; i++) {
-      const start = i * per;
-      const end = start + per;
-      const data = dataList.slice(start, end);
-      this.dataList.push(data);
-    }
   }
 
 }

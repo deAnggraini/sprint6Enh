@@ -13,40 +13,32 @@
         </a>
     </div>
 </div>
-
-<ngb-carousel>
-    <ng-template ngbSlide *ngFor="let item of dataList;">
-        <ng-container [ngTemplateOutlet]="carouselRow" [ngTemplateOutletContext]="{row:item}"></ng-container>
-    </ng-template>
-</ngb-carousel>
-
-<ng-template #carouselRow let-row="row">
-    <div class="row m-0">
-        <ng-container *ngFor="let item of row">
-            <ng-container [ngTemplateOutlet]="carouselItem" [ngTemplateOutletContext]="{item:item}"></ng-container>
-        </ng-container>
-    </div>
-</ng-template>
-<ng-template #carouselItem let-item="item">
-    <div class="col rounded-sm mr-7 mb-7" style="border: 1px solid #DDD; box-shadow: 0px 4px 8px 0px #0000001A;"
-        onmouseover="this.style.border ='1px groove #1995D1';" onmouseout="this.style.border ='1px solid #DDD';"
-    >
-        <div class="row">
-            <div class="col-md-auto p-0">
-                <img class="img-show" src="{{backend_img}}/articles/{{item.img}}" width="100%" height="130px"
-                    background-position:center>
-            </div>
-            <div class="col p-0 px-2">
-                <div class="mb-2">
-                    <span class="text-muted font-weight-bold font-size-sm">{{item.created_date | date: "dd MMMM yyyy"}}</span>
+<ngx-slick-carousel class="carousel" #slickModal="slick-carousel" [config]="slideConfig">
+    <div ngxSlickItem *ngFor="let item of slides" class="slide my-3">
+        <div class="mx-2">
+            <div class="col rounded-sm" style="border: 1px solid #DDD; box-shadow: 0px 4px 8px 0px #0000001A;"
+                onmouseover="this.style.border ='1px groove #1995D1';"
+                onmouseout="this.style.border ='1px solid #DDD';">
+                <div class="row">
+                    <div class="col-md-auto p-0">
+                        <img class="img-show" src="{{backend_img}}/articles/{{item.img}}" width="100%" height="130px"
+                            background-position:center>
+                    </div>
+                    <div class="col p-0 px-2">
+                        <div class="mb-2">
+                            <span class="text-muted font-weight-bold font-size-sm">{{item.created_date | date: "dd MMMM yyyy"}}</span>
+                        </div>
+                        <div class="mb-2 text-ellipsis-1">
+                            <a routerLink="/article/terbaru" class="title text-dark font-weight-bold font-size-h7 cursor-pointer">
+                                {{item.title | maxLength: 35}}
+                            </a>
+                        </div>
+                        <p class="text-desc mb-1 text-ellipsis-2">
+                            {{item.desc | maxLength: 45}}
+                        </p>
+                    </div>
                 </div>
-                <div class="mb-2">
-                    <a routerLink="/article/terbaru" class="title text-dark font-weight-bold font-size-h7 cursor-pointer">{{item.title}}</a>
-                </div>
-                <p class="text-desc mb-1">
-                    {{item.desc}}
-                </p>
-            </div>
+        </div>
         </div>
     </div>
-</ng-template>
+</ngx-slick-carousel>
