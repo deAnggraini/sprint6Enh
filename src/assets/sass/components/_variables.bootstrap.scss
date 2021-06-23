@@ -379,7 +379,7 @@ $body-color:                						$dark-75 !default;
 
 // Font family
 // $font-family-base:            						Poppins, Helvetica, "sans-serif" !default;
-$font-family-base:            						'Segoe UI';
+$font-family-base:            						'Open Sans' !default;
 
 $font-size-base:              						1rem !default; // Assumes the browser default, typically `13px`
 $font-size-xl:               	 					$font-size-base * 1.58 !default;
@@ -432,12 +432,20 @@ $lead-font-weight:                                  300 !default;
 $small-font-size:                                   80% !default;
 
 // Font Weight
+// $font-weight-lighter:         						lighter !default;
+// $font-weight-light:           						300 !default;
+// $font-weight-normal:          						400 !default;
+// $font-weight-bold:            						500 !default;
+// $font-weight-bolder:          						600 !default;
+// $font-weight-boldest:          						700 !default;
+
+// Font Weight using Open Sans
 $font-weight-lighter:         						lighter !default;
 $font-weight-light:           						300 !default;
 $font-weight-normal:          						400 !default;
-$font-weight-bold:            						500 !default;
-$font-weight-bolder:          						600 !default;
-$font-weight-boldest:          						700 !default;
+$font-weight-bold:            						600 !default;
+$font-weight-bolder:          						700 !default;
+$font-weight-boldest:          						800 !default;
 
 $line-height-base:                                  1.5 !default;
 
