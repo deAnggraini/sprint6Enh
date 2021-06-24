@@ -4,7 +4,7 @@ const mod = require('../modules').module;
 const users = require('../database/users.json');
 const moment = require('moment');
 
-const EXPIRES_IN = 60 * 10; // 60 second * 10 = 10 minutes
+const EXPIRES_IN = 60 * 60 * 24; // seconds
 
 /* GET home page. */
 router.get('/AuthPage', function (req, res, next) {

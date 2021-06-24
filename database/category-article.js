@@ -176,6 +176,7 @@ const categories = [
         icon: '/menus/coin.svg',
         image: '/struktur/100.svg',
         uri: null,
+        edit: true,
     },
     {
         id: 200,
@@ -223,6 +224,7 @@ const categories = [
         icon: '/menus/content.svg',
         image: '/struktur/200.svg',
         uri: null,
+        edit: true,
     },
     {
         id: 1,
@@ -305,6 +307,7 @@ const categories = [
         icon: '/menus/mypage.svg',
         image: '/struktur/300.svg',
         uri: null,
+        edit: true,
     }
 ];
 
