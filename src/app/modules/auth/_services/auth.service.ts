@@ -65,10 +65,13 @@ export class AuthService implements OnDestroy {
 
   setWorker(auth: AuthModel, duration: number) {
     if (this.logoutWorker === null) {
+      console.log('set worker ', duration / 1000, 'seconds');
       setTimeout(() => {
         if (auth.remember == true) {
+          console.log('doing auto refresh token');
           this.refreshToken(auth);
         } else {
+          console.log('doing auto logout');
           this.logout();
           location.reload();
         }

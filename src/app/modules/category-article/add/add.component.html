@@ -16,7 +16,7 @@
                         PAKAR<br>
                         PANDUAN KERJA DIGITAL
                     </a>
-                    <a (click)="open(formAddSection)" class="btn btn-xs btn-light-success btn-icon"><i
+                    <a (click)="open()" class="btn btn-xs btn-light-success btn-icon"><i
                             class="fas fa-plus-circle"></i></a>
                 </div>
                 <ul class="navi navi-hover">
@@ -28,7 +28,8 @@
                 </ul>
             </div>
             <div class="section-body d-flex flex-column flex-row-fluid pt-5">
-                <app-struktur-lvl2-tree [selected]="selected$"></app-struktur-lvl2-tree>
+                <app-struktur-lvl2-tree [selected]="selected$" (editLevel1)="editLevel1($event)"
+                    (deleteLevel1)="deleteLevel1()"></app-struktur-lvl2-tree>
             </div>
         </div>
     </div>
@@ -49,7 +50,7 @@
 
 <ng-template #formAddSection let-c="close" let-d="dismiss">
     <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Tambah Menu</h4>
+        <h4 class="modal-title" id="modal-basic-title">{{isEdit ? 'Ubah' : 'Tambah'}} Menu</h4>
         <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
             <i aria-hidden="true">&times;</i>
         </button>
@@ -100,7 +101,7 @@
     <div class="modal-footer">
         <button type="button" class="btn btn-outline-light btn-sm rounded-lg" (click)="c('Batal')">Batal</button>
         <button type="button" class="btn btn-outline-dark btn-sm rounded-lg" (click)="save()"
-            [disabled]="dataForm.invalid">Tambah</button>
+            [disabled]="dataForm.invalid">{{isEdit ? 'Ubah' : 'Tambah'}}</button>
     </div>
 </ng-template>
 
