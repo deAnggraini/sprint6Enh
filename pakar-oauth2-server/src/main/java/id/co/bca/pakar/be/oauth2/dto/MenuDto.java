@@ -8,7 +8,7 @@ import java.util.Set;
 public class MenuDto {
 	@JsonProperty("id")
 	private Long id;
-	@JsonProperty("name")
+	@JsonProperty("title")
 	private String menuName;
 	@JsonProperty("desc")
 	private String menuDescription;
@@ -17,9 +17,9 @@ public class MenuDto {
 	@JsonProperty("uri")
 	private String uri;
 	@JsonProperty("level")
-	private Long level;
+	private Long level=1L;
 	@JsonProperty("sort")
-	private Long order = 0L;
+	private Long order = 1L;
 	@JsonProperty("edit")
 	private Boolean editStatus = Boolean.TRUE;
 	@JsonProperty("menus")
