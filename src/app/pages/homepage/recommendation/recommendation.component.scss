@@ -4,4 +4,23 @@
       width: 130px;
     }
   }
+
+  .control-c {
+    width: 32px;
+    height: 32px;
+  }
+
+  .slick-prev {
+    left: -10px;
+    z-index: 1;
+  }
+
+  .slick-next {
+    right: -10px;
+  }
+
+  .slick-disabled {
+    opacity: 0;
+  }
+
 }

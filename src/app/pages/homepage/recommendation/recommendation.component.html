@@ -1,11 +1,11 @@
 <div class="d-flex flex-wrap justify-content-between mb-5">
-    <h3 class="">
-        <div class="font-weight-bolder text-dark">Rekomendasi Untuk Kamu</div>
-        <div class="text-muted font-weight-bold font-size-sm">
-            Informasi PAKAR yang direkomendasikan sesuai <i class="font-size-sm">jobdesk</i> Kamu
+    <h3 class="ml-2">
+        <div class="font-weight-bolder text-dark mb-2">Rekomendasi Untuk Kamu</div>
+        <div class="font-weight-normal font-size-sm" style="color: #605E5C;">
+            Informasi PAKAR yang direkomendasikan sesuai <i class="font-size-sm" style="color: #605E5C;">jobdesk</i> Kamu
         </div>
     </h3>
-    <div class="d-flex align-items-end">
+    <div class="d-flex align-items-end mr-2">
         <a class="navi-link" href="#">
             <a routerLink="/article/recommendation" class="navi-text cursor-pointer font-weight-bold font-size-sm">
                 Lihat semua >
@@ -16,7 +16,8 @@
 <ngx-slick-carousel class="carousel" #slickModal="slick-carousel" [config]="slideConfig">
     <div ngxSlickItem *ngFor="let item of slides" class="slide my-3">
         <div class="mx-2">
-            <div class="col rounded-sm" style="border: 1px solid #DDD; box-shadow: 0px 4px 8px 0px #0000001A;"
+            <div class="col rounded-sm"
+                style="border: 1px solid #DDD; box-shadow: 0px 4px 8px 0px #0000001A;"
                 onmouseover="this.style.border ='1px groove #1995D1';"
                 onmouseout="this.style.border ='1px solid #DDD';">
                 <div class="row">
@@ -25,12 +26,12 @@
                             background-position:center>
                     </div>
                     <div class="col p-0 px-2">
-                        <div class="mb-2">
+                        <div class="mb-2 my-3">
                             <span
-                                class="text-muted font-weight-bold font-size-sm">{{item.created_date | date: "dd MMMM yyyy"}}</span>
+                                class="font-size-sm" style="color: #605E5C">{{item.created_date | date: "dd MMMM yyyy"}}</span>
                         </div>
                         <div class="mb-2 text-ellipsis-1">
-                            <a class="title text-dark font-weight-bold font-size-h7"
+                            <a class="title text-dark font-weight-bolder font-size-h7"
                                 routerLink="/article/recommendation">{{item.title | maxLength: 35}}</a>
                         </div>
                         <p class="text-desc mb-1 text-ellipsis-2">
