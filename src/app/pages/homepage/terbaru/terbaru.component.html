@@ -1,8 +1,8 @@
 <div class="d-flex flex-wrap justify-content-between mb-5">
     <h3 class="ml-2">
-        <div class="font-weight-bolder text-dark">PAKAR Terbaru</div>
-        <div class="text-muted font-weight-bold font-size-sm">
-            Kumpulan informasi pakar yang baru di-<i class="font-size-sm">update</i>
+        <div class="font-weight-bolder text-dark mb-2">PAKAR Terbaru</div>
+        <div class="font-weight-normal font-size-sm" style="color: #605E5C;">
+            Kumpulan informasi pakar yang baru di-<i class="font-size-sm" style="color: #605E5C;">update</i>
         </div>
     </h3>
     <div class="d-flex align-items-end mr-2">
@@ -30,7 +30,7 @@
                             <span class="font-size-sm" style="color: #605E5C">{{item.created_date | date: "dd MMMM yyyy"}}</span>
                         </div>
                         <div class="mb-2 text-ellipsis-1">
-                            <a routerLink="/article/terbaru" class="title text-dark font-weight-bold font-size-h7 cursor-pointer">
+                            <a routerLink="/article/terbaru" class="title text-dark font-weight-bolder font-size-h7 cursor-pointer">
                                 {{item.title | maxLength: 35}}
                             </a>
                         </div>

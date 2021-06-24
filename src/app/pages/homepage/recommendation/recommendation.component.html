@@ -1,8 +1,8 @@
 <div class="d-flex flex-wrap justify-content-between mb-5">
     <h3 class="ml-2">
-        <div class="font-weight-bolder text-dark">Rekomendasi Untuk Kamu</div>
-        <div class="text-muted font-weight-bold font-size-sm">
-            Informasi PAKAR yang direkomendasikan sesuai <i class="font-size-sm">jobdesk</i> Kamu
+        <div class="font-weight-bolder text-dark mb-2">Rekomendasi Untuk Kamu</div>
+        <div class="font-weight-normal font-size-sm" style="color: #605E5C;">
+            Informasi PAKAR yang direkomendasikan sesuai <i class="font-size-sm" style="color: #605E5C;">jobdesk</i> Kamu
         </div>
     </h3>
     <div class="d-flex align-items-end mr-2">
@@ -31,7 +31,7 @@
                                 class="font-size-sm" style="color: #605E5C">{{item.created_date | date: "dd MMMM yyyy"}}</span>
                         </div>
                         <div class="mb-2 text-ellipsis-1">
-                            <a class="title text-dark font-weight-bold font-size-h7"
+                            <a class="title text-dark font-weight-bolder font-size-h7"
                                 routerLink="/article/recommendation">{{item.title | maxLength: 35}}</a>
                         </div>
                         <p class="text-desc mb-1 text-ellipsis-2">
