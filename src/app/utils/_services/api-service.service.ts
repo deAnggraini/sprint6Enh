@@ -16,7 +16,7 @@ export class ApiService {
 
   constructor(private http: HttpClient, private toast: ToastService) { }
 
-  private getHeaders() {
+  getHeaders(json: boolean = true) {
     let token = 'empty';
     let username = 'empty';
     const str = localStorage.getItem(this.authLocalStorageToken);
@@ -25,15 +25,14 @@ export class ApiService {
       token = `Bearer ${auth.authToken}`;
       username = auth.username
     }
-    return {
-      headers: new HttpHeaders(
-        {
-          'Content-Type': 'application/json',
-          'Authorization': token,
-          'X-USERNAME': username
-        }
-      )
+    const headers = new HttpHeaders({
+      'Authorization': token,
+      'X-USERNAME': username
+    });
+    if (json) {
+      headers.append('Content-Type', 'application/json');
     }
+    return { headers };
   }
 
   post(url: string, body: any | null, options?: {
@@ -48,7 +47,7 @@ export class ApiService {
     responseType?: 'json';
     withCredentials?: boolean;
   }): Observable<any> {
-    return this.http.post(url, body, this.getHeaders()).pipe(
+    return this.http.post(url, body, options == null ? this.getHeaders() : options).pipe(
       concatMap((res: CommonHttpResponse) => {
         if (res.error && res.error !== '00') throw Error(res.msg);
         if (res.status && res.status.error !== '00') throw Error(res.msg);
@@ -76,7 +75,7 @@ export class ApiService {
     responseType?: 'json';
     withCredentials?: boolean;
   }): Observable<any> {
-    return this.http.get(url, this.getHeaders()).pipe(
+    return this.http.get(url, options == null ? this.getHeaders() : options).pipe(
       concatMap((res: CommonHttpResponse) => {
         if (res.error && res.error !== '00') throw Error(res.msg);
         if (res.status && res.status.error !== '00') throw Error(res.msg);

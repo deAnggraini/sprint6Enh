@@ -16,7 +16,7 @@ export class HomepageComponent implements OnInit {
 
   constructor(private theme: ThemeService, private changeDetectorRef: ChangeDetectorRef) {
     const img = this.theme.getConfig().homepage.bg_img_top;
-    const img_url = `${environment.apiUrl}/themes/homepage/${img}`;
+    const img_url = `${environment.backend_img}/themes/homepage/${img}`;
     this.background_image = img_url;
     this.background_category_menu = 'eclipse.svg';
     this.sortingList$ = this.theme.homepageComponent$.asObservable();
