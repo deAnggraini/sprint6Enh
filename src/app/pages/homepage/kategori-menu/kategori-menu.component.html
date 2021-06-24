@@ -1,5 +1,5 @@
 <div class="mt-10">
-    <h3>
+    <h3 class="ml-2">
         <div class="font-weight-bolder text-dark">Kategori Menu</div>
         <div class="text-muted font-weight-bold font-size-sm">
             Baca seluruh artikel PAKAR sesuai kategori menu yang ada
@@ -13,7 +13,7 @@
             <div class="card-shadow border-1 rounded-sm mt-n15 p-5">
                 <div class="pt-15"></div>
                 <div><a routerLink="/article/list/{{item.id}}"
-                        class="text-warning font-weight-bold font-size-h6">{{item.title}}</a></div>
+                        class="text-dark font-weight-bold font-size-h6 mb-1">{{item.title}}</a></div>
                 <small>{{item.desc}}</small>
                 <ul class="navi navi-hover">
                     <li class="navi-item" *ngFor="let link of item.menus | slice:0:3">
