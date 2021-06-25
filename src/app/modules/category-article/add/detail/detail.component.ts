@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
 
 declare var $: any;
@@ -9,12 +9,23 @@ declare var $: any;
   styleUrls: ['./detail.component.scss']
 })
 export class DetailComponent implements OnInit, OnDestroy {
+
+  @Output() editLevel1 = new EventEmitter<any>();
+  @Output() deleteLevel1 = new EventEmitter<any>();
   @Input() selected: Observable<any>;
   section: any;
   tree_id = "#struktur-tree";
   datasource: any[];
 
   constructor(private cdr: ChangeDetectorRef) { }
+
+  editSection() {
+    this.editLevel1.emit(this.section);
+  }
+
+  deleteSection() {
+    this.deleteLevel1.emit();
+  }
 
   ngOnDestroy(): void {
     console.log('destroy called');
@@ -24,7 +35,6 @@ export class DetailComponent implements OnInit, OnDestroy {
     this.datasource = [];
     this.initJsTree();
     this.selected.subscribe(res => {
-      console.log('selected subscribe', { res });
       this.section = res;
       this.refreshJsTree();
       // this.cdr.detectChanges();
@@ -70,7 +80,6 @@ export class DetailComponent implements OnInit, OnDestroy {
         );
       });
     }
-    console.log({ ds });
     this.datasource = ds;
     return ds;
   }
@@ -174,7 +183,6 @@ export class DetailComponent implements OnInit, OnDestroy {
       "plugins": ['dnd', 'themes', "types"]
     });
     $(this.tree_id).on("create_node.jstree", function (e, data) {
-      console.log('create_node');
       $("li#" + data.node.id).find("a").append('test');
     });
     $(this.tree_id).on("changed.jstree", function (e, data) {

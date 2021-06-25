@@ -4,12 +4,14 @@ import { MaxLengthPipe } from './pipe/max-length.pipe';
 import { ToastsContainer } from './_components/toast/toast-container.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { PaginationComponent } from './_components/pagination/pagination.component';
+import { ConfirmComponent } from './_components/confirm/confirm.component';
 
 @NgModule({
   declarations: [
     MaxLengthPipe,
     ToastsContainer,
     PaginationComponent,
+    ConfirmComponent,
   ],
   imports: [
     CommonModule,
@@ -18,7 +20,8 @@ import { PaginationComponent } from './_components/pagination/pagination.compone
   exports: [
     MaxLengthPipe,
     ToastsContainer,
-    PaginationComponent
+    PaginationComponent,
+    ConfirmComponent
   ]
 })
 export class UtilsModule {

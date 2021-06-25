@@ -7,19 +7,18 @@
 "></div>
 <div class="card card-custom gutter-b mx-15 mt-n50" style="overflow-x: hidden;">
     <div class="card-body d-flex flex-column flex-grow flex-wrap">
-        <div>Struktur Menu</div>
-        <div>Menu untuk menambahkan, mengubah, atau menghapus struktur level PAKAR.</div>
-        <div class="struktur-container d-flex flex-row flex-column-fluid rounded-sm">
+        <span class="pakar-text-header">Struktur Menu</span>
+        <span class="pakar-text-header-desc">Menu untuk menambahkan, mengubah, atau menghapus struktur level
+            PAKAR.</span>
+        <div class="struktur-container d-flex flex-row flex-column-fluid rounded-sm mt-8">
             <div class="section-nav d-flex flex-column flex-row-auto">
-                <div class="nav-header d-flex flex-row justify-content-between">
+                <div class="nav-header d-flex flex-row justify-content-between align-items-center pl-8">
                     <a routerLink="/homepage">
-                        PAKAR<br>
-                        PANDUAN KERJA DIGITAL
+                        <span [inlineSVG]="'./assets/media/svg/bca/pakar-logo-top.svg'" cacheSVG="true" class=""></span>
                     </a>
-                    <a (click)="open(formAddSection)" class="btn btn-xs btn-light-success btn-icon"><i
-                            class="fas fa-plus-circle"></i></a>
+                    <a (click)="open()" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-plus-circle"></i></a>
                 </div>
-                <ul class="navi navi-hover">
+                <ul class="navi navi-hover mt-5">
                     <ng-container *ngFor="let item of menuConfig.items">
                         <ng-container class="navi-item" *ngIf="item.root === true" [ngTemplateOutlet]="rowItem"
                             [ngTemplateOutletContext]="{item:item}">
@@ -27,8 +26,9 @@
                     </ng-container>
                 </ul>
             </div>
-            <div class="section-body d-flex flex-column flex-row-fluid pt-5">
-                <app-struktur-lvl2-tree [selected]="selected$"></app-struktur-lvl2-tree>
+            <div class="section-body d-flex flex-column flex-row-fluid align-items-stretch px-10 py-5">
+                <app-struktur-lvl2-tree [selected]="selected$" (editLevel1)="editLevel1($event)"
+                    (deleteLevel1)="deleteLevel1()"></app-struktur-lvl2-tree>
             </div>
         </div>
     </div>
@@ -49,7 +49,7 @@
 
 <ng-template #formAddSection let-c="close" let-d="dismiss">
     <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Tambah Menu</h4>
+        <h4 class="modal-title" id="modal-basic-title">{{isEdit ? 'Ubah' : 'Tambah'}} Menu</h4>
         <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
             <i aria-hidden="true">&times;</i>
         </button>
@@ -100,7 +100,7 @@
     <div class="modal-footer">
         <button type="button" class="btn btn-outline-light btn-sm rounded-lg" (click)="c('Batal')">Batal</button>
         <button type="button" class="btn btn-outline-dark btn-sm rounded-lg" (click)="save()"
-            [disabled]="dataForm.invalid">Tambah</button>
+            [disabled]="dataForm.invalid">{{isEdit ? 'Ubah' : 'Tambah'}}</button>
     </div>
 </ng-template>
 
