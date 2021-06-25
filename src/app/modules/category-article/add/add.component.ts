@@ -101,12 +101,14 @@ export class AddComponent implements OnInit, OnDestroy {
   }
 
   save() {
-    this.strukturService.save(this.convertToFormData()).subscribe(resp => {
-      if (resp) {
-        this.menu.addStruktur(resp);
-        this.modalService.dismissAll();
-      }
-    })
+    if (this.dataForm.valid) {
+      this.strukturService.save(this.convertToFormData()).subscribe(resp => {
+        if (resp) {
+          this.menu.addStruktur(resp);
+          this.modalService.dismissAll();
+        }
+      })
+    }
   }
 
   open(reset: boolean = true) {

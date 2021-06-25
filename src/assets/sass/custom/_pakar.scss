@@ -1,0 +1,27 @@
+.font-size-16 {
+  font-size: 1rem !important;
+}
+
+.font-size-24 {
+  font-size: 1.5rem !important;
+}
+
+.font-size-26 {
+  font-size: 1.625rem !important;
+}
+
+.font-size-28 {
+  font-size: 1.75rem !important;
+}
+
+.pakar-text-header {
+    color: #201F1E;
+    font-weight: 600;
+    @extend .font-size-28;
+}
+
+.pakar-text-header-desc {
+    color: #605E5C;
+    font-weight: 400;
+    @extend .font-size-16;
+}

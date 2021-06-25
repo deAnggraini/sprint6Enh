@@ -77,7 +77,7 @@
     }
   }
 
-  &.is-invalid,
+  &.ng-invalid.ng-touched,
   &.ng-invalid.ng-dirty {
     background-image: none;
     border-color: #F64E60;
