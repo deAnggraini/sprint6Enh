@@ -171,7 +171,7 @@ export class DynamicAsideMenuService {
     return this.categories$;
   }
 
-  addStruktur(newData: any) {
+  addStruktur(newData: any, level: number = 1, parent: any = null) {
     newData.showLess = true;
     let found = this.categories.find(d => d.id == newData.id);
     if (found) {
@@ -193,9 +193,14 @@ export class DynamicAsideMenuService {
   }
 
   refreshStruktur(dataList: any[] = []) {
-    dataList.map(d => d.showLess = true);
-    this.categories = dataList;
-    this.categories$.next(dataList);
-    this.loadMenu(this.parseToMenu(dataList));
+    if (dataList.length) {
+      dataList.map(d => d.showLess = true);
+      this.categories = dataList;
+      this.categories$.next(dataList);
+      this.loadMenu(this.parseToMenu(dataList));
+    } else {
+      this.populateCategoryArticle();
+    }
   }
+
 }

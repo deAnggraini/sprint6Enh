@@ -1,0 +1,33 @@
+export declare interface StrukturDTO {
+    id: number,
+    name: string,
+    title?: string,
+    icon: string,
+    image: string,
+    desc: string,
+    edit: boolean,
+    uri: string,
+    level: number,
+    sort: number,
+    parent?: number,
+    menus?: StrukturDTO[],
+    location?: '',
+    location_text?: '',
+}
+
+export declare interface StrukturItemDTO {
+    id: number,
+    name: string,
+    title?: string,
+    icon: string,
+    image: string,
+    desc: string,
+    edit: boolean,
+    uri: string,
+    level: number,
+    sort: number,
+    parent?: number,
+    menus?: StrukturDTO[],
+    location?: '',
+    location_text?: '',
+}

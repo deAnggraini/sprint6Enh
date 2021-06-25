@@ -15,13 +15,26 @@
 }
 
 .pakar-text-header {
-    color: #201F1E;
-    font-weight: 600;
-    @extend .font-size-28;
+  color: #201F1E;
+  font-weight: 600;
+  @extend .font-size-28;
 }
 
 .pakar-text-header-desc {
-    color: #605E5C;
-    font-weight: 400;
-    @extend .font-size-16;
+  color: #605E5C;
+  font-weight: 400;
+  @extend .font-size-16;
+}
+
+.btn {
+  &.btn-blue {
+    i, span {
+      color: #0078D4;
+    }
+  }
+  &.btn-blue:hover, &.btn-blue:focus {
+    i, span {
+      color: darkblue;
+    }
+  }
 }
