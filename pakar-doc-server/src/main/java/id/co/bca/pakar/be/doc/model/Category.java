@@ -1,20 +1,13 @@
 package id.co.bca.pakar.be.doc.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
-@Table(name = "r_article_category")
-public class ArticleCategory extends EntityBase {
+@Table(name = "r_category")
+public class Category extends EntityBase {
 	@Id
-	@SequenceGenerator(name = "articleCategorySeqGen", sequenceName = "articleCategorySeq", initialValue = 1, allocationSize = 1)
-	@GeneratedValue(generator = "articleCategorySeqGen")
+	@SequenceGenerator(name = "categorySeqGen", sequenceName = "categorySeq", initialValue = 1, allocationSize = 1)
+	@GeneratedValue(generator = "categorySeqGen")
 	private Long id;
 	@Column(name = "title", nullable = false, unique = true)
 	private String title;
@@ -26,7 +19,7 @@ public class ArticleCategory extends EntityBase {
 	private Long level;
 	@ManyToOne
 	@JoinColumn(name = "parent_category")
-	private ArticleCategory  parentCategory;
+	private Category parentCategory;
 	
 	public Long getId() {
 		return id;
@@ -58,10 +51,10 @@ public class ArticleCategory extends EntityBase {
 	public void setLevel(Long level) {
 		this.level = level;
 	}
-	public ArticleCategory getParentCategory() {
+	public Category getParentCategory() {
 		return parentCategory;
 	}
-	public void setParentCategory(ArticleCategory parentCategory) {
+	public void setParentCategory(Category parentCategory) {
 		this.parentCategory = parentCategory;
 	}
 }
