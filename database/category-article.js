@@ -2,14 +2,14 @@ const categories = [
     {
         id: 100,
         title: 'Produk Untuk Nasabah',
-        level: 0,
+        level: 1,
         desc: 'Daftar operasional cabang yang dikategorikan berdasarkan tugasnya.',
         sort: 0,
         menus: [
             {
                 id: 110,
                 title: 'Produk Dana',
-                level: 1,
+                level: 2,
                 desc: '',
                 sort: 0,
                 menus: [
@@ -54,7 +54,7 @@ const categories = [
             {
                 id: 120,
                 title: 'Produk Investasi & Asuransi',
-                level: 1,
+                level: 2,
                 desc: '',
                 sort: 1,
                 menus: [
@@ -133,14 +133,14 @@ const categories = [
             {
                 id: 130,
                 title: 'Produk Digital',
-                level: 1,
+                level: 2,
                 desc: '',
                 sort: 2,
             },
             {
                 id: 140,
                 title: 'Produk Kerja sama',
-                level: 1,
+                level: 2,
                 desc: '',
                 sort: 3,
             },
@@ -181,42 +181,42 @@ const categories = [
     {
         id: 200,
         title: 'Aktivitas Cabang',
-        level: 0,
+        level: 1,
         desc: 'Produk BCA yang digunakan langsung oleh nasabah seperti tabungan e-banking dll.',
         sort: 1,
         menus: [
             {
                 id: 210,
                 title: 'Pengetahuan Perbankan',
-                level: 1,
+                level: 2,
                 desc: '',
                 sort: 0,
             },
             {
                 id: 220,
                 title: 'Layanan Khusus di Cabang',
-                level: 1,
+                level: 2,
                 desc: '',
                 sort: 1,
             },
             {
                 id: 230,
                 title: 'Pelaku cabang',
-                level: 1,
+                level: 2,
                 desc: '',
                 sort: 2,
             },
             {
                 id: 240,
                 title: 'Aktivitas Harian di Cabang',
-                level: 1,
+                level: 2,
                 desc: '',
                 sort: 3,
             },
             {
                 id: 250,
                 title: 'Pengelolaan nasabah',
-                level: 1,
+                level: 2,
                 desc: '',
                 sort: 4,
             },
@@ -229,14 +229,14 @@ const categories = [
     {
         id: 1,
         title: 'Aplikasi Mesin',
-        level: 0,
+        level: 1,
         desc: 'Daftar operasional cabang yang dikategorikan berdasarkan tugasnya.',
         sort: 2,
         menus: [
             {
                 id: 2,
                 title: 'Pendukung Transaksi Umum',
-                level: 1,
+                level: 2,
                 desc: '',
                 sort: 0,
                 menus: [
@@ -257,7 +257,7 @@ const categories = [
             {
                 id: 3,
                 title: 'Pendukung Transaksi Internasional',
-                level: 1,
+                level: 2,
                 desc: '',
                 sort: 1,
                 menus: [
@@ -278,28 +278,28 @@ const categories = [
             {
                 id: 330,
                 title: 'Pendukung Transaksi Kredit',
-                level: 1,
+                level: 2,
                 desc: '',
                 sort: 2,
             },
             {
                 id: 340,
                 title: 'Internal BCA',
-                level: 1,
+                level: 2,
                 desc: '',
                 sort: 3,
             },
             {
                 id: 350,
                 title: 'Regulator',
-                level: 1,
+                level: 2,
                 desc: '',
                 sort: 4,
             },
             {
                 id: 360,
                 title: 'Pendukung Operasional ',
-                level: 1,
+                level: 2,
                 desc: '',
                 sort: 5,
             },
