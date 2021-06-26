@@ -36,8 +36,11 @@
 
 <ng-template #rowItem let-item="item">
     <li class="navi-item" [ngClass]="{'cursor-pointer': item.id, 'disabled': !item.id}" (click)="setJsTree(item)">
-        <a class="navi-link" [ngClass]="{disabled: !item.id}">
-            <span class="navi-text">{{item.title}}</span>
+        <a class="navi-link" [ngClass]="{disabled: !item.edit}">
+            <span class="navi-text" [ngClass]="{
+                    'font-bold-700': selected$.value.id && selected$.value.id == item.id, 
+                    'pakar-color-dark' : selected$.value.id && selected$.value.id == item.id
+                }">{{item.title}}</span>
             <span class="navi-arrow" *ngIf="item.id"></span>
         </a>
     </li>

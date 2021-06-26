@@ -1,5 +1,5 @@
 <div class="detail-header d-flex flex-row justify-content-between" *ngIf="section.id; else emptyData">
-    <span>{{section.title}} </span>
+    <span class="pakar-text-header-18">{{section.title}} </span>
     <div class="node-buttons">
         <div class="btn btn-sm btn-blue btn-my" (click)="open()"><i class="fas fa-plus-circle"></i></div>
         <div class="btn btn-sm btn-blue btn-my" (click)="editSection()"><i class="fas fa-pen"></i></div>
@@ -11,7 +11,7 @@
 
 <ng-template #formAddChild let-c="close" let-d="dismiss">
     <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">{{isEdit ? 'Ubah' : 'Tambah'}} Kategori</h4>
+        <h4 class="modal-title" id="modal-basic-title">{{isEdit ? 'Ubah' : 'Tambah'}} {{dataForm.value.level > 2 ? 'Sub-': ''}}Kategori</h4>
         <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
             <i aria-hidden="true">&times;</i>
         </button>

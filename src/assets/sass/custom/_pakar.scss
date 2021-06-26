@@ -1,5 +1,20 @@
+$bca-color: #0078D4;
+$bca-color-dark: #0F5EA9;
+
+.pakar-color-dark {
+  color: $bca-color-dark !important;
+}
+
+.pakar-color {
+  color: $bca-color !important;
+}
+
 .font-size-16 {
   font-size: 1rem !important;
+}
+
+.font-size-18 {
+  font-size: 1.125rem !important;
 }
 
 .font-size-24 {
@@ -14,9 +29,23 @@
   font-size: 1.75rem !important;
 }
 
+.font-bold-600 {
+  font-weight: 600;
+}
+
+.font-bold-700 {
+  font-weight: 700;
+}
+
+.pakar-text-header-18 {
+  color: #201F1E;
+  @extend .font-bold-600;
+  @extend .font-size-18;
+}
+
 .pakar-text-header {
   color: #201F1E;
-  font-weight: 600;
+  @extend .font-bold-600;
   @extend .font-size-28;
 }
 
@@ -28,12 +57,18 @@
 
 .btn {
   &.btn-blue {
-    i, span {
+
+    i,
+    span {
       color: #0078D4;
     }
   }
-  &.btn-blue:hover, &.btn-blue:focus {
-    i, span {
+
+  &.btn-blue:hover,
+  &.btn-blue:focus {
+
+    i,
+    span {
       color: darkblue;
     }
   }

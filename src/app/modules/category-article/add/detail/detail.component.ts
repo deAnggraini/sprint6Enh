@@ -24,7 +24,7 @@ export class DetailComponent implements OnInit, OnDestroy {
     desc: '',
     edit: true,
     uri: '',
-    level: 1,
+    level: 2,
     sort: 0,
     parent: 0,
     menus: [],
@@ -82,13 +82,9 @@ export class DetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  editSection() {
-    this.editLevel1.emit(this.section);
-  }
+  editSection() { this.editLevel1.emit(this.section); }
 
-  deleteSection() {
-    this.deleteLevel1.emit();
-  }
+  deleteSection() { this.deleteLevel1.emit(); }
 
   open(reset: boolean = true) {
     if (reset) {
@@ -99,6 +95,7 @@ export class DetailComponent implements OnInit, OnDestroy {
   }
 
   edit(data: any) {
+    console.log('edit', data);
     this.imageFile = null;
     this.isEdit = true;
     this.dataForm.reset(Object.assign({}, data, { name: data.title }));
@@ -131,6 +128,28 @@ export class DetailComponent implements OnInit, OnDestroy {
         }
       })
     }
+  }
+
+  delete(node){
+    const categoryText = node.level == 2 ? 'kategori' : node.level == 3 ? 'sub-kategori' : 'sub-sub-kategori';
+    const categoryChildText = node.level == 2 ? 'sub-kategori' : node.level == 3 ? 'sub-sub-kategori' : '';
+    this.confirm.open({
+      title: 'Hapus Menu',
+      message: `<p>Apakah Kamu yakin ingin menghapus ${categoryText} “<b>${node.title}</b>”?
+      ${node.level != 4 ? `</p><p>Seluruh ${categoryChildText} yang terdapat pada menu tersebut akan naik menjadi ${categoryText}.</p>` : ''}`,
+      btnOkText: 'Hapus',
+      btnCancelText: 'Batal'
+    })
+      .then((confirmed) => {
+        if (confirmed === true) {
+          this.strukturService.delete({ id: node.id }).subscribe(resp => {
+            if (resp) {
+              this.menu.refreshStruktur(resp);
+              // this.selected$.next({});
+            }
+          })
+        }
+      });
   }
 
 
@@ -193,20 +212,20 @@ export class DetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  private parseChildren(menus: any[], level: number) {
+  private parseChildren(menus: any[]) {
     const result = [];
     if (menus && menus.length) {
       menus.forEach(d => {
-        const { id, title, menus } = d;
+        const { id, title, menus, level } = d;
         result.push(
           {
             id,
             type: `level-${level}`,
             "text": `<div class="d-flex tree-item flex-row flex-grow justify-content-between">
                   <div class="node-text">${title}</div>
-                  ${this.createButtonIcon(1)}
+                  ${this.createButtonIcon({ id, level })}
                 </div>`,
-            "children": this.parseChildren(menus, level + 1)
+            "children": this.parseChildren(menus)
           }
         );
       });
@@ -218,7 +237,7 @@ export class DetailComponent implements OnInit, OnDestroy {
     const ds: any[] = [];
     if (this.section.menus) {
       this.section.menus.forEach(d => {
-        const { id, title, menus } = d;
+        const { id, title, menus, level } = d;
         ds.push(
           {
             id,
@@ -227,7 +246,7 @@ export class DetailComponent implements OnInit, OnDestroy {
                   <div class="node-text">${title}</div>
                   ${this.createButtonIcon(1)}
                 </div>`,
-            "children": this.parseChildren(menus, 2)
+            "children": this.parseChildren(menus)
           }
         );
       });
@@ -237,8 +256,8 @@ export class DetailComponent implements OnInit, OnDestroy {
   }
 
   private createButtonIcon(data: any) {
-    return `<div class="node-buttons">
-      <div class="btn btn-sm btn-blue btn-my add-child" data-id="${data.id}"><i class="add-child fas fa-plus-circle"></i></div>
+    return `<div class="node-buttons mr-1">
+      ${data.level != 4 ? '<div class="btn btn-sm btn-blue btn-my add-child" data-id="${data.id}"><i class="add-child fas fa-plus-circle"></i></div>' : ''}
       <div class="btn btn-sm btn-blue btn-my edit-child" data-id="${data.id}"><i class="edit-child fas fa-pen"></i></div>
       <div class="btn btn-sm btn-blue btn-my delete-child" data-id="${data.id}"><i class="delete-child far fa-trash-alt"></i></div>
     </div>`;
@@ -262,17 +281,18 @@ export class DetailComponent implements OnInit, OnDestroy {
         "multiple": false,
         "check_callback": true,
         "themes": {
-          "responsive": false
+          "responsive": false,
+          "variant" : "large"
         },
         "data": this.datasource
       },
       "types": {
         "default": {
-          "icon": "fas fa-chevron-right"
+          "icon": "ki ki-arrow-next icon-sm pakar-color-dark"
         },
-        "file": {
-          "icon": "fa fa-file"
-        }
+        // "file": {
+        //   "icon": "fa fa-file"
+        // }
       },
       "state": {
         "key": "demo1"
@@ -289,7 +309,13 @@ export class DetailComponent implements OnInit, OnDestroy {
 
         const addChild = $(target).hasClass('add-child');
         if (addChild) {
-          const { original } = node;
+          const node = $that.findNode(parseInt(selected[0]));
+          const defaultValue = Object.assign({}, $that.defaultValue, { level: node.level + 1, parent: node.id });
+          $that.dataForm.reset(defaultValue);
+          $that.isEdit = false;
+          $that.imageFile = null;
+          $that.open(false);
+          e.stopPropagation();
         }
 
         const editChild = $(target).hasClass('edit-child');
@@ -300,6 +326,18 @@ export class DetailComponent implements OnInit, OnDestroy {
           } else {
             console.error('node not found');
           }
+          e.stopPropagation();
+        }
+
+        const deleteChild = $(target).hasClass('delete-child');
+        if (deleteChild) {
+          const node = $that.findNode(parseInt(selected[0]));
+          if (node) {
+            $that.delete(node);
+          } else {
+            console.error('node not found');
+          }
+          e.stopPropagation();
         }
       }
     });

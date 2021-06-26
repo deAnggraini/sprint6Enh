@@ -7,6 +7,7 @@ export const DynamicAsideMenuConfig = {
       svg: './assets/media/svg/icons/Home/Home.svg',
       page: '/homepage',
       bullet: 'dot',
+      edit: false,
     },
     {
       title: 'Daskboard',
@@ -15,6 +16,7 @@ export const DynamicAsideMenuConfig = {
       svg: './assets/media/svg/icons/Shopping/Chart-line1.svg',
       page: '/dashboard',
       bullet: 'dot',
+      edit: false,
     },
     {
       title: 'Kembali ke myBCAportal',
@@ -23,6 +25,7 @@ export const DynamicAsideMenuConfig = {
       svg: './assets/media/svg/bca/aside/coin.svg',
       page: '/builder',
       bullet: 'dot',
+      edit: false,
     },
     {
       title: 'PAKAR Info',
@@ -31,6 +34,7 @@ export const DynamicAsideMenuConfig = {
       svg: './assets/media/svg/icons/Code/Info-circle.svg',
       page: '/info',
       bullet: 'dot',
+      edit: false,
     }
   ],
   footer: [
@@ -41,6 +45,7 @@ export const DynamicAsideMenuConfig = {
       svg: './assets/media/svg/bca/aside/pdf.svg',
       page: '/info',
       bullet: 'dot',
+      edit: false,
     },
     {
       title: 'FAQ',
@@ -49,6 +54,7 @@ export const DynamicAsideMenuConfig = {
       svg: './assets/media/svg/icons/Code/Question-circle.svg',
       page: '/info',
       bullet: 'dot',
+      edit: false,
     }
   ],
   editor: [
@@ -59,6 +65,7 @@ export const DynamicAsideMenuConfig = {
       svg: './assets/media/svg/bca/aside/content.svg',
       page: '/info',
       bullet: 'dot',
+      edit: false,
     },
     {
       title: 'My Pages',
@@ -67,6 +74,7 @@ export const DynamicAsideMenuConfig = {
       svg: './assets/media/svg/bca/aside/mypage.svg',
       page: '/info',
       bullet: 'dot',
+      edit: false,
     }
   ],
   publisher: [
@@ -77,6 +85,7 @@ export const DynamicAsideMenuConfig = {
       svg: './assets/media/svg/bca/aside/content.svg',
       page: '/info',
       bullet: 'dot',
+      edit: false,
     },
     {
       title: 'My Pages',
@@ -85,6 +94,7 @@ export const DynamicAsideMenuConfig = {
       svg: './assets/media/svg/bca/aside/mypage.svg',
       page: '/info',
       bullet: 'dot',
+      edit: false,
     }
   ],
   admin: [
@@ -95,6 +105,7 @@ export const DynamicAsideMenuConfig = {
       svg: './assets/media/svg/bca/aside/mypage.svg',
       page: '/info',
       bullet: 'dot',
+      edit: false,
     }
   ],
   super_admin: [
@@ -105,6 +116,7 @@ export const DynamicAsideMenuConfig = {
       svg: './assets/media/svg/bca/aside/content.svg',
       page: '/info',
       bullet: 'dot',
+      edit: false,
     },
     {
       title: 'My Pages',
@@ -113,6 +125,7 @@ export const DynamicAsideMenuConfig = {
       svg: './assets/media/svg/bca/aside/mypage.svg',
       page: '/info',
       bullet: 'dot',
+      edit: false,
     }
   ],
 };

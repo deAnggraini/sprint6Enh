@@ -84,7 +84,7 @@ export class DynamicAsideMenuService {
     // loop top level
     const items = [];
     articles.map(item => {
-      items.push({ title: item.title, section: item.title, id: item.id, level: 0, root: true });
+      items.push({ title: item.title, section: item.title, id: item.id, level: 0, root: true, edit: item.edit });
       if (item.menus && item.menus.length) {
         const maxLoop = item.showLess ? 2 : item.menus.length;
         for (let i = 0; i < maxLoop; i++) {
