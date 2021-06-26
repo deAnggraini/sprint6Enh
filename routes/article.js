@@ -5,6 +5,7 @@ const { search, articles, recommendation, news, popular, suggestion } = require(
 const theme = require('../database/themes');
 const _ = require('lodash');
 const path = require('path');
+const categories = require('../database/category-article');
 
 router.get('/theme', function (req, res) {
     res.send({ error: false, msg: '', data: theme });
@@ -72,31 +73,37 @@ router.post('/news', (req, res) => {
     res.send({ error: false, msg: "", data: news });
 });
 
-function findParent(categories, parentId, level) {
-    let parent = [], node;
-    // const { id, name, desc, edit, level, sort } = item;
+function findParent(categories, parentId, level = 1) {
+    if (!categories) return null;
+    let parent = null;
     if (level == 2) {
-        let found = categories.find(d => d.id == parentId);
-        if (found) {
-            parent.push(found);
+        parent = categories.find(d => d.id == parentId);
+    } else {
+        parent = categories.find(d => d.id == parentId);
+        if (!parent) {
+            categories.forEach(d => {
+                if (parent) return;
+                parent = findParent(d.menus, parentId);
+            })
         }
-        // categories.forEach(d => {
-        //     if (found) return;
-        //     found = d.menus.find(d => d.id == id);
-        //     if (found) {
-        //         node = d;
-        //         parent.push(d.id);
-        //     } else {
-
-        //     }
-        // })
     }
-    return [parent, node];
+    return parent;
+}
+
+function findNode(categories, id) {
+    if (!categories) return [parent, null];
+    node = categories.find(d => d.id == id);
+    if (!node) {
+        categories.forEach(d => {
+            if (node) return;
+            node = findNode(d.menus, id);
+        });
+    }
+    return node;
 }
 
 router.post('/struktur-save', (req, res, next) => {
     const { body, files } = req;
-    console.log({ body, files });
     const { name, desc, edit, level, sort, parent, location, location_text } = body;
     const $level = parseInt(level);
     const $parent = parseInt(parent);
@@ -105,15 +112,14 @@ router.post('/struktur-save', (req, res, next) => {
     let _parent = [], _node = null, last_category = [], id = 0;
     if ($level == 1) {
         last_category = categoryArticle.slice(-1)[0];
-    } else if ($level == 2) {
-        [_parent, _node] = findParent(categoryArticle, $parent, $level);
-        _parent = _parent.slice(-1)[0];
+    } else {
+        _parent = findParent(categoryArticle, $parent, $level);
         last_category = _parent.menus.slice(-1)[0];
     }
     if (last_category) {
         id = last_category.id;
     }
-    const new_id = id + 1000;
+    const new_id = id + 1000 + Math.floor(Math.random() * 10000);;
 
     const imagesPath = path.join(process.cwd(), '/public/images');
     let icon = '', image = '';
@@ -153,7 +159,7 @@ router.post('/struktur-save', (req, res, next) => {
 
     if ($level == 1) {
         categoryArticle.push(new_data);
-    } else if ($level == 2) {
+    } else {
         _parent.menus.push(new_data);
     }
 
@@ -163,8 +169,9 @@ router.post('/struktur-save', (req, res, next) => {
 router.post('/struktur-update', (req, res) => {
     const { body, files } = req;
     const { id, name, desc, level, parent, location, location_text } = body;
+    const $level = parseInt(level);
+    const $parent = parseInt(parent);
 
-    console.log({ body, files });
 
     const imagesPath = path.join(process.cwd(), '/public/images');
     let icon = '', image = '';
@@ -172,8 +179,8 @@ router.post('/struktur-update', (req, res) => {
     let found = null;
     if (level == 1) {
         found = categoryArticle.find(d => d.id == id);
-    } else if (level == 2) {
-        const _parent = categoryArticle.find(d => d.id == parent);
+    } else {
+        const _parent = findParent(categories, $parent, $level);
         found = _parent.menus.find(d => d.id == id);
     }
 
@@ -205,29 +212,48 @@ router.post('/struktur-update', (req, res) => {
     res.send({ error: false, msg: "", data: found });
 });
 
+function calculateLevel(list = [], level = 1) {
+    if (list && list.length) {
+        list.forEach(d => {
+            d.level = level;
+            calculateLevel(d.menus, level + 1);
+        })
+    }
+}
+
 router.post('/struktur-delete', (req, res) => {
     const { id } = req.body;
-    const found = categoryArticle.find(d => d.id == id);
-    const notDelete = categoryArticle.filter(d => d.id != id);
+    let notDelete = [], brothers = [];
+
+    const found = findNode(categoryArticle, id, []);
+    if (found.level == 1) {
+        brothers = categoryArticle;
+        notDelete = brothers.filter(d => d.id != id);
+    } else {
+        const parent = findParent(categoryArticle, found.parent);
+        brothers = parent.menus;
+        notDelete = brothers.filter(d => d.id != id);
+    }
 
     if (found.menus && found.menus.length) {
         let sort = notDelete.length;
         found.menus.forEach(d => {
-            d.level = 0;
+            d.level = found.level;
             d.sort = sort++;
             notDelete.push(d);
         });
     }
 
-    while (categoryArticle.length) {
-        categoryArticle.pop();
+    while (brothers.length) {
+        brothers.pop();
     }
     notDelete.map(d => {
-        categoryArticle.push(d);
-    })
+        brothers.push(d);
+    });
+
+    calculateLevel(categoryArticle);
 
     res.send({ error: false, msg: "", data: categoryArticle });
 });
-
 
 module.exports = router;

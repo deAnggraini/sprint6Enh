@@ -5,6 +5,7 @@ const categories = [
         level: 1,
         desc: 'Daftar operasional cabang yang dikategorikan berdasarkan tugasnya.',
         sort: 0,
+        parent: 0,
         menus: [
             {
                 id: 110,
@@ -12,42 +13,49 @@ const categories = [
                 level: 2,
                 desc: '',
                 sort: 0,
+                parent: 100,
                 menus: [
                     {
                         id: 111,
                         title: 'Deposito',
-                        level: 1,
+                        level: 3,
                         desc: '',
+                        parent: 110,
                     },
                     {
                         id: 112,
                         title: 'Giro',
-                        level: 1,
+                        level: 3,
                         desc: '',
+                        parent: 110,
                     },
                     {
                         id: 113,
                         title: 'LAKU',
-                        level: 1,
+                        level: 3,
                         desc: '',
+                        parent: 110,
                     },
                     {
                         id: 114,
                         title: 'Simpanan Pelajar',
-                        level: 1,
+                        level: 3,
                         desc: '',
+                        parent: 110,
                     },
                     {
                         id: 115,
                         title: 'TabunganKu',
-                        level: 1,
+                        level: 3,
                         desc: '',
+                        parent: 110,
                     },
                     {
                         id: 116,
                         title: 'Tahapan Berjangka siMuda',
-                        level: 1,
+                        level: 3,
                         desc: '',
+                        parent: 110,
                     },
                 ]
             },
@@ -57,74 +65,86 @@ const categories = [
                 level: 2,
                 desc: '',
                 sort: 1,
+                parent: 100,
                 menus: [
                     {
                         id: 121,
                         title: 'Bancassurance',
-                        level: 2,
+                        level: 3,
                         desc: '',
+                        parent: 120,
                     },
                     {
                         id: 122,
                         title: 'DBMM',
-                        level: 2,
+                        level: 3,
                         desc: '',
+                        parent: 120,
                     },
                     {
                         id: 123,
                         title: 'Reksadana',
-                        level: 2,
+                        level: 3,
                         desc: '',
+                        parent: 120,
                     },
                     {
                         id: 124,
                         title: 'Obligasi Korporasi',
-                        level: 2,
+                        level: 3,
                         desc: '',
+                        parent: 120,
                     },
                     {
                         id: 125,
                         title: 'Obligasi Negara',
-                        level: 2,
+                        level: 3,
                         desc: '',
+                        parent: 120,
                         menus: [
                             {
                                 id: 1251,
                                 title: 'Obligasi Negara Ritel (ORI)',
-                                level: 3,
+                                level: 4,
                                 desc: '',
+                                parent: 125,
                             },
                             {
                                 id: 1252,
                                 title: 'Obligasi Negara Valas (INDON)',
-                                level: 3,
+                                level: 4,
                                 desc: '',
+                                parent: 125,
                             },
                             {
                                 id: 1253,
                                 title: 'Obligasi Negara Valas Syariah (INDOIS)',
-                                level: 3,
+                                level: 4,
                                 desc: '',
+                                parent: 125,
                             },
                         ]
                     },
                     {
                         id: 126,
                         title: 'Sertifikat Berharga BI',
-                        level: 2,
+                        level: 3,
                         desc: '',
+                        parent: 120,
                         menus: [
                             {
                                 id: 1261,
                                 title: 'Surat Berharga BI dalam Valas (SBBI Valas)',
-                                level: 3,
+                                level: 4,
                                 desc: '',
+                                parent: 126,
                             },
                             {
                                 id: 1262,
                                 title: 'Sertifikat Bank Indonesia (SBI)',
-                                level: 3,
+                                level: 4,
                                 desc: '',
+                                parent: 126,
                             },
                         ]
                     }
@@ -136,6 +156,7 @@ const categories = [
                 level: 2,
                 desc: '',
                 sort: 2,
+                parent: 100,
             },
             {
                 id: 140,
@@ -143,34 +164,39 @@ const categories = [
                 level: 2,
                 desc: '',
                 sort: 3,
+                parent: 100,
             },
             {
                 id: 150,
                 title: 'Produk Layanan Perbankan',
-                level: 1,
+                level: 2,
                 desc: '',
                 sort: 4,
+                parent: 100,
             },
             {
                 id: 160,
                 title: 'Produk Kartu Kredit',
-                level: 1,
+                level: 2,
                 desc: '',
                 sort: 5,
+                parent: 100,
             },
             {
                 id: 170,
-                title: 'Produk Kredit Kosumtif',
-                level: 1,
+                title: 'Produk Kredit Konsumtif',
+                level: 2,
                 desc: '',
                 sort: 6,
+                parent: 100,
             },
             {
                 id: 180,
                 title: 'Produk Kredit Produktif',
-                level: 1,
+                level: 2,
                 desc: '',
                 sort: 7,
+                parent: 100,
             },
         ],
         icon: '/menus/coin.svg',
@@ -184,6 +210,7 @@ const categories = [
         level: 1,
         desc: 'Produk BCA yang digunakan langsung oleh nasabah seperti tabungan e-banking dll.',
         sort: 1,
+        parent: 0,
         menus: [
             {
                 id: 210,
@@ -191,6 +218,7 @@ const categories = [
                 level: 2,
                 desc: '',
                 sort: 0,
+                parent: 200,
             },
             {
                 id: 220,
@@ -198,6 +226,7 @@ const categories = [
                 level: 2,
                 desc: '',
                 sort: 1,
+                parent: 200,
             },
             {
                 id: 230,
@@ -205,6 +234,7 @@ const categories = [
                 level: 2,
                 desc: '',
                 sort: 2,
+                parent: 200,
             },
             {
                 id: 240,
@@ -212,6 +242,7 @@ const categories = [
                 level: 2,
                 desc: '',
                 sort: 3,
+                parent: 200,
             },
             {
                 id: 250,
@@ -219,6 +250,7 @@ const categories = [
                 level: 2,
                 desc: '',
                 sort: 4,
+                parent: 200,
             },
         ],
         icon: '/menus/content.svg',
@@ -232,6 +264,7 @@ const categories = [
         level: 1,
         desc: 'Daftar operasional cabang yang dikategorikan berdasarkan tugasnya.',
         sort: 2,
+        parent: 0,
         menus: [
             {
                 id: 2,
@@ -239,6 +272,7 @@ const categories = [
                 level: 2,
                 desc: '',
                 sort: 0,
+                parent: 1,
                 menus: [
                     {
                         id: 121,
@@ -260,18 +294,21 @@ const categories = [
                 level: 2,
                 desc: '',
                 sort: 1,
+                parent: 1,
                 menus: [
                     {
                         id: 131,
                         title: 'Andy',
-                        level: 1,
+                        level: 3,
                         desc: '',
+                        parent: 3,
                     },
                     {
                         id: 132,
                         title: 'BDS-OR',
-                        level: 1,
+                        level: 3,
                         desc: '',
+                        parent: 3,
                     }
                 ]
             },
@@ -280,6 +317,7 @@ const categories = [
                 title: 'Pendukung Transaksi Kredit',
                 level: 2,
                 desc: '',
+                parent: 1,
                 sort: 2,
             },
             {
@@ -287,6 +325,7 @@ const categories = [
                 title: 'Internal BCA',
                 level: 2,
                 desc: '',
+                parent: 1,
                 sort: 3,
             },
             {
@@ -295,6 +334,7 @@ const categories = [
                 level: 2,
                 desc: '',
                 sort: 4,
+                parent: 1,
             },
             {
                 id: 360,
@@ -302,6 +342,7 @@ const categories = [
                 level: 2,
                 desc: '',
                 sort: 5,
+                parent: 1,
             },
         ],
         icon: '/menus/mypage.svg',
