@@ -19,6 +19,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   };
   loginForm: FormGroup;
   hasError: boolean;
+  hasErrorMessage: string;
   returnUrl: string;
   isLoading$: Observable<boolean>;
   revealPass: boolean = false;
@@ -89,8 +90,8 @@ export class LoginComponent implements OnInit, OnDestroy {
           }
         },
         error => {
-          console.error(error);
           this.hasError = true;
+          this.hasErrorMessage = error;
         },
       );
     this.unsubscribe.push(loginSubscr);

@@ -86,12 +86,18 @@ export class AuthService implements OnDestroy {
     const params = { username, password, remember };
     return this.apiService.post(`${this.oauth_url}/login`, params)
       .pipe(
+        catchError((err) => {
+          throw err;
+          return of(err);
+        }),
         map((auth: AuthModel) => {
-          const { expiresIn } = auth;
-          const autoLogout = moment().add(expiresIn, 's').toDate();
-          auth = Object.assign({}, auth, { autoLogout, remember });
-          this.setWorker(auth, auth.expiresIn * 1000);
-          this.setAuthFromLocalStorage(auth);
+          if (auth) {
+            const { expiresIn } = auth;
+            const autoLogout = moment().add(expiresIn, 's').toDate();
+            auth = Object.assign({}, auth, { autoLogout, remember });
+            this.setWorker(auth, auth.expiresIn * 1000);
+            this.setAuthFromLocalStorage(auth);
+          }
           return auth;
         }),
         switchMap(() => this.getUserByToken()),
