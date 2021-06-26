@@ -43,7 +43,7 @@ router.post('/login', (req, res) => {
     if (found) {
         res.send({ error: false, msg: "", data: Object.assign({}, found, { password: null, expiresIn, remember }) });
     } else {
-        res.send({ error: true, msg: "Username and password invalid" });
+        res.send({ error: true, msg: "Incorrect User ID or password" });
     }
 });
 
