@@ -1,16 +1,86 @@
 <div class="detail-header d-flex flex-row justify-content-between" *ngIf="section.id; else emptyData">
-    <span>{{section.title}} </span>
+    <span class="pakar-text-header-18">{{section.title}} </span>
     <div class="node-buttons">
-        <div class="btn btn-sm btn-clean btn-my"><i class="fas fa-plus-circle"></i></div>
-        <div class="btn btn-sm btn-clean btn-my" (click)="editSection()"><i class="fas fa-pen"></i></div>
-        <div class="btn btn-sm btn-clean btn-my" (click)="deleteSection()"><i class="far fa-trash-alt"></i></div>
+        <div class="btn btn-sm btn-blue btn-my" (click)="open()"><i class="fas fa-plus-circle"></i></div>
+        <div class="btn btn-sm btn-blue btn-my" (click)="editSection()"><i class="fas fa-pen"></i></div>
+        <div class="btn btn-sm btn-blue btn-my" (click)="deleteSection()"><i class="far fa-trash-alt"></i></div>
     </div>
 </div>
 <div id="struktur-tree" class="tree-demo" style="width: 420px;"></div>
 
 
+<ng-template #formAddChild let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{isEdit ? 'Ubah' : 'Tambah'}} {{dataForm.value.level > 2 ? 'Sub-': ''}}Kategori</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <i aria-hidden="true">&times;</i>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form class="form" [formGroup]="dataForm" novalidate="novalidate" (ngSubmit)="save()">
+            <div class="form-group">
+                <label>Nama Kategori *</label>
+                <input class="form-control" type="text" maxlength="50" placeholder="Masukkan nama menu" required
+                    formControlName="name" autocomplete="off" [ngClass]="{ 'is-invalid': hasError}">
+                <ng-container [ngTemplateOutlet]="formError"
+                    [ngTemplateOutletContext]="{ control: dataForm.controls['name']}"></ng-container>
+            </div>
+            <div class="form-group">
+                <label>Gambar Kategori *</label>
+                <!-- formControlName="image" -->
+                <input class="form-control" type="file" placeholder="Pilih Gambar" required autocomplete="off"
+                    [ngClass]="{ 'is-invalid': hasError}" (change)="onImageChange($event, 'image')" accept="image/*">
+                <small>Gambar diperlukan untuk kebutuhan homepage.</small>
+                <ng-container [ngTemplateOutlet]="formError"
+                    [ngTemplateOutletContext]="{ control: dataForm.controls['image']}"></ng-container>
+                <div class="preview" *ngIf="imageFile">
+                    <img [src]="imageFile" style="width:100px; height:100px">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Deskripsi Kategori *</label>
+                <textarea class="form-control" maxlength="200" placeholder="Masukkan definisi dari Kategori terkait"
+                    required formControlName="desc" autocomplete="off"
+                    [ngClass]="{ 'is-invalid': hasError }"></textarea>
+                <ng-container [ngTemplateOutlet]="formError"
+                    [ngTemplateOutletContext]="{ control: dataForm.controls['desc']}"></ng-container>
+            </div>
+            <div class="form-group">
+                <label>Lokasi *</label>
+                <select class="form-control" required formControlName="location">
+                    <option value="">-- Pilih Salah Satu --</option>
+                    <option *ngFor="let lokasi of locations" [value]="lokasi._value">
+                        {{lokasi._text}}
+                    </option>
+                </select>
+                <ng-container [ngTemplateOutlet]="formError"
+                    [ngTemplateOutletContext]="{ control: dataForm.controls['desc']}"></ng-container>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-light btn-sm rounded-lg" (click)="c('Batal')">Batal</button>
+        <button type="button" class="btn btn-outline-dark btn-sm rounded-lg" (click)="save()"
+            [disabled]="dataForm.invalid">{{isEdit ? 'Ubah' : 'Tambah'}}</button>
+    </div>
+</ng-template>
+
 <ng-template #emptyData>
     <div class="">
         <div>Silahkan Pilih Kategori Menu</div>
     </div>
+</ng-template>
+
+<ng-template #formError let-control="control">
+    <ng-container *ngIf="control.errors && control.dirty">
+        <div class="fv-plugins-message-container">
+            <div class="fv-help-block">
+                <ng-container *ngIf="control.errors.required"><span>Field harus disi</span></ng-container>
+                <ng-container *ngIf="control.errors.minlength"><span>Panjang minimal
+                        {{control.errors.minlength.requiredLength}}</span></ng-container>
+                <ng-container *ngIf="control.errors.maxlength"><span>Panjang maximal
+                        {{control.errors.maxlength.requiredLength}}</span></ng-container>
+            </div>
+        </div>
+    </ng-container>
 </ng-template>

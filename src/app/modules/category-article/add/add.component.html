@@ -16,7 +16,7 @@
                     <a routerLink="/homepage">
                         <span [inlineSVG]="'./assets/media/svg/bca/pakar-logo-top.svg'" cacheSVG="true" class=""></span>
                     </a>
-                    <a (click)="open()" class="btn btn-sm btn-clean btn-icon"><i class="fa fa-plus-circle"></i></a>
+                    <a (click)="open()" class="btn  btn-icon btn-sm btn-blue"><i class="fa fa-plus-circle"></i></a>
                 </div>
                 <ul class="navi navi-hover mt-5">
                     <ng-container *ngFor="let item of menuConfig.items">
@@ -28,7 +28,7 @@
             </div>
             <div class="section-body d-flex flex-column flex-row-fluid align-items-stretch px-10 py-5">
                 <app-struktur-lvl2-tree [selected]="selected$" (editLevel1)="editLevel1($event)"
-                    (deleteLevel1)="deleteLevel1()"></app-struktur-lvl2-tree>
+                    (deleteLevel1)="deleteLevel1()" [locationStruktur]="categories$"></app-struktur-lvl2-tree>
             </div>
         </div>
     </div>
@@ -36,8 +36,11 @@
 
 <ng-template #rowItem let-item="item">
     <li class="navi-item" [ngClass]="{'cursor-pointer': item.id, 'disabled': !item.id}" (click)="setJsTree(item)">
-        <a class="navi-link" [ngClass]="{disabled: !item.id}">
-            <span class="navi-text">{{item.title}}</span>
+        <a class="navi-link" [ngClass]="{disabled: !item.edit}">
+            <span class="navi-text" [ngClass]="{
+                    'font-bold-700': selected$.value.id && selected$.value.id == item.id, 
+                    'pakar-color-dark' : selected$.value.id && selected$.value.id == item.id
+                }">{{item.title}}</span>
             <span class="navi-arrow" *ngIf="item.id"></span>
         </a>
     </li>

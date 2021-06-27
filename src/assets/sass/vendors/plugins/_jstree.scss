@@ -58,6 +58,11 @@
     }
 }
 
+.jstree-open>.jstree-anchor>.jstree-icon.ki.ki-arrow-next:before {
+    margin-left: 2px;
+    content: "\f109";
+}
+
 .jstree-open>.jstree-anchor>.fa-folder:before {
     margin-left: 2px;
     content: "\f07c";

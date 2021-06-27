@@ -5,18 +5,7 @@ import { NgbModal, ModalDismissReasons, NgbModalConfig } from '@ng-bootstrap/ng-
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { StrukturService } from '../../_services/stuktur.service';
 import { ConfirmService } from 'src/app/utils/_services/confirm.service';
-
-interface DTO {
-  id: number,
-  name: string,
-  icon: string,
-  image: string,
-  desc: string,
-  edit: boolean,
-  uri: string,
-  level: number,
-  sort: number,
-}
+import { StrukturDTO } from '../../_model/struktur.dto';
 
 @Component({
   selector: 'app-add',
@@ -25,7 +14,7 @@ interface DTO {
 })
 export class AddComponent implements OnInit, OnDestroy {
   @ViewChild('formAddSection') formAddSection: TemplateRef<any>;
-  defaultValue: DTO = {
+  defaultValue: StrukturDTO = {
     id: 0,
     name: '',
     icon: '',
@@ -40,6 +29,7 @@ export class AddComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
   categories: any[];
   selected$: BehaviorSubject<any> = new BehaviorSubject({});
+  categories$: BehaviorSubject<any> = new BehaviorSubject({});
   dataForm: FormGroup;
   hasError: boolean = false;
 
@@ -97,6 +87,7 @@ export class AddComponent implements OnInit, OnDestroy {
     fd.append('uri', this.dataForm.value.uri);
     fd.append('level', this.dataForm.value.level.toString());
     fd.append('sort', String(this.categories.length + 1));
+    fd.append('parent', "0");
     return fd;
   }
 
@@ -179,6 +170,7 @@ export class AddComponent implements OnInit, OnDestroy {
     this.initForm();
     const menuSubscr = this.menu.menuConfig$.subscribe(res => {
       this.categories = this.menu.categories;
+      this.categories$.next(this.categories);
       this.menuConfig = res;
 
       // ada perubahan data, dan sudah ada yang terselect, harus di update

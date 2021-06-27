@@ -58,6 +58,7 @@ export class ApiService {
       catchError((err) => {
         console.error('ApiService', err);
         this.toast.showDanger('Call API error');
+        throw err.message;
         return of(undefined);
       }),
     );
