@@ -11,6 +11,17 @@ public class ThemeHeaderDto {
     @JsonProperty("hover")
     private String hover;
 
+    public ThemeHeaderDto (String background, String color, String hover){
+        super();
+        this.background = background;
+        this.color = color;
+        this.hover = hover;
+    }
+
+    public ThemeHeaderDto(){
+        super();
+    }
+
     public String getBackground() {
         return background;
     }
