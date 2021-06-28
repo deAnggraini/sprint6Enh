@@ -7,6 +7,9 @@ import org.springframework.http.ResponseEntity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+
 public abstract class BaseController {
 	protected class RestResponse<T> {
 		@JsonProperty("data")
@@ -88,4 +91,16 @@ public abstract class BaseController {
 			return new ResponseEntity<>(new RestResponse<>(dataList, errorCode, errorMessage), HttpStatus.OK);
 		}
     }
+	
+	protected String getOriginalToken(String bearerToken) {
+		String tokenValue = "";
+		if (bearerToken != null && bearerToken.contains("Bearer")) {
+            tokenValue = bearerToken.replace("Bearer", "").trim();            
+        }
+		return tokenValue;
+	}
+	
+	protected Claims getAllClaimsFromToken(String token) {
+		return Jwts.parser().setSigningKey("pakar123").parseClaimsJws(token).getBody();
+	}
 }

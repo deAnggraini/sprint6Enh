@@ -1,0 +1,121 @@
+{
+    "data": [
+        {
+            "id": 1,
+            "menu_code": null,
+            "menu_name": "Home PAKAR",
+            "menu_description": null,
+            "icon": {
+                "id": 1,
+                "name": "icon name",
+                "uri": "/assets/icon/contoh.png"
+            },
+            "image": {
+                "id": 1,
+                "name": "imageName",
+                "uri": "/assets/image/contoh.jpg"
+            },
+            "uri": null,
+            "level": 1,
+            "order": null,
+            "edit": false,
+            "childs": []
+        },
+        {
+            "id": 2,
+            "menu_code": null,
+            "menu_name": "Aktivitas Cabang",
+            "menu_description": null,
+            "icon": null,
+            "image": null,
+            "uri": null,
+            "level": 1,
+            "order": null,
+            "edit": false,
+            "childs": []
+        },
+        {
+            "id": 3,
+            "menu_code": null,
+            "menu_name": "Produk Untuk Nasabah",
+            "menu_description": null,
+            "icon": null,
+            "image": null,
+            "uri": null,
+            "level": 2,
+            "order": null,
+            "edit": false,
+            "childs": [
+                {
+                    "id": 7,
+                    "menu_code": null,
+                    "menu_name": "SME",
+                    "menu_description": null,
+                    "icon": null,
+                    "image": null,
+                    "uri": null,
+                    "level": null,
+                    "order": null,
+                    "edit": false,
+                    "childs": []
+                },
+                {
+                    "id": 8,
+                    "menu_code": null,
+                    "menu_name": "Komersial",
+                    "menu_description": null,
+                    "icon": null,
+                    "image": null,
+                    "uri": null,
+                    "level": null,
+                    "order": null,
+                    "edit": false,
+                    "childs": []
+                }
+            ]
+        },
+        {
+            "id": 4,
+            "menu_code": null,
+            "menu_name": "Aplikasi Mesin",
+            "menu_description": null,
+            "icon": null,
+            "image": null,
+            "uri": null,
+            "level": null,
+            "order": null,
+            "edit": false,
+            "childs": []
+        },
+        {
+            "id": 5,
+            "menu_code": null,
+            "menu_name": "Aplikasi PDF",
+            "menu_description": null,
+            "icon": null,
+            "image": null,
+            "uri": null,
+            "level": null,
+            "order": null,
+            "edit": false,
+            "childs": []
+        },
+        {
+            "id": 6,
+            "menu_code": null,
+            "menu_name": "FAQ",
+            "menu_description": null,
+            "icon": null,
+            "image": null,
+            "uri": null,
+            "level": null,
+            "order": null,
+            "edit": false,
+            "childs": []
+        }
+    ],
+    "status": {
+        "code": "00",
+        "message": "Menu Success Load"
+    }
+}

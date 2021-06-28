@@ -1,5 +1,8 @@
 package id.co.bca.pakar.be.oauth2.config;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +13,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import id.co.bca.pakar.be.oauth2.authenticate.CustomAuthenticationProvider;
 import id.co.bca.pakar.be.oauth2.eai.RemoteEaiAuthentication;
@@ -64,4 +70,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	public RemoteEaiAuthentication getRemoteEaiAuthenticcation() {
 		return new RemoteEaiAuthentication();
 	}
+	
+//	@Bean
+//    public CorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration configuration = new CorsConfiguration();
+//        configuration.setAllowedOrigins(Arrays.asList("https://example.com"));
+//        configuration.setAllowedMethods(Arrays.asList("GET","POST"));
+//        configuration.setAllowedHeaders(Arrays.asList("Authorization", "X-USERNAME", "refreshToken"));
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", configuration);
+//        return source;
+//    }
 }

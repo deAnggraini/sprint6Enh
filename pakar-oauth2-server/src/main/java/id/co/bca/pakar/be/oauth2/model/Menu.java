@@ -20,8 +20,8 @@ public class Menu extends EntityBase {
 	private String menuName;
 	@Column(name = "menu_description")
 	private String menuDescription;
-	@Column(name = "sort")
-	private Long sort;
+	@Column(name = "order")
+	private Long order;
 	@Column(name = "level")
 	private Long level;
 	@ManyToOne
@@ -65,11 +65,11 @@ public class Menu extends EntityBase {
 		this.menuDescription = menuDescription;
 	}
 	
-	public Long getSort() {
-		return sort;
+	public Long getOrder() {
+		return order;
 	}
-	public void setSort(Long sort) {
-		this.sort = sort;
+	public void setOrder(Long order) {
+		this.order = order;
 	}
 	public Long getLevel() {
 		return level;

@@ -1,11 +1,12 @@
 package id.co.bca.pakar.controller;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,7 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import id.co.bca.pakar.dto.AuthenticationDto;
 import id.co.bca.pakar.dto.EaiCredential;
 import id.co.bca.pakar.dto.EaiLoginResponse;
-import id.co.bca.pakar.util.DESedeEncryption;
+import id.co.bca.pakar.util.JSONMapperAdapter;
 import id.co.bca.pakar.util.TrippleDesEncryption;
 
 @RestController
@@ -26,31 +27,34 @@ public class AuthenticationController {
 	private static final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 	
 	static String keyAlgorithm = "123456789013245678901234";
+	
+	@Value("${json.file.user}")
+	private String userPath;
 
 	@PostMapping(value = "/ad-gateways/verify1", consumes = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE,
 					MediaType.APPLICATION_XML_VALUE })
-	public String loginEaiSuccess(@RequestHeader Map<String, String> headers, @RequestBody EaiCredential credential) {
+	public String loginEaiSuccess(@RequestHeader Map<String, String> headers, @RequestBody EaiCredential credential) throws Exception {
 		headers.forEach((key, value) -> {
 			logger.info(String.format("Header '%s' = %s", key, value));
 		});
 		logger.info("client request " + credential.toString());
-		List<AuthenticationDto> authDtos = new ArrayList<AuthenticationDto>();
-		authDtos.add(new AuthenticationDto("user", "password"));
-		authDtos.add(new AuthenticationDto("test1", "password1"));
-		authDtos.add(new AuthenticationDto("saifulhq", "12345"));
-		authDtos.add(new AuthenticationDto("admin", "12345"));
-		authDtos.add(new AuthenticationDto("super", "12345"));
-		authDtos.add(new AuthenticationDto("editor", "12345"));
-		authDtos.add(new AuthenticationDto("publisher", "12345"));
-		authDtos.add(new AuthenticationDto("guest", "12345"));
-		authDtos.add(new AuthenticationDto("superadmin", "12345"));
-		authDtos.add(new AuthenticationDto("test", "12345"));
-		authDtos.add(new AuthenticationDto("reader", "12345"));
-		for (AuthenticationDto dto : authDtos) {
-			logger.info("client request " + dto.getUsername());
-		}
+//		List<AuthenticationDto> authDtos = new ArrayList<AuthenticationDto>();
+//		authDtos.add(new AuthenticationDto("user", "password"));
+//		authDtos.add(new AuthenticationDto("test1", "password1"));
+//		authDtos.add(new AuthenticationDto("saifulhq", "12345"));
+//		authDtos.add(new AuthenticationDto("admin", "12345"));
+//		authDtos.add(new AuthenticationDto("super", "12345"));
+//		authDtos.add(new AuthenticationDto("editor", "12345"));
+//		authDtos.add(new AuthenticationDto("publisher", "12345"));
+//		authDtos.add(new AuthenticationDto("guest", "12345"));
+//		authDtos.add(new AuthenticationDto("superadmin", "12345"));
+//		authDtos.add(new AuthenticationDto("test", "12345"));
+//		authDtos.add(new AuthenticationDto("reader", "12345"));
+//		authDtos.add(new AuthenticationDto("reader12", "12345678abc"));
 		
+		String json = readFileAsString(userPath);
+        AuthenticationDto[] authDtos = (AuthenticationDto[]) JSONMapperAdapter.jsonToListObject(json, AuthenticationDto[].class);	
 		EaiLoginResponse response = new EaiLoginResponse();
 		boolean loginStatus = false;
 		for (AuthenticationDto dto : authDtos) {
@@ -95,50 +99,64 @@ public class AuthenticationController {
 		return ret;
 	}
 	
-	public static void main(String[] args) {
-//		String password = "";
-//		try {
-//			password = new DESedeEncryption("123456789013245678901234").decryptFromHex("7e4ec02231ed5cd4");
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
+	public static String readFileAsString(String file)throws Exception {
+        return new String(Files.readAllBytes(Paths.get(file)));
+    }
+	
+//	public static void main(String[] args) {
+////		String password = "";
+////		try {
+////			password = new DESedeEncryption("123456789013245678901234").decryptFromHex("7e4ec02231ed5cd4");
+////		} catch (Exception e) {
+////			// TODO Auto-generated catch block
+////			e.printStackTrace();
+////		}
+////		System.out.println(password);
+//		List<AuthenticationDto> authDtos = new ArrayList();
+//		authDtos.add(new AuthenticationDto("user", "password"));
+//		authDtos.add(new AuthenticationDto("test1", "password1"));
+//		authDtos.add(new AuthenticationDto("saifulhq", "12345"));
+//		authDtos.add(new AuthenticationDto("admin", "12345"));
+//		authDtos.add(new AuthenticationDto("super", "12345"));
+//		authDtos.add(new AuthenticationDto("editor", "12345"));
+//		authDtos.add(new AuthenticationDto("publisher", "12345"));
+//		authDtos.add(new AuthenticationDto("guest", "12345"));
+//		authDtos.add(new AuthenticationDto("superadmin", "12345"));
+//		authDtos.add(new AuthenticationDto("test", "12345"));
+//		authDtos.add(new AuthenticationDto("reader", "12345"));
+//
+//		EaiLoginResponse response = new EaiLoginResponse();
+//		boolean loginStatus = false;
+//		for (AuthenticationDto dto : authDtos) {
+////			if (dto.getUsername().equals(credential.getUserId())) {
+//				String password = "";
+//				try {
+//					password = (new TrippleDesEncryption("123456789013245678901234".getBytes())).decrypt("da82edc6dcc1af30");
+//					System.out.println(password);
+//				} catch (Exception e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//
+//				if (dto.getPassword().equals(password)) {
+//					response.getErrorSchema().setErroCode("ESB-00-000");
+//					response.getErrorSchema().getErrorMessage().put("Indonesian", "Berhasil");
+//					response.getErrorSchema().getErrorMessage().put("English", "Success");
+//					response.getOutputSchema().setStatus("0");
+//					loginStatus = true;
+//					break;
+//				}
+////			}
 //		}
-//		System.out.println(password);
-		List<AuthenticationDto> authDtos = new ArrayList();
-		authDtos.add(new AuthenticationDto("user", "password"));
-		authDtos.add(new AuthenticationDto("test1", "password1"));
-		authDtos.add(new AuthenticationDto("saifulhq", "12345"));
-		authDtos.add(new AuthenticationDto("admin", "12345"));
-		authDtos.add(new AuthenticationDto("super", "12345"));
-		authDtos.add(new AuthenticationDto("editor", "12345"));
-		authDtos.add(new AuthenticationDto("publisher", "12345"));
-		authDtos.add(new AuthenticationDto("guest", "12345"));
-		authDtos.add(new AuthenticationDto("superadmin", "12345"));
-		authDtos.add(new AuthenticationDto("test", "12345"));
-		authDtos.add(new AuthenticationDto("reader", "12345"));
-
-		EaiLoginResponse response = new EaiLoginResponse();
-		boolean loginStatus = false;
-		for (AuthenticationDto dto : authDtos) {
-//			if (dto.getUsername().equals(credential.getUserId())) {
-				String password = "";
-				try {
-					password = (new TrippleDesEncryption("123456789013245678901234".getBytes())).decrypt("da82edc6dcc1af30");
-					System.out.println(password);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-				if (dto.getPassword().equals(password)) {
-					response.getErrorSchema().setErroCode("ESB-00-000");
-					response.getErrorSchema().getErrorMessage().put("Indonesian", "Berhasil");
-					response.getErrorSchema().getErrorMessage().put("English", "Success");
-					response.getOutputSchema().setStatus("0");
-					loginStatus = true;
-					break;
-				}
-//			}
-		}
-	}
+//	}
+	
+	public static void main(String[] args) throws Exception {
+        String file = "src/test/resources/myUser.json";
+        String json = readFileAsString(file);
+        
+        AuthenticationDto[] list = (AuthenticationDto[]) JSONMapperAdapter.jsonToListObject(json, AuthenticationDto[].class);
+        for(AuthenticationDto dto : list) {
+        	System.out.println(dto.toString());
+        }
+    }
 }

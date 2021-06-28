@@ -2,6 +2,7 @@ package id.co.bca.pakar.be.oauth2.api;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,8 +14,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import id.co.bca.pakar.be.oauth2.common.Constant;
 import id.co.bca.pakar.be.oauth2.dto.CredentialDto;
 import id.co.bca.pakar.be.oauth2.dto.LoggedinDto;
+import id.co.bca.pakar.be.oauth2.dto.NewAccessTokenDto;
+import id.co.bca.pakar.be.oauth2.dto.RefreshTokenResponseDto;
 import id.co.bca.pakar.be.oauth2.service.AuthenticationService;
 
 @RestController
@@ -25,30 +29,22 @@ public class AuthenticationController extends BaseController {
 	@Autowired
 	private AuthenticationService authenticationService;
 	
-	@PostMapping(value = "/api/auth/login", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
+	@PostMapping(value = Constant.ApiEndpoint.LOGIN_URL, consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<RestResponse<LoggedinDto>> login(@RequestBody CredentialDto dto) {
+	public ResponseEntity<RestResponse<LoggedinDto>> login(@Valid @RequestBody CredentialDto dto) {
 		try {
-			logger.info("received credential data --------- " + dto.toString());
-//			HttpHeaders headers = new HttpHeaders();
-//			headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-			logger.info("authenticate process -----");
+			logger.info("----- authenticate process -----");
 			LoggedinDto oAuthToken = authenticationService.authenticate(dto);
+			oAuthToken.setRememberMe(dto.getRememberMe());
 			
-//			RestResponse<LoggedinDto> tResponse = new RestResponse(oAuthToken);
-//			return ResponseEntity.accepted().headers(headers).body(tResponse);
-			return this.createResponse(oAuthToken, "00", "SUCCESS");
+			return this.createResponse(oAuthToken, Constant.ApiResponseCode.LOGIN_SUCCEED.getAction()[0], Constant.ApiResponseCode.LOGIN_SUCCEED.getAction()[1]);
 		} catch (Exception e) {
 			logger.error("exception", e);
-//			HttpHeaders headers = new HttpHeaders();
-//			headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-//			RestResponse<LoggedinDto> tResponse = new RestResponse(new LoggedinDto(), "01", "FAILED LOGIN");
-//			return ResponseEntity.accepted().headers(headers).body(tResponse);
-			return this.createResponse(new LoggedinDto(), "01", "FAILED LOGIN");
+			return this.createResponse(new LoggedinDto(), Constant.ApiResponseCode.INCORRECT_USERNAME_PASSWORD.getAction()[0], Constant.ApiResponseCode.INCORRECT_USERNAME_PASSWORD.getAction()[1]);
 		}
 	}
 	
-	@PostMapping(value = "/api/auth/logout", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
+	@PostMapping(value = Constant.ApiEndpoint.LOGOUT_URL, consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<RestResponse<String>> logout(HttpServletRequest request, HttpServletResponse response) {		
 		String authHeader = request.getHeader("Authorization");
@@ -58,14 +54,27 @@ public class AuthenticationController extends BaseController {
 			    String tokenValue = authHeader.replace("Bearer", "").trim();
 			    Boolean logoutStatus = authenticationService.logout(tokenValue);
 			    if(logoutStatus) {
-			    	return this.createResponse("0", "00", "SUCCESS");
+			    	return this.createResponse("0", Constant.ApiResponseCode.LOGOUT_SUCCEED.getAction()[0], Constant.ApiResponseCode.LOGOUT_SUCCEED.getAction()[1]);
 			    } else
-			    	return this.createResponse("-1", "01", "LOGOUT FAILED");			    
+			    	return this.createResponse("-1", Constant.ApiResponseCode.LOGOUT_FAILED.getAction()[0], Constant.ApiResponseCode.LOGOUT_FAILED.getAction()[1]);			    
 			}
-			return this.createResponse("-1", "01", "LOGOUT FAILED");
+			return this.createResponse("-1", Constant.ApiResponseCode.LOGOUT_FAILED.getAction()[0], Constant.ApiResponseCode.LOGOUT_FAILED.getAction()[1]);
 		} catch (Exception e) {
 			logger.error("exception",e);
-			return this.createResponse("-1", "01", "LOGOUT FAILED");
+			return this.createResponse("-1", Constant.ApiResponseCode.LOGOUT_FAILED.getAction()[0], Constant.ApiResponseCode.LOGOUT_FAILED.getAction()[1]);
+		}
+	}
+	
+	@PostMapping(value = Constant.ApiEndpoint.REFRESH_TOKEN_URL, consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
+			MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<RestResponse<RefreshTokenResponseDto>> refreshToken(@Valid @RequestBody NewAccessTokenDto dto) {
+		try {
+			logger.info("generate new access token with refresh token --- " + dto.getRefreshToken());
+			RefreshTokenResponseDto oAuthToken = authenticationService.generateNewAccessToken(dto.getRefreshToken());
+			return this.createResponse(oAuthToken, Constant.ApiResponseCode.REFRESH_TOKEN_SUCCEED.getAction()[0], Constant.ApiResponseCode.REFRESH_TOKEN_SUCCEED.getAction()[1]);
+		} catch (Exception e) {
+			logger.error("exception", e);
+			return this.createResponse(new RefreshTokenResponseDto(), Constant.ApiResponseCode.REFRESH_TOKEN_FAILED.getAction()[0], Constant.ApiResponseCode.REFRESH_TOKEN_FAILED.getAction()[1]);
 		}
 	}
 }

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+import id.co.bca.pakar.be.oauth2.common.Constant;
 import id.co.bca.pakar.be.oauth2.dto.LoggedinDto;
 import id.co.bca.pakar.be.oauth2.service.UserService;
 
@@ -56,12 +57,12 @@ public class UserController extends BaseController {
 			headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
 			logger.info("get user by token ");
 			LoggedinDto loggedInDto = userService.findUserByToken(tokenValue, username);
-			return createResponse(loggedInDto, "00",  "SUCCESS");
+			return createResponse(loggedInDto, Constant.ApiResponseCode.EXIST_USER_PROFILE.getAction()[0], Constant.ApiResponseCode.EXIST_USER_PROFILE.getAction()[1]);
 		} catch (Exception e) {
 			logger.error("exception", e);
 			HttpHeaders headers = new HttpHeaders();
 			headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-			RestResponse<LoggedinDto> tResponse = new RestResponse(new LoggedinDto(), "01", "FAILED LOGIN");
+			RestResponse<LoggedinDto> tResponse = new RestResponse(new LoggedinDto(),  Constant.ApiResponseCode.USER_PROFILE_NOT_FOUND.getAction()[0], Constant.ApiResponseCode.USER_PROFILE_NOT_FOUND.getAction()[1]);
 			return new ResponseEntity<RestResponse<LoggedinDto>>(tResponse, HttpStatus.OK);
 		}
 	}

@@ -25,6 +25,9 @@ public class AuthenticationDto {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+	@Override
+	public String toString() {
+		return "AuthenticationDto [username=" + username + ", password=" + password + "]";
+	}
 	
 }

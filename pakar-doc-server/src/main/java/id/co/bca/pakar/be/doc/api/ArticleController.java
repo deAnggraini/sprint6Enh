@@ -48,6 +48,8 @@ public class ArticleController extends BaseController {
 
 		ThemeDto themeDto = themeService.getThemeList();
 
+		logger.info("themeDto" +themeDto);
+
 		return createResponse(themeDto, "OO", "SUCCESS");
 	}
 

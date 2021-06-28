@@ -1,5 +1,7 @@
 package id.co.bca.pakar.be.oauth2.config;
 
+import java.util.List;
+
 import javax.sql.DataSource;
 
 import org.slf4j.Logger;
@@ -12,6 +14,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
@@ -23,9 +26,10 @@ import org.springframework.security.oauth2.provider.error.WebResponseExceptionTr
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
-import org.springframework.security.web.AuthenticationEntryPoint;
 
+import id.co.bca.pakar.be.oauth2.authenticate.CustomAuthenticationProvider;
 import id.co.bca.pakar.be.oauth2.prop.SecurityProperties;
+import id.co.bca.pakar.be.oauth2.service.imp.CustomUserDetailsService;
 import id.co.bca.pakar.be.oauth2.token.CustomJdbcTokenStore;
 
 @SuppressWarnings("deprecation")
@@ -67,33 +71,38 @@ public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
 	@Autowired
 	private WebResponseExceptionTranslator customWebResponseExceptionTranslator;
 
+	@Autowired
+	private CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+
+	@Autowired
+	private CustomUserDetailsService userDetailsService;
+
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-		//		endpoints.authenticationManager(authenticationManager);
+		logger.info("configure AuthorizationServerEndpointsConfigurer");
 		// add jwt token as token generator
 		endpoints.authenticationManager(authenticationManager).tokenStore(tokenStore)
-		.accessTokenConverter(accessTokenConverter)
-		.exceptionTranslator(customWebResponseExceptionTranslator);
+				.userDetailsService(userDetailsService).accessTokenConverter(accessTokenConverter)
+				.exceptionTranslator(customWebResponseExceptionTranslator);
 	}
 
 	@Override
 	public void configure(final AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
-		oauthServer.tokenKeyAccess("permitAll()")
-		.checkTokenAccess("isAuthenticated()")
-		.authenticationEntryPoint(authenticationEntryPoint());
+		logger.info("configure AuthorizationServerSecurityConfigurer");
+		oauthServer.allowFormAuthenticationForClients().tokenKeyAccess("permitAll()")
+				.checkTokenAccess("isAuthenticated()").authenticationEntryPoint(customAuthenticationEntryPoint);
 	}
 
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-		logger.info("configure ClientDetailsServiceConfigurer");		
-		clients.jdbc(dataSource)
-			.passwordEncoder(passwordEncoder);
+		logger.info("configure ClientDetailsServiceConfigurer");
+		clients.jdbc(dataSource).passwordEncoder(passwordEncoder);
 	}
 
 	@Bean
 	public TokenStore tokenStore() {
-		//		return new JwtTokenStore(accessTokenConverter());
-		logger.info("------ create bean TokenStore ------ ");
+		// return new JwtTokenStore(accessTokenConverter());
+		logger.info("create bean TokenStore");
 		/**
 		 * set token to database
 		 */
@@ -105,7 +114,7 @@ public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
 
 	@Bean
 	public JwtAccessTokenConverter accessTokenConverter() {
-		logger.info("------ create bean JwtAccessConverter ------ ");
+		logger.info("create bean JwtAccessConverter");
 		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
 		converter.setSigningKey(signingKey);
 		return converter;
@@ -114,18 +123,19 @@ public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
 	@Bean
 	@Primary
 	public DefaultTokenServices tokenService(final ClientDetailsService clientDetailsService) {
+		logger.info("generate tokenService bean");
 		DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
 		defaultTokenServices.setTokenStore(tokenStore);
+		defaultTokenServices.setReuseRefreshToken(false);
 		defaultTokenServices.setSupportRefreshToken(true);
 		defaultTokenServices.setClientDetailsService(clientDetailsService);
-		defaultTokenServices.setAuthenticationManager(authenticationManager);
-		logger.info("converter ------ " + defaultTokenServices);
+		defaultTokenServices.setAuthenticationManager(new ProviderManager(List.of(new CustomAuthenticationProvider())));
 
 		return defaultTokenServices;
 	}
 
-	@Bean
-	public AuthenticationEntryPoint authenticationEntryPoint() {
-		return new CustomAuthenticationEntryPoint();
-	}
+//	@Bean
+//	public AuthenticationEntryPoint authenticationEntryPoint() {
+//		return new CustomAuthenticationEntryPoint();
+//	}
 }

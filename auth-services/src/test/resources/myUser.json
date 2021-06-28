@@ -1,0 +1,26 @@
+[
+	{
+	  "username":"test",
+	  "password":12345
+	},
+	{
+	  "username":"reader",
+	  "password":12345
+	},
+	{
+	  "username":"editor",
+	  "password":12345
+	},
+	{
+	  "username":"publisher",
+	  "password":12345
+	},
+	{
+	  "username":"admin",
+	  "password":12345
+	},
+	{
+	  "username":"guest",
+	  "password":12345
+	}
+]

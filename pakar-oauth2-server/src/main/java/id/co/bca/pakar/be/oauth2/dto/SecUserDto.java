@@ -1,32 +1,40 @@
 package id.co.bca.pakar.be.oauth2.dto;
 
 import java.util.Collection;
+import java.util.Collections;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
-public class SecUserDto implements UserDetails {
+public class SecUserDto extends User {
+	private String username;
+	private String password;
+	private boolean enabled = true;
+	private boolean accountNonExpired = true;
+	private boolean accountNonLocked = true;
+	private boolean credentialsNonExpired = true;
 	
-	public SecUserDto() {
-		super();
+	public SecUserDto(String username, String password, boolean enabled, boolean accountNonExpired,
+			boolean credentialsNonExpired, boolean accountNonLocked,
+			Collection<? extends GrantedAuthority> authorities) {
+		super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
 		// TODO Auto-generated constructor stub
 	}
 
-	@Override
-    public String getUsername() {
-        return "javainuse-user";
+	public SecUserDto(String username, String password, Collection<? extends GrantedAuthority> authorities) {
+		super(username, password, authorities);
+		// TODO Auto-generated constructor stub
+	}
+
+	public String getUsername() {
+        return this.username;
     }
 
-    @Override
     public String getPassword() {
-        return "";
+        return this.password;
     }
-
-//    @Override
-//    public Collection<? extends GrantedAuthority> getAuthorities() {
-//        return Collections.<GrantedAuthority>singletonList(new SimpleGrantedAuthority("User"));
-//    }
 
     @Override
     public boolean isAccountNonExpired() {
@@ -47,10 +55,4 @@ public class SecUserDto implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }
