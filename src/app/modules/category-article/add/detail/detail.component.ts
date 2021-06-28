@@ -37,7 +37,11 @@ export class DetailComponent implements OnInit, OnDestroy {
   @Input() selected: Observable<any>;
   @Input() locationStruktur: Observable<any[]>;
 
+  editSection() { this.editLevel1.emit(this.section); }
+  deleteSection() { this.deleteLevel1.emit(); }
+
   @ViewChild('formAddChild') formModal: TemplateRef<any>;
+  @ViewChild('formChangeParent') formChangeParentModal: TemplateRef<any>;
 
   locations: any[] = [];
   dataForm: FormGroup;
@@ -51,6 +55,10 @@ export class DetailComponent implements OnInit, OnDestroy {
   moved: boolean = false;
   logs: any[] = [];
   txtLevelName: string = 'Kategori';
+  txtLevelChildName: string = 'Sub-Kategori';
+  selectedDelete: any = { id: 0, title: '', name: '' };
+  listToChangeParent: any[] = [];
+  listBrothers: any[] = [];
 
   constructor(
     private menu: DynamicAsideMenuService,
@@ -84,10 +92,6 @@ export class DetailComponent implements OnInit, OnDestroy {
       };
     }
   }
-
-  editSection() { this.editLevel1.emit(this.section); }
-
-  deleteSection() { this.deleteLevel1.emit(); }
 
   open(reset: boolean = true) {
     if (reset) {
@@ -129,6 +133,19 @@ export class DetailComponent implements OnInit, OnDestroy {
     fd.append('location', this.dataForm.value.location);
     fd.append('location_text', this.locations.find(d => d._value == this.dataForm.value.location)._text);
     return fd;
+  }
+
+  private setTxtLevelName(level: number = 2) {
+    if (level == 2) {
+      this.txtLevelName = 'Kategori';
+      this.txtLevelChildName = 'Sub-Kategori';
+    } else if (level == 3) {
+      this.txtLevelName = 'Sub-Kategori';
+      this.txtLevelChildName = 'Sub-Sub-Kategori';
+    } else if (level == 4) {
+      this.txtLevelName = 'Sub-Sub-Kategori';
+      this.txtLevelChildName = 'None';
+    }
   }
 
   save() {
@@ -173,26 +190,80 @@ export class DetailComponent implements OnInit, OnDestroy {
     this.menu.refreshStruktur();
   }
 
+  findBrother(node) {
+    let { parent } = node;
+    parent = parseInt(parent);
+    if (parent) {
+      const parent_node = this.findNode(parent);
+      const { menus } = parent_node;
+      const brothers = menus.filter(d => d.id != node.id);
+      return brothers.map(d => { return { id: d.id, title: d.title } });
+    }
+    return [];
+  }
+
   delete(node) {
     const categoryText = node.level == 2 ? 'kategori' : node.level == 3 ? 'sub-kategori' : 'sub-sub-kategori';
-    const categoryChildText = node.level == 2 ? 'sub-kategori' : node.level == 3 ? 'sub-sub-kategori' : '';
+    // const categoryChildText = node.level == 2 ? 'sub-kategori' : node.level == 3 ? 'sub-sub-kategori' : '';
     this.confirm.open({
       title: `Hapus ${categoryText}`,
-      message: `<p>Apakah Kamu yakin ingin menghapus ${categoryText} “<b>${node.title}</b>”?
-      ${node.level != 4 ? `</p><p>Seluruh ${categoryChildText} yang terdapat pada menu tersebut akan naik menjadi ${categoryText}.</p>` : ''}`,
+      message: `<p>Apakah Kamu yakin ingin menghapus ${categoryText} “<b>${node.title}</b>”?`,
+      // ${node.level != 4 ? `</p><p>Seluruh ${categoryChildText} yang terdapat pada menu tersebut akan naik menjadi ${categoryText}.</p>` : ''}`,
       btnOkText: 'Hapus',
       btnCancelText: 'Batal'
     })
       .then((confirmed) => {
         if (confirmed === true) {
-          this.strukturService.delete({ id: node.id }).subscribe(resp => {
-            if (resp) {
-              this.menu.refreshStruktur(resp);
-              // this.selected$.next({});
-            }
-          })
+          if (node.menus && node.menus.length) {
+            this.listToChangeParent = node.menus.map(d => {
+              return { id: d.id, title: d.title, changeTo: 0, error: false };
+            });
+            this.listBrothers = this.findBrother(node);
+            this.selectedDelete = JSON.parse(JSON.stringify(node));
+            this.changeNodeParent();
+          } else {
+            this.strukturService.delete({ id: node.id, changeTo: [] }).subscribe(resp => {
+              if (resp) {
+                this.menu.refreshStruktur();
+              }
+            })
+          }
         }
       });
+  }
+
+  saveChangeParent() {
+    if (!this.validationChangeParent()) {
+      const { id } = this.selectedDelete;
+      this.strukturService.delete({ id, changeTo: this.listToChangeParent }).subscribe(resp => {
+        if (resp) {
+          this.menu.refreshStruktur();
+          this.modalService.dismissAll();
+        }
+      })
+    }
+  }
+
+  private validationChangeParent() {
+    let result = false;
+    this.listToChangeParent.forEach(d => {
+      if (d.changeTo < 1) {
+        d.error = true;
+        result = true;
+      } else d.error = false;
+    })
+    return result;
+  }
+
+  changeComboboxParent(value, id) {
+    const found = this.listToChangeParent.find(d => d.id == id);
+    if (found) {
+      found.changeTo = parseInt(value);
+    }
+  }
+
+  changeNodeParent() {
+    this.modalService.open(this.formChangeParentModal, { size: 'lg' });
   }
 
   ngOnDestroy(): void {
@@ -228,7 +299,7 @@ export class DetailComponent implements OnInit, OnDestroy {
     if (dataList && dataList.length) {
       dataList.forEach(d => {
         const _clone = JSON.parse(JSON.stringify(d));
-        delete _clone.menus;
+        // delete _clone.menus;
         _clone._value = parent.concat(_clone).map(d => d.id).join(',');
         _clone._text = parent.concat(_clone).map(d => d.title).join(' > ');
         this.locations.push(_clone);
@@ -238,7 +309,7 @@ export class DetailComponent implements OnInit, OnDestroy {
   }
 
   private resetForm() {
-    this.txtLevelName = 'Kategori';
+    this.setTxtLevelName();
     this.defaultValue.location = this.section.id.toString();
     this.dataForm.reset(this.defaultValue);
     this.imageFile = null;
@@ -359,20 +430,6 @@ export class DetailComponent implements OnInit, OnDestroy {
       "core": {
         "multiple": false,
         "check_callback": true,
-        // check_callback: function (op, node, parent, position, more) {
-        //   console.log({ op, node, parent, position, more });
-        //   switch (op) {
-        //     case 'move_node':
-        //       if (more && more.core) {
-        //         // this is the condition when the user dropped
-        //         // make a synchronous call to the server and
-        //         // return false if the server rejects the action
-        //         // return doMoveNode(node, parent);
-        //       }
-        //     // return true if we can move, false if not
-        //     // return moveNode(node, parent, position, more);
-        //   }
-        // },
         "themes": {
           "responsive": false,
           "variant": "large"
@@ -383,23 +440,12 @@ export class DetailComponent implements OnInit, OnDestroy {
         "default": {
           "icon": "ki ki-arrow-next icon-sm pakar-color-dark"
         },
-        // "file": {
-        //   "icon": "fa fa-file"
-        // }
       },
       "state": {
         "key": "demo1"
       },
       "plugins": ['dnd', 'state', 'themes', "types"]
     }).on('move_node.jstree', function (e, data) {
-      // console.log({ e, data });
-      // console.log('Moved');
-      // console.log('after : datasource', $that.datasource);
-
-      // const $tree = $($that.tree_id).jstree(true);
-      // console.log('after : core data', $tree.settings);
-
-      // console.log('new_intance', data.new_instance.get_json());
       $that.moving(data);
     });
     $(this.tree_id).on("create_node.jstree", function (e, data) {
@@ -416,6 +462,7 @@ export class DetailComponent implements OnInit, OnDestroy {
           const node = $that.findNode(parseInt(selected[0]));
           const myLocation = $that.findLocation(node);
           const defaultValue = Object.assign({}, $that.defaultValue, { level: node.level + 1, parent: node.id, location: myLocation._value });
+          $that.setTxtLevelName(node.level + 1);
           $that.dataForm.reset(defaultValue);
           $that.isEdit = false;
           $that.imageFile = null;
@@ -427,6 +474,7 @@ export class DetailComponent implements OnInit, OnDestroy {
         if (editChild) {
           const node = $that.findNode(parseInt(selected[0]));
           if (node) {
+            $that.setTxtLevelName(node.level);
             $that.edit(node);
           } else {
             console.error('node not found');
@@ -438,6 +486,7 @@ export class DetailComponent implements OnInit, OnDestroy {
         if (deleteChild) {
           const node = $that.findNode(parseInt(selected[0]));
           if (node) {
+            $that.setTxtLevelName(node.level);
             $that.delete(node);
           } else {
             console.error('node not found');
