@@ -11,7 +11,7 @@ router.get('/theme', function (req, res) {
     res.send({ error: false, msg: '', data: theme });
 });
 
-router.get('/category-article', (req, res) => {
+router.get('/category', (req, res) => {
     res.send({ error: false, msg: "", data: categoryArticle });
 });
 
@@ -91,7 +91,7 @@ function findParent(categories, parentId, level = 1) {
 }
 
 function findNode(categories, id) {
-    if (!categories) return [parent, null];
+    if (!categories) return null;
     node = categories.find(d => d.id == id);
     if (!node) {
         categories.forEach(d => {
@@ -102,8 +102,9 @@ function findNode(categories, id) {
     return node;
 }
 
-router.post('/struktur-save', (req, res, next) => {
+router.post('/saveStructure', (req, res, next) => {
     const { body, files } = req;
+    console.log({ body, files });
     const { name, desc, edit, level, sort, parent, location, location_text } = body;
     const $level = parseInt(level);
     const $parent = parseInt(parent);
@@ -166,12 +167,12 @@ router.post('/struktur-save', (req, res, next) => {
     res.send({ error: false, msg: "", data: new_data });
 });
 
-router.post('/struktur-update', (req, res) => {
+router.post('/updateStructure', (req, res) => {
     const { body, files } = req;
+    console.log({ body, files });
     const { id, name, desc, level, parent, location, location_text } = body;
     const $level = parseInt(level);
     const $parent = parseInt(parent);
-
 
     const imagesPath = path.join(process.cwd(), '/public/images');
     let icon = '', image = '';
@@ -221,7 +222,7 @@ function calculateLevel(list = [], level = 1) {
     }
 }
 
-router.post('/struktur-delete', (req, res) => {
+router.post('/deleteStructure', (req, res) => {
     const { id } = req.body;
     let notDelete = [], brothers = [];
 
@@ -254,6 +255,60 @@ router.post('/struktur-delete', (req, res) => {
     calculateLevel(categoryArticle);
 
     res.send({ error: false, msg: "", data: categoryArticle });
+});
+
+router.post('/saveBatchStructure', (req, res) => {
+    const { body } = req;
+    const { id, children } = body;
+    console.log({ id, children });
+
+    const found = categoryArticle.find(d => d.id == id);
+    if (!found) {
+        if (!found) res.send({ error: true, msg: "data tidak ditemukan" });
+    }
+
+    const new_child = [];
+    const list_level_2 = children.filter(d => parseInt(d.level) == 2);
+    const list_level_3 = children.filter(d => parseInt(d.level) == 3);
+    const list_level_4 = children.filter(d => parseInt(d.level) == 4);
+
+    list_level_2.forEach(lvl2 => {
+        const node_lvl2 = findNode(categoryArticle, lvl2.id);
+        if (node_lvl2) {
+            const _node_lvl2 = JSON.parse(JSON.stringify(node_lvl2));
+            _node_lvl2.parent = parseInt(lvl2.parent);
+            _node_lvl2.sort = parseInt(lvl2.sort);
+            _node_lvl2.menus = [];
+
+            const foundLvl3 = list_level_3.filter(d => d.parent == _node_lvl2.id);
+            foundLvl3.forEach(lvl3 => {
+                const node_lvl3 = findNode(categoryArticle, lvl3.id);
+                if (node_lvl3) {
+                    const _node_lvl3 = JSON.parse(JSON.stringify(node_lvl3));
+                    _node_lvl3.parent = parseInt(lvl3.parent);
+                    _node_lvl3.sort = parseInt(lvl3.sort);
+                    _node_lvl3.menus = [];
+
+                    const foundLvl4 = list_level_4.filter(d => d.parent == _node_lvl3.id);
+                    foundLvl4.forEach(lvl4 => {
+                        const node_lvl4 = findNode(categoryArticle, lvl4.id);
+                        if (node_lvl4) {
+                            const _node_lvl4 = JSON.parse(JSON.stringify(node_lvl4));
+                            _node_lvl4.parent = parseInt(lvl4.parent);
+                            _node_lvl4.sort = parseInt(lvl4.sort);
+                            _node_lvl4.menus = [];
+                            _node_lvl3.menus.push(_node_lvl4);
+                        }
+                    })
+                    _node_lvl2.menus.push(_node_lvl3);
+                }
+            })
+            new_child.push(_node_lvl2);
+        }
+    });
+
+    found.menus = new_child;
+    res.send({ error: false, msg: "debug", data: new_child });
 });
 
 module.exports = router;

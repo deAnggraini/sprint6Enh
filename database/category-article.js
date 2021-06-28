@@ -15,48 +15,6 @@ const categories = [
                 sort: 0,
                 parent: 100,
                 menus: [
-                    {
-                        id: 111,
-                        title: 'Deposito',
-                        level: 3,
-                        desc: '',
-                        parent: 110,
-                    },
-                    {
-                        id: 112,
-                        title: 'Giro',
-                        level: 3,
-                        desc: '',
-                        parent: 110,
-                    },
-                    {
-                        id: 113,
-                        title: 'LAKU',
-                        level: 3,
-                        desc: '',
-                        parent: 110,
-                    },
-                    {
-                        id: 114,
-                        title: 'Simpanan Pelajar',
-                        level: 3,
-                        desc: '',
-                        parent: 110,
-                    },
-                    {
-                        id: 115,
-                        title: 'TabunganKu',
-                        level: 3,
-                        desc: '',
-                        parent: 110,
-                    },
-                    {
-                        id: 116,
-                        title: 'Tahapan Berjangka siMuda',
-                        level: 3,
-                        desc: '',
-                        parent: 110,
-                    },
                 ]
             },
             {
@@ -68,61 +26,12 @@ const categories = [
                 parent: 100,
                 menus: [
                     {
-                        id: 121,
-                        title: 'Bancassurance',
-                        level: 3,
-                        desc: '',
-                        parent: 120,
-                    },
-                    {
-                        id: 122,
-                        title: 'DBMM',
-                        level: 3,
-                        desc: '',
-                        parent: 120,
-                    },
-                    {
-                        id: 123,
-                        title: 'Reksadana',
-                        level: 3,
-                        desc: '',
-                        parent: 120,
-                    },
-                    {
-                        id: 124,
-                        title: 'Obligasi Korporasi',
-                        level: 3,
-                        desc: '',
-                        parent: 120,
-                    },
-                    {
                         id: 125,
                         title: 'Obligasi Negara',
                         level: 3,
                         desc: '',
                         parent: 120,
                         menus: [
-                            {
-                                id: 1251,
-                                title: 'Obligasi Negara Ritel (ORI)',
-                                level: 4,
-                                desc: '',
-                                parent: 125,
-                            },
-                            {
-                                id: 1252,
-                                title: 'Obligasi Negara Valas (INDON)',
-                                level: 4,
-                                desc: '',
-                                parent: 125,
-                            },
-                            {
-                                id: 1253,
-                                title: 'Obligasi Negara Valas Syariah (INDOIS)',
-                                level: 4,
-                                desc: '',
-                                parent: 125,
-                            },
                         ]
                     },
                     {
@@ -132,20 +41,6 @@ const categories = [
                         desc: '',
                         parent: 120,
                         menus: [
-                            {
-                                id: 1261,
-                                title: 'Surat Berharga BI dalam Valas (SBBI Valas)',
-                                level: 4,
-                                desc: '',
-                                parent: 126,
-                            },
-                            {
-                                id: 1262,
-                                title: 'Sertifikat Bank Indonesia (SBI)',
-                                level: 4,
-                                desc: '',
-                                parent: 126,
-                            },
                         ]
                     }
                 ]
@@ -165,6 +60,53 @@ const categories = [
                 desc: '',
                 sort: 3,
                 parent: 100,
+                menus: [
+                    {
+                        id: 141,
+                        title: 'Kerja Sama Copart',
+                        level: 3,
+                        desc: '',
+                        parent: 140,
+                        menus: [
+                        ]
+                    },
+                    {
+                        id: 142,
+                        title: 'Kerja Sama Merchant',
+                        level: 3,
+                        desc: '',
+                        parent: 140,
+                        menus: [
+                        ]
+                    },
+                    {
+                        id: 143,
+                        title: 'Kerja sama Institusi',
+                        level: 3,
+                        desc: '',
+                        parent: 140,
+                        menus: [
+                        ]
+                    },
+                    {
+                        id: 144,
+                        title: 'Kerja sama perusahaan anak',
+                        level: 3,
+                        desc: '',
+                        parent: 140,
+                        menus: [
+                        ]
+                    },
+                    {
+                        id: 145,
+                        title: 'Kerja sama perusahaan khusus',
+                        level: 3,
+                        desc: '',
+                        parent: 140,
+                        menus: [
+                        ]
+                    },
+                ]
             },
             {
                 id: 150,
@@ -173,6 +115,35 @@ const categories = [
                 desc: '',
                 sort: 4,
                 parent: 100,
+                menus: [
+                    {
+                        id: 151,
+                        title: 'Perbankan Internasional',
+                        level: 3,
+                        desc: '',
+                        parent: 150,
+                        menus: [
+                        ]
+                    },
+                    {
+                        id: 152,
+                        title: 'Treasuri',
+                        level: 3,
+                        desc: '',
+                        parent: 150,
+                        menus: [
+                        ]
+                    },
+                    {
+                        id: 153,
+                        title: 'Perbankan Domesik',
+                        level: 3,
+                        desc: '',
+                        parent: 150,
+                        menus: [
+                        ]
+                    },
+                ]
             },
             {
                 id: 160,
@@ -197,6 +168,35 @@ const categories = [
                 desc: '',
                 sort: 7,
                 parent: 100,
+                menus: [
+                    {
+                        id: 181,
+                        title: 'SME',
+                        level: 3,
+                        desc: '',
+                        parent: 180,
+                        menus: [
+                        ]
+                    },
+                    {
+                        id: 182,
+                        title: 'Komersial',
+                        level: 3,
+                        desc: '',
+                        parent: 180,
+                        menus: [
+                        ]
+                    },
+                    {
+                        id: 183,
+                        title: 'Korporasi',
+                        level: 3,
+                        desc: '',
+                        parent: 180,
+                        menus: [
+                        ]
+                    },
+                ]
             },
         ],
         icon: '/menus/coin.svg',
@@ -235,6 +235,66 @@ const categories = [
                 desc: '',
                 sort: 2,
                 parent: 200,
+                menus: [
+                    {
+                        id: 231,
+                        title: 'CS',
+                        level: 3,
+                        desc: '',
+                        sort: 1,
+                        parent: 230,
+                        menus: [
+                            {
+                                id: 239,
+                                title: 'Pembukaan rekening',
+                                level: 4,
+                                desc: '',
+                                sort: 1,
+                                parent: 231,
+                            },
+                            {
+                                id: 238,
+                                title: 'Perubahan Data',
+                                level: 4,
+                                desc: '',
+                                sort: 1,
+                                parent: 231,
+                            },
+                        ]
+                    },
+                    {
+                        id: 232,
+                        title: 'Teller',
+                        level: 3,
+                        desc: '',
+                        sort: 1,
+                        parent: 230,
+                    },
+                    {
+                        id: 233,
+                        title: 'AO SME',
+                        level: 3,
+                        desc: '',
+                        sort: 1,
+                        parent: 230,
+                    },
+                    {
+                        id: 234,
+                        title: 'AO Komersial',
+                        level: 3,
+                        desc: '',
+                        sort: 1,
+                        parent: 230,
+                    },
+                    {
+                        id: 235,
+                        title: 'RO',
+                        level: 3,
+                        desc: '',
+                        sort: 1,
+                        parent: 230,
+                    },
+                ]
             },
             {
                 id: 240,
@@ -260,7 +320,7 @@ const categories = [
     },
     {
         id: 1,
-        title: 'Aplikasi Mesin',
+        title: 'Aplikasi/Mesin',
         level: 1,
         desc: 'Daftar operasional cabang yang dikategorikan berdasarkan tugasnya.',
         sort: 2,
@@ -274,18 +334,6 @@ const categories = [
                 sort: 0,
                 parent: 1,
                 menus: [
-                    {
-                        id: 121,
-                        title: 'ABACAS',
-                        level: 1,
-                        desc: '',
-                    },
-                    {
-                        id: 122,
-                        title: 'Aplikasi customized report',
-                        level: 1,
-                        desc: '',
-                    }
                 ]
             },
             {
@@ -296,20 +344,6 @@ const categories = [
                 sort: 1,
                 parent: 1,
                 menus: [
-                    {
-                        id: 131,
-                        title: 'Andy',
-                        level: 3,
-                        desc: '',
-                        parent: 3,
-                    },
-                    {
-                        id: 132,
-                        title: 'BDS-OR',
-                        level: 3,
-                        desc: '',
-                        parent: 3,
-                    }
                 ]
             },
             {

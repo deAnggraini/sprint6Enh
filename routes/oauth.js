@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 const mod = require('../modules').module;
 const users = require('../database/users.json');
+const { menus_top, menus_bottom } = require('../database/menus');
+const categories = require('../database/category-article');
 const moment = require('moment');
 
 const EXPIRES_IN = 60 * 60 * 24; // seconds
@@ -78,6 +80,10 @@ router.post('/refreshToken', (req, res) => {
 
 router.post('/logout', (req, res) => {
     res.send({ error: false, msg: "", data: {} });
-})
+});
+
+router.get('/menu', (req, res) => {
+    res.send({ error: false, msg: "", data: menus_top.concat(categories).concat(menus_bottom) });
+});
 
 module.exports = router;
