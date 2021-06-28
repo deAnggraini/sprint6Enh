@@ -16,7 +16,8 @@
                     <a routerLink="/homepage">
                         <span [inlineSVG]="'./assets/media/svg/bca/pakar-logo-top.svg'" cacheSVG="true" class=""></span>
                     </a>
-                    <a (click)="open()" class="btn  btn-icon btn-sm btn-blue"><i class="fa fa-plus-circle"></i></a>
+                    <a (click)="open()" class="btn  btn-icon btn-sm btn-clean btn-blue"><i
+                            class="fa fa-plus-circle"></i></a>
                 </div>
                 <ul class="navi navi-hover mt-5">
                     <ng-container *ngFor="let item of menuConfig.items">
@@ -57,20 +58,26 @@
             <i aria-hidden="true">&times;</i>
         </button>
     </div>
-    <div class="modal-body">
+    <div class="modal-body pt-0">
         <form class="form" [formGroup]="dataForm" novalidate="novalidate" (ngSubmit)="save()">
             <div class="form-group">
-                <label>Nama Menu *</label>
+                <label>Nama Menu <span class="text-danger">*</span></label>
                 <input class="form-control" type="text" maxlength="50" placeholder="Masukkan nama menu" required
                     formControlName="name" autocomplete="off" [ngClass]="{ 'is-invalid': hasError}">
                 <ng-container [ngTemplateOutlet]="formError"
                     [ngTemplateOutletContext]="{ control: dataForm.controls['name']}"></ng-container>
             </div>
             <div class="form-group">
-                <label>Icon Menu *</label>
+                <label>Icon Menu <span class="text-danger">*</span></label>
                 <!-- formControlName="icon" -->
-                <input class="form-control" type="file" placeholder="Pilih Gambar" required autocomplete="off"
-                    [ngClass]="{ 'is-invalid': hasError }" (change)="onImageChange($event, 'icon')" accept="image/*">
+                <!-- <input class="form-control" type="file" placeholder="Pilih Gambar" required autocomplete="off"
+                    [ngClass]="{ 'is-invalid': hasError }" (change)="onImageChange($event, 'icon')" accept="image/*"> -->
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="inputGroupFile04"
+                        [ngClass]="{ 'is-invalid': hasError }" (change)="onImageChange($event, 'icon')"
+                        accept="image/*">
+                    <label class="custom-file-label" for="inputGroupFile04">{{ showIconName('icon') }}</label>
+                </div>
                 <small>Icon diperlukan untuk kebutuhan navigasi menu kiri.</small>
                 <ng-container [ngTemplateOutlet]="formError"
                     [ngTemplateOutletContext]="{ control: dataForm.controls['icon']}"></ng-container>
@@ -79,10 +86,16 @@
                 </div>
             </div>
             <div class="form-group">
-                <label>Gambar Menu *</label>
+                <label>Gambar Menu <span class="text-danger">*</span></label>
                 <!-- formControlName="image" -->
-                <input class="form-control" type="file" placeholder="Pilih Gambar" required autocomplete="off"
-                    [ngClass]="{ 'is-invalid': hasError}" (change)="onImageChange($event, 'image')" accept="image/*">
+                <!-- <input class="form-control" type="file" placeholder="Pilih Gambar" required autocomplete="off"
+                    [ngClass]="{ 'is-invalid': hasError}" (change)="onImageChange($event, 'image')" accept="image/*"> -->
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="inputGroupFile04"
+                        [ngClass]="{ 'is-invalid': hasError }" (change)="onImageChange($event, 'image')"
+                        accept="image/*">
+                    <label class="custom-file-label" for="inputGroupFile04">{{ showIconName('image') }}</label>
+                </div>
                 <small>Gambar diperlukan untuk kebutuhan homepage.</small>
                 <ng-container [ngTemplateOutlet]="formError"
                     [ngTemplateOutletContext]="{ control: dataForm.controls['image']}"></ng-container>
@@ -91,7 +104,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label>Deskripsi Menu *</label>
+                <label>Deskripsi Menu <span class="text-danger">*</span></label>
                 <textarea class="form-control" maxlength="200" placeholder="Masukkan definisi dari Kategori terkait"
                     required formControlName="desc" autocomplete="off"
                     [ngClass]="{ 'is-invalid': hasError }"></textarea>
@@ -101,8 +114,8 @@
         </form>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-outline-light btn-sm rounded-lg" (click)="c('Batal')">Batal</button>
-        <button type="button" class="btn btn-outline-dark btn-sm rounded-lg" (click)="save()"
+        <button type="button" class="btn btn-outline-light btn-sm rounded-lg px-5" (click)="c('Batal')">Batal</button>
+        <button type="button" class="btn btn-sm btn-blue rounded-lg px-5" (click)="save()"
             [disabled]="dataForm.invalid">{{isEdit ? 'Ubah' : 'Tambah'}}</button>
     </div>
 </ng-template>

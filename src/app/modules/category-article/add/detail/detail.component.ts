@@ -48,6 +48,9 @@ export class DetailComponent implements OnInit, OnDestroy {
   isEdit: boolean = false;
   hasError: boolean = false;
   imageFile: string;
+  moved: boolean = false;
+  logs: any[] = [];
+  txtLevelName: string = 'Kategori';
 
   constructor(
     private menu: DynamicAsideMenuService,
@@ -95,11 +98,20 @@ export class DetailComponent implements OnInit, OnDestroy {
   }
 
   edit(data: any) {
-    console.log('edit', data);
     this.imageFile = null;
     this.isEdit = true;
     this.dataForm.reset(Object.assign({}, data, { name: data.title }));
     this.open(false);
+  }
+
+  showIconName(type: string = "image") {
+    if (type == "image") {
+      if (typeof (this.dataForm.value.image) === "string") {
+        return this.dataForm.value.image;
+      } else {
+        return this.dataForm.value.image?.name;
+      }
+    }
   }
 
   private convertToFormData(): FormData {
@@ -126,15 +138,46 @@ export class DetailComponent implements OnInit, OnDestroy {
           this.menu.refreshStruktur();
           this.modalService.dismissAll();
         }
-      })
+      });
     }
   }
 
-  delete(node){
+  private convertTreeToArray(dataList: any[]) {
+    let result = [];
+    if (dataList && dataList.length) {
+      dataList.forEach(d => {
+        const _clone = JSON.parse(JSON.stringify(d));
+        delete _clone.menus;
+        result.push(_clone);
+        result = result.concat(this.convertTreeToArray(d.menus));
+      })
+    }
+    return result;
+  }
+
+  updateSection() {
+    const params = {
+      id: this.section.id,
+      children: this.convertTreeToArray(this.logs.slice(-1)[0]),
+    }
+    this.strukturService.updateSection(params).subscribe(resp => {
+      if (resp) {
+        this.menu.refreshStruktur();
+      }
+    });
+  }
+
+  cancel() {
+    this.moved = false;
+    this.logs = [];
+    this.menu.refreshStruktur();
+  }
+
+  delete(node) {
     const categoryText = node.level == 2 ? 'kategori' : node.level == 3 ? 'sub-kategori' : 'sub-sub-kategori';
     const categoryChildText = node.level == 2 ? 'sub-kategori' : node.level == 3 ? 'sub-sub-kategori' : '';
     this.confirm.open({
-      title: 'Hapus Menu',
+      title: `Hapus ${categoryText}`,
       message: `<p>Apakah Kamu yakin ingin menghapus ${categoryText} “<b>${node.title}</b>”?
       ${node.level != 4 ? `</p><p>Seluruh ${categoryChildText} yang terdapat pada menu tersebut akan naik menjadi ${categoryText}.</p>` : ''}`,
       btnOkText: 'Hapus',
@@ -152,11 +195,11 @@ export class DetailComponent implements OnInit, OnDestroy {
       });
   }
 
-
   ngOnDestroy(): void {
   }
 
   ngOnInit(): void {
+    this.logs = [];
     this.initForm();
     this.datasource = [];
     this.initJsTree();
@@ -177,6 +220,10 @@ export class DetailComponent implements OnInit, OnDestroy {
     })
   }
 
+  private findLocation(data) {
+    return this.locations.find(d => d.id == data.id);
+  }
+
   private createCategorySingleDimention(dataList: any[], parent: any[]) {
     if (dataList && dataList.length) {
       dataList.forEach(d => {
@@ -191,6 +238,8 @@ export class DetailComponent implements OnInit, OnDestroy {
   }
 
   private resetForm() {
+    this.txtLevelName = 'Kategori';
+    this.defaultValue.location = this.section.id.toString();
     this.dataForm.reset(this.defaultValue);
     this.imageFile = null;
   }
@@ -221,11 +270,12 @@ export class DetailComponent implements OnInit, OnDestroy {
           {
             id,
             type: `level-${level}`,
+            _text: title,
             "text": `<div class="d-flex tree-item flex-row flex-grow justify-content-between">
                   <div class="node-text">${title}</div>
                   ${this.createButtonIcon({ id, level })}
                 </div>`,
-            "children": this.parseChildren(menus)
+            "children": this.parseChildren(menus),
           }
         );
       });
@@ -241,7 +291,8 @@ export class DetailComponent implements OnInit, OnDestroy {
         ds.push(
           {
             id,
-            type: 'level-2',
+            type: `level-${level}`,
+            _text: title,
             "text": `<div class="d-flex tree-item flex-row flex-grow justify-content-between">
                   <div class="node-text">${title}</div>
                   ${this.createButtonIcon(1)}
@@ -257,9 +308,9 @@ export class DetailComponent implements OnInit, OnDestroy {
 
   private createButtonIcon(data: any) {
     return `<div class="node-buttons mr-1">
-      ${data.level != 4 ? '<div class="btn btn-sm btn-blue btn-my add-child" data-id="${data.id}"><i class="add-child fas fa-plus-circle"></i></div>' : ''}
-      <div class="btn btn-sm btn-blue btn-my edit-child" data-id="${data.id}"><i class="edit-child fas fa-pen"></i></div>
-      <div class="btn btn-sm btn-blue btn-my delete-child" data-id="${data.id}"><i class="delete-child far fa-trash-alt"></i></div>
+      ${data.level != 4 ? '<div class="btn btn-sm btn-clean btn-blue btn-my add-child" data-id="${data.id}"><i class="add-child fas fa-plus-circle"></i></div>' : ''}
+      <div class="btn btn-sm btn-clean btn-blue btn-my edit-child" data-id="${data.id}"><i class="edit-child fas fa-pen"></i></div>
+      <div class="btn btn-sm btn-clean btn-blue btn-my delete-child" data-id="${data.id}"><i class="delete-child far fa-trash-alt"></i></div>
     </div>`;
   }
 
@@ -274,15 +325,57 @@ export class DetailComponent implements OnInit, OnDestroy {
     return this.locations.find(d => d.id == id)
   }
 
+  private moving(data) {
+    this.moved = true;
+    const new_children = this.createJsonData(data.new_instance.get_json(), this.section.id);
+    this.logs.push(new_children);
+    this.cdr.detectChanges();
+  }
+
+  private createJsonData(jstree_json: any[], parent: number = 0, level: number = 2) {
+    const datasource = [];
+    if (jstree_json && jstree_json.length) {
+      jstree_json.forEach((d, i) => {
+        if (d.id) {
+          const node = this.findNode(d.id);
+          if (node) {
+            // const _node = JSON.parse(JSON.stringify(node));
+            node.level = level;
+            node.parent = parent;
+            node.sort = i + 1;
+            node.menus = [];
+            node.menus = this.createJsonData(d.children, d.id, level + 1);
+            datasource.push(node);
+          }
+        }
+      });
+    }
+    return datasource;
+  }
+
   private initJsTree() {
     const $that = this;
     $(this.tree_id).jstree({
       "core": {
         "multiple": false,
         "check_callback": true,
+        // check_callback: function (op, node, parent, position, more) {
+        //   console.log({ op, node, parent, position, more });
+        //   switch (op) {
+        //     case 'move_node':
+        //       if (more && more.core) {
+        //         // this is the condition when the user dropped
+        //         // make a synchronous call to the server and
+        //         // return false if the server rejects the action
+        //         // return doMoveNode(node, parent);
+        //       }
+        //     // return true if we can move, false if not
+        //     // return moveNode(node, parent, position, more);
+        //   }
+        // },
         "themes": {
           "responsive": false,
-          "variant" : "large"
+          "variant": "large"
         },
         "data": this.datasource
       },
@@ -298,8 +391,19 @@ export class DetailComponent implements OnInit, OnDestroy {
         "key": "demo1"
       },
       "plugins": ['dnd', 'state', 'themes', "types"]
+    }).on('move_node.jstree', function (e, data) {
+      // console.log({ e, data });
+      // console.log('Moved');
+      // console.log('after : datasource', $that.datasource);
+
+      // const $tree = $($that.tree_id).jstree(true);
+      // console.log('after : core data', $tree.settings);
+
+      // console.log('new_intance', data.new_instance.get_json());
+      $that.moving(data);
     });
     $(this.tree_id).on("create_node.jstree", function (e, data) {
+      console.log('create_node');
       $("li#" + data.node.id).find("a").append('test');
     });
     $(this.tree_id).on("changed.jstree", function (e, data) {
@@ -310,7 +414,8 @@ export class DetailComponent implements OnInit, OnDestroy {
         const addChild = $(target).hasClass('add-child');
         if (addChild) {
           const node = $that.findNode(parseInt(selected[0]));
-          const defaultValue = Object.assign({}, $that.defaultValue, { level: node.level + 1, parent: node.id });
+          const myLocation = $that.findLocation(node);
+          const defaultValue = Object.assign({}, $that.defaultValue, { level: node.level + 1, parent: node.id, location: myLocation._value });
           $that.dataForm.reset(defaultValue);
           $that.isEdit = false;
           $that.imageFile = null;

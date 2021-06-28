@@ -6,18 +6,22 @@
         </div>
     </h3>
     <div class="row m-0 mt-7">
-        <div class="col-lg-4 col-xxl-4 mb-7" *ngFor="let item of listData;let i = index">
+        <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4 col-xxl-4 mb-7" *ngFor="let item of listData;let i = index">
             <div class="text-center">
                 <img src="{{backend_img}}/{{item.image}}" style="max-width: 100px; max-height: 100px;">
             </div>
             <div class="kategori-menu-card card-shadow border-1 rounded-sm mt-n15 p-5">
                 <div class="pt-15"></div>
-                <div><a routerLink="/article/list/{{item.id}}"
-                        class="text-dark font-weight-bold font-size-h6 mb-1">{{item.title}}</a></div>
-                <small>{{item.desc}}</small>
+                <div>
+                    <a routerLink="/article/list/{{item.id}}"
+                        class="text-dark font-weight-bold font-size-h6 mb-1 text-ellipsis-1">{{item.title}}</a>
+                </div>
+                <small class="text-ellipsis-2">{{item.desc}}</small>
                 <ul class="navi navi-hover">
                     <li class="navi-item" *ngFor="let link of item.menus | slice:0:3">
-                        <a routerLink="/article/list/{{link.id}}" class="navi-link cursor-pointer">{{link.title}}</a>
+                        <a routerLink="/article/list/{{link.id}}" class="navi-link cursor-pointer">
+                            <span class="text-ellipsis-1">{{link.title}}</span>
+                        </a>
                     </li>
                     <!-- <li class="navi-item"><a routerLink="" class="navi-link cursor-pointer">Bagian Unit Cabang</a></li>
                     <li class="navi-item"><a routerLink="" class="navi-link cursor-pointer">Aktivitas Unit Cabang</a></li> -->

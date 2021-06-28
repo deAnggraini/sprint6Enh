@@ -17,6 +17,10 @@ $bca-color-dark: #0F5EA9;
   font-size: 1.125rem !important;
 }
 
+.font-size-20 {
+  font-size: 1.25rem !important;
+}
+
 .font-size-24 {
   font-size: 1.5rem !important;
 }
@@ -57,19 +61,34 @@ $bca-color-dark: #0F5EA9;
 
 .btn {
   &.btn-blue {
+    color: white;
+    @extend .font-bold-600;
+    background-color: #0078D4;
+
+    &.btn-clean,
+    &.btn-clean:hover {
+      background-color: transparent;
+    }
 
     i,
     span {
       color: #0078D4;
     }
-  }
 
-  &.btn-blue:hover,
-  &.btn-blue:focus {
+    &:disabled {
+      background-color: #A19F9D;
+      cursor: not-allowed;
+    }
 
-    i,
-    span {
-      color: darkblue;
+    &:hover:not(:disabled),
+    &:focus:not(:disabled) {
+      background-color: $bca-color-dark;
+
+      i,
+      span {
+        color: darkblue !important;
+      }
     }
   }
+
 }

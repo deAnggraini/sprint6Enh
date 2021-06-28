@@ -20,14 +20,18 @@ export class StrukturService {
   }
 
   private add(data: FormData) {
-    return this.apiService.post(`${this._base_url}/struktur-save`, data, this.apiService.getHeaders(false));
+    return this.apiService.post(`${this._base_url}/saveStructure`, data, this.apiService.getHeaders(false));
   }
 
   private update(data: FormData) {
-    return this.apiService.post(`${this._base_url}/struktur-update`, data, this.apiService.getHeaders(false));
+    return this.apiService.post(`${this._base_url}/updateStructure`, data, this.apiService.getHeaders(false));
   }
 
   delete(data: any) {
-    return this.apiService.post(`${this._base_url}/struktur-delete`, data);
+    return this.apiService.post(`${this._base_url}/deleteStructure`, data);
+  }
+
+  updateSection(data: any) {
+    return this.apiService.post(`${this._base_url}/saveBatchStructure`, data);
   }
 }

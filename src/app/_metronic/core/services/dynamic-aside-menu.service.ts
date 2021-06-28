@@ -49,6 +49,7 @@ export class DynamicAsideMenuService {
     this.menuConfig$ = this.menuConfigSubject.asObservable();
     // this.categories$ = this.categoriesObject.asObservable();
     this.populateCategoryArticle();
+    this.populateMenus();
   }
 
   private parseToMenu(articles) {
@@ -111,8 +112,12 @@ export class DynamicAsideMenuService {
     return items;
   }
 
+  private populateMenus(){
+    // codeing disini
+  }
+
   private populateCategoryArticle() {
-    this.apiService.get(`${this._base_url}/category-article`)
+    this.apiService.get(`${this._base_url}/category`)
       .subscribe(
         (_articles: any[]) => {
           _articles.map(d => d.showLess = true);

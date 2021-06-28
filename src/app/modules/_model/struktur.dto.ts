@@ -11,8 +11,8 @@ export declare interface StrukturDTO {
     sort: number,
     parent?: number,
     menus?: StrukturDTO[],
-    location?: '',
-    location_text?: '',
+    location?: string,
+    location_text?: string,
 }
 
 export declare interface StrukturItemDTO {
@@ -28,6 +28,6 @@ export declare interface StrukturItemDTO {
     sort: number,
     parent?: number,
     menus?: StrukturDTO[],
-    location?: '',
-    location_text?: '',
+    location?: string,
+    location_text?: string,
 }

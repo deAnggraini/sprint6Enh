@@ -290,3 +290,13 @@
 .resize-none {
   resize: none;
 }
+
+.custom-file-input:lang(en)~.custom-file-label::after {
+  content: "Pilih Gambar";
+
+  &.ng-invalid.ng-touched,
+  &.ng-invalid.ng-dirty {
+    background-image: none;
+    border-color: #F64E60;
+  }
+}

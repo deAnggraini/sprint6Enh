@@ -1,11 +1,11 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChild, TemplateRef } from '@angular/core';
-import { DynamicAsideMenuService } from 'src/app/_metronic/core';
-import { Subscription, BehaviorSubject } from 'rxjs';
-import { NgbModal, ModalDismissReasons, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
-import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
-import { StrukturService } from '../../_services/stuktur.service';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { ConfirmService } from 'src/app/utils/_services/confirm.service';
+import { DynamicAsideMenuService } from 'src/app/_metronic/core';
 import { StrukturDTO } from '../../_model/struktur.dto';
+import { StrukturService } from '../../_services/stuktur.service';
 
 @Component({
   selector: 'app-add',
@@ -35,6 +35,7 @@ export class AddComponent implements OnInit, OnDestroy {
 
   imageFile: string;
   iconFile: string;
+  iconText: string;
   isEdit: boolean = false;
 
   constructor(
@@ -78,6 +79,8 @@ export class AddComponent implements OnInit, OnDestroy {
 
   private convertToFormData(): FormData {
     const fd: FormData = new FormData();
+
+    // best practice
     fd.append('id', this.dataForm.value.id.toString());
     fd.append('name', this.dataForm.value.name);
     fd.append('desc', this.dataForm.value.desc);
@@ -88,6 +91,9 @@ export class AddComponent implements OnInit, OnDestroy {
     fd.append('level', this.dataForm.value.level.toString());
     fd.append('sort', String(this.categories.length + 1));
     fd.append('parent', "0");
+
+    fd.append('data', JSON.parse(this.dataForm.value)); // <--- yang ini kang jum
+    
     return fd;
   }
 
@@ -99,6 +105,24 @@ export class AddComponent implements OnInit, OnDestroy {
           this.modalService.dismissAll();
         }
       })
+    } else {
+      this.dataForm.markAllAsTouched();
+    }
+  }
+
+  showIconName(type: string = "image") {
+    if (type == "image") {
+      if (typeof (this.dataForm.value.image) === "string") {
+        return this.dataForm.value.image;
+      } else {
+        return this.dataForm.value.image?.name;
+      }
+    } else {
+      if (typeof (this.dataForm.value.icon) === "string") {
+        return this.dataForm.value.icon;
+      } else {
+        return this.dataForm.value.icon?.name;
+      }
     }
   }
 
@@ -120,7 +144,7 @@ export class AddComponent implements OnInit, OnDestroy {
 
   deleteLevel1() {
     this.confirm.open({
-      title: 'Hapus Menu',
+      title: `Hapus Menu`,
       message: `<p>Apakah Kamu yakin ingin menghapus menu “<b>${this.selected$.value.title}</b>”?</p><p>Seluruh kategori yang terdapat pada menu tersebut akan naik menjadi menu.</p>`,
       btnOkText: 'Hapus',
       btnCancelText: 'Batal'
