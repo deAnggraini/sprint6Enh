@@ -18,13 +18,10 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
-@Transactional
 public class StructureServiceImp implements StructureService {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -55,6 +52,7 @@ public class StructureServiceImp implements StructureService {
 	 * @throws Exception
 	 */
 	@Override
+	@Transactional
 	public StructureDto add(String username, StructureDto dto, MultipartFile image, MultipartFile icon) throws Exception {
 		try {
 			logger.info("add category");
@@ -146,100 +144,159 @@ public class StructureServiceImp implements StructureService {
 	 * @return
 	 * @throws Exception
 	 */
-    @Override
-    public StructureResponseDto add(String username, StructureWithFileDto dto) throws Exception {
-        try {
-            logger.info("add category");
-            StructureResponseDto _dto = new StructureResponseDto();
+	@Override
+	@Transactional
+	public StructureResponseDto add(String username, StructureWithFileDto dto) throws Exception {
+		try {
+			logger.info("add category");
+			StructureResponseDto _dto = new StructureResponseDto();
+
+            /*
+			get existing structure from db with param structure id
+			 */
+			Optional<Structure> parentOp = structureRepository.findById(dto.getParent());
+			logger.debug("structure result from db {}", parentOp);
+			if (parentOp.isEmpty()) {
+				if(dto.getLevel() > 1) {
+					logger.info("not found structure with id {}", dto.getParent());
+					throw new DataNotFoundException("not found parent data with structure id " + dto.getParent());
+				}
+			}
+			Structure _parentOp = parentOp.get();
+			/*
+			validate parent with level, if request level <
+			*/
+			Long parentLevel = _parentOp.getLevel();
+			if(dto.getLevel().longValue() <= parentLevel.longValue()) {
+				logger.info("level from request invalid, cause new level value {} < than from parent level {}", dto.getLevel(), parentLevel);
+				throw new InvalidLevelException("invalid new level "+dto.getLevel());
+			}
 
 			_dto.setName(dto.getName());
 			_dto.setDesc(dto.getDesc());
-            Images _images = null;
-            if(!dto.getImage().isEmpty()) {
-                String location = pathCategory;
-                logger.debug("folder location {}", location);
-                logger.debug("image file name {}", dto.getImage().getOriginalFilename());
+			Images _images = null;
+			if(!dto.getImage().isEmpty()) {
+				String location = pathCategory;
+				logger.debug("folder location {}", location);
+				logger.debug("image file name {}", dto.getImage().getOriginalFilename());
 
-                Path path = Paths.get(location+dto.getImage().getOriginalFilename());
+				Path path = Paths.get(location+dto.getImage().getOriginalFilename());
 
-                logger.info("saving image");
-                Images images = new Images();
-                images.setCreatedBy(username);
-                logger.debug("save file name to db {}", path.getFileName().toString());
-                images.setImageName(path.getFileName().toString());
-                logger.debug("save path file to db {}", path.toAbsolutePath().toString());
-                images.setUri(path.toAbsolutePath().toString());
-                _images = imageRepository.save(images);
+				logger.info("saving image");
+				Images images = new Images();
+				images.setCreatedBy(username);
+				logger.debug("save file name to db {}", path.getFileName().toString());
+				images.setImageName(path.getFileName().toString());
+				logger.debug("save path file to db {}", path.toAbsolutePath().toString());
+				images.setUri(path.toAbsolutePath().toString());
+				_images = imageRepository.save(images);
 
-                // save image to folder
-                logger.info("saving image to share folder");
+				// save image to folder
+				logger.info("saving image to share folder");
 				_dto.setImage(path.toAbsolutePath().toString());
 				FileUploadUtil.saveFile(location, dto.getImage());
-            }
+			}
 
-            Icons _icon = null;
-            if(!dto.getIcon().isEmpty()) {
-                String location = pathCategory;
-                logger.debug("folder location {}", location);
-                logger.debug("icon file name {}", dto.getIcon().getOriginalFilename());
-                Path path = Paths.get(location+dto.getIcon().getOriginalFilename());
+			Icons _icon = null;
+			if(!dto.getIcon().isEmpty()) {
+				String location = pathCategory;
+				logger.debug("folder location {}", location);
+				logger.debug("icon file name {}", dto.getIcon().getOriginalFilename());
+				Path path = Paths.get(location+dto.getIcon().getOriginalFilename());
 
-                logger.info("saving icon");
-                Icons icons = new Icons();
-                icons.setCreatedBy(username);
-                logger.debug("save file name to db {}", path.getFileName().toString());
-                icons.setIconName(path.getFileName().toString());
-                logger.debug("save path file to db {}", path.toAbsolutePath().toString());
-                icons.setUri(path.toAbsolutePath().toString());
-                _icon = iconRepository.save(icons);
+				logger.info("saving icon");
+				Icons icons = new Icons();
+				icons.setCreatedBy(username);
+				logger.debug("save file name to db {}", path.getFileName().toString());
+				icons.setIconName(path.getFileName().toString());
+				logger.debug("save path file to db {}", path.toAbsolutePath().toString());
+				icons.setUri(path.toAbsolutePath().toString());
+				_icon = iconRepository.save(icons);
 
-                // save image to folder
-                logger.info("saving icon to share folder");
-                _dto.setIcon(path.toAbsolutePath().toString());
-                FileUploadUtil.saveFile(location, dto.getIcon());
-            }
+				// save image to folder
+				logger.info("saving icon to share folder");
+				_dto.setIcon(path.toAbsolutePath().toString());
+				FileUploadUtil.saveFile(location, dto.getIcon());
+			}
 
-            logger.info("saving structure");
-            Structure structure = new Structure();
-            structure.setCreatedBy(username);
-            structure.setStructureName(dto.getName());
-            structure.setStructureDescription(dto.getDesc());
-            structure.setLevel(dto.getLevel());
-            structure.setSort(dto.getSort());
-            structure.setEdit(dto.getEdit());
-            structure.setUri(dto.getUri());
-            structure.setParentStructure(dto.getParent());
-            Structure _structure = structureRepository.save(structure);
+			logger.info("saving structure");
+			Structure structure = new Structure();
+			structure.setCreatedBy(username);
+			structure.setStructureName(dto.getName());
+			structure.setStructureDescription(dto.getDesc());
+			structure.setLevel(dto.getLevel());
+			structure.setSort(dto.getSort());
+			structure.setEdit(dto.getEdit());
+			structure.setUri(dto.getUri());
+			structure.setParentStructure(dto.getParent());
+			Structure _structure = structureRepository.save(structure);
 
-            if(_images != null) {
-                logger.info("saving structure image mapper");
-                StructureImages sim = new StructureImages();
-                sim.setCreatedBy(username);
-                sim.setStructure(_structure);
-                sim.setImages(_images);
-                structureImageRepository.save(sim);
-            }
+			if(_images != null) {
+				logger.info("saving structure image mapper");
+				StructureImages sim = new StructureImages();
+				sim.setCreatedBy(username);
+				sim.setStructure(_structure);
+				sim.setImages(_images);
+				structureImageRepository.save(sim);
+			}
 
-            if(_icon != null) {
-                logger.info("saving structure icon mapper");
-                StructureIcons sic = new StructureIcons();
-                sic.setCreatedBy(username);
-                sic.setStructure(_structure);
-                sic.setIcons(_icon);
-                structureIconRepository.save(sic);
-            }
-            _dto.setId(_structure.getId());
-            _dto.setEdit(_structure.getEdit());
-            _dto.setParent(_structure.getParentStructure());
-            _dto.setUri(_structure.getUri());
-            return _dto;
-        } catch (Exception e) {
-            logger.error("exception",e);
-            throw new Exception("exception",e);
-        }
-    }
+			if(_icon != null) {
+				logger.info("saving structure icon mapper");
+				StructureIcons sic = new StructureIcons();
+				sic.setCreatedBy(username);
+				sic.setStructure(_structure);
+				sic.setIcons(_icon);
+				structureIconRepository.save(sic);
+			}
 
-    /**
+			// get list parent of new structure
+			Long parentId = _structure.getParentStructure();
+			boolean parentStatus = Boolean.TRUE;
+			do  {
+				Optional<Structure> parentStructure = structureRepository.findById(parentId);
+				if(!parentStructure.isEmpty()) {
+					Structure _parent = parentStructure.get();
+					parentId = _parent.getParentStructure();
+					BreadcumbStructureDto bcDto = new BreadcumbStructureDto();
+					bcDto.setId(_parent.getId());
+					bcDto.setName(_parent.getStructureName());
+					bcDto.setLevel(_parent.getLevel());
+					_dto.getBreadcumbStructureDtoList().add(bcDto);
+					if(parentId == null)
+						parentStatus = Boolean.FALSE;
+					else if(parentId.longValue() == 0)
+						parentStatus = Boolean.FALSE;
+				} else {
+					parentStatus = Boolean.FALSE;
+				}
+			} while(parentStatus);
+
+			// sorting bread crumb
+			Collections.sort(_dto.getBreadcumbStructureDtoList(), new Comparator<BreadcumbStructureDto>() {
+				@Override
+				public int compare(BreadcumbStructureDto o1, BreadcumbStructureDto o2) {
+					return o1.getLevel().intValue() - o2.getLevel().intValue();
+				}
+			});
+
+			_dto.setId(_structure.getId());
+			_dto.setEdit(_structure.getEdit());
+			_dto.setParent(_structure.getParentStructure());
+			_dto.setUri(_structure.getUri());
+			return _dto;
+		} catch (DataNotFoundException e) {
+			logger.error("data not found",e);
+			throw new DataNotFoundException("data not found",e);
+		} catch (InvalidLevelException e) {
+			logger.error("invalid level exception",e);
+			throw new InvalidLevelException("invalid level exception",e);
+		} catch (Exception e) {
+			logger.error("exception",e);
+			throw new Exception("exception",e);
+		}
+	}
+
+	/**
 	 * save multi structure
 	 * @param username
 	 * @param dtoList
@@ -247,6 +304,7 @@ public class StructureServiceImp implements StructureService {
 	 * @throws Exception
 	 */
 	@Override
+	@Transactional
 	public List<StructureResponseDto> saveBatchStructures(String username, List<StructureWithFileDto> dtoList) throws Exception {
 		// looping save
 		try {
@@ -373,6 +431,7 @@ public class StructureServiceImp implements StructureService {
 	 * @throws Exception
 	 */
 	@Override
+	@Transactional
 	public StructureResponseDto update(String username, StructureWithFileDto dto) throws Exception {
 		try {
 			StructureResponseDto _dto = new StructureResponseDto();
@@ -394,8 +453,8 @@ public class StructureServiceImp implements StructureService {
 			*/
 			Long parentLevel = structure.getLevel();
 			if(dto.getLevel().longValue() <= parentLevel.longValue()) {
-                logger.info("level from request invalid, cause new level value {} < than from parent level {}", dto.getLevel(), parentLevel);
-                throw new InvalidLevelException("invalid new level "+dto.getId());
+				logger.info("level from request invalid, cause new level value {} < than from parent level {}", dto.getLevel(), parentLevel);
+				throw new InvalidLevelException("invalid new level "+dto.getId());
 			}
 
 			_dto.setName(dto.getName());
@@ -502,12 +561,12 @@ public class StructureServiceImp implements StructureService {
 			_dto.setUri(_structure.getUri());
 			return _dto;
 		} catch (DataNotFoundException e) {
-            logger.error("data not found",e);
-            throw new DataNotFoundException("data not found", e);
-        } catch (InvalidLevelException e) {
-            logger.error("invalid new level",e);
-            throw new InvalidLevelException("invalid new level", e);
-        } catch (Exception e) {
+			logger.error("data not found",e);
+			throw new DataNotFoundException("data not found", e);
+		} catch (InvalidLevelException e) {
+			logger.error("invalid new level",e);
+			throw new InvalidLevelException("invalid new level", e);
+		} catch (Exception e) {
 			logger.error("exception",e);
 			throw new Exception("exception",e);
 		}
@@ -521,6 +580,7 @@ public class StructureServiceImp implements StructureService {
 	 * @throws Exception
 	 */
 	@Override
+	@Transactional
 	public DeleteStructureDto delete(String username, DeleteStructureDto deleteStructureDto) throws Exception {
 		try {
 			// get structure first from structure id
