@@ -1,0 +1,23 @@
+:host ::ng-deep {
+  .right-preview {
+    position: relative;
+    width: 420px;
+    padding: 24px 15px;
+    border: 1px solid #EDEBE9;
+    background: rgba(0, 0, 0, 0.41);
+    background-color: #FAF9F8;
+
+    .top-bg {
+      position: absolute;
+      background-color: #106EBE;
+      height: 51px;
+      top: 0;
+      left: 0;
+      width: 100%;
+    }
+
+    .content {
+        background-color: white;
+    }
+  }
+}

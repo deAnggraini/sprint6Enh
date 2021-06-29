@@ -14,6 +14,7 @@ import { StrukturService } from '../../_services/stuktur.service';
 })
 export class AddComponent implements OnInit, OnDestroy {
   @ViewChild('formAddSection') formAddSection: TemplateRef<any>;
+  @ViewChild('formChangeParent') formChangeParent: TemplateRef<any>;
   defaultValue: StrukturDTO = {
     id: 0,
     name: '',
@@ -37,6 +38,10 @@ export class AddComponent implements OnInit, OnDestroy {
   iconFile: string;
   iconText: string;
   isEdit: boolean = false;
+
+  listToChangeParent: any[] = [];
+  listBrothers: any[] = [];
+  selectedDelete: any = { id: 0, title: '', name: '' };
 
   constructor(
     private menu: DynamicAsideMenuService,
@@ -91,9 +96,6 @@ export class AddComponent implements OnInit, OnDestroy {
     fd.append('level', this.dataForm.value.level.toString());
     fd.append('sort', String(this.categories.length + 1));
     fd.append('parent', "0");
-
-    fd.append('data', JSON.parse(this.dataForm.value)); // <--- yang ini kang jum
-    
     return fd;
   }
 
@@ -142,23 +144,64 @@ export class AddComponent implements OnInit, OnDestroy {
     this.open(false);
   }
 
+  private validationChangeParent() {
+    let result = false;
+    this.listToChangeParent.forEach(d => {
+      if (d.changeTo < 1) {
+        d.error = true;
+        result = true;
+      } else d.error = false;
+    })
+    return result;
+  }
+
+  saveChangeParent() {
+    if (!this.validationChangeParent()) {
+      const { id } = this.selected$.value;
+      this.strukturService.delete({ id, changeTo: this.listToChangeParent }).subscribe(resp => {
+        if (resp) {
+          this.menu.refreshStruktur();
+          this.modalService.dismissAll();
+        }
+      })
+    }
+  }
+
   deleteLevel1() {
     this.confirm.open({
       title: `Hapus Menu`,
-      message: `<p>Apakah Kamu yakin ingin menghapus menu “<b>${this.selected$.value.title}</b>”?</p><p>Seluruh kategori yang terdapat pada menu tersebut akan naik menjadi menu.</p>`,
+      message: `<p>Apakah Kamu yakin ingin menghapus menu “<b>${this.selected$.value.title}</b>”?`,
+      //</p><p>Seluruh kategori yang terdapat pada menu tersebut akan naik menjadi menu.</p>`,
       btnOkText: 'Hapus',
       btnCancelText: 'Batal'
     })
       .then((confirmed) => {
         if (confirmed === true) {
-          this.strukturService.delete({ id: this.selected$.value.id }).subscribe(resp => {
-            if (resp) {
-              this.menu.refreshStruktur(resp);
-              this.selected$.next({});
-            }
-          })
+          const { value } = this.selected$;
+          if (value.menus && value.menus.length) {
+            this.listToChangeParent = value.menus.map(d => {
+              return { id: d.id, title: d.title, changeTo: 0, error: false };
+            });
+            this.listBrothers = this.categories.filter(d => d.id != value.id).map(d => { return { id: d.id, title: d.title } });
+            this.selectedDelete = JSON.parse(JSON.stringify(value));
+            this.modalService.open(this.formChangeParent, { size: 'lg' });
+          } else {
+            this.strukturService.delete({ id: this.selected$.value.id, changeTo: [] }).subscribe(resp => {
+              if (resp) {
+                this.menu.refreshStruktur(resp);
+                this.selected$.next({});
+              }
+            })
+          }
         }
       });
+  }
+
+  changeComboboxParent(value, id) {
+    const found = this.listToChangeParent.find(d => d.id == id);
+    if (found) {
+      found.changeTo = parseInt(value);
+    }
   }
 
   private initForm() {
