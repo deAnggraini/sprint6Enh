@@ -17,7 +17,11 @@ public class Constant {
 		USER_PROFILE_NOT_FOUND(new String[] { "01", "User Profile Not Found" }),
 		MENU_PROFILE_SUCCESS(new String[] { "00", "Menu Success Load" }),
 		OK(new String[] { "00", "Response OK" }),
-		GENERAL_ERROR(new String[] { "01", "Undefined Error" });
+		GENERAL_ERROR(new String[] { "01", "Undefined Error" }),
+		REQUEST_PARAM_INVALID(new String[] { "01", "Request Param Invalid" }),
+		MAX_UPLOAD_EXCEEDED(new String[] { "01", "Exceeded file size" }),
+		DATA_NOT_FOUND(new String[] { "01", "Not found data" }),
+		INVALID_STRUCUTURE_LEVEL(new String[] { "01", "Level Structure Invalid" });;
 
 		// declaring private variable for getting values
 		private String action[];

@@ -4,32 +4,40 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.*;
 
+
 public class StructureDto {
     @JsonProperty("id")
-    private Long id;
+    protected Long id;
     @NotEmpty(message = "name is required")
     @Size(max = 50, message = "maximum length 50 characters")
-//    @Pattern(regexp = "[A-Za-z\\s]+$")
+    @Pattern(regexp = "[A-Za-z\\s]+$", message = "desc field must contain alpha numeric and space only")
     @JsonProperty("name")
-    private String name;
-//    @NotNull
-//    @Size(max = 200)
-//    @Pattern(regexp = "[A-Za-z\\s]+$")
+    protected String name;
+    @NotEmpty(message = "desc is required")
+    @Size(max = 200, message = "maximum length 200 characters")
+    @Pattern(regexp = "[A-Za-z\\s]+$", message = "desc field must contain alpha numeric and space only")
     @JsonProperty("desc")
-    private String description;
+    protected String desc;
 
-//    @NotNull
-//    @Min(1)
+    @NotNull(message = "sort is required")
+    @Min(value = 1, message = "minimum value is 1")
     @JsonProperty("sort")
-    private Long sort=1L;
+    protected Long sort=1L;
 
-//    @NotNull
-//    @Min(1)
+    @NotNull(message = "level is required")
+    @Min(value = 1, message = "minimum value is 1")
     @JsonProperty("level")
-    private Long level=1L;
-    @Min(0)
+    protected Long level=1L;
+
+    @NotNull(message = "parent param must exist in request")
+    @Min(value = 0, message = "minimum value is 0")
     @JsonProperty("parent")
-    private Long parent = 0L;
+    protected Long parent = 0L;
+
+    protected String uri;
+    protected Boolean edit;
+    protected String location;
+    protected String location_text;
 
     public Long getId() {
         return id;
@@ -47,12 +55,12 @@ public class StructureDto {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
+    public String getDesc() {
+        return desc;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 
     public Long getSort() {
@@ -79,4 +87,35 @@ public class StructureDto {
         this.parent = parent;
     }
 
+    public String getUri() {
+        return uri;
+    }
+
+    public void setUri(String uri) {
+        this.uri = uri;
+    }
+
+    public Boolean getEdit() {
+        return edit;
+    }
+
+    public void setEdit(Boolean edit) {
+        this.edit = edit;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getLocation_text() {
+        return location_text;
+    }
+
+    public void setLocation_text(String location_text) {
+        this.location_text = location_text;
+    }
 }

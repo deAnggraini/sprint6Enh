@@ -14,7 +14,7 @@ public class StructureImages extends EntityBase {
 	private Structure structure;
 	@ManyToOne
 	@JoinColumn(name = "image_id")
-	private Images imagesicons;
+	private Images images;
 	public Long getId() {
 		return id;
 	}
@@ -27,10 +27,12 @@ public class StructureImages extends EntityBase {
 	public void setStructure(Structure structure) {
 		this.structure = structure;
 	}
-	public Images getImagesicons() {
-		return imagesicons;
+
+	public Images getImages() {
+		return images;
 	}
-	public void setImagesicons(Images imagesicons) {
-		this.imagesicons = imagesicons;
+
+	public void setImages(Images images) {
+		this.images = images;
 	}
 }

@@ -41,7 +41,6 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	}
 
 	@Bean()
-//	@Primary
 	protected RemoteTokenServices remoteToken(){
 		RemoteTokenServices remoteTokenServices = new RemoteTokenServices();
 		remoteTokenServices.setCheckTokenEndpointUrl(checkTokenUri);

@@ -17,9 +17,12 @@ public class Structure extends EntityBase{
 	private Long sort;
 	@Column(name = "level")
 	private Long level;
-	@ManyToOne
-	@JoinColumn(name = "parent")
-	private Structure parentStructure;
+	@Column(name = "parent")
+	private Long parentStructure;
+	@Column(name = "edit")
+	private Boolean edit;
+	@Column(name = "uri")
+	private String uri;
 
 	public Long getId() {
 		return id;
@@ -61,11 +64,27 @@ public class Structure extends EntityBase{
 		this.level = level;
 	}
 
-	public Structure getParentStructure() {
+	public Long getParentStructure() {
 		return parentStructure;
 	}
 
-	public void setParentStructure(Structure parentStructure) {
+	public void setParentStructure(Long parentStructure) {
 		this.parentStructure = parentStructure;
+	}
+
+	public Boolean getEdit() {
+		return edit;
+	}
+
+	public void setEdit(Boolean edit) {
+		this.edit = edit;
+	}
+
+	public String getUri() {
+		return uri;
+	}
+
+	public void setUri(String uri) {
+		this.uri = uri;
 	}
 }
