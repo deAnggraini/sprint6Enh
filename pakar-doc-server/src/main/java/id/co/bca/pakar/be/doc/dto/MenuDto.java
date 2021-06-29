@@ -2,8 +2,8 @@ package id.co.bca.pakar.be.doc.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MenuDto {
 	@JsonProperty("id")
@@ -22,8 +22,8 @@ public class MenuDto {
 	private Long order = 1L;
 	@JsonProperty("edit")
 	private Boolean editStatus = Boolean.TRUE;
-//	@JsonProperty("menus")
-//	private Set<MenuDto> menuChilds = new HashSet<MenuDto>();
+	@JsonProperty("menus")
+	private List<MenuDto> menuChilds = new ArrayList<MenuDto>();
 	private Long parent = 0L;
 	private String code;
 
@@ -90,17 +90,16 @@ public class MenuDto {
 	public void setEditStatus(Boolean editStatus) {
 		this.editStatus = editStatus;
 	}
-	
-	
 
-//	public Set<MenuDto> getMenuChilds() {
-//		return menuChilds;
-//	}
-//
-//	public void setMenuChilds(Set<MenuDto> menuChilds) {
-//		this.menuChilds = menuChilds;
-//	}
-	
+
+	public List<MenuDto> getMenuChilds() {
+		return menuChilds;
+	}
+
+	public void setMenuChilds(List<MenuDto> menuChilds) {
+		this.menuChilds = menuChilds;
+	}
+
 	public String getCode() {
 		return code;
 	}
