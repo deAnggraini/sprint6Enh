@@ -2,8 +2,8 @@ package id.co.bca.pakar.be.oauth2.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MenuDto {
 	@JsonProperty("id")
@@ -14,8 +14,6 @@ public class MenuDto {
 	private String menuDescription;
 	@JsonProperty("icon")
 	private String iconUri;
-	@JsonProperty("image")
-	private String imageUri;
 	@JsonProperty("uri")
 	private String uri;
 	@JsonProperty("level")
@@ -25,7 +23,9 @@ public class MenuDto {
 	@JsonProperty("edit")
 	private Boolean editStatus = Boolean.TRUE;
 	@JsonProperty("menus")
-	private Set<MenuDto> menuChilds = new HashSet<MenuDto>();
+	private List<MenuDto> menuChilds = new ArrayList<MenuDto>();
+	@JsonProperty("parent")
+	private Long parent = 0L;
 
 	public Long getId() {
 		return id;
@@ -56,14 +56,6 @@ public class MenuDto {
 	}
 
 	public void setIconUri(String iconUri) {
-		this.iconUri = iconUri;
-	}
-
-	public String getImageUri() {
-		return iconUri;
-	}
-
-	public void setImageUri(String iconUri) {
 		this.iconUri = iconUri;
 	}
 
@@ -99,11 +91,36 @@ public class MenuDto {
 		this.editStatus = editStatus;
 	}
 
-	public Set<MenuDto> getMenuChilds() {
+
+	public List<MenuDto> getMenuChilds() {
 		return menuChilds;
 	}
 
-	public void setMenuChilds(Set<MenuDto> menuChilds) {
+	public void setMenuChilds(List<MenuDto> menuChilds) {
 		this.menuChilds = menuChilds;
+	}
+
+	public Long getParent() {
+		return parent;
+	}
+
+	public void setParent(Long parent) {
+		this.parent = parent;
+	}
+
+	@Override
+	public String toString() {
+		return "MenuDto{" +
+				"id=" + id +
+				", menuName='" + menuName + '\'' +
+				", menuDescription='" + menuDescription + '\'' +
+				", iconUri='" + iconUri + '\'' +
+				", uri='" + uri + '\'' +
+				", level=" + level +
+				", order=" + order +
+				", editStatus=" + editStatus +
+				", menuChilds=" + menuChilds +
+				", parent=" + parent +
+				'}';
 	}
 }
