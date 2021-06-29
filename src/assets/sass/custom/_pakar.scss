@@ -102,3 +102,76 @@ $bca-color-dark: #0F5EA9;
   }
 
 }
+
+.input-search {
+  padding-left: 25%;
+  padding-right: 25%;
+
+  .input-group {
+    background-color: white;
+    border: 1px solid #C8C6C4;
+    border-radius: 20px;
+    padding-left: 15px;
+    overflow: hidden;
+
+    .form-control-clear.btn-clean {
+      background-color: transparent;
+      border-color: transparent;
+    }
+
+    input {
+      border: none;
+    }
+
+    .btn {
+      border-color: transparent;
+      background: white;
+      border-radius: 0;
+
+      .fa {
+        color: #0F5EA9;
+      }
+    }
+
+    .input-separator {
+      margin-top: 0.7rem;
+      margin-bottom: 0.7rem;
+      width: 1px;
+      background-color: #C8C6C4;
+    }
+
+    .btn:hover {
+      background-color: #C8C6C4;
+      border-color: #C8C6C4;
+
+      .fa {
+        color: #C8C6C4;
+      }
+    }
+
+    .btn-clean:hover {
+      background-color: transparent;
+      border-color: transparent;
+    }
+  }
+}
+
+.back-panel {
+
+  a,
+  .fa,
+  .far,
+  .fas {
+    color: white;
+  }
+
+  a:hover {
+    color: #0078D4;
+
+    .fa,
+    .far,
+    .fas {
+      color: #0078D4;
+    }
+  }
+}

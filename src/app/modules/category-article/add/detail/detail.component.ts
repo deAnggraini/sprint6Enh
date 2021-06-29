@@ -4,8 +4,9 @@ import { ConfirmService } from 'src/app/utils/_services/confirm.service';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { StrukturDTO } from 'src/app/modules/_model/struktur.dto';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { StrukturService } from 'src/app/modules/_services/stuktur.service';
+import { StrukturService } from 'src/app/modules/_services/struktur.service';
 import { DynamicAsideMenuService } from 'src/app/_metronic/core';
+import { ToastService } from 'src/app/utils/_services/toast.service';
 
 declare var $: any;
 
@@ -67,7 +68,8 @@ export class DetailComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private modalService: NgbModal,
     private config: NgbModalConfig,
-    private fb: FormBuilder) {
+    private fb: FormBuilder,
+    private toast: ToastService) {
     this.config.backdrop = 'static';
     this.config.keyboard = false;
   }
@@ -154,6 +156,7 @@ export class DetailComponent implements OnInit, OnDestroy {
         if (resp) {
           this.menu.refreshStruktur();
           this.modalService.dismissAll();
+          this.toast.showSuccess('Simpan Data Berhasil');
         }
       });
     }
@@ -181,6 +184,7 @@ export class DetailComponent implements OnInit, OnDestroy {
     }
     this.strukturService.updateSection(params).subscribe(resp => {
       if (resp) {
+        this.toast.showSuccess('Simpan Data Berhasil');
         this.moved = false;
         this.menu.refreshStruktur();
       }
@@ -233,6 +237,7 @@ export class DetailComponent implements OnInit, OnDestroy {
           } else {
             this.strukturService.delete({ id: node.id, changeTo: [] }).subscribe(resp => {
               if (resp) {
+                this.toast.showSuccess('Hapus Data Berhasil');
                 this.menu.refreshStruktur();
               }
             })
@@ -248,6 +253,7 @@ export class DetailComponent implements OnInit, OnDestroy {
         if (resp) {
           this.menu.refreshStruktur();
           this.modalService.dismissAll();
+          this.toast.showSuccess('Hapus Data Berhasil');
         }
       })
     }

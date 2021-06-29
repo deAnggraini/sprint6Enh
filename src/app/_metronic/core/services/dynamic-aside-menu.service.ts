@@ -4,6 +4,7 @@ import { DynamicAsideMenuConfig } from '../../configs/dynamic-aside-menu.config'
 import { ApiService } from 'src/app/utils/_services/api-service.service';
 import { environment } from 'src/environments/environment';
 import { AuthService, UserModel } from 'src/app/modules/auth';
+import { StrukturService } from 'src/app/modules/_services/struktur.service';
 
 interface Menu {
   id?: number,
@@ -41,13 +42,23 @@ export class DynamicAsideMenuService {
 
   constructor(
     private apiService: ApiService,
-    private auth: AuthService
+    private auth: AuthService,
+    private strukturService: StrukturService,
   ) {
     this.auth.currentUserSubject.asObservable().subscribe((user) => {
       this.login = user;
     });
     this.menuConfig$ = this.menuConfigSubject.asObservable();
     // this.categories$ = this.categoriesObject.asObservable();
+
+    this.strukturService.categories$.subscribe(
+      (_articles: any[]) => {
+        _articles.map(d => d.showLess = true);
+        this.categories = JSON.parse(JSON.stringify(_articles));
+        this.categories$.next(this.categories);
+        this.loadMenu(this.parseToMenu(_articles));
+      });
+
     this.populateCategoryArticle();
     this.populateMenus();
   }
@@ -112,20 +123,12 @@ export class DynamicAsideMenuService {
     return items;
   }
 
-  private populateMenus(){
+  private populateMenus() {
     // codeing disini
   }
 
   private populateCategoryArticle() {
-    this.apiService.get(`${this._base_url}/category`)
-      .subscribe(
-        (_articles: any[]) => {
-          _articles.map(d => d.showLess = true);
-          this.categories = JSON.parse(JSON.stringify(_articles));
-          this.categories$.next(this.categories);
-          this.loadMenu(this.parseToMenu(_articles));
-        }
-      );
+    this.strukturService.list();
   }
 
   private menuByRoles() {

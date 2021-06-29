@@ -57,7 +57,7 @@ export class ApiService {
       }),
       catchError((err) => {
         console.error('ApiService', err);
-        setTimeout(() => this.toast.showDanger('Call API error'), 0);
+        setTimeout(() => this.toast.showDanger(err.message), 0);
         throw err.message;
         return of(undefined);
       }),

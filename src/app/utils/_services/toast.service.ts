@@ -1,4 +1,5 @@
 import { Injectable, TemplateRef } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -6,11 +7,13 @@ import { Injectable, TemplateRef } from '@angular/core';
 export class ToastService {
 
   toasts: any[] = [];
+  toasts$: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
 
   constructor() { }
 
   show(textOrTpl: string | TemplateRef<any>, options: any = {}) {
     this.toasts.push({ textOrTpl, ...options });
+    this.toasts$.next(this.toasts);
   }
 
   remove(toast) {

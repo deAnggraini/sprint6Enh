@@ -1,0 +1,38 @@
+:host ::ng-deep .nav {
+  .nav-item {
+    .nav-link {
+      color: white;
+      padding: 0.75rem 1rem;
+
+      &.active {
+        font-weight: 600;
+
+        .nav-text {
+          font-weight: 700;
+        }
+      }
+
+      &:hover {
+
+        // color: red;
+        .nav-text {
+          color: #1995D1;
+        }
+      }
+
+      .nav-text {
+        color: white;
+      }
+    }
+
+    &.nav-separator {
+      .nav-link {
+        padding: 0.75rem 0;
+      }
+
+      &:last-of-type {
+        display: none;
+      }
+    }
+  }
+}

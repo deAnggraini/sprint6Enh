@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { StrukturService } from './stuktur.service';
+import { StrukturService } from './struktur.service';
 
 describe('StrukturService', () => {
   let service: StrukturService;
