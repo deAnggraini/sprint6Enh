@@ -22,4 +22,14 @@ public interface MenuRepository extends CrudRepository<Menu, String> {
                     "select id, created_by, created_date, deleted, modify_by, modify_date, menu_name, menu_description, level, order, parent_menu from r_menu",
             nativeQuery = true)
     List<Menu> getAllMenu();
+
+    @Query(
+            value ="SELECT * FROM r_menu m WHERE m.nav = 'top' AND m.deleted IS FALSE",
+            nativeQuery = true)
+    List<Menu> getAllTopMenu();
+
+    @Query(
+            value ="SELECT * FROM r_menu m WHERE m.nav = 'bottom' AND m.deleted IS FALSE",
+            nativeQuery = true)
+    List<Menu> getAllBottomMenu();
 }
