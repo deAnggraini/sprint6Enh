@@ -138,14 +138,15 @@ public class StructureController extends BaseController {
 	 * get all structure
 	 * @return
 	 */
-	@GetMapping
-	public ResponseEntity<RestResponse<List<StructureResponseDto>>> getCategories() {
+	@GetMapping("/api/doc/category")
+	public ResponseEntity<RestResponse<List<MenuDto>>> getCategories() {
 		logger.info("get all structure/category");
 		try {
-			return createResponse(new ArrayList<StructureResponseDto>(),Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
+			List<MenuDto> menus = structureService.getCategories();
+			return createResponse(menus,Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
 		} catch (Exception e) {
 			logger.error("exception", e);
-			return createResponse(new ArrayList<StructureResponseDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
+			return createResponse(new ArrayList<MenuDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
 		}
 	}
 
