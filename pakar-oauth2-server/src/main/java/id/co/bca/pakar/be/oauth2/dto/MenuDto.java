@@ -14,6 +14,8 @@ public class MenuDto {
 	private String menuDescription;
 	@JsonProperty("icon")
 	private String iconUri;
+	@JsonProperty("image")
+	private String imageUri;
 	@JsonProperty("uri")
 	private String uri;
 	@JsonProperty("level")
@@ -54,6 +56,14 @@ public class MenuDto {
 	}
 
 	public void setIconUri(String iconUri) {
+		this.iconUri = iconUri;
+	}
+
+	public String getImageUri() {
+		return iconUri;
+	}
+
+	public void setImageUri(String iconUri) {
 		this.iconUri = iconUri;
 	}
 
