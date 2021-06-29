@@ -13,8 +13,8 @@ public class UploadFileValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        UploadFileDto dto = (UploadFileDto)target;
-        if(dto.getName().length() < 3)
-            errors.rejectValue("name", "length name minimum 3 characters");
+//        UploadFileDto dto = (UploadFileDto)target;
+//        if(dto.getName().length() < 3)
+//            errors.rejectValue("name", "length name minimum 3 characters");
     }
 }

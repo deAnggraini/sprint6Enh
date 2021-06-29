@@ -31,8 +31,8 @@ public class UploadServiceImpl implements UploadService {
     @Autowired
     private Environment env;
 
-    @Value("${spring.file.upload-dir}")
-    private String url;
+//    @Value("${spring.file.upload-dir}")
+//    private String url;
 
     @Autowired
     ThemeImageRepository themeImageRepository;
