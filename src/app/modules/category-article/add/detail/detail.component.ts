@@ -165,6 +165,8 @@ export class DetailComponent implements OnInit, OnDestroy {
       dataList.forEach(d => {
         const _clone = JSON.parse(JSON.stringify(d));
         delete _clone.menus;
+        delete _clone._text;
+        delete _clone._value;
         result.push(_clone);
         result = result.concat(this.convertTreeToArray(d.menus));
       })
@@ -179,6 +181,7 @@ export class DetailComponent implements OnInit, OnDestroy {
     }
     this.strukturService.updateSection(params).subscribe(resp => {
       if (resp) {
+        this.moved = false;
         this.menu.refreshStruktur();
       }
     });

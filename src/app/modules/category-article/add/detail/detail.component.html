@@ -8,7 +8,7 @@
     </div>
 </div>
 <div id="struktur-tree" class="tree-demo" style="width: 420px;"></div>
-<div *ngIf="section.id" style="
+<div *ngIf="section.id && moved" style="
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -97,7 +97,7 @@
                 {{txtLevelChildName}} yang terdapat pada {{txtLevelName}} tersebut.</div>
             <div class="form-group row" *ngFor="let change of listToChangeParent">
                 <label class="col-4 col-form-label">{{change.title}} - {{change.error}}</label>
-                <select class="form-control col-8" required [ngClass]="{ 'is-invalid': change.error}" #mySelect (change)="changeComboboxParent(mySelect.value, change.id)">
+                <select class="form-control col-7" required [ngClass]="{ 'is-invalid': change.error}" #mySelect (change)="changeComboboxParent(mySelect.value, change.id)">
                     <option value="0">-- Pilih Salah Satu --</option>
                     <option *ngFor="let bro of listBrothers" [value]="bro.id">{{bro.title}}</option>
                 </select>
