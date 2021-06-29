@@ -12,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -53,6 +50,12 @@ public class StructureController extends BaseController {
 			logger.info("size image "+structure.getImage().getSize());
 			StructureResponseDto responseDto = structureService.add(username, structure);
 			return createResponse(responseDto, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
+		} catch (DataNotFoundException e) {
+			logger.error("exception", e);
+			return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.DATA_NOT_FOUND.getAction()[0], Constant.ApiResponseCode.DATA_NOT_FOUND.getAction()[1]);
+		} catch (InvalidLevelException e) {
+			logger.error("exception", e);
+			return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.INVALID_STRUCUTURE_LEVEL.getAction()[0], Constant.ApiResponseCode.INVALID_STRUCUTURE_LEVEL.getAction()[1]);
 		} catch (Exception e) {
 			logger.error("exception", e);
 			return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
@@ -125,6 +128,21 @@ public class StructureController extends BaseController {
 			}
 			List<StructureResponseDto> response = structureService.saveBatchStructures(username, structures.getStructureWithFileDtoList());
 			return createResponse(response, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
+		} catch (Exception e) {
+			logger.error("exception", e);
+			return createResponse(new ArrayList<StructureResponseDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
+		}
+	}
+
+	/**
+	 * get all structure
+	 * @return
+	 */
+	@GetMapping
+	public ResponseEntity<RestResponse<List<StructureResponseDto>>> getCategories() {
+		logger.info("get all structure/category");
+		try {
+			return createResponse(new ArrayList<StructureResponseDto>(),Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
 		} catch (Exception e) {
 			logger.error("exception", e);
 			return createResponse(new ArrayList<StructureResponseDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
