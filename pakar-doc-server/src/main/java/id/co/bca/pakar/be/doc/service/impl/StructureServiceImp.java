@@ -1,9 +1,7 @@
 package id.co.bca.pakar.be.doc.service.impl;
 
 import id.co.bca.pakar.be.doc.dao.*;
-import id.co.bca.pakar.be.doc.dto.StructureDto;
-import id.co.bca.pakar.be.doc.dto.StructureResponseDto;
-import id.co.bca.pakar.be.doc.dto.StructureWithFileDto;
+import id.co.bca.pakar.be.doc.dto.*;
 import id.co.bca.pakar.be.doc.exception.DataNotFoundException;
 import id.co.bca.pakar.be.doc.exception.InvalidLevelException;
 import id.co.bca.pakar.be.doc.model.*;
@@ -141,6 +139,13 @@ public class StructureServiceImp implements StructureService {
 		}
 	}
 
+	/**
+	 * add new structure
+	 * @param username
+	 * @param dto
+	 * @return
+	 * @throws Exception
+	 */
     @Override
     public StructureResponseDto add(String username, StructureWithFileDto dto) throws Exception {
         try {
@@ -234,94 +239,130 @@ public class StructureServiceImp implements StructureService {
         }
     }
 
-    // sekali pengiriman multi structure
+    /**
+	 * save multi structure
+	 * @param username
+	 * @param dtoList
+	 * @return
+	 * @throws Exception
+	 */
 	@Override
-	public List<StructureDto> add(String username, List<StructureWithFileDto> dtoList) throws Exception {
+	public List<StructureResponseDto> saveBatchStructures(String username, List<StructureWithFileDto> dtoList) throws Exception {
 		// looping save
-		List<StructureDto> newStructureList = new ArrayList<StructureDto>();
-		for(StructureWithFileDto structureDto : dtoList) {
-			try {
-				logger.info("add category");
-				StructureDto _dto = new StructureDto();
+		try {
+			List<StructureResponseDto> newStructureList = new ArrayList<StructureResponseDto>();
+			for(StructureWithFileDto structureDto : dtoList) {
+				try {
+					logger.info("add category");
+					StructureResponseDto _dto = new StructureResponseDto();
+					logger.info("get structure id {} from database", structureDto.getId());
+					Optional<Structure> structureOp = structureRepository.findById(structureDto.getId());
+					logger.debug("structure result from db {}", structureOp);
+					if (structureOp.isEmpty()) {
+						logger.info("not found structure with id {}", structureDto.getId());
+						throw new DataNotFoundException("not found data with structure id " + structureDto.getId());
+					}
+					logger.debug("extract structure from optional");
+					Structure structure = structureOp.get();
 
-				_dto.setName(structureDto.getName());
-				_dto.setDesc(structureDto.getDesc());
-				Images _images = null;
-				if(!structureDto.getImage().isEmpty()) {
-					String location = pathCategory;
-					logger.debug("folder location {}", location);
-					logger.debug("image file name {}", structureDto.getImage().getOriginalFilename());
+					_dto.setName(structureDto.getName());
+					_dto.setDesc(structureDto.getDesc());
+					Images _images = null;
+					if (!structureDto.getImage().isEmpty()) {
+						String location = pathCategory;
+						logger.debug("folder location {}", location);
+						logger.debug("image file name {}", structureDto.getImage().getOriginalFilename());
 
-					Path path = Paths.get(location+structureDto.getImage().getOriginalFilename());
+						Path path = Paths.get(location + structureDto.getImage().getOriginalFilename());
 
-					logger.info("saving image");
-					Images images = new Images();
-					images.setCreatedBy(username);
-					logger.debug("save file name to db {}", path.getFileName().toString());
-					images.setImageName(path.getFileName().toString());
-					logger.debug("save path file to db {}", path.toAbsolutePath().toString());
-					images.setUri(path.toAbsolutePath().toString());
-					_images = imageRepository.save(images);
+						logger.info("saving image");
+						Images images = new Images();
+						images.setCreatedBy(username);
+						logger.debug("save file name to db {}", path.getFileName().toString());
+						images.setImageName(path.getFileName().toString());
+						logger.debug("save path file to db {}", path.toAbsolutePath().toString());
+						images.setUri(path.toAbsolutePath().toString());
+						_images = imageRepository.save(images);
 
-					// save image to folder
-					logger.info("saving image to share folder");
-					FileUploadUtil.saveFile(location, structureDto.getImage());
+						// save image to folder
+						logger.info("saving image to share folder");
+						FileUploadUtil.saveFile(location, structureDto.getImage());
+					}
+
+					Icons _icon = null;
+					if (!structureDto.getIcon().isEmpty()) {
+						String location = pathCategory;
+						logger.debug("folder location {}", location);
+						logger.debug("icon file name {}", structureDto.getIcon().getOriginalFilename());
+						Path path = Paths.get(location + structureDto.getIcon().getOriginalFilename());
+
+						logger.info("saving icon");
+						Icons icons = new Icons();
+						icons.setCreatedBy(username);
+						logger.debug("save file name to db {}", path.getFileName().toString());
+						icons.setIconName(path.getFileName().toString());
+						logger.debug("save path file to db {}", path.toAbsolutePath().toString());
+						icons.setUri(path.toAbsolutePath().toString());
+						_icon = iconRepository.save(icons);
+
+						// save image to folder
+						logger.info("saving icon to share folder");
+						FileUploadUtil.saveFile(location, structureDto.getIcon());
+					}
+
+					logger.info("saving structure");
+					if (structure == null) {
+						// save to new structure
+						structure.setCreatedBy(username);
+						structure.setStructureName(structureDto.getName());
+						structure.setStructureDescription(structureDto.getDesc());
+						structure.setLevel(structureDto.getLevel());
+						structure.setSort(structureDto.getSort());
+						structure.setEdit(structureDto.getEdit());
+						structure.setUri(structureDto.getUri());
+						structure.setParentStructure(structureDto.getParent());
+					} else {
+						// update new structure
+						structure.setModifyBy(username);
+						structure.setModifyDate(new Date());
+						structure.setStructureName(structureDto.getName());
+						structure.setStructureDescription(structureDto.getDesc());
+						structure.setLevel(structureDto.getLevel());
+						structure.setSort(structureDto.getSort());
+						structure.setEdit(structureDto.getEdit());
+						structure.setUri(structureDto.getUri());
+						structure.setParentStructure(structureDto.getParent());
+					}
+					Structure _structure = structureRepository.save(structure);
+
+					if(_images != null) {
+						logger.info("saving structure image mapper");
+						StructureImages sim = new StructureImages();
+						sim.setCreatedBy(username);
+						sim.setStructure(_structure);
+						sim.setImages(_images);
+						structureImageRepository.save(sim);
+					}
+
+					if(_icon != null) {
+						logger.info("saving structure icon mapper");
+						StructureIcons sic = new StructureIcons();
+						sic.setCreatedBy(username);
+						sic.setStructure(_structure);
+						sic.setIcons(_icon);
+						structureIconRepository.save(sic);
+					}
+					_dto.setId(_structure.getId());
+					newStructureList.add(_dto);
+				} catch (Exception e) {
+
 				}
-
-				Icons _icon = null;
-				if(!structureDto.getIcon().isEmpty()) {
-					String location = pathCategory;
-					logger.debug("folder location {}", location);
-					logger.debug("icon file name {}", structureDto.getIcon().getOriginalFilename());
-					Path path = Paths.get(location+structureDto.getIcon().getOriginalFilename());
-
-					logger.info("saving icon");
-					Icons icons = new Icons();
-					icons.setCreatedBy(username);
-					logger.debug("save file name to db {}", path.getFileName().toString());
-					icons.setIconName(path.getFileName().toString());
-					logger.debug("save path file to db {}", path.toAbsolutePath().toString());
-					icons.setUri(path.toAbsolutePath().toString());
-					_icon = iconRepository.save(icons);
-
-					// save image to folder
-					logger.info("saving icon to share folder");
-					FileUploadUtil.saveFile(location, structureDto.getIcon());
-				}
-
-				logger.info("saving structure");
-				Structure structure = new Structure();
-				structure.setCreatedBy(username);
-				structure.setStructureName(structureDto.getName());
-				structure.setStructureDescription(structureDto.getDesc());
-				structure.setLevel(structure.getLevel());
-				structure.setSort(structure.getSort());
-				Structure _structure = structureRepository.save(structure);
-
-				if(_images != null) {
-					logger.info("saving structure image mapper");
-					StructureImages sim = new StructureImages();
-					sim.setCreatedBy(username);
-					sim.setStructure(_structure);
-					sim.setImages(_images);
-					structureImageRepository.save(sim);
-				}
-
-				if(_icon != null) {
-					logger.info("saving structure icon mapper");
-					StructureIcons sic = new StructureIcons();
-					sic.setCreatedBy(username);
-					sic.setStructure(_structure);
-					sic.setIcons(_icon);
-					structureIconRepository.save(sic);
-				}
-				_dto.setId(_structure.getId());
-				newStructureList.add(_dto);
-			} catch (Exception e) {
-
 			}
+			return newStructureList;
+		} catch (Exception e) {
+			logger.error("exception", e);
+			return new ArrayList<StructureResponseDto>();
 		}
-		return newStructureList;
 	}
 
 	/**
@@ -349,7 +390,7 @@ public class StructureServiceImp implements StructureService {
 			Structure structure = structureOp.get();
 
 			/*
-			validate parent with level
+			validate parent with level, if request level <
 			*/
 			Long parentLevel = structure.getLevel();
 			if(dto.getLevel().longValue() <= parentLevel.longValue()) {
@@ -472,8 +513,60 @@ public class StructureServiceImp implements StructureService {
 		}
 	}
 
+	/**
+	 *
+	 * @param username
+	 * @param deleteStructureDto
+	 * @return
+	 * @throws Exception
+	 */
 	@Override
-	public StructureDto delete(Long structureId) throws Exception {
-		return null;
+	public DeleteStructureDto delete(String username, DeleteStructureDto deleteStructureDto) throws Exception {
+		try {
+			// get structure first from structure id
+			Optional<Structure> deletedEntity = structureRepository.findById(deleteStructureDto.getStructureId());
+			if(deletedEntity.isEmpty()) {
+				logger.info("not found data");
+				throw new DataNotFoundException("data not found");
+			}
+			Structure _deletedEntity = deletedEntity.get();
+			// delete structure icon first
+			StructureIcons sic = structureIconRepository.findByStructureId(deleteStructureDto.getStructureId());
+			if(sic != null) {
+				logger.info("remove structure icon with id {}", sic.getId());
+				structureIconRepository.deleteById(sic.getId());
+			}
+
+			// delete structure icon first
+			StructureImages sim = structureImageRepository.findByStructureId(deleteStructureDto.getStructureId());
+			if(sim != null) {
+				logger.info("remove structure image with id {}", sim.getId());
+				structureImageRepository.deleteById(sim.getId());
+			}
+
+			// delete structure
+			structureRepository.delete(_deletedEntity);
+
+			// move child structures, to other structures
+			for(ChangeToStructureDto changeTo : deleteStructureDto.getChangeTo()) {
+				Optional<Structure> movedEntity = structureRepository.findById(changeTo.getStructureId());
+				if(!movedEntity.isEmpty()) {
+					logger.info("move structure id {} to parent structure {}", changeTo.getStructureId(), changeTo.getChangeTo());
+					Structure _movedEntity = movedEntity.get();
+					_movedEntity.setModifyBy(username);
+					_movedEntity.setModifyDate(new Date());
+					_movedEntity.setParentStructure(changeTo.getChangeTo());
+					_movedEntity = structureRepository.save(_movedEntity);
+				}
+			}
+
+			return deleteStructureDto;
+		} catch (DataNotFoundException e) {
+			logger.error("exception", e);
+			throw new DataNotFoundException("data not found", e);
+		} catch (Exception e) {
+			logger.error("exception", e);
+			throw new Exception("failed delete structures", e);
+		}
 	}
 }
