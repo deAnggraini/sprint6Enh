@@ -225,58 +225,67 @@ function calculateLevel(list = [], level = 1) {
 router.post('/deleteStructure', (req, res) => {
     const { id, changeTo } = req.body;
     console.log({ id, changeTo });
-    let notDelete = [], brothers = [];
+    // let notDelete = [], brothers = [];
 
     const found = findNode(categoryArticle, id, []);
-    if (found.level == 1) {
-        brothers = categoryArticle;
-        notDelete = brothers.filter(d => d.id != id);
-    } else {
-        // const parent = findParent(categoryArticle, found.parent);
-        // brothers = parent.menus;
-        // notDelete = brothers.filter(d => d.id != id);
+    // if (found.level == 1) {
+    //     brothers = categoryArticle;
+    //     notDelete = brothers.filter(d => d.id != id);
+    // } else {
+    // const parent = findParent(categoryArticle, found.parent);
+    // brothers = parent.menus;
+    // notDelete = brothers.filter(d => d.id != id);
 
-        // cara baru dengan field changeTo
-        if (changeTo.length) {
-            changeTo.forEach(d => {
-                const { id, changeTo } = d;
-                const found = findNode(categoryArticle, id, []);
-                const parent = findNode(categoryArticle, changeTo, []);
-                if (!parent.hasOwnProperty('menus')) {
-                    parent.menus = [];
-                }
+    // cara baru dengan field changeTo
+    if (changeTo.length) {
+        changeTo.forEach(d => {
+            const { id, changeTo } = d;
+            const found = findNode(categoryArticle, id, []);
+            const parent = findNode(categoryArticle, changeTo, []) || { id: 0, level: 0, menus: [] };
+            if (!parent.hasOwnProperty('menus')) {
+                parent.menus = [];
+            }
 
-                found.parent = parent.id;
-                found.level = parent.level + 1;
-                found.sort = parent.menus.length + 1;
-                parent.menus.push(found);
-            });
-        }
-        const parent = findParent(categoryArticle, found.parent);
-        parent.menus = parent.menus.filter(d => d.id != id);
-        res.send({ error: false, msg: "", data: categoryArticle });
-        return;
-    }
-
-    if (found.menus && found.menus.length) {
-        let sort = notDelete.length;
-        found.menus.forEach(d => {
-            d.level = found.level;
-            d.sort = sort++;
-            notDelete.push(d);
+            found.parent = parent.id;
+            found.level = parent.level + 1;
+            found.sort = parent.menus.length + 1;
+            parent.menus.push(found);
         });
     }
-
-    while (brothers.length) {
-        brothers.pop();
+    if (found.level > 1) {
+        const parent = findParent(categoryArticle, found.parent);
+        parent.menus = parent.menus.filter(d => d.id != id);
+    } else {
+        const notDelete = categoryArticle.filter(d => d.id != id);
+        while (categoryArticle.length) {
+            categoryArticle.pop();
+        }
+        notDelete.map(d => {
+            categoryArticle.push(d);
+        });
     }
-    notDelete.map(d => {
-        brothers.push(d);
-    });
-
-    calculateLevel(categoryArticle);
-
     res.send({ error: false, msg: "", data: categoryArticle });
+    // }
+
+    // if (found.menus && found.menus.length) {
+    //     let sort = notDelete.length;
+    //     found.menus.forEach(d => {
+    //         d.level = found.level;
+    //         d.sort = sort++;
+    //         notDelete.push(d);
+    //     });
+    // }
+
+    // while (brothers.length) {
+    //     brothers.pop();
+    // }
+    // notDelete.map(d => {
+    //     brothers.push(d);
+    // });
+
+    // calculateLevel(categoryArticle);
+
+    // res.send({ error: false, msg: "", data: categoryArticle });
 });
 
 router.post('/saveBatchStructure', (req, res) => {
