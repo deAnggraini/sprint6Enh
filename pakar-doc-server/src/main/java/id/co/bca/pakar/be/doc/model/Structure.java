@@ -23,6 +23,10 @@ public class Structure extends EntityBase{
 	private Boolean edit;
 	@Column(name = "uri")
 	private String uri;
+	@Column(name = "location")
+	private String location;
+	@Column(name = "location_text")
+	private String location_text;
 
 	public Long getId() {
 		return id;
@@ -86,5 +90,21 @@ public class Structure extends EntityBase{
 
 	public void setUri(String uri) {
 		this.uri = uri;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	public String getLocation_text() {
+		return location_text;
+	}
+
+	public void setLocation_text(String location_text) {
+		this.location_text = location_text;
 	}
 }
