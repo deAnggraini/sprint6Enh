@@ -24,7 +24,17 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQL10Dialect
     properties:
       hibernate:
-        dialect:org.hibernate.dialect.PostgreSQL10Dialect  
+        dialect:org.hibernate.dialect.PostgreSQL10Dialect
+  # Enable multipart uploads
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 2KB
+      max-file-size: 2MB
+      max-request-size: 10MB
+  multipart:
+    max-size: 2000000
+    file-type: image/png,image/jpg,image/jpeg
 ---
 spring:
   profiles: dev-local      
