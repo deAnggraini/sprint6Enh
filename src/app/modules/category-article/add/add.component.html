@@ -69,9 +69,6 @@
             </div>
             <div class="form-group">
                 <label>Icon Menu <span class="text-danger">*</span></label>
-                <!-- formControlName="icon" -->
-                <!-- <input class="form-control" type="file" placeholder="Pilih Gambar" required autocomplete="off"
-                    [ngClass]="{ 'is-invalid': hasError }" (change)="onImageChange($event, 'icon')" accept="image/*"> -->
                 <div class="custom-file">
                     <input type="file" class="custom-file-input" id="inputGroupFile04"
                         [ngClass]="{ 'is-invalid': hasError }" (change)="onImageChange($event, 'icon')"
@@ -87,9 +84,6 @@
             </div>
             <div class="form-group">
                 <label>Gambar Menu <span class="text-danger">*</span></label>
-                <!-- formControlName="image" -->
-                <!-- <input class="form-control" type="file" placeholder="Pilih Gambar" required autocomplete="off"
-                    [ngClass]="{ 'is-invalid': hasError}" (change)="onImageChange($event, 'image')" accept="image/*"> -->
                 <div class="custom-file">
                     <input type="file" class="custom-file-input" id="inputGroupFile04"
                         [ngClass]="{ 'is-invalid': hasError }" (change)="onImageChange($event, 'image')"
@@ -117,6 +111,32 @@
         <button type="button" class="btn btn-outline-light btn-sm rounded-lg px-5" (click)="c('Batal')">Batal</button>
         <button type="button" class="btn btn-sm btn-blue rounded-lg px-5" (click)="save()"
             [disabled]="dataForm.invalid">{{isEdit ? 'Ubah' : 'Tambah'}}</button>
+    </div>
+</ng-template>
+
+<ng-template #formChangeParent let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Pindah Menu</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <i aria-hidden="true">&times;</i>
+        </button>
+    </div>
+    <div class="modal-body pt-0">
+        <form class="form" [formGroup]="dataForm" novalidate="novalidate" (ngSubmit)="save()">
+            <div>Sebelum Kamu dapat menghapus menu <b>"{{selectedDelete.title}}"</b>, Kamu harus memindahkan terlebih dahulu
+                kategori yang terdapat pada menu tersebut.</div>
+            <div class="form-group row" *ngFor="let change of listToChangeParent">
+                <label class="col-4 col-form-label">{{change.title}}</label>
+                <select class="form-control col-7" required [ngClass]="{ 'is-invalid': change.error}" #mySelect (change)="changeComboboxParent(mySelect.value, change.id)">
+                    <option value="0">-- Pilih Salah Satu --</option>
+                    <option *ngFor="let bro of listBrothers" [value]="bro.id">{{bro.title}}</option>
+                </select>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-light btn-sm rounded-lg px-5" (click)="c('Batal')">Batal</button>
+        <button type="button" class="btn btn-sm btn-blue rounded-lg px-5" (click)="saveChangeParent()">Simpan</button>
     </div>
 </ng-template>
 

@@ -194,15 +194,21 @@ export class DetailComponent implements OnInit, OnDestroy {
   }
 
   findBrother(node) {
-    let { parent } = node;
+    let { parent, level, id } = node;
     parent = parseInt(parent);
-    if (parent) {
-      const parent_node = this.findNode(parent);
-      const { menus } = parent_node;
-      const brothers = menus.filter(d => d.id != node.id);
-      return brothers.map(d => { return { id: d.id, title: d.title } });
-    }
-    return [];
+    // if (parent) {
+    //   const parent_node = this.findNode(parent);
+    //   const { menus } = parent_node;
+    //   const brothers = menus.filter(d => d.id != node.id);
+    //   return brothers.map(d => { return { id: d.id, title: d.title } });
+    // }
+    const result = [];
+    this.locations.forEach(d => {
+      if (d.level <= level && d.id != id) {
+        result.push({ id: d.id, title: d._text });
+      }
+    });
+    return result;
   }
 
   delete(node) {

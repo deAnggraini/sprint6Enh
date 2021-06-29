@@ -86,7 +86,7 @@
 
 <ng-template #formChangeParent let-c="close" let-d="dismiss">
     <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Pindah {{txtLevelChildName}}</h4>
+        <h4 class="modal-title" id="modal-basic-title">Pindah {{txtLevelName}}</h4>
         <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
             <i aria-hidden="true">&times;</i>
         </button>
@@ -96,7 +96,7 @@
             <div>Sebelum Kamu dapat menghapus {{txtLevelName}} <b>"{{selectedDelete.title}}"</b>, Kamu harus memindahkan terlebih dahulu
                 {{txtLevelChildName}} yang terdapat pada {{txtLevelName}} tersebut.</div>
             <div class="form-group row" *ngFor="let change of listToChangeParent">
-                <label class="col-4 col-form-label">{{change.title}} - {{change.error}}</label>
+                <label class="col-4 col-form-label">{{change.title}}</label>
                 <select class="form-control col-7" required [ngClass]="{ 'is-invalid': change.error}" #mySelect (change)="changeComboboxParent(mySelect.value, change.id)">
                     <option value="0">-- Pilih Salah Satu --</option>
                     <option *ngFor="let bro of listBrothers" [value]="bro.id">{{bro.title}}</option>
