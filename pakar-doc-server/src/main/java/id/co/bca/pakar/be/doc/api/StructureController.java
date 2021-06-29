@@ -13,9 +13,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -88,37 +90,44 @@ public class StructureController extends BaseController {
 	 * add method edit structure menu
 	 * @return
 	 */
-	@PostMapping(value = "/api/doc/deleteStructure", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE }, produces = {
+	@PostMapping(value = "/api/doc/deleteStructure", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<RestResponse<List<StructureDto>>> deleteStructure(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, MultiStructureDto structures, BindingResult bindingResult) {
+	public ResponseEntity<RestResponse<DeleteStructureDto>> deleteStructure(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @Valid @RequestBody DeleteStructureDto structures) {
 		try {
-			structureValidator.validate(structures, bindingResult);
-			if(bindingResult.hasErrors()) {
-				logger.info("binding result "+bindingResult.getAllErrors());
-				return createResponse(new ArrayList<StructureDto>(), Constant.ApiResponseCode.REQUEST_PARAM_INVALID.getAction()[0], Constant.ApiResponseCode.REQUEST_PARAM_INVALID.getAction()[1]);
-			}
-			List<StructureDto> response = structureService.add(username, structures.getStructureWithFileDtoList());
+			logger.info("deleting structure process");
+			DeleteStructureDto response = structureService.delete(username, structures);
 			return createResponse(response, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
+		} catch (DataNotFoundException e) {
+			logger.error("exception", e);
+			return createResponse(new DeleteStructureDto(), Constant.ApiResponseCode.DATA_NOT_FOUND.getAction()[0], Constant.ApiResponseCode.DATA_NOT_FOUND.getAction()[1]);
 		} catch (Exception e) {
 			logger.error("exception", e);
-			return createResponse(new ArrayList<StructureDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
+			return createResponse(new DeleteStructureDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
 		}
 	}
 
-	@PostMapping(value = "/api/doc/saveBatchStructure", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE }, produces = {
+	/**
+	 * saveing batch structures
+	 * @param authorization
+	 * @param username
+	 * @param structures
+	 * @param bindingResult
+	 * @return
+	 */
+	@PostMapping(value = "/api/doc/saveBatchStructure", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<RestResponse<List<StructureDto>>> saveBatchStructure(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, MultiStructureDto structures, BindingResult bindingResult) {
+	public ResponseEntity<RestResponse<List<StructureResponseDto>>> saveBatchStructure(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, MultiStructureDto structures, BindingResult bindingResult) {
 		try {
 			structureValidator.validate(structures, bindingResult);
 			if(bindingResult.hasErrors()) {
 				logger.info("binding result "+bindingResult.getAllErrors());
-				return createResponse(new ArrayList<StructureDto>(), Constant.ApiResponseCode.REQUEST_PARAM_INVALID.getAction()[0], Constant.ApiResponseCode.REQUEST_PARAM_INVALID.getAction()[1]);
+				return createResponse(new ArrayList<StructureResponseDto>(), Constant.ApiResponseCode.REQUEST_PARAM_INVALID.getAction()[0], Constant.ApiResponseCode.REQUEST_PARAM_INVALID.getAction()[1]);
 			}
-			List<StructureDto> response = structureService.add(username, structures.getStructureWithFileDtoList());
+			List<StructureResponseDto> response = structureService.saveBatchStructures(username, structures.getStructureWithFileDtoList());
 			return createResponse(response, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
 		} catch (Exception e) {
 			logger.error("exception", e);
-			return createResponse(new ArrayList<StructureDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
+			return createResponse(new ArrayList<StructureResponseDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
 		}
 	}
 
