@@ -1,13 +1,6 @@
 package id.co.bca.pakar.be.oauth2.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "r_structure")
@@ -16,17 +9,17 @@ public class Structure extends EntityBase{
 	@SequenceGenerator(name = "structureSeqGen", sequenceName = "strcutureSeq", initialValue = 1, allocationSize = 1)
 	@GeneratedValue(generator = "structureSeqGen")
 	private Long id;
-	@Column(name = "struct_name")
+	@Column(name = "name")
 	private String structureName;
-	@Column(name = "struct_description")
+	@Column(name = "description")
 	private String structureDescription;
 	@Column(name = "order")
 	private Long order;
 	@Column(name = "level")
 	private Long level;
 	@ManyToOne
-	@JoinColumn(name = "parent_structure")
-	private Menu parentStructure;
+	@JoinColumn(name = "parent")
+	private Structure parentStructure;
 
 	public Long getId() {
 		return id;
@@ -68,11 +61,11 @@ public class Structure extends EntityBase{
 		this.level = level;
 	}
 
-	public Menu getParentStructure() {
+	public Structure getParentStructure() {
 		return parentStructure;
 	}
 
-	public void setParentStructure(Menu parentStructure) {
+	public void setParentStructure(Structure parentStructure) {
 		this.parentStructure = parentStructure;
 	}
 }
