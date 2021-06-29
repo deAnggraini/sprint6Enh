@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import id.co.bca.pakar.be.oauth2.dto.MenuDto;
 import org.springframework.http.ResponseEntity;
+
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.http.MediaType;
 import java.util.Arrays;
@@ -47,6 +49,24 @@ public class MenuController extends BaseController {
             headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
             RestResponse<MenuDto> tResponse = new RestResponse(new MenuDto(), "01", "Menu Failed Load");
             return ResponseEntity.accepted().headers(headers).body(tResponse);
+        }
+    }
+
+    @GetMapping("/api/auth/menus")
+    public ResponseEntity<RestResponse<List<MenuDto>>> menus(@RequestHeader (name="Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username) {
+        try {
+            String tokenValue = "";
+            if (authorization != null && authorization.contains("Bearer")) {
+                tokenValue = authorization.replace("Bearer", "").trim();
+                logger.info("token value request header --- "+tokenValue);
+                logger.info("username request header --- "+username);
+            }
+            List<MenuDto> menu = menuService.getMenus(tokenValue, username);
+            logger.info("menu controller {}", menu.get(0));
+            return this.createResponse(menu, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
+        } catch (Exception e) {
+            logger.error("exception", e);
+            return this.createResponse(new ArrayList<MenuDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
         }
     }
 }
