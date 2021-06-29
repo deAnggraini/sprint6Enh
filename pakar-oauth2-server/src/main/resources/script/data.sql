@@ -107,4 +107,42 @@ INSERT INTO public.r_user_role
 (id, created_by, created_date, deleted, username, role_id)
 VALUES(8, 'system',now()::DATE, 'f','test1', 'READER');
 
+INSERT INTO public.r_menu
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent, nav)
+VALUES(10001, 'system', '2021-06-29 00:00:00.000', false, 'system', '2021-06-29 00:00:00.000', 'Home PAKAR', '', 1, 1, 0, 'top');
+INSERT INTO public.r_menu
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent, nav)
+VALUES(10002, 'system', '2021-06-29 00:00:00.000', false, 'system', '2021-06-29 00:00:00.000', 'Kembali ke myBCAportal', '', 1, 2, 0, 'top');
+INSERT INTO public.r_menu
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent, nav)
+VALUES(10003, 'system', '2021-06-29 00:00:00.000', false, 'system', '2021-06-29 00:00:00.000', 'Biaya dan Wewenang', '', 1, 3, 0, 'top');
+INSERT INTO public.r_menu
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent, nav)
+VALUES(10013, 'system', '2021-06-29 00:00:00.000', false, 'system', '2021-06-29 00:00:00.000', 'Biaya dan Wewenang 1', '', 2, 1, 10003, 'top');
+INSERT INTO public.r_menu
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent, nav)
+VALUES(10023, 'system', '2021-06-29 00:00:00.000', false, 'system', '2021-06-29 00:00:00.000', 'Biaya dan Wewenang 2', '', 2, 2, 10003, 'top');
+INSERT INTO public.r_menu
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent, nav)
+VALUES(10004, 'system', '2021-06-29 00:00:00.000', false, 'system', '2021-06-29 00:00:00.000', 'PAKAR Info', '', 1, 4, 0, 'top');
+INSERT INTO public.r_menu
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent, nav)
+VALUES(10005, 'system', '2021-06-29 00:00:00.000', false, 'system', '2021-06-29 00:00:00.000', 'Contents', '', 1, 5, 0,'top');
+INSERT INTO public.r_menu
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent, nav)
+VALUES(10006, 'system', '2021-06-29 00:00:00.000', false, 'system', '2021-06-29 00:00:00.000', 'My Pages', '', 1, 6, 0, 'top');
+INSERT INTO public.r_menu
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent, nav)
+VALUES(11001, 'system', '2021-06-29 00:00:00.000', false, 'system', '2021-06-29 00:00:00.000', 'PAKAR PDF', '', 1, 100, 0, 'bottom');
+INSERT INTO public.r_menu
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent, nav)
+VALUES(11002, 'system', '2021-06-29 00:00:00.000', false, 'system', '2021-06-29 00:00:00.000', 'FAQ', '', 1, 100, 0, 'bottom');
+INSERT INTO public.r_menu
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent, nav)
+VALUES(11003, 'system', '2021-06-29 00:00:00.000', false, 'system', '2021-06-29 00:00:00.000', 'FAQ Operasional', '', 2, 100, 0, 'bottom');
+INSERT INTO public.r_menu
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent, nav)
+VALUES(11004, 'system', '2021-06-29 00:00:00.000', false, 'system', '2021-06-29 00:00:00.000', 'FAQ Kredit', '', 2, 100, 0, 'bottom');
+
+
 
