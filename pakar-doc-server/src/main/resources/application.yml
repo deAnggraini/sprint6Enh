@@ -29,6 +29,9 @@ spring:
       file-size-threshold: 2KB
       max-file-size: 2MB
       max-request-size: 10MB
+  multipart:
+    max-size: 2000000
+    file-type: image/png, image/jpg, image/jpeg
 ---
 spring:
   profiles: dev-local      
