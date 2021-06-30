@@ -6,8 +6,8 @@ import javax.persistence.*;
 @Table(name = "r_menu")
 public class Menu extends EntityBase {
     @Id
-    @SequenceGenerator(name = "structureSeqGen", sequenceName = "strcutureSeq", initialValue = 1, allocationSize = 1)
-    @GeneratedValue(generator = "structureSeqGen")
+    @SequenceGenerator(name = "menuSeqGen", sequenceName = "menuSeq", initialValue = 1, allocationSize = 1)
+    @GeneratedValue(generator = "menuSeqGen")
     private Long id;
     @Column(name = "name")
     private String name;
