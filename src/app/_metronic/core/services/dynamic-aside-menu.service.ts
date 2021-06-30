@@ -30,10 +30,13 @@ const emptyMenuConfig = {
 export class DynamicAsideMenuService {
 
   private _base_url = `${environment.apiUrl}/doc`;
+  private _auth_url = `${environment.apiUrl}/auth`;
   private menuConfigSubject = new BehaviorSubject<any>(emptyMenuConfig);
   private categories$ = new BehaviorSubject<any[]>([]);
+  private menus$ = new BehaviorSubject<any[]>([]);
   // private categories$: Observable<any[]>;
   categories: any[] = [];
+  menus: any[] = [];
   // private unsubscribe: Subscription[] = [];
   menuConfig$: Observable<any>;
   user$: Observable<UserModel>;
@@ -48,7 +51,7 @@ export class DynamicAsideMenuService {
     });
     this.menuConfig$ = this.menuConfigSubject.asObservable();
     // this.categories$ = this.categoriesObject.asObservable();
-    this.populateCategoryArticle();
+    // this.populateCategoryArticle();
     this.populateMenus();
   }
 
@@ -85,8 +88,9 @@ export class DynamicAsideMenuService {
     // loop top level
     const items = [];
     articles.map(item => {
-      items.push({ title: item.title, section: item.title, id: item.id, level: 0, root: true, edit: item.edit });
-      if (item.menus && item.menus.length) {
+      // items.push({ title: item.title, section: item.title, id: item.id, level: 0, root: true, edit: item.edit });
+      items.push( item );
+      if (item.menus && item.menus.length) {      
         const maxLoop = item.showLess ? 2 : item.menus.length;
         for (let i = 0; i < maxLoop; i++) {
           const menu = item.menus[i];
@@ -108,12 +112,23 @@ export class DynamicAsideMenuService {
           });
         }
       }
-    })
+    }) 
     return items;
   }
 
   private populateMenus(){
     // codeing disini
+    this.apiService.get(`${this._auth_url}/menu`).subscribe(
+      (_menus: any[]) => {
+        _menus.map(d => d.showLess = true);
+        this.menus = JSON.parse(JSON.stringify(_menus));
+        // this.menus$.next(this.menus);
+        this.categories$.next(this.menus);      
+        this.loadMenu(this.parseToMenu(_menus));
+        // this.loadMenu(this.menus$);
+        // this.menuConfigSubject = this.menus$;
+      }
+    );
   }
 
   private populateCategoryArticle() {
@@ -146,13 +161,15 @@ export class DynamicAsideMenuService {
   // Here you able to load your menu from server/data-base/localStorage
   // Default => from DynamicAsideMenuConfig
   private loadMenu(_server) {
-    const config = DynamicAsideMenuConfig;
-    const items = [].concat(config.items)
-      .concat(this.menuByRoles())
-      .concat(_server)
-      .concat(config.footer)
-      // .concat({ section: ' ' }) // agar menu tidak terlalu mepet kebawah
-      ;
+    // const config = DynamicAsideMenuConfig;  
+    // const items = [].concat(config.items)
+    //   .concat(this.menuByRoles())
+    //   .concat(_server)
+    //   .concat(config.footer)
+    //   .concat({ section: ' ' }) // agar menu tidak terlalu mepet kebawah
+    //   ;
+
+   const items = [].concat(_server);
     this.setMenu({ items });
   }
 
