@@ -536,6 +536,14 @@ const articles = [
     },
 ]
 
+const lastKeyword = [
+    { id: 0, text: 'Ketentuan Time Loan' },
+    { id: 0, text: 'Prosedur Giro' },
+    { id: 0, text: 'Open Payment' },
+    { id: 0, text: 'Pembukaan Rekening Tahapan' },
+    { id: 0, text: 'Flazz' },
+];
+
 module.exports.suggestion = [
     {
         id: 1,
@@ -563,4 +571,5 @@ module.exports.recommendation = JSON.parse(JSON.stringify(articles));
 module.exports.news = JSON.parse(JSON.stringify(articles)).reverse();
 module.exports.popular = JSON.parse(JSON.stringify(articles)).slice(5, 10);
 
+module.exports.lastKeyword = lastKeyword;
 module.exports.articles = articles;
