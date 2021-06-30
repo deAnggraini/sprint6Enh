@@ -5,7 +5,8 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 import { ConfirmService } from 'src/app/utils/_services/confirm.service';
 import { DynamicAsideMenuService } from 'src/app/_metronic/core';
 import { StrukturDTO } from '../../_model/struktur.dto';
-import { StrukturService } from '../../_services/stuktur.service';
+import { StrukturService } from '../../_services/struktur.service';
+import { ToastService } from 'src/app/utils/_services/toast.service';
 
 @Component({
   selector: 'app-add',
@@ -50,7 +51,8 @@ export class AddComponent implements OnInit, OnDestroy {
     private config: NgbModalConfig,
     private fb: FormBuilder,
     private strukturService: StrukturService,
-    private confirm: ConfirmService
+    private confirm: ConfirmService,
+    private toast: ToastService
   ) {
     this.config.backdrop = 'static';
     this.config.keyboard = false;
@@ -105,6 +107,7 @@ export class AddComponent implements OnInit, OnDestroy {
         if (resp) {
           this.menu.addStruktur(resp);
           this.modalService.dismissAll();
+          this.toast.showSuccess('Simpan Data Berhasil');
         }
       })
     } else {
@@ -162,6 +165,7 @@ export class AddComponent implements OnInit, OnDestroy {
         if (resp) {
           this.menu.refreshStruktur();
           this.modalService.dismissAll();
+          this.toast.showSuccess('Hapus Data Berhasil');
         }
       })
     }
@@ -190,6 +194,7 @@ export class AddComponent implements OnInit, OnDestroy {
               if (resp) {
                 this.menu.refreshStruktur(resp);
                 this.selected$.next({});
+                this.toast.showSuccess('Hapus Data Berhasil');
               }
             })
           }

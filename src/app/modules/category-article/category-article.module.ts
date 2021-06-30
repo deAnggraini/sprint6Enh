@@ -27,7 +27,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [AddComponent, ListComponent, DetailComponent],
+  declarations: [AddComponent, ListComponent, DetailComponent, CategoryArticleComponent],
   imports: [
     CommonModule,
     GeneralModule,

@@ -13,6 +13,7 @@ export declare interface StrukturDTO {
     menus?: StrukturDTO[],
     location?: string,
     location_text?: string,
+    listParent?: any[]
 }
 
 export declare interface StrukturItemDTO {
@@ -30,4 +31,5 @@ export declare interface StrukturItemDTO {
     menus?: StrukturDTO[],
     location?: string,
     location_text?: string,
+    listParent?: any[]
 }

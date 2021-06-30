@@ -1,1 +1,53 @@
-<p>list works!</p>
+<div style="
+background-image: url('./assets/media/images/struktur_bg.svg');
+background-repeat: no-repeat;
+background-position: center;
+height: 184px;
+"></div>
+<div class="mx-15 mt-n40">
+    <div class="input-search mb-1">
+        <div class="input-group" (click)="$event.stopPropagation()">
+            <!-- [ngbTypeahead]="search"  (focus)="setKeyword(keyword)" -->
+            <input type="text" class="form-control" placeholder="Cari di PAKAR..." aria-label="Cari di PAKAR..."
+                aria-describedby="basic-addon2" maxlength="2048" [(ngModel)]="keyword" (keyup.enter)="search()"
+                #inputSearch>
+            <div class="form-control-clear btn btn-icon btn-clean" *ngIf="keyword" (click)="keyword='';">
+                <span [inlineSVG]="'./assets/media/svg/icons/Navigation/Close.svg'" cacheSVG="true"
+                    class="hidden svg-icon mr-1 ml-1"></span>
+            </div>
+            <div class="input-separator"></div>
+            <button class="btn btn-outline-secondary btn-success" type="button" (click)="search()">
+                <i class="fa fa-search"></i>
+            </button>
+        </div>
+    </div>
+    <div class="back-panel">
+        <pakar-breadcrumbs [node]="struktur$"></pakar-breadcrumbs>
+    </div>
+    <ng-container *ngIf="struktur$ | async as item">
+        <div class="pakar-container h-100 p-8 d-flex flex-column flex-column-auto flex-grow"
+            style="min-height: initial;">
+            <span class="pakar-text-header">{{item.title}}</span>
+            <span class="pakar-text-header-desc">{{item.desc}}</span>
+            <div class="row mt-5">
+                <div class="col-sm-6 col-md-6 col-lg-3 col-xl-3 col-xxl-3 mb-5" *ngFor="let menu of item.menus">
+                    <div class="d-flex flex-column">
+                        <span class="pakar-text-header-18 py-3">{{menu.title}}</span>
+                        <div class="card card-custom">
+                            <div class="image-item" [ngStyle]="{'background-image': image_uri(menu.image)}"></div>
+                            <span class="p-3">{{menu.desc}}</span>
+                            <ul class="nav flex-column">
+                                <li class="nav-item" *ngFor="let child of menu.menus | slice:0:2">
+                                    <a class="nav-link px-3 pb-3 pt-0" routerLink="/struktur/list/{{child.id}}">{{child.title}}</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link px-3 pb-3 pt-0" routerLink="/struktur/list/{{menu.id}}">Lihat Semua</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+</div>

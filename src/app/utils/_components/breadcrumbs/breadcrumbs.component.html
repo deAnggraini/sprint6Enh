@@ -1,0 +1,10 @@
+<ul class="nav" *ngIf="node">
+    <ng-container *ngFor="let item of dataList">
+        <li class="nav-item">
+            <a class="nav-link cursor-pointer" routerLink="{{item.uri}}" routerLinkActive="active">
+                <span class="nav-text">{{item.title}}</span>
+            </a>
+        </li>
+        <li class="nav-item nav-separator"><span class="nav-link nav-text">&gt;</span></li>
+    </ng-container>
+</ul>
