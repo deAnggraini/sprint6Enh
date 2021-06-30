@@ -39,7 +39,7 @@ style="background: {{headerBackground}}; box-shadow: {{showAside ? '0px 4px 8px 
       <!-- begin::Menu Nav -->
       <ul class="menu-nav" [ngClass]="ulCSSClasses">
         <ng-container *ngFor="let item of menuConfig.items">
-          <ng-container *ngIf="item.level == 1 && item.id > 1000" [ngTemplateOutlet]="menuItemHeaderTemplate"
+          <ng-container *ngIf="item.level == 1 && item.id > 10000 && item.id < 11000" [ngTemplateOutlet]="menuItemTopTemplate"
             [ngTemplateOutletContext]="{ item: item }"></ng-container>
           <!-- <ng-container *ngIf="item.section" [ngTemplateOutlet]="menuItemSectionTemplate"
             [ngTemplateOutletContext]="{ item: item }"></ng-container> -->
@@ -50,6 +50,8 @@ style="background: {{headerBackground}}; box-shadow: {{showAside ? '0px 4px 8px 
             [ngTemplateOutletContext]="{ item: item }"></ng-container>
           <ng-container *ngIf="item.title && item.isFunction" [ngTemplateOutlet]="lihatSemuaTemplate"
             [ngTemplateOutletContext]="{ item: item }"></ng-container>
+          <ng-container *ngIf="item.level == 1 && item.id > 11000" [ngTemplateOutlet]="menuItemBottomTemplate"
+              [ngTemplateOutletContext]="{ item: item }"></ng-container>
         </ng-container>
       </ul>
       <!-- end::Menu Nav -->
@@ -81,10 +83,10 @@ style="background: {{headerBackground}}; box-shadow: {{showAside ? '0px 4px 8px 
       <a class="menu-link menu-toggle" [attr.href]="item.page" routerLinkActive="active"
         [ngClass]="{ 'active ': isMenuItemActive(item.page) }">
         <span [inlineSVG]="item.svg" cacheSVG="true" class="svg-icon menu-icon"></span>
-        <span class="menu-text" [translate]="item.translate">{{
+        <span class="menu-text" [translate]="item.translate"> {{
           item.title
         }}</span>
-        <!-- <i class="menu-arrow"></i> -->
+        <i class="menu-arrow"></i>
       </a>
       <div class="menu-submenu">
         <i class="menu-arrow"></i>
@@ -189,8 +191,8 @@ style="background: {{headerBackground}}; box-shadow: {{showAside ? '0px 4px 8px 
 <ng-template #lihatSemuaTemplate let-item="item">
   <!-- begin::if don't have submenu -->
   <ng-container *ngIf="!item.submenu">
-    <li class="menu-item" aria-haspopup="true" data-menu-toggle="hover">
-      <a class="menu-link" [routerLink]="" (click)="updateMenu(item)">
+    <li class="" aria-haspopup="true" data-menu-toggle="hover" style="padding-left: 15px;">
+      <a class="menu-link" [routerLink]="" (click)="updateMenu(item)" >
         <span cacheSVG="true" class="svg-icon menu-icon"></span>
         <span class="menu-text">{{item.title}}</span>
         <i class="menu-icon"></i>
@@ -201,13 +203,13 @@ style="background: {{headerBackground}}; box-shadow: {{showAside ? '0px 4px 8px 
 </ng-template>
 
 
-<ng-template #menuItemHeaderTemplate let-item="item">
-    <!-- begin::if don't have submenu -->
-  <ng-container *ngIf="!item.submenu">
-    <li class="menu-item"  aria-haspopup="true"  data-menu-toggle="hover">
+<ng-template #menuItemTopTemplate let-item="item">
+  <!-- begin::if don't have submenu -->
+  <ng-container *ngIf="!item.menus.length">
+    <li class="menu-item" aria-haspopup="true" data-menu-toggle="hover">
       <a class="menu-link">
         <span [inlineSVG]="item.svg" cacheSVG="true" class="svg-icon menu-icon"></span>
-        <span class="menu-text"  [translate]="item.translate">{{item.title}}</span>
+        <span class="menu-text" [translate]="item.translate">{{item.title}}</span>
         <!-- <i class="menu-icon"></i> -->
       </a>
     </li>
@@ -215,7 +217,7 @@ style="background: {{headerBackground}}; box-shadow: {{showAside ? '0px 4px 8px 
   <!-- end::if don't have submenu -->
 
   <!-- begin::if has submenu -->
-  <ng-container *ngIf="item.submenu">
+  <ng-container *ngIf="item.menus.length">
     <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover"
       [ngClass]="{ 'menu-item-open': isMenuItemActive(item.page) }" routerLinkActive="menu-item-open">
       <a class="menu-link menu-toggle" [attr.href]="item.page" routerLinkActive="active"
@@ -223,7 +225,7 @@ style="background: {{headerBackground}}; box-shadow: {{showAside ? '0px 4px 8px 
         <span [inlineSVG]="item.svg" cacheSVG="true" class="svg-icon menu-icon"></span>
         <span class="menu-text" [translate]="item.translate">{{
           item.title
-        }}</span>
+          }}</span>
         <i class="menu-arrow"></i>
       </a>
       <div class="menu-submenu">
@@ -233,10 +235,54 @@ style="background: {{headerBackground}}; box-shadow: {{showAside ? '0px 4px 8px 
             <span class="menu-link">
               <span class="menu-text" [translate]="item.translate">{{
                 item.title
-              }}</span>
+                }}</span>
             </span>
           </li>
-          <ng-container *ngFor="let sub of item.submenu" [ngTemplateOutlet]="menu1LevelTemplate"
+          <ng-container *ngFor="let sub of item.menus" [ngTemplateOutlet]="menu1LevelTemplate"
+            [ngTemplateOutletContext]="{ item: sub }"></ng-container>
+        </ul>
+      </div>
+    </li>
+  </ng-container>
+  <!-- end::if has submenu -->
+</ng-template>
+
+<ng-template #menuItemBottomTemplate let-item="item">
+  <!-- begin::if don't have submenu -->
+  <ng-container *ngIf="!item.menus.length">
+      <li class="menu-item" aria-haspopup="true" data-menu-toggle="hover" style="padding-top: 15px;">
+        <a class="menu-link">
+          <span [inlineSVG]="item.svg" cacheSVG="true" class="svg-icon menu-icon"></span>
+          <span class="menu-text" [translate]="item.translate">{{item.title}}</span>
+          <!-- <i class="menu-icon"></i> -->
+        </a>
+      </li>
+    </ng-container>
+  <!-- end::if don't have submenu -->
+
+  <!-- begin::if has submenu -->
+  <ng-container *ngIf="item.menus.length">
+    <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover"
+      [ngClass]="{ 'menu-item-open': isMenuItemActive(item.page) }" routerLinkActive="menu-item-open">
+      <a class="menu-link menu-toggle" [attr.href]="item.page" routerLinkActive="active"
+        [ngClass]="{ 'active ': isMenuItemActive(item.page) }">
+        <span [inlineSVG]="item.svg" cacheSVG="true" class="svg-icon menu-icon"></span>
+        <span class="menu-text" [translate]="item.translate">{{
+          item.title
+          }}</span>
+        <i class="menu-arrow"></i>
+      </a>
+      <div class="menu-submenu">
+        <i class="menu-arrow"></i>
+        <ul class="menu-subnav">
+          <li class="menu-item menu-item-parent" aria-haspopup="true">
+            <span class="menu-link">
+              <span class="menu-text" [translate]="item.translate">{{
+                item.title
+                }}</span>
+            </span>
+          </li>
+          <ng-container *ngFor="let sub of item.menus" [ngTemplateOutlet]="menu1LevelTemplate"
             [ngTemplateOutletContext]="{ item: sub }"></ng-container>
         </ul>
       </div>
