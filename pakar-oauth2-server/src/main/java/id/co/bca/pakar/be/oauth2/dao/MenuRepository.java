@@ -18,8 +18,7 @@ public interface MenuRepository extends CrudRepository<Menu, String> {
 //    List<Menu> getMenu();
 
     @Query(
-            value =
-                    "select id, created_by, created_date, deleted, modify_by, modify_date, menu_name, menu_description, level, order, parent_menu from r_menu",
+            value = "SELECT * FROM r_menu m ",
             nativeQuery = true)
     List<Menu> getAllMenu();
 

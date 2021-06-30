@@ -3,8 +3,10 @@ package id.co.bca.pakar.be.oauth2.service.imp;
 import id.co.bca.pakar.be.oauth2.dao.MenuIconRepository;
 import id.co.bca.pakar.be.oauth2.dao.MenuImageRepository;
 import id.co.bca.pakar.be.oauth2.dao.MenuRepository;
+import id.co.bca.pakar.be.oauth2.dao.StructureRepository;
 import id.co.bca.pakar.be.oauth2.dto.MenuDto;
 import id.co.bca.pakar.be.oauth2.model.Menu;
+import id.co.bca.pakar.be.oauth2.model.Structure;
 import id.co.bca.pakar.be.oauth2.service.MenuService;
 import id.co.bca.pakar.be.oauth2.util.TreeMenu;
 import org.slf4j.Logger;
@@ -26,48 +28,11 @@ public class MenuServiceImpl implements MenuService {
     @Autowired
     private MenuRepository menuRepository;
     @Autowired
+    private StructureRepository structureRepository;
+    @Autowired
     private MenuImageRepository menuImageRepository;
     @Autowired
     private MenuIconRepository menuIconRepository;
-
-    @Override
-    public List<MenuDto> getMenu(String token, String username) {
-        List<MenuDto> burgerMenu = new ArrayList<MenuDto>();
-//        logger.info("masuk sini yaa");
-//        MenuDto tMenu = new MenuDto();
-//        List<Menu> child = new ArrayList<>();
-        try {
-//            List<Menu> menu = menuRepository.getAllMenu();
-//            logger.info("menu service " + menu);
-//            if(menu != null) {
-//                for(Menu menuTemp : menu) {
-//                    IconDto icon = new IconDto();
-//                    ImageDto imageDto = new ImageDto();
-//                    tMenu.setId(menuTemp.getId());
-//                    tMenu.setMenuName(menuTemp.getMenuName());
-//                    tMenu.setMenuDescription(menuTemp.getMenuDescription());
-//                    tMenu.setLevel(menuTemp.getLevel());
-//                    tMenu.setOrder(menuTemp.getOrder());
-//                    tMenu.setMenuName(menuTemp.getMenuName());
-//                    MenuIcons iconMenu = menuIconRepository.findIconbyMenuId(menuTemp.getId());
-//                    MenuImages imageMenu = menuImageRepository.findImagebyMenuId(menuTemp.getId());
-//                    logger.info("icon = " + iconMenu);
-//                    logger.info("images = " + imageMenu);
-//
-////                    tMenu.setIconUri();
-////                    tMenu.setImageUri();
-//                }
-//                burgerMenu.add(tMenu);
-//            }
-
-            return burgerMenu;
-        } catch (Exception e) {
-            logger.error("exception ", e);
-//            throw new Exception(e);
-        }
-
-        return  null;
-    }
 
     @Override
     @Transactional
@@ -80,6 +45,10 @@ public class MenuServiceImpl implements MenuService {
             allMenus.addAll(topTreeMenu);
 
             // TODO structure menu insert here
+            logger.info("get all menu");
+            Iterable<Structure> menus = structureRepository.findAll();
+            List<MenuDto> treeMenu = new TreeMenu().menuTree(mapToListIterable(menus));
+            allMenus.addAll(treeMenu);
 
             logger.info("get all bottom menu");
             List<Menu> bottomMenus = menuRepository.getAllBottomMenu();
@@ -103,6 +72,24 @@ public class MenuServiceImpl implements MenuService {
             menuDto.setMenuName(menu.getName());
             menuDto.setMenuDescription(menu.getDescription());
             menuDto.setUri(menu.getUri());
+            // Set iconUri
+            //Set ImageUri
+            listOfMenus.add(menuDto);
+        }
+        return listOfMenus;
+    }
+
+    private List<MenuDto> mapToListIterable(Iterable<Structure> iterable) {
+        List<MenuDto> listOfMenus = new ArrayList<>();
+        for (Structure structure : iterable) {
+            MenuDto menuDto = new MenuDto();
+            menuDto.setId(structure.getId());
+            menuDto.setLevel(structure.getLevel());
+            menuDto.setOrder(structure.getSort());
+            menuDto.setParent(structure.getParentStructure());
+            menuDto.setUri(structure.getUri());
+            // Set iconUri
+            //Set ImageUri
             listOfMenus.add(menuDto);
         }
         return listOfMenus;
