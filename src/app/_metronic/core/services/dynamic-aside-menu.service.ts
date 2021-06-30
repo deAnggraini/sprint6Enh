@@ -132,12 +132,7 @@ export class DynamicAsideMenuService {
     this.apiService.get(`${this._auth_url}/menu`).subscribe(
       (_menus: any[]) => {
         _menus.map(d => d.showLess = true);
-        this.menus = JSON.parse(JSON.stringify(_menus));
-        // this.menus$.next(this.menus);
-        this.categories$.next(this.menus);      
         this.loadMenu(this.parseToMenu(_menus));
-        // this.loadMenu(this.menus$);
-        // this.menuConfigSubject = this.menus$;
       }
     );
   }
