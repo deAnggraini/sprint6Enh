@@ -25,34 +25,34 @@ public class MenuController extends BaseController {
     @Autowired
     private MenuService menuService;
 
-    @GetMapping(value = "/api/auth/menu", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
-            MediaType.APPLICATION_JSON_VALUE })
-    public ResponseEntity<RestResponse<MenuDto>> menu(@RequestHeader (name="Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username) {
-        try {
-            String tokenValue = "";
-            if (authorization != null && authorization.contains("Bearer")) {
-                tokenValue = authorization.replace("Bearer", "").trim();
-                logger.info("token value request header --- "+tokenValue);
-                logger.info("username request header --- "+username);
-            }
-            HttpHeaders headers = new HttpHeaders();
-            headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-            List<MenuDto> menu = menuService.getMenu(tokenValue, username);
-            logger.info("menu controller " + menu.get(0));
-//            RestResponse<MenuDto> tResponse = new RestResponse(menu, "00", "Menu Success Load");
-//            return new ResponseEntity<RestResponse<MenuDto>>(tResponse, HttpStatus.OK);
-            return this.createResponse(new MenuDto(), Constant.ApiResponseCode.MENU_PROFILE_SUCCESS.getAction()[0], Constant.ApiResponseCode.MENU_PROFILE_SUCCESS.getAction()[1]);
+//    @GetMapping(value = "/api/auth/menu", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
+//            MediaType.APPLICATION_JSON_VALUE })
+//    public ResponseEntity<RestResponse<MenuDto>> menu(@RequestHeader (name="Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username) {
+//        try {
+//            String tokenValue = "";
+//            if (authorization != null && authorization.contains("Bearer")) {
+//                tokenValue = authorization.replace("Bearer", "").trim();
+//                logger.info("token value request header --- "+tokenValue);
+//                logger.info("username request header --- "+username);
+//            }
+//            HttpHeaders headers = new HttpHeaders();
+//            headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+//            List<MenuDto> menu = menuService.getMenu(tokenValue, username);
+//            logger.info("menu controller " + menu.get(0));
+////            RestResponse<MenuDto> tResponse = new RestResponse(menu, "00", "Menu Success Load");
+////            return new ResponseEntity<RestResponse<MenuDto>>(tResponse, HttpStatus.OK);
+//            return this.createResponse(new MenuDto(), Constant.ApiResponseCode.MENU_PROFILE_SUCCESS.getAction()[0], Constant.ApiResponseCode.MENU_PROFILE_SUCCESS.getAction()[1]);
+//
+//        } catch (Exception e) {
+//            logger.error("exception", e);
+//            HttpHeaders headers = new HttpHeaders();
+//            headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+//            RestResponse<MenuDto> tResponse = new RestResponse(new MenuDto(), "01", "Menu Failed Load");
+//            return ResponseEntity.accepted().headers(headers).body(tResponse);
+//        }
+//    }
 
-        } catch (Exception e) {
-            logger.error("exception", e);
-            HttpHeaders headers = new HttpHeaders();
-            headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-            RestResponse<MenuDto> tResponse = new RestResponse(new MenuDto(), "01", "Menu Failed Load");
-            return ResponseEntity.accepted().headers(headers).body(tResponse);
-        }
-    }
-
-    @GetMapping("/api/auth/menus")
+    @GetMapping("/api/auth/menu")
     public ResponseEntity<RestResponse<List<MenuDto>>> menus(@RequestHeader (name="Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username) {
         try {
             String tokenValue = "";
