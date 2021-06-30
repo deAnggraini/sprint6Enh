@@ -7,6 +7,11 @@ import { PaginationComponent } from './_components/pagination/pagination.compone
 import { ConfirmComponent } from './_components/confirm/confirm.component';
 import { BreadcrumbsComponent } from './_components/breadcrumbs/breadcrumbs.component';
 import { RouterModule } from '@angular/router';
+import { PakarSearchComponent } from './_components/pakar-search/pakar-search.component';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { GeneralModule } from '../_metronic/partials/content/general/general.module';
+import { InlineSVGModule } from 'ng-inline-svg';
+import { SanitizeHtmlPipe } from './pipe/sanitize-html.pipe';
 
 @NgModule({
   declarations: [
@@ -15,18 +20,25 @@ import { RouterModule } from '@angular/router';
     PaginationComponent,
     ConfirmComponent,
     BreadcrumbsComponent,
+    PakarSearchComponent,
+    SanitizeHtmlPipe,
   ],
   imports: [
     CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
     NgbModule,
-    RouterModule
+    RouterModule,
+    InlineSVGModule
   ],
   exports: [
     MaxLengthPipe,
+    SanitizeHtmlPipe,
     ToastsContainer,
     PaginationComponent,
     ConfirmComponent,
-    BreadcrumbsComponent
+    BreadcrumbsComponent,
+    PakarSearchComponent
   ]
 })
 export class UtilsModule {

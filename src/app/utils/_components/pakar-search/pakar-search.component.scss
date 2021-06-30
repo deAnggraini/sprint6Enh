@@ -1,0 +1,45 @@
+:host ::ng-deep .input-search {
+  height: 50px;
+
+  .input-group.show {
+    border-radius: 20px 20px 0 0;
+  }
+
+  .my-data {
+    padding: 10px 15px;
+    background-color: white;
+    z-index: 100;
+    position: relative;
+    border: 1px solid #C8C6C4;
+    border-top-width: 0px;
+    border-radius: 0px 0px 20px 20px;
+    overflow-y: hidden;
+
+    .search-scroll {
+      overflow-y: auto;
+      max-height: 250px;
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+    }
+
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    background-color: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: #ddd;
+    border-radius: 30px;
+  }
+}
+
+:host ::ng-deep {
+  .fount-text {
+    font-weight: bold;
+  }
+}

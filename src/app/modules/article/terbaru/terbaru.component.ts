@@ -15,7 +15,6 @@ export class TerbaruComponent implements OnInit {
   total: number = 0;
   length: number = 0;
   backend_img: string = environment.backend_img;
-  keyword: string = ''
 
   constructor(
     private router: Router,
@@ -24,7 +23,6 @@ export class TerbaruComponent implements OnInit {
     private location: Location) { }
 
   ngOnInit(): void {
-    this.keyword = this.articleService.keyword$.value;
     this.articleService.news().subscribe(
       resp => {
         this.dataList = resp;
@@ -38,11 +36,6 @@ export class TerbaruComponent implements OnInit {
   
   back() {
     this.location.back();
-  }
-
-  search() {
-    this.articleService.keyword$.next(this.keyword);
-    this.router.navigate(['/article/search', { keyword: this.keyword }]);
   }
 
 }

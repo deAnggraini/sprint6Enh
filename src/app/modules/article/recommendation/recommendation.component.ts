@@ -14,7 +14,6 @@ export class RecommendationComponent implements OnInit {
   total: number = 0;
   length: number = 0;
   backend_img: string = environment.backend_img;
-  keyword: string = '';
 
   // pagination
   dataPerPage: number = 6;
@@ -26,7 +25,6 @@ export class RecommendationComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(): void {
-    this.keyword = this.articleService.keyword$.value;
     this.articleService.recommendation().subscribe(
       resp => {
         this.dataList = resp.slice(0, 12);
@@ -36,11 +34,6 @@ export class RecommendationComponent implements OnInit {
 
       }
     );
-  }
-
-  search() {
-    this.articleService.keyword$.next(this.keyword);
-    this.router.navigate(['/article/search', { keyword: this.keyword }]);
   }
 
 }

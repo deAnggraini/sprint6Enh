@@ -5,22 +5,7 @@
     height: 184px;
 "></div>
 <div class="mx-15 mt-n50">
-    <div class="input-search mb-5">
-        <div class="input-group" (click)="$event.stopPropagation()">
-            <!-- [ngbTypeahead]="search"  (focus)="setKeyword(keyword)" -->
-            <input type="text" class="form-control" placeholder="Cari di PAKAR..." aria-label="Cari di PAKAR..."
-                aria-describedby="basic-addon2" maxlength="2048" [(ngModel)]="keyword" (keyup.enter)="search()"
-                #inputSearch>
-            <div class="form-control-clear btn btn-icon btn-clean" *ngIf="keyword" (click)="keyword='';">
-                <span [inlineSVG]="'./assets/media/svg/icons/Navigation/Close.svg'" cacheSVG="true"
-                    class="hidden svg-icon mr-1 ml-1"></span>
-            </div>
-            <div class="input-separator"></div>
-            <button class="btn btn-outline-secondary btn-success" type="button" (click)="search()">
-                <i class="fa fa-search"></i>
-            </button>
-        </div>
-    </div>
+    <pakar-search></pakar-search>
     <div class="mb-10 back-panel">
         <a (click)="back()" class="cursor-pointer">
             <i class="fas fa-angle-left mr-2"></i> Kembali ke Halaman Utama PAKAR

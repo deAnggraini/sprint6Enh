@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ApiService } from 'src/app/utils/_services/api-service.service';
 import { environment } from 'src/environments/environment';
 import { of, BehaviorSubject } from 'rxjs';
+import * as moment from 'moment';
 
 @Injectable({
   providedIn: 'root'
@@ -19,10 +20,21 @@ export class ArticleService {
 
   // share state
   keyword$: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  lastKeywords$: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
+  lastTimeGetKeyword: Date;
 
   constructor(private apiService: ApiService) { }
 
-
+  lastKeywords() {
+    if (!this.lastTimeGetKeyword || moment(this.lastTimeGetKeyword).diff(moment(), 'd') > 0) {
+      this.apiService.post(`${this._base_url}/keyword`, {}).subscribe(
+        resp => {
+          this.lastKeywords$.next(resp);
+          this.lastTimeGetKeyword = new Date();
+        }
+      );
+    }
+  }
 
   suggestion(keyword) {
     if (keyword === "") {

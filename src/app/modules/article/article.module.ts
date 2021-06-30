@@ -14,6 +14,7 @@ import { InlineSVGModule } from 'ng-inline-svg';
 import { RecommendationComponent } from './recommendation/recommendation.component';
 import { TerbaruComponent } from './terbaru/terbaru.component';
 import { UtilsModule } from 'src/app/utils/utils.module';
+import { FormArticleComponent } from './form-article/form-article.component';
 
 const routes: Routes = [
   {
@@ -23,6 +24,7 @@ const routes: Routes = [
       { path: 'list', component: ListComponent, },
       { path: 'list/:category', component: ListComponent, },
       { path: 'add', component: AddComponent, },
+      { path: 'form', component: FormArticleComponent, },
       { path: 'search', component: SearchComponent, },
       { path: 'recommendation', component: RecommendationComponent, },
       { path: 'terbaru', component: TerbaruComponent, },
@@ -39,7 +41,8 @@ const routes: Routes = [
     ArticleComponent,
     SearchComponent,
     RecommendationComponent,
-    TerbaruComponent
+    TerbaruComponent,
+    FormArticleComponent
   ],
   imports: [
     CommonModule,

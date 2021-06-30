@@ -16,9 +16,6 @@ export class ListComponent implements OnInit {
   struktur$: BehaviorSubject<StrukturDTO> = new BehaviorSubject<StrukturDTO>(null);
   image_path: string = environment.backend_img;
 
-
-  keyword: string;
-
   constructor(private route: ActivatedRoute, private struktutService: StrukturService) { }
 
   search() {
