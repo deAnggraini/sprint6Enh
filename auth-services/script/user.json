@@ -26,5 +26,17 @@
 	{
 		"username":"reader12",
 		"password":"12345678abc"
+	},
+	{
+		"username":"admin123",
+		"password":"12345678"
+	},
+	{
+		"username":"editor12",
+		"password":"12345678abc"
+	},
+	{
+		"username":"publish1",
+		"password":"12345678abc"
 	}
 ]

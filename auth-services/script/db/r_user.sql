@@ -1,4 +1,15 @@
-INSERT INTO r_user(role_id, created_by,created_date, modify_by, modify_date, deleted, description) VALUES ('READER', 'system', now()::TIMESTAMP, NULL, NULL, 'f','role reader' );
-INSERT INTO r_role(role_id, created_by,created_date, modify_by, modify_date, deleted, description) VALUES ('EDITOR', 'system', now()::TIMESTAMP, NULL, NULL, 'f','role editor' );
-INSERT INTO r_role(role_id, created_by,created_date, modify_by, modify_date, deleted, description) VALUES ('PUBLISHER', 'system', now()::TIMESTAMP, NULL, NULL, 'f','role publisher' );
-INSERT INTO r_role(role_id, created_by,created_date, modify_by, modify_date, deleted, description) VALUES ('SUPERADMIN', 'system', now()::TIMESTAMP, NULL, NULL, 'f','role super admin' );
+INSERT INTO public.r_user
+(username, created_by, created_date, deleted, modify_by, modify_date, enabled, "password")
+VALUES('admin123', 'system', now()::DATE, false, 'system', now()::DATE, false, '12345678');
+
+INSERT INTO public.r_user
+(username, created_by, created_date, deleted, modify_by, modify_date, enabled, "password")
+VALUES('reader12', 'system', now()::DATE, false, 'system', now()::DATE, false, '12345678abc');
+
+INSERT INTO public.r_user
+(username, created_by, created_date, deleted, modify_by, modify_date, enabled, "password")
+VALUES('editor12', 'system', now()::DATE, false, 'system', now()::DATE, false, '12345678abc');
+
+INSERT INTO public.r_user
+(username, created_by, created_date, deleted, modify_by, modify_date, enabled, "password")
+VALUES('publish1', 'system', now()::DATE, false, 'system', now()::DATE, false, '12345678abc');
