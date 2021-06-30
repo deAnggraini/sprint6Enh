@@ -12,14 +12,21 @@ export class RecommendationComponent implements OnInit {
 
   backend_img: string = environment.backend_img;
   slides = [];
-  phoneSize = window.matchMedia("(max-width: 480px)")
   slideConfig = {
-    // "slidesToShow": 3,
-    "slidesToShow": this.phoneSize.matches == true ? 1 : 3,
+    "slidesToShow": 3,
     "slidesToScroll": 1,
     "infinite": false,
     "prevArrow": "<img class='a-left control-c prev slick-prev' src='./assets/media/svg/bca/homepage/carousel-prev.svg'>",
-    "nextArrow": "<img class='a-right control-c next slick-next' src='./assets/media/svg/bca/homepage/carousel-next.svg'>"
+    "nextArrow": "<img class='a-right control-c next slick-next' src='./assets/media/svg/bca/homepage/carousel-next.svg'>",
+    responsive: [
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1
+        }
+      }
+    ]
   };
 
   constructor(private articleService: ArticleService, private changeDetectorRef: ChangeDetectorRef) {

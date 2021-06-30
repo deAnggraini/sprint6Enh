@@ -31,10 +31,13 @@ const emptyMenuConfig = {
 export class DynamicAsideMenuService {
 
   private _base_url = `${environment.apiUrl}/doc`;
+  private _auth_url = `${environment.apiUrl}/auth`;
   private menuConfigSubject = new BehaviorSubject<any>(emptyMenuConfig);
   private categories$ = new BehaviorSubject<any[]>([]);
+  private menus$ = new BehaviorSubject<any[]>([]);
   // private categories$: Observable<any[]>;
   categories: any[] = [];
+  menus: any[] = [];
   // private unsubscribe: Subscription[] = [];
   menuConfig$: Observable<any>;
   user$: Observable<UserModel>;
@@ -78,7 +81,7 @@ export class DynamicAsideMenuService {
       let res: Menu = Object.assign({}, dumm_template, { id, title, icon, svg, page, submenu: [] });
       return res;
     }
-    const readChild = (item: any): Menu => {
+    const readChild = (item: any): Menu => {     
       if (item.id) {
         const menu = parseItem(item);
         if (item.menus && item.menus.length) {
@@ -95,9 +98,11 @@ export class DynamicAsideMenuService {
 
     // loop top level
     const items = [];
-    articles.map(item => {
-      items.push({ title: item.title, section: item.title, id: item.id, level: 0, root: true, edit: item.edit });
-      if (item.menus && item.menus.length) {
+    articles.map(item => {     
+      // items.push({ title: item.title, section: item.title, id: item.id, level: 0, root: true, edit: item.edit });
+      items.push( item );
+      // Add item.id condition exclude menu top and bottom
+      if (item.menus && item.menus.length && item.id < 10000) {
         const maxLoop = item.showLess ? 2 : item.menus.length;
         for (let i = 0; i < maxLoop; i++) {
           const menu = item.menus[i];
@@ -106,7 +111,7 @@ export class DynamicAsideMenuService {
           }
         }
         if (item.menus.length > 2) {
-          let title = 'Lihat Lebih Sedikit'
+          let title = 'Lihat Lebih Sedikit ' + item.title;
           if (item.showLess) {
             title = 'Lihat Semua' + item.title;
           }
@@ -119,12 +124,43 @@ export class DynamicAsideMenuService {
           });
         }
       }
-    })
+      // for menu top and bottom
+      else  if (item.menus && item.menus.length && item.id > 10000) {
+        const maxLoop = item.showLess ? 2 : item.menus.length;
+        for (let i = 0; i < maxLoop; i++) {
+          const menu = item.menus[i];
+          if (menu) {
+            item.menus[i] = parseItem(menu);
+            if (item.menus[i].submenu && item.menus[i].submenu.length == 0) delete item.menus[i].submenu;
+          }
+        }
+        if (item.menus.length > 2) {
+          let title = 'Lihat Lebih Sedikit ' + item.title;
+          if (item.showLess) {
+            title = 'Lihat Semua' + item.title;
+          }
+          items.push({
+            isFunction: true,
+            title,
+            page: '/lihatsemua/title',
+            data: item,
+            level: -1
+          });
+        }
+      }
+    })    
     return items;
   }
 
   private populateMenus() {
     // codeing disini
+    this.apiService.get(`${this._auth_url}/menu`).subscribe(
+      (_menus: any[]) => {
+        _menus.map(d => d.showLess = true);
+        this.menus = JSON.parse(JSON.stringify(_menus));
+        this.loadMenu(this.parseToMenu(_menus));
+      }
+    );
   }
 
   private populateCategoryArticle() {
@@ -149,13 +185,15 @@ export class DynamicAsideMenuService {
   // Here you able to load your menu from server/data-base/localStorage
   // Default => from DynamicAsideMenuConfig
   private loadMenu(_server) {
-    const config = DynamicAsideMenuConfig;
-    const items = [].concat(config.items)
-      .concat(this.menuByRoles())
-      .concat(_server)
-      .concat(config.footer)
-      // .concat({ section: ' ' }) // agar menu tidak terlalu mepet kebawah
-      ;
+    // const config = DynamicAsideMenuConfig;  
+    // const items = [].concat(config.items)
+    //   .concat(this.menuByRoles())
+    //   .concat(_server)
+    //   .concat(config.footer)
+    //   .concat({ section: ' ' }) // agar menu tidak terlalu mepet kebawah
+    //   ;
+
+   const items = [].concat(_server);
     this.setMenu({ items });
   }
 
@@ -168,11 +206,13 @@ export class DynamicAsideMenuService {
   }
 
   updateMenu(item: any) {
-    const found = this.categories.find(d => d.id == item.data.id);
+    // const found = this.categories.find(d => d.id == item.data.id);
+    const found = this.menus.find(d => d.id == item.data.id);
     if (found) {
       found.showLess = !found.showLess;
     }
     this.loadMenu(this.parseToMenu(this.categories));
+    this.loadMenu(this.parseToMenu(this.menus));
   }
 
   getCategory(): BehaviorSubject<any> {
