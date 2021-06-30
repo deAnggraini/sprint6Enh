@@ -79,6 +79,8 @@ public class MenuServiceImpl implements MenuService {
             List<MenuDto> topTreeMenu = new TreeMenu().menuTree(mapToList(topMenus));
             allMenus.addAll(topTreeMenu);
 
+            // structure menu insert here
+
             logger.info("get all bottom menu");
             List<Menu> bottomMenus = menuRepository.getAllBottomMenu();
             List<MenuDto> bottomTreeMenu = new TreeMenu().menuTree(mapToList(bottomMenus));
