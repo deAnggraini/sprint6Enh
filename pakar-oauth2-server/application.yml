@@ -51,14 +51,14 @@ spring:
   profiles: dev-ogya
   eai:
     ad:
-      loginUri: http://192.168.181.70:12085/ad-gateways/verify1
+      loginUri: http://192.168.181.70:13085/ad-gateways/verify1
       clientId: 8C21EBEEB1AA3FBFE05400144FFBD319
       applicationID: PRJ1
       key: 123456789013245678901234
   security:
     oauth2:
       server: 
-        url: http://127.0.0.1:12081/oauth/token
+        url: http://192.168.181.70:${port:8081}/oauth/token
       clientId: 8C21EBEEB1AA3FBFE05400144FFBD319
       clientSecret: da82edc6dcc1af30
       authorize-grant-type: password,refresh_token
@@ -68,8 +68,8 @@ spring:
       signingkey: pakar123
   dataSource: 
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://192.168.181.95:5432/pakardb
-    username: pakar
+    url: jdbc:postgresql://192.168.181.95:5432/pakardb2
+    username: pakar2
     password: pakar123
     hikari:
       connectionTimeout: 20000
