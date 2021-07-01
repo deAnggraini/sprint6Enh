@@ -26,12 +26,10 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
   asideMenuScroll = 1;
   asideSelfMinimizeToggle = false;
   showAside = false;
-
+  imgUrl = `${environment.apiUrl}/images`;
   currentUrl: string;
   headerBackground: string;
 
-  imgUrl = `${environment.apiUrl}/images`;
-  
   constructor(
     private layout: LayoutService,
     private router: Router,
@@ -114,4 +112,13 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
   asideShow() {
     this.showAside = !this.showAside;
   }
+
+  externalLink(uri): boolean {   
+    if (uri.includes("http")) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
 }
