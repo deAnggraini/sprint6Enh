@@ -6,7 +6,7 @@ import javax.persistence.*;
 @Table(name = "r_structure")
 public class Structure extends EntityBase{
 	@Id
-	@SequenceGenerator(name = "structureSeqGen", sequenceName = "strcutureSeq", initialValue = 1, allocationSize = 1)
+	@SequenceGenerator(name = "structureSeqGen", sequenceName = "structureSeq", initialValue = 1, allocationSize = 1)
 	@GeneratedValue(generator = "structureSeqGen")
 	private Long id;
 	@Column(name = "name")
