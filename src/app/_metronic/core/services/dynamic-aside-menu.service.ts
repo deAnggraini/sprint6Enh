@@ -113,7 +113,7 @@ export class DynamicAsideMenuService {
         if (item.menus.length > 2) {
           let title = 'Lihat Lebih Sedikit ' + item.title;
           if (item.showLess) {
-            title = 'Lihat Semua' + item.title;
+            title = 'Lihat Semua ' + item.title;
           }
           items.push({
             isFunction: true,
@@ -148,7 +148,7 @@ export class DynamicAsideMenuService {
           });
         }
       }
-    })    
+    })   
     return items;
   }
 

@@ -207,7 +207,7 @@ style="background: {{headerBackground}}; box-shadow: {{showAside ? '0px 4px 8px 
   <!-- begin::if don't have submenu -->
   <ng-container *ngIf="!item.menus.length">
     <li class="menu-item" aria-haspopup="true" data-menu-toggle="hover">
-      <a class="menu-link">
+      <a class="menu-link" [routerLink]="item.uri" routerLinkActive="active">
         <span [inlineSVG]="imgUrl + item.icon" cacheSVG="true" class="svg-icon menu-icon"></span>
         <span class="menu-text" [translate]="item.translate">{{item.title}}</span>
         <!-- <i class="menu-icon"></i> -->
@@ -219,9 +219,9 @@ style="background: {{headerBackground}}; box-shadow: {{showAside ? '0px 4px 8px 
   <!-- begin::if has submenu -->
   <ng-container *ngIf="item.menus.length">
     <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover"
-      [ngClass]="{ 'menu-item-open': isMenuItemActive(item.page) }" routerLinkActive="menu-item-open">
-      <a class="menu-link menu-toggle" [attr.href]="item.page" routerLinkActive="active"
-        [ngClass]="{ 'active ': isMenuItemActive(item.page) }">
+      [ngClass]="{ 'menu-item-open': isMenuItemActive(item.uri) }" routerLinkActive="menu-item-open">
+      <a class="menu-link menu-toggle" [attr.href]="item.uri" routerLinkActive="active"
+        [ngClass]="{ 'active ': isMenuItemActive(item.uri) }">
         <span [inlineSVG]="imgUrl + item.icon" cacheSVG="true" class="svg-icon menu-icon"></span>
         <span class="menu-text" [translate]="item.translate">{{
           item.title
@@ -251,7 +251,7 @@ style="background: {{headerBackground}}; box-shadow: {{showAside ? '0px 4px 8px 
   <!-- begin::if don't have submenu -->
   <ng-container *ngIf="!item.menus.length">
       <li class="menu-item" aria-haspopup="true" data-menu-toggle="hover" style="padding-top: 15px;">
-        <a class="menu-link">
+        <a class="menu-link" [routerLink]="item.uri" routerLinkActive="active">
           <span [inlineSVG]="imgUrl + item.icon" cacheSVG="true" class="svg-icon menu-icon"></span>
           <span class="menu-text" [translate]="item.translate">{{item.title}}</span>
           <!-- <i class="menu-icon"></i> -->
@@ -263,9 +263,9 @@ style="background: {{headerBackground}}; box-shadow: {{showAside ? '0px 4px 8px 
   <!-- begin::if has submenu -->
   <ng-container *ngIf="item.menus.length">
     <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover"
-      [ngClass]="{ 'menu-item-open': isMenuItemActive(item.page) }" routerLinkActive="menu-item-open">
-      <a class="menu-link menu-toggle" [attr.href]="item.page" routerLinkActive="active"
-        [ngClass]="{ 'active ': isMenuItemActive(item.page) }">
+      [ngClass]="{ 'menu-item-open': isMenuItemActive(item.uri) }" routerLinkActive="menu-item-open">
+      <a class="menu-link menu-toggle" [attr.href]="item.uri" routerLinkActive="active"
+        [ngClass]="{ 'active ': isMenuItemActive(item.uri) }">
         <span [inlineSVG]="imgUrl + item.icon" cacheSVG="true" class="svg-icon menu-icon"></span>
         <span class="menu-text" [translate]="item.translate">{{
           item.title
