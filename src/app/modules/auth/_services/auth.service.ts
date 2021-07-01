@@ -106,7 +106,9 @@ export class AuthService implements OnDestroy {
   }
 
   logout() {
-    this.apiService.post(`${this.oauth_url}/logout`, {}).subscribe(resp => console.log({ resp }));
+    // if(check cookie tidak kosong) {
+    // this.apiService.post(`${this.oauth_url}/logout`, {}).subscribe(resp => console.log({ resp }));
+    // }
     localStorage.removeItem(this.authLocalStorageToken);
     this.router.navigate(['/auth/login'], {
       queryParams: {},

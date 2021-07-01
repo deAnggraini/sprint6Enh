@@ -2,8 +2,8 @@ export class CommonHttpResponse {
     error?: string;
     msg?: string;
     status?: {
-        error: string;
-        msg: string;
+        code: string;
+        message: string;
     }
     data?: any;
     paging?: {
