@@ -34,7 +34,7 @@ public class ArticleController extends BaseController {
 	@Autowired
 	private UploadService uploadService;
 
-	@GetMapping("/api/doc/theme")
+	@GetMapping("/api/v1/doc/theme")
 	public ResponseEntity<RestResponse<ThemeDto>> theme() {
 		logger.info("theme process");
 		try{
