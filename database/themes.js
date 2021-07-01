@@ -6,7 +6,7 @@ const DefaultThemeConfig = {
         hover: 'red',
     },
     homepage: {
-        bg_img_top: 'default_top.svg',
+        bg_img_top: '/themes/homepage/default_top.svg',
         //bg_img_top: 'news.svg',
         component: [
             'search',
@@ -17,7 +17,7 @@ const DefaultThemeConfig = {
         ]
     },
     login: {
-        image: 'default_login.svg'
+        image: '/themes/homepage/default_login.svg'
     }
 }
 
