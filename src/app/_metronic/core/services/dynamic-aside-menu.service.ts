@@ -72,13 +72,10 @@ export class DynamicAsideMenuService {
       // root: false,
       // submenu: [],
     }
-    const parseItem = (item: any): Menu => {
-      const { id, title, desc } = item;
-      const icon = 'flaticon2-list-2';
-      // const svg = './assets/media/svg/icons/Layout/Layout-right-panel-2.svg';
+    const parseItem = (item: any): Menu => { 
+      const { id, title, desc, icon, uri} = item;
       const svg = './assets/media/svg/icons/Navigation/Angle-right.svg';
-      const page = `/article/list/${id}`;
-      let res: Menu = Object.assign({}, dumm_template, { id, title, icon, svg, page, submenu: [] });
+      let res: Menu = Object.assign({}, dumm_template, { id, title, icon, svg, uri, submenu: [] });
       return res;
     }
     const readChild = (item: any): Menu => {     
