@@ -1,7 +1,8 @@
 
   <!-- [ngStyle]="showAside ? {'box-shadow': '0px 4px 8px 0px #0202027b'} : {'box-shadow': '-2px 4px 8px 0px #0000001A'};" -->
+  <!-- style="background: {{headerBackground}}; box-shadow: {{showAside ? '0px 4px 8px 0px #0202027b' : '-2px 4px 8px 0px #0000001A'}}" -->
 <div class="brand flex-column-auto" id="kt_brand" [ngClass]="brandClasses"
-style="background: {{headerBackground}}; box-shadow: {{showAside ? '0px 4px 8px 0px #0202027b' : '-2px 4px 8px 0px #0000001A'}}"
+  [ngStyle]="{'background': headerBackground, 'box-shadow': showAside ? '0px 4px 8px 0px #0202027b' : '-2px 4px 8px 0px #0000001A'}"
   >
   <!-- routerLink="/"  -->
   <a class="brand-logo cursor-pointer" *ngIf="showAside">
@@ -66,7 +67,7 @@ style="background: {{headerBackground}}; box-shadow: {{showAside ? '0px 4px 8px 
   <!-- begin::if don't have submenu -->
   <ng-container *ngIf="!item.submenu">
     <li class="menu-item" aria-haspopup="true" routerLinkActive="menu-item-active">
-      <a class="menu-link" [routerLink]="item.page" routerLinkActive="active">
+      <a class="menu-link" [routerLink]="item.uri" routerLinkActive="active">
         <span [inlineSVG]="item.svg" cacheSVG="true" class="svg-icon menu-icon"></span>
         <span class="menu-text" [translate]="item.translate">{{
           item.title

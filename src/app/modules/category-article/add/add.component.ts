@@ -241,7 +241,6 @@ export class AddComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initForm();
     const menuSubscr = this.menu.menuConfig$.subscribe(res => {
-      console.log({ res });
       this.categories = this.menu.categories;
       this.categories$.next(this.categories);
       this.menuConfig = res;
