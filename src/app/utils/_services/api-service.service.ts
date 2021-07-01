@@ -53,7 +53,7 @@ export class ApiService {
         if (res.error && res.error !== '00') throw Error(res.msg);
         if (res.status && res.status.code !== '00' && res.status.code !== 'OO') {
           console.error('error', res.status);
-          throw Error(res.msg);
+          throw Error(res.status.message);
         }
         const { data, paging } = res;
         if (paging) return of({ data, paging });
@@ -86,7 +86,7 @@ export class ApiService {
         if (res.error && res.error !== '00') throw Error(res.msg);
         if (res.status && res.status.code !== '00' && res.status.code !== 'OO') {
           console.error('error', res.status);
-          throw Error(res.msg);
+          throw Error(res.status.message);
         }
         const { data, paging } = res;
         if (paging) return of({ data, paging });
