@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import id.co.bca.pakar.be.doc.common.Constant;
 import id.co.bca.pakar.be.doc.dto.ThemeDto;
 import id.co.bca.pakar.be.doc.dto.UploadFileDto;
 import id.co.bca.pakar.be.doc.model.Theme;
@@ -36,36 +37,48 @@ public class ArticleController extends BaseController {
 	@GetMapping("/api/doc/theme")
 	public ResponseEntity<RestResponse<ThemeDto>> theme() {
 		logger.info("theme process");
-		HttpHeaders headers = new HttpHeaders();
-		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+		try{
+			HttpHeaders headers = new HttpHeaders();
+			headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
 
-		ThemeDto themeDto = themeService.getThemeList();
+			ThemeDto themeDto = themeService.getThemeList();
 
-		logger.info("themeDto" +themeDto);
+			logger.info("themeDto" +themeDto);
 
-		return createResponse(themeDto, "OO", "SUCCESS");
+			return this.createResponse(themeDto, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
+
+		}catch (Exception e) {
+			logger.error("exception", e);
+			return this.createResponse(new ThemeDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
+		}
+
 	}
 
-	@PostMapping("/api/doc/upload")
+	/*@PostMapping("/api/doc/upload")
 	public ResponseEntity<RestResponse<UploadFileDto>> uploadFile(
 			@RequestParam("file") MultipartFile file, @RequestHeader(name="Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @RequestParam String imageType) {
-
 		logger.info("uploadFile process");
-		logger.info("received token bearer --- " + authorization);
-		String tokenValue = "";
-		if (authorization != null && authorization.contains("Bearer")) {
-			tokenValue = authorization.replace("Bearer", "").trim();
+		try {
+			logger.info("received token bearer --- " + authorization);
+			String tokenValue = "";
+			if (authorization != null && authorization.contains("Bearer")) {
+				tokenValue = authorization.replace("Bearer", "").trim();
 
-			logger.info("token value request header --- "+tokenValue);
-			logger.info("username request header --- "+username);
+				logger.info("token value request header --- " + tokenValue);
+				logger.info("username request header --- " + username);
+			}
+			HttpHeaders headers = new HttpHeaders();
+			headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+
+			logger.info("image type " + imageType);
+			UploadFileDto uploadFileDto = uploadService.storeFile(file, imageType, username);
+			return this.createResponse(uploadFileDto, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
+
+		}catch (Exception e){
+			logger.error("exception", e);
+			return this.createResponse(new UploadFileDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
 		}
-		HttpHeaders headers = new HttpHeaders();
-		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-
-		logger.info("image type "+imageType);
-		UploadFileDto uploadFileDto = uploadService.storeFile(file, imageType);
-		return createResponse(uploadFileDto, "OO", "SUCCESS");
-	}
+	}*/
 
 
 
