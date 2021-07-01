@@ -96,6 +96,8 @@ public class MenuServiceImpl implements MenuService {
             menuDto.setId(structure.getId());
             menuDto.setLevel(structure.getLevel());
             menuDto.setOrder(structure.getSort());
+            menuDto.setMenuName(structure.getStructureName());
+            menuDto.setMenuDescription(structure.getStructureDescription());
             menuDto.setParent(structure.getParentStructure());
             menuDto.setUri(structure.getUri());
             try {
