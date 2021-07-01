@@ -19,14 +19,14 @@ public interface MenuRepository extends CrudRepository<Menu, String> {
     List<Long> findMenuId(@Param("username") String username);
 
     @Query(
-            value = "SELECT * FROM r_menu m where m.id=:id AND m.nav = 'top' AND m.deleted IS FALSE",
+            value = "select m.* from r_menu m join r_menu_role rmr on m.id = rmr.menu_id join r_user_role rur on rmr.role_id=rur.role_id join r_user_profile rup on rur.username=:username where m.nav = 'top' AND m.deleted IS FALSE",
             nativeQuery = true)
-    List<Menu> getAllTopMenuById(@Param("id") Long id);
+    List<Menu> getAllTopMenuById(@Param("username") String username);
 
     @Query(
-            value = "SELECT * FROM r_menu m where m.id=:id AND m.nav = 'bottom' AND m.deleted IS FALSE",
+            value = "select m.* from r_menu m join r_menu_role rmr on m.id = rmr.menu_id join r_user_role rur on rmr.role_id=rur.role_id join r_user_profile rup on rur.username=:username where m.nav = 'bottom' AND m.deleted IS FALSE",
             nativeQuery = true)
-    List<Menu> getAllBottomMenuById(@Param("id") Long id);
+    List<Menu> getAllBottomMenuById(@Param("username") String username);
 
 
     @Query(
