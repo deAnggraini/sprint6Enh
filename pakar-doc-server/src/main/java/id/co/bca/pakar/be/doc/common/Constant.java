@@ -21,7 +21,8 @@ public class Constant {
 		REQUEST_PARAM_INVALID(new String[] { "01", "Request Param Invalid" }),
 		MAX_UPLOAD_EXCEEDED(new String[] { "01", "Exceeded file size" }),
 		DATA_NOT_FOUND(new String[] { "01", "Not found data" }),
-		INVALID_STRUCUTURE_LEVEL(new String[] { "01", "Level Structure Invalid" });;
+		INVALID_STRUCTURE_LEVEL(new String[] { "01", "Level Structure Invalid" }),
+		INVALID_SORT_STRUCTURE(new String[] { "01", "Sort value exist in same parent  id" });
 
 		// declaring private variable for getting values
 		private String action[];
