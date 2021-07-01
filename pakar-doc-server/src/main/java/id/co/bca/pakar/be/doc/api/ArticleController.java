@@ -22,6 +22,7 @@ import id.co.bca.pakar.be.doc.dto.SearchHistoryItem;
 import id.co.bca.pakar.be.doc.util.JSONMapperAdapter;
 import org.springframework.web.multipart.MultipartFile;
 
+@CrossOrigin
 @RestController
 public class ArticleController extends BaseController {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
