@@ -49,6 +49,7 @@ export class ApiService {
   }): Observable<any> {
     return this.http.post(url, body, options == null ? this.getHeaders() : options).pipe(
       concatMap((res: CommonHttpResponse) => {
+        console.log({ res });
         if (res.error && res.error !== '00') throw Error(res.msg);
         if (res.status && res.status.error !== '00') throw Error(res.msg);
         const { data, paging } = res;
@@ -56,6 +57,7 @@ export class ApiService {
         return of(data);
       }),
       catchError((err) => {
+        console.log('iki endi', err);
         console.error('ApiService', err);
         setTimeout(() => this.toast.showDanger(err.message), 0);
         throw err.message;
