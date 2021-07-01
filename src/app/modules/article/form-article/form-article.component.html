@@ -16,9 +16,23 @@
         </div>
         <div class="form-group">
             <label>Deskripsi Singkat *</label>
-            <select class="form-control">
-                <option value="0">-- Silahkan Pilih --</option>
-            </select>
+            <ckeditor [editor]="editor" [config]="config" tagName="textarea"></ckeditor>
+        </div>
+        <div class="form-group">
+            <label>Gambar Artikel *</label>
+            <input type="file" class="form-control">
+        </div>
+        <div class="form-group">
+            <label>View Artikel *</label>
+            <input type="url" class="form-control">
+        </div>
+        <div class="form-group">
+            <label>Content Artikel *</label>
+            <div class="border border-light rounded-sm p-3">
+                <div class="border border-light rounded-sm p-2 mb-3">Ketentuan Tahapan <span>info</span></div>
+                <div class="border border-light rounded-sm p-2 mb-3">Prosedure Tahapan <span>info</span></div>
+                <div class="border border-light rounded-sm p-2 mb-3">Formulir Tahapan <span>info</span></div>
+            </div>
         </div>
     </form>
 </div>

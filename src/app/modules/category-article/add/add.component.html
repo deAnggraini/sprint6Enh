@@ -21,7 +21,7 @@
                 </div>
                 <ul class="navi navi-hover mt-5">
                     <ng-container *ngFor="let item of menuConfig.items">
-                        <ng-container class="navi-item" *ngIf="item.root === true" [ngTemplateOutlet]="rowItem"
+                        <ng-container class="navi-item" *ngIf="item.level === 1" [ngTemplateOutlet]="rowItem"
                             [ngTemplateOutletContext]="{item:item}">
                         </ng-container>
                     </ng-container>

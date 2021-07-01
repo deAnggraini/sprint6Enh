@@ -15,6 +15,7 @@ import { RecommendationComponent } from './recommendation/recommendation.compone
 import { TerbaruComponent } from './terbaru/terbaru.component';
 import { UtilsModule } from 'src/app/utils/utils.module';
 import { FormArticleComponent } from './form-article/form-article.component';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 
 const routes: Routes = [
   {
@@ -54,7 +55,8 @@ const routes: Routes = [
     MatInputModule,
     FormsModule,
     InlineSVGModule,
-    UtilsModule
+    UtilsModule,
+    CKEditorModule
   ]
 })
 export class ArticleModule { }
