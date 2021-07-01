@@ -37,7 +37,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 		http.authorizeRequests()
 				.antMatchers(AUTH_WHITELIST).permitAll()
 				.antMatchers("/api/doc/**")
-				.authenticated();
+				.permitAll();
 	}
 
 	@Bean()
