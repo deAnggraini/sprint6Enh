@@ -38,6 +38,7 @@ app.use('/auth', require('./routes/oauth'));
 app.use('/auth', require('./routes/oauth'));
 // app.use('/master', require('./routes/master'));
 app.use('/doc', require('./routes/article'));
+app.use('/v1/doc', require('./routes/v1'));
 // app.use('/theme', require('./routes/themes'));
 
 // catch 404 and forward to error handler
