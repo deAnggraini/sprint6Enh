@@ -10,7 +10,7 @@ import { tap } from 'rxjs/operators';
 })
 export class ThemeService {
 
-  private _base_url = `${environment.apiUrl}/doc`;
+  private _base_url = `${environment.apiUrl}/v1/doc`;
   private theme: ThemeConfig = DefaultThemeConfig;
   currentTheme: Subject<ThemeConfig> = new Subject();
   homepageComponent$: BehaviorSubject<string[]> = new BehaviorSubject([]);
