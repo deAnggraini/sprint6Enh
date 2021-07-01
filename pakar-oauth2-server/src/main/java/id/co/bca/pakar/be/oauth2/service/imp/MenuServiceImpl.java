@@ -73,6 +73,7 @@ public class MenuServiceImpl implements MenuService {
             menuDto.setMenuName(menu.getName());
             menuDto.setMenuDescription(menu.getDescription());
             menuDto.setUri(menu.getUri());
+            menuDto.setEditStatus(menu.getEdit());
             try {
                 MenuIcons mic = menuIconRepository.findIconbyMenuId(menu.getId());
                 menuDto.setIconUri(mic != null ? mic.getIcons().getUri() : "");
@@ -101,6 +102,7 @@ public class MenuServiceImpl implements MenuService {
             menuDto.setMenuDescription(structure.getStructureDescription());
             menuDto.setParent(structure.getParentStructure());
             menuDto.setUri(structure.getUri());
+            menuDto.setEditStatus(structure.getEdit());
             try {
                 StructureIcons sic = structureIconRepository.findByStructureId(structure.getId());
                 menuDto.setIconUri(sic != null ? sic.getIcons().getUri() : "");
