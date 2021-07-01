@@ -51,7 +51,7 @@ export class ApiService {
       concatMap((res: CommonHttpResponse) => {
         console.log({ res });
         if (res.error && res.error !== '00') throw Error(res.msg);
-        if (res.status && res.status.error !== '00') throw Error(res.msg);
+        if (res.status && res.status.code !== '00') throw Error(res.msg);
         const { data, paging } = res;
         if (paging) return of({ data, paging });
         return of(data);
@@ -81,7 +81,7 @@ export class ApiService {
     return this.http.get(url, options == null ? this.getHeaders() : options).pipe(
       concatMap((res: CommonHttpResponse) => {
         if (res.error && res.error !== '00') throw Error(res.msg);
-        if (res.status && res.status.error !== '00') throw Error(res.msg);
+        if (res.status && res.status.code !== '00') throw Error(res.msg);
         const { data, paging } = res;
         if (paging) return of({ data, paging });
         return of(data);
