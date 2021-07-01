@@ -1,12 +1,8 @@
 package id.co.bca.pakar.be.oauth2.service.imp;
 
-import id.co.bca.pakar.be.oauth2.dao.MenuIconRepository;
-import id.co.bca.pakar.be.oauth2.dao.MenuImageRepository;
-import id.co.bca.pakar.be.oauth2.dao.MenuRepository;
-import id.co.bca.pakar.be.oauth2.dao.StructureRepository;
+import id.co.bca.pakar.be.oauth2.dao.*;
 import id.co.bca.pakar.be.oauth2.dto.MenuDto;
-import id.co.bca.pakar.be.oauth2.model.Menu;
-import id.co.bca.pakar.be.oauth2.model.Structure;
+import id.co.bca.pakar.be.oauth2.model.*;
 import id.co.bca.pakar.be.oauth2.service.MenuService;
 import id.co.bca.pakar.be.oauth2.util.TreeMenu;
 import org.slf4j.Logger;
@@ -33,6 +29,10 @@ public class MenuServiceImpl implements MenuService {
     private MenuImageRepository menuImageRepository;
     @Autowired
     private MenuIconRepository menuIconRepository;
+    @Autowired
+    private StructureImageRepository structureImageRepository;
+    @Autowired
+    private StructureIconRepository structureIconRepository;
 
     @Override
     @Transactional
@@ -72,8 +72,18 @@ public class MenuServiceImpl implements MenuService {
             menuDto.setMenuName(menu.getName());
             menuDto.setMenuDescription(menu.getDescription());
             menuDto.setUri(menu.getUri());
-            // Set iconUri
-            //Set ImageUri
+            try {
+                MenuIcons mic = menuIconRepository.findIconbyMenuId(menu.getId());
+                menuDto.setIconUri(mic != null ? mic.getIcons().getUri() : "");
+            } catch (Exception e) {
+                logger.error("exception",e);
+            }
+            try {
+                MenuImages mim = menuImageRepository.findImagebyMenuId(menu.getId());
+                menuDto.setImageUri(mim != null ? mim.getImages().getUri() : "");
+            } catch (Exception e) {
+                logger.error("exception",e);
+            }
             listOfMenus.add(menuDto);
         }
         return listOfMenus;
@@ -88,8 +98,18 @@ public class MenuServiceImpl implements MenuService {
             menuDto.setOrder(structure.getSort());
             menuDto.setParent(structure.getParentStructure());
             menuDto.setUri(structure.getUri());
-            // Set iconUri
-            //Set ImageUri
+            try {
+                StructureIcons sic = structureIconRepository.findByStructureId(structure.getId());
+                menuDto.setIconUri(sic != null ? sic.getIcons().getUri() : "");
+            } catch (Exception e) {
+                logger.error("exception",e);
+            }
+            try {
+                StructureImages sim = structureImageRepository.findByStructureId(structure.getId());
+                menuDto.setImageUri(sim != null ? sim.getImages().getUri() : "");
+            } catch (Exception e) {
+                logger.error("exception",e);
+            }
             listOfMenus.add(menuDto);
         }
         return listOfMenus;
