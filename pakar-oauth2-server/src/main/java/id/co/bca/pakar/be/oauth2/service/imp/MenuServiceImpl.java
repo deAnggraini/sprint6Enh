@@ -63,9 +63,10 @@ public class MenuServiceImpl implements MenuService {
             allMenus.addAll(topTreeMenu);
 
 
-            logger.info("get all menu");
-            Long idMenu = menuRepository.findMenuId(username);
-            Iterable<Structure> menus = menuRepository.getAllStructureById(idMenu);
+            logger.info("get all structure");
+//            Long idMenu = menuRepository.findMenuId(username);
+//            Iterable<Structure> menus = menuRepository.getAllStructureById(idMenu);
+            Iterable<Structure> menus = structureRepository.findAll();
             List<MenuDto> treeMenu = new TreeMenu().menuTree(mapToListIterable(menus));
             allMenus.addAll(treeMenu);
 
