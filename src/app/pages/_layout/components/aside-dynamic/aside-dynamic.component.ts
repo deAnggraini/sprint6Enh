@@ -4,6 +4,7 @@ import { config, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { LayoutService, DynamicAsideMenuService } from '../../../../_metronic/core';
 import { ThemeService } from 'src/app/modules/_services/theme.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-aside-dynamic',
@@ -29,6 +30,8 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
   currentUrl: string;
   headerBackground: string;
 
+  imgUrl = `${environment.apiUrl}/images`;
+  
   constructor(
     private layout: LayoutService,
     private router: Router,
