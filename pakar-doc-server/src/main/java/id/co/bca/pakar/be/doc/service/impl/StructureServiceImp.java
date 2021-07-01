@@ -154,34 +154,44 @@ public class StructureServiceImp implements StructureService {
             logger.info("add category");
             StructureResponseDto _dto = new StructureResponseDto();
 
-            /*
-			get existing structure from db with param structure id
-			 */
-            Optional<Structure> parentOp = structureRepository.findById(dto.getParent());
-            logger.debug("structure result from db {}", parentOp);
-            if (parentOp.isEmpty()) {
-                if (dto.getLevel() > 1) {
-                    logger.info("not found structure with id {}", dto.getParent());
-                    throw new DataNotFoundException("not found parent data with structure id " + dto.getParent());
+            // validate
+            if(dto.getParent().intValue() == 0) {
+                if(dto.getLevel().intValue() > 1) {
+                    logger.info("level from request invalid, cause parent value 0 and level value must be setted to 1}");
+                    throw new InvalidLevelException("invalid new level " + dto.getLevel() + "with parent value "+dto.getParent());
                 }
-            }
-            Structure _parentOp = parentOp.get();
-			/*
-			validate parent with level, if request level <
-			*/
-            Long parentLevel = _parentOp.getLevel();
-            if (dto.getLevel().longValue() <= parentLevel.longValue()) {
-                logger.info("level from request invalid, cause new level value {} < than from parent level {}", dto.getLevel(), parentLevel);
-                throw new InvalidLevelException("invalid new level " + dto.getLevel());
             }
 
             /*
-			validate duplicate sorting value for same parent id
-			*/
-            Boolean isExiststructure = structureRepository.existStructureByParentIdAndSort(_parentOp.getParentStructure(), _parentOp.getSort());
-            if (isExiststructure.booleanValue()) {
-                logger.info("sort value already exist, stop process {} for parent id {}", dto.getSort(), dto.getParent());
-                throw new InvalidSortException("sort value already exist " + dto.getSort());
+			get existing structure from db with param structure id
+			 */
+            if(dto.getParent() > 0) {
+                Optional<Structure> parentOp = structureRepository.findById(dto.getParent());
+                logger.debug("structure result from db {}", parentOp);
+                if (parentOp.isEmpty()) {
+                    if (dto.getLevel() > 1) {
+                        logger.info("not found structure with id {}", dto.getParent());
+                        throw new DataNotFoundException("not found parent data with structure id " + dto.getParent());
+                    }
+                }
+                Structure _parentOp = parentOp.get();
+                /*
+                validate parent with level, if request level <
+                */
+                Long parentLevel = _parentOp.getLevel();
+                if (dto.getLevel().longValue() <= parentLevel.longValue()) {
+                    logger.info("level from request invalid, cause new level value {} < than from parent level {}", dto.getLevel(), parentLevel);
+                    throw new InvalidLevelException("invalid new level " + dto.getLevel());
+                }
+
+                /*
+                validate duplicate sorting value for same parent id
+                */
+                Boolean isExiststructure = structureRepository.existStructureByParentIdAndSort(_parentOp.getParentStructure(), _parentOp.getSort());
+                if (isExiststructure.booleanValue()) {
+                    logger.info("sort value already exist, stop process {} for parent id {}", dto.getSort(), dto.getParent());
+                    throw new InvalidSortException("sort value already exist " + dto.getSort());
+                }
             }
 
             _dto.setName(dto.getName());

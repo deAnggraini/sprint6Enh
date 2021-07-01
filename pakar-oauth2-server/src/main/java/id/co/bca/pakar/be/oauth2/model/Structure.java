@@ -1,7 +1,5 @@
 package id.co.bca.pakar.be.oauth2.model;
 
-import id.co.bca.pakar.be.oauth2.model.EntityBase;
-
 import javax.persistence.*;
 
 @Entity

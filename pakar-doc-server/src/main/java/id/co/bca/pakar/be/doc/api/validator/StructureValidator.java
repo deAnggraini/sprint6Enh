@@ -81,52 +81,59 @@ public class StructureValidator implements Validator {
             return;
         }
 
+        logger.debug("validate level {}", dto.getLevel());
         if(dto.getLevel().longValue() > 1) {
             if(!dto.getIcon().isEmpty())  {
-                errors.rejectValue("icon", "request icon invalid cause level value > 1");
+                errors.rejectValue("level", "request icon invalid cause level value > 1");
                 return;
             }
         }
 
         boolean validFileType = false;
-        if(!dto.getIcon().isEmpty()) {
-            String[] fileTypes = fileType.split("\\,");
-            for(String str : fileTypes) {
-                if(dto.getIcon().getContentType().equals(str)) {
-                    validFileType = true;
-                    break;
+        logger.debug("icon value {}", dto.getIcon());
+        if(dto.getIcon() != null) {
+            if (!dto.getIcon().isEmpty()) {
+                String[] fileTypes = fileType.split("\\,");
+                for (String str : fileTypes) {
+                    if (dto.getIcon().getContentType().equals(str)) {
+                        validFileType = true;
+                        break;
+                    }
                 }
-            }
 
-            if(!validFileType) {
-                errors.rejectValue("icon", "invalid icon file type");
-                return;
-            }
+                if (!validFileType) {
+                    errors.rejectValue("icon", "invalid icon file type");
+                    return;
+                }
 
-            if(dto.getIcon().getSize() > Long.parseLong(maxFileSize)){
-                errors.rejectValue("icon", "exceeded file size");
-                return;
+                if (dto.getIcon().getSize() > Long.parseLong(maxFileSize)) {
+                    errors.rejectValue("icon", "exceeded file size");
+                    return;
+                }
             }
         }
 
         validFileType = false;
-        if(!dto.getImage().isEmpty()) {
-            String[] fileTypes = fileType.split("\\,");
-            for(String str : fileTypes) {
-                if(dto.getImage().getContentType().equals(str)) {
-                    validFileType = true;
-                    break;
+        logger.debug("image value {}", dto.getImage());
+        if(dto.getImage() != null) {
+            if (!dto.getImage().isEmpty()) {
+                String[] fileTypes = fileType.split("\\,");
+                for (String str : fileTypes) {
+                    if (dto.getImage().getContentType().equals(str)) {
+                        validFileType = true;
+                        break;
+                    }
                 }
-            }
 
-            if(!validFileType) {
-                errors.rejectValue("image", "invalid image file type");
-                return;
-            }
+                if (!validFileType) {
+                    errors.rejectValue("image", "invalid image file type");
+                    return;
+                }
 
-            if(dto.getImage().getSize() > Long.parseLong(maxFileSize)){
-                errors.rejectValue("image", "exceeded file size");
-                return;
+                if (dto.getImage().getSize() > Long.parseLong(maxFileSize)) {
+                    errors.rejectValue("image", "exceeded file size");
+                    return;
+                }
             }
         }
     }
