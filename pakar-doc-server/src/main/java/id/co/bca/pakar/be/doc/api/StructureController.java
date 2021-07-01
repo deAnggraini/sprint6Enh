@@ -5,6 +5,7 @@ import id.co.bca.pakar.be.doc.common.Constant;
 import id.co.bca.pakar.be.doc.dto.*;
 import id.co.bca.pakar.be.doc.exception.DataNotFoundException;
 import id.co.bca.pakar.be.doc.exception.InvalidLevelException;
+import id.co.bca.pakar.be.doc.exception.InvalidSortException;
 import id.co.bca.pakar.be.doc.service.StructureService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +38,7 @@ public class StructureController extends BaseController {
 	 */
 	@PostMapping(value = "/api/doc/saveStructure", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE }, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<RestResponse<StructureResponseDto>> saveStructure(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, StructureWithFileDto structure, BindingResult bindingResult) {
+	public ResponseEntity<RestResponse<StructureResponseDto>> saveStructure(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @ModelAttribute StructureWithFileDto structure, BindingResult bindingResult) {
 		try {
 			logger.info("add structure process");
 			logger.info("validate request input");
@@ -55,7 +56,10 @@ public class StructureController extends BaseController {
 			return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.DATA_NOT_FOUND.getAction()[0], Constant.ApiResponseCode.DATA_NOT_FOUND.getAction()[1]);
 		} catch (InvalidLevelException e) {
 			logger.error("exception", e);
-			return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.INVALID_STRUCUTURE_LEVEL.getAction()[0], Constant.ApiResponseCode.INVALID_STRUCUTURE_LEVEL.getAction()[1]);
+			return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.INVALID_STRUCTURE_LEVEL.getAction()[0], Constant.ApiResponseCode.INVALID_STRUCTURE_LEVEL.getAction()[1]);
+		} catch (InvalidSortException e) {
+			logger.error("exception", e);
+			return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.INVALID_SORT_STRUCTURE.getAction()[0], Constant.ApiResponseCode.INVALID_SORT_STRUCTURE.getAction()[1]);
 		} catch (Exception e) {
 			logger.error("exception", e);
 			return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
@@ -82,7 +86,7 @@ public class StructureController extends BaseController {
 			return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.DATA_NOT_FOUND.getAction()[0], Constant.ApiResponseCode.DATA_NOT_FOUND.getAction()[1]);
 		} catch (InvalidLevelException e) {
 			logger.error("exception", e);
-			return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.INVALID_STRUCUTURE_LEVEL.getAction()[0], Constant.ApiResponseCode.INVALID_STRUCUTURE_LEVEL.getAction()[1]);
+			return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.INVALID_STRUCTURE_LEVEL.getAction()[0], Constant.ApiResponseCode.INVALID_STRUCTURE_LEVEL.getAction()[1]);
 		} catch (Exception e) {
 			logger.error("exception", e);
 			return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
@@ -114,20 +118,20 @@ public class StructureController extends BaseController {
 	 * @param authorization
 	 * @param username
 	 * @param structures
-	 * @param bindingResult
 	 * @return
 	 */
 	@PostMapping(value = "/api/doc/saveBatchStructure", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<RestResponse<List<StructureResponseDto>>> saveBatchStructure(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, MultiStructureDto structures, BindingResult bindingResult) {
+	public ResponseEntity<RestResponse<List<StructureResponseDto>>> saveBatchStructure(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @RequestBody List<StructureDto> structures) {
 		try {
-			structureValidator.validate(structures, bindingResult);
-			if(bindingResult.hasErrors()) {
-				logger.info("binding result "+bindingResult.getAllErrors());
-				return createResponse(new ArrayList<StructureResponseDto>(), Constant.ApiResponseCode.REQUEST_PARAM_INVALID.getAction()[0], Constant.ApiResponseCode.REQUEST_PARAM_INVALID.getAction()[1]);
-			}
-			List<StructureResponseDto> response = structureService.saveBatchStructures(username, structures.getStructureWithFileDtoList());
+			List<StructureResponseDto> response = structureService.saveBatchStructures(username, structures);
 			return createResponse(response, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
+		} catch (DataNotFoundException e) {
+			logger.error("exception", e);
+			return createResponse(new ArrayList<StructureResponseDto>(), Constant.ApiResponseCode.DATA_NOT_FOUND.getAction()[0], Constant.ApiResponseCode.DATA_NOT_FOUND.getAction()[1]);
+		} catch (InvalidLevelException e) {
+			logger.error("exception", e);
+			return createResponse(new ArrayList<StructureResponseDto>(), Constant.ApiResponseCode.INVALID_STRUCTURE_LEVEL.getAction()[0], Constant.ApiResponseCode.INVALID_STRUCTURE_LEVEL.getAction()[1]);
 		} catch (Exception e) {
 			logger.error("exception", e);
 			return createResponse(new ArrayList<StructureResponseDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
@@ -139,101 +143,14 @@ public class StructureController extends BaseController {
 	 * @return
 	 */
 	@GetMapping("/api/doc/category")
-	public ResponseEntity<RestResponse<List<MenuDto>>> getCategories() {
+	public ResponseEntity<RestResponse<List<MenuDto>>> getCategories(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username) {
 		logger.info("get all structure/category");
 		try {
-			List<MenuDto> menus = structureService.getCategories();
+			List<MenuDto> menus = structureService.getCategories(username);
 			return createResponse(menus,Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
 		} catch (Exception e) {
 			logger.error("exception", e);
 			return createResponse(new ArrayList<MenuDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
 		}
-	}
-
-	public static void main(String args[]) {
-		List<MenuDto> menus = new ArrayList<MenuDto>();
-		MenuDto menuLevel = new MenuDto();
-		menuLevel.setId(1L);
-		menuLevel.setMenuName("Home PAKAR");
-		menuLevel.setLevel(1L);
-		menuLevel.setOrder(1L);
-		menuLevel.setParent(0L);
-		menuLevel.setCode("1.1.0");
-		menus.add(menuLevel);
-		menuLevel = new MenuDto();
-		menuLevel.setId(2L);
-		menuLevel.setMenuName("Aktivitas Cabang");
-		menuLevel.setLevel(1L);
-		menuLevel.setOrder(3L);
-		menuLevel.setParent(0L);
-		menuLevel.setCode("1.3.0");
-		menus.add(menuLevel);
-		menuLevel = new MenuDto();
-		menuLevel.setId(3L);
-		menuLevel.setLevel(1L);
-		menuLevel.setOrder(2L);
-		menuLevel.setParent(0L);
-		menuLevel.setCode("1.2.0");
-		menuLevel.setMenuName("Produk Untuk Nasabah");		
-		menus.add(menuLevel);
-		menuLevel = new MenuDto();
-		menuLevel.setId(7L);
-		menuLevel.setMenuName("PRODUK DANA");
-		menuLevel.setLevel(2L);
-		menuLevel.setOrder(1L);
-		menuLevel.setParent(7L);
-		menuLevel.setCode("2.1.7");
-		menus.add(menuLevel);
-		menuLevel = new MenuDto();
-		menuLevel.setId(9L);
-		menuLevel.setLevel(2L);
-		menuLevel.setOrder(2L);
-		menuLevel.setParent(7L);
-		menuLevel.setMenuName("Produk Kredit Produktif");
-		menus.add(menuLevel);
-		menuLevel = new MenuDto();
-		menuLevel.setId(4L);
-		menuLevel.setLevel(1L);
-		menuLevel.setOrder(4L);
-		menuLevel.setParent(0L);
-		menuLevel.setMenuName("Aplikasi Mesin");
-		menus.add(menuLevel);
-		menuLevel = new MenuDto();
-		menuLevel.setId(6L);
-		menuLevel.setLevel(1L);
-		menuLevel.setOrder(6L);
-		menuLevel.setParent(0L);
-		menuLevel.setMenuName("FAQ");
-		menus.add(menuLevel);
-		menuLevel = new MenuDto();
-		menuLevel.setId(5L);
-		menuLevel.setLevel(1L);
-		menuLevel.setOrder(5L);
-		menuLevel.setParent(0L);
-		menuLevel.setMenuName("Pakar PDF");
-		menus.add(menuLevel);
-		
-//		Comparator<MenuDto> comparator = Comparator.comparingLong(MenuDto::getLevel)
-//                .thenComparingLong(MenuDto::getOrder);
-//		menus.sort(comparator);
-////		Collections.sort(menus, new MenuComparator<MenuDto>());
-//		for (int i=0; i<menus.size(); i++)
-//            System.out.println(menus.get(i));
-//		
-//		String json = JSONMapperAdapter.objectToJson(menus);
-//		System.out.println(json);
-		
-		Comparator<MenuDto> compareByLevel = Comparator
-                .comparingLong(MenuDto::getLevel)
-                .thenComparingLong(MenuDto::getOrder)
-                .thenComparingLong(MenuDto::getParent);
-
-		List<MenuDto> sortedMenu = menus.stream()
-		        .sorted(compareByLevel)
-		        .collect(Collectors.toList());
-		for (int i=0; i<sortedMenu.size(); i++)
-          System.out.println(sortedMenu.get(i));
-		
-		System.out.println(sortedMenu);
 	}
 }

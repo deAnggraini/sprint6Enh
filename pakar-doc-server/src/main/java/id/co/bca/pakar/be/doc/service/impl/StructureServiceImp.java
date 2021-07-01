@@ -4,6 +4,7 @@ import id.co.bca.pakar.be.doc.dao.*;
 import id.co.bca.pakar.be.doc.dto.*;
 import id.co.bca.pakar.be.doc.exception.DataNotFoundException;
 import id.co.bca.pakar.be.doc.exception.InvalidLevelException;
+import id.co.bca.pakar.be.doc.exception.InvalidSortException;
 import id.co.bca.pakar.be.doc.model.*;
 import id.co.bca.pakar.be.doc.service.StructureService;
 import id.co.bca.pakar.be.doc.util.FileUploadUtil;
@@ -153,25 +154,44 @@ public class StructureServiceImp implements StructureService {
             logger.info("add category");
             StructureResponseDto _dto = new StructureResponseDto();
 
+            // validate
+            if(dto.getParent().intValue() == 0) {
+                if(dto.getLevel().intValue() > 1) {
+                    logger.info("level from request invalid, cause parent value 0 and level value must be setted to 1}");
+                    throw new InvalidLevelException("invalid new level " + dto.getLevel() + "with parent value "+dto.getParent());
+                }
+            }
+
             /*
 			get existing structure from db with param structure id
 			 */
-            Optional<Structure> parentOp = structureRepository.findById(dto.getParent());
-            logger.debug("structure result from db {}", parentOp);
-            if (parentOp.isEmpty()) {
-                if (dto.getLevel() > 1) {
-                    logger.info("not found structure with id {}", dto.getParent());
-                    throw new DataNotFoundException("not found parent data with structure id " + dto.getParent());
+            if(dto.getParent() > 0) {
+                Optional<Structure> parentOp = structureRepository.findById(dto.getParent());
+                logger.debug("structure result from db {}", parentOp);
+                if (parentOp.isEmpty()) {
+                    if (dto.getLevel() > 1) {
+                        logger.info("not found structure with id {}", dto.getParent());
+                        throw new DataNotFoundException("not found parent data with structure id " + dto.getParent());
+                    }
                 }
-            }
-            Structure _parentOp = parentOp.get();
-			/*
-			validate parent with level, if request level <
-			*/
-            Long parentLevel = _parentOp.getLevel();
-            if (dto.getLevel().longValue() <= parentLevel.longValue()) {
-                logger.info("level from request invalid, cause new level value {} < than from parent level {}", dto.getLevel(), parentLevel);
-                throw new InvalidLevelException("invalid new level " + dto.getLevel());
+                Structure _parentOp = parentOp.get();
+                /*
+                validate parent with level, if request level <
+                */
+                Long parentLevel = _parentOp.getLevel();
+                if (dto.getLevel().longValue() <= parentLevel.longValue()) {
+                    logger.info("level from request invalid, cause new level value {} < than from parent level {}", dto.getLevel(), parentLevel);
+                    throw new InvalidLevelException("invalid new level " + dto.getLevel());
+                }
+
+                /*
+                validate duplicate sorting value for same parent id
+                */
+                Boolean isExiststructure = structureRepository.existStructureByParentIdAndSort(_parentOp.getParentStructure(), _parentOp.getSort());
+                if (isExiststructure.booleanValue()) {
+                    logger.info("sort value already exist, stop process {} for parent id {}", dto.getSort(), dto.getParent());
+                    throw new InvalidSortException("sort value already exist " + dto.getSort());
+                }
             }
 
             _dto.setName(dto.getName());
@@ -292,7 +312,10 @@ public class StructureServiceImp implements StructureService {
         } catch (InvalidLevelException e) {
             logger.error("invalid level exception", e);
             throw new InvalidLevelException("invalid level exception", e);
-        } catch (Exception e) {
+        } catch (InvalidSortException e) {
+            logger.error("invalid sort exception", e);
+            throw new InvalidSortException("invalid sort exception", e);
+        }catch (Exception e) {
             logger.error("exception", e);
             throw new Exception("exception", e);
         }
@@ -307,14 +330,14 @@ public class StructureServiceImp implements StructureService {
      * @throws Exception
      */
     @Override
-    @Transactional
-    public List<StructureResponseDto> saveBatchStructures(String username, List<StructureWithFileDto> dtoList) throws Exception {
+    @Transactional(rollbackOn = {Exception.class, InvalidLevelException.class, DataNotFoundException.class})
+    public List<StructureResponseDto> saveBatchStructures(String username, List<StructureDto> dtoList) throws Exception {
         // looping save
         try {
             List<StructureResponseDto> newStructureList = new ArrayList<StructureResponseDto>();
-            for (StructureWithFileDto structureDto : dtoList) {
+            for (StructureDto structureDto : dtoList) {
                 try {
-                    logger.info("add category");
+                    logger.info("update category");
                     StructureResponseDto _dto = new StructureResponseDto();
                     logger.info("get structure id {} from database", structureDto.getId());
                     Optional<Structure> structureOp = structureRepository.findById(structureDto.getId());
@@ -326,103 +349,88 @@ public class StructureServiceImp implements StructureService {
                     logger.debug("extract structure from optional");
                     Structure structure = structureOp.get();
 
-                    _dto.setName(structureDto.getName());
-                    _dto.setDesc(structureDto.getDesc());
-                    Images _images = null;
-                    if (!structureDto.getImage().isEmpty()) {
-                        String location = pathCategory;
-                        logger.debug("folder location {}", location);
-                        logger.debug("image file name {}", structureDto.getImage().getOriginalFilename());
-
-                        Path path = Paths.get(location + structureDto.getImage().getOriginalFilename());
-
-                        logger.info("saving image");
-                        Images images = new Images();
-                        images.setCreatedBy(username);
-                        logger.debug("save file name to db {}", path.getFileName().toString());
-                        images.setImageName(path.getFileName().toString());
-                        logger.debug("save path file to db {}", path.toAbsolutePath().toString());
-                        images.setUri(path.toAbsolutePath().toString());
-                        _images = imageRepository.save(images);
-
-                        // save image to folder
-                        logger.info("saving image to share folder");
-                        FileUploadUtil.saveFile(location, structureDto.getImage());
+                    // validate data level
+                    /*
+                    if parent lavel == 0
+                        if level not 1 then process failed
+                     */
+                    Long currentLevel = structureDto.getLevel();
+                    Long currentPid = structureDto.getParent();
+                    // validate structure exist in database base on current pid if current pid != 0
+                    if(currentPid.intValue() > 0) {
+                        boolean isExist = structureRepository.existsById(currentPid);
+                        if(!isExist) {
+                            logger.info("no structure found in database, process stopped");
+                            throw new DataNotFoundException("no structure found in database");
+                        }
                     }
 
-                    Icons _icon = null;
-                    if (!structureDto.getIcon().isEmpty()) {
-                        String location = pathCategory;
-                        logger.debug("folder location {}", location);
-                        logger.debug("icon file name {}", structureDto.getIcon().getOriginalFilename());
-                        Path path = Paths.get(location + structureDto.getIcon().getOriginalFilename());
-
-                        logger.info("saving icon");
-                        Icons icons = new Icons();
-                        icons.setCreatedBy(username);
-                        logger.debug("save file name to db {}", path.getFileName().toString());
-                        icons.setIconName(path.getFileName().toString());
-                        logger.debug("save path file to db {}", path.toAbsolutePath().toString());
-                        icons.setUri(path.toAbsolutePath().toString());
-                        _icon = iconRepository.save(icons);
-
-                        // save image to folder
-                        logger.info("saving icon to share folder");
-                        FileUploadUtil.saveFile(location, structureDto.getIcon());
+                    if (currentPid.intValue() == 0) {
+                        if (currentLevel.intValue() != 1) {
+                            logger.info("invalid level, cause structure has parent value 0 but level != 1, process stopped");
+                            throw new InvalidLevelException("invalid level, cause structure has parent value 0 but level != 1");
+                        }
                     }
 
+                    /**
+                     * if current parent id != 0 then
+                     *   get structure with parent id = compared structure id
+                     *   if child
+                     */
+                    logger.info("structure will be validated {}", structureDto.toString());
+                    for (StructureDto _structureDto : dtoList) {
+                        logger.info("structure compared to {}", _structureDto.toString());
+                        if (_structureDto.getId().intValue() == currentPid.intValue()) {
+                            Long parentLevel = _structureDto.getLevel();
+                            if(currentLevel.intValue() <= parentLevel.intValue()) {
+                                logger.info("child level has value smaller than parent level, process stopped");
+                                throw new InvalidLevelException("child level has value smaller than parent level");
+                            }
+                        }
+                    }
+
+                    // cek if has same sort value in one level for one
                     logger.info("saving structure");
-                    if (structure == null) {
-                        // save to new structure
-                        structure.setCreatedBy(username);
-                        structure.setStructureName(structureDto.getName());
-                        structure.setStructureDescription(structureDto.getDesc());
-                        structure.setLevel(structureDto.getLevel());
-                        structure.setSort(structureDto.getSort());
-                        structure.setEdit(structureDto.getEdit());
-                        structure.setUri(structureDto.getUri());
-                        structure.setParentStructure(structureDto.getParent());
-                    } else {
-                        // update new structure
-                        structure.setModifyBy(username);
-                        structure.setModifyDate(new Date());
-                        structure.setStructureName(structureDto.getName());
-                        structure.setStructureDescription(structureDto.getDesc());
-                        structure.setLevel(structureDto.getLevel());
-                        structure.setSort(structureDto.getSort());
-                        structure.setEdit(structureDto.getEdit());
-                        structure.setUri(structureDto.getUri());
-                        structure.setParentStructure(structureDto.getParent());
-                    }
+                    // update new structure
+                    structure.setModifyBy(username);
+                    structure.setModifyDate(new Date());
+                    structure.setStructureName(structureDto.getName());
+                    structure.setStructureDescription(structureDto.getDesc());
+                    structure.setLevel(structureDto.getLevel());
+                    structure.setSort(structureDto.getSort());
+                    structure.setEdit(structureDto.getEdit());
+                    structure.setUri(structureDto.getUri());
+                    structure.setParentStructure(structureDto.getParent());
                     Structure _structure = structureRepository.save(structure);
 
-                    if (_images != null) {
-                        logger.info("saving structure image mapper");
-                        StructureImages sim = new StructureImages();
-                        sim.setCreatedBy(username);
-                        sim.setStructure(_structure);
-                        sim.setImages(_images);
-                        structureImageRepository.save(sim);
-                    }
-
-                    if (_icon != null) {
-                        logger.info("saving structure icon mapper");
-                        StructureIcons sic = new StructureIcons();
-                        sic.setCreatedBy(username);
-                        sic.setStructure(_structure);
-                        sic.setIcons(_icon);
-                        structureIconRepository.save(sic);
-                    }
-                    _dto.setId(_structure.getId());
+                    // populate data
+                    _dto.setName(structureDto.getName());
+                    _dto.setDesc(structureDto.getDesc());
+                    _dto.setId(structureDto.getId());
+                    _dto.setLevel(structureDto.getLevel());
+                    _dto.setParent(structureDto.getParent());
                     newStructureList.add(_dto);
+                } catch (DataNotFoundException e) {
+                    logger.error("there is data not found in database, stop process update");
+                    throw new DataNotFoundException("there is data not found in database");
+                } catch (InvalidLevelException e) {
+                    logger.error("invalid setting level, stop process update");
+                    throw new InvalidLevelException("invalid setting level");
                 } catch (Exception e) {
-
+                    logger.error("general exception appear");
+                    throw new Exception(e);
                 }
             }
             return newStructureList;
+        } catch (DataNotFoundException e) {
+            logger.error("there is data not found in database, stop process update");
+            throw new DataNotFoundException("there is data not found in database");
+        } catch (InvalidLevelException e) {
+            logger.error("invalid setting level, stop process update");
+            throw new InvalidLevelException("invalid setting level");
         } catch (Exception e) {
             logger.error("exception", e);
-            return new ArrayList<StructureResponseDto>();
+            throw new Exception(e);
         }
     }
 
@@ -635,7 +643,7 @@ public class StructureServiceImp implements StructureService {
 
     @Override
     @Transactional
-    public List<MenuDto> getCategories() throws Exception {
+    public List<MenuDto> getCategories(String username) throws Exception {
         try {
             Iterable<Structure> findAllIterable = structureRepository.findAll();
             List<MenuDto> treeMenu = new TreeMenu().menuTree(mapToList(findAllIterable));
@@ -646,6 +654,11 @@ public class StructureServiceImp implements StructureService {
         }
     }
 
+    /**
+     * map of structure to menu dto
+     * @param iterable
+     * @return
+     */
     private List<MenuDto> mapToList(Iterable<Structure> iterable) {
         List<MenuDto> listOfMenus = new ArrayList<>();
         for (Structure structure : iterable) {
@@ -654,6 +667,19 @@ public class StructureServiceImp implements StructureService {
             menuDto.setLevel(structure.getLevel());
             menuDto.setOrder(structure.getSort());
             menuDto.setParent(structure.getParentStructure());
+            try {
+                StructureIcons sic = structureIconRepository.findByStructureId(structure.getId());
+                menuDto.setIconUri(sic != null ? sic.getIcons().getUri() : "");
+            } catch (Exception e) {
+
+            }
+            try {
+                StructureImages sim = structureImageRepository.findByStructureId(structure.getId());
+                menuDto.setImageUri(sim != null ? sim.getImages().getUri() : "");
+            } catch (Exception e) {
+
+            }
+            menuDto.setUri(structure.getUri());
             listOfMenus.add(menuDto);
         }
         return listOfMenus;

@@ -144,5 +144,139 @@ INSERT INTO public.r_menu
 (id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent, nav)
 VALUES(11004, 'system', '2021-06-29 00:00:00.000', false, 'system', '2021-06-29 00:00:00.000', 'FAQ Kredit', '', 2, 100, 0, 'bottom');
 
+-- Structure --
+INSERT INTO public.r_structure
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
+VALUES(200, 'system',now()::DATE, 'f',null, null,'Aktivitas Cabang', 'Produk BCA yang digunakan langsung oleh nasabah seperti tabungan e-banking dll.', 1, 1, null);
+INSERT INTO public.r_structure
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
+VALUES(210, 'system',now()::DATE, 'f',null, null, 'Pengetahuan Perbankan', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 2, 1, 200);
+INSERT INTO public.r_structure
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
+VALUES(220, 'system',now()::DATE, 'f',null, null, 'Layanan Khusus di Cabang', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 2, 2, 200);
+INSERT INTO public.r_structure
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
+VALUES(230, 'system',now()::DATE, 'f',null, null, 'Pelaku cabang', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 2, 3, 200);
+INSERT INTO public.r_structure
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
+VALUES(240, 'system',now()::DATE, 'f',null, null, 'Aktivitas Harian di Cabang', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 2, 4, 200);
+INSERT INTO public.r_structure
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
+VALUES(250, 'system',now()::DATE, 'f',null, null, 'Pengelolaan nasabah', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 2, 5, 200);
+INSERT INTO public.r_structure
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
+VALUES(231, 'system',now()::DATE, 'f',null, null, 'CS', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 3, 1, 230);
+INSERT INTO public.r_structure
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
+VALUES(232, 'system',now()::DATE, 'f',null, null, 'Teller', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 3, 2, 230);
+INSERT INTO public.r_structure
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
+VALUES(233, 'system',now()::DATE, 'f',null, null, 'AO SME', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 3, 4, 230);
+INSERT INTO public.r_structure
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
+VALUES(234, 'system',now()::DATE, 'f',null, null, 'AO Komersial', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 3, 5, 230);
+INSERT INTO public.r_structure
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
+VALUES(235, 'system',now()::DATE, 'f',null, null, 'RO', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 3, 6, 230);
+INSERT INTO public.r_structure
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
+VALUES(239, 'system',now()::DATE, 'f',null, null, 'Pembukuan Rekening', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 4, 1, 231);
+INSERT INTO public.r_structure
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
+VALUES(238, 'system',now()::DATE, 'f',null, null, 'Perubahan Data', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 4, 2, 231);
+
+-- PRODUK UNTUK NASABAH--
+INSERT INTO public.r_structure
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort,parent)
+VALUES(100, 'system',now()::DATE, 'f',null, null, 'Produk Untuk Nasabah', 'Daftar operasional cabang yang dikategorikan berdasarkan tugasnya.', 1, 2, null);
+INSERT INTO public.r_structure
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
+VALUES(110, 'system',now()::DATE, 'f',null, null, 'Produk Dana', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 2, 1, 100);
+INSERT INTO public.r_structure
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
+VALUES(120, 'system',now()::DATE, 'f',null, null, 'Produk Investasi & Asuransi', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 2, 2, 100);
+INSERT INTO public.r_structure
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
+VALUES(130, 'system',now()::DATE, 'f',null, null, 'Produk Digital', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 2, 3, 100);
+INSERT INTO public.r_structure
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
+VALUES(140, 'system',now()::DATE, 'f',null, null, 'Produk Kerja sama', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 2, 4, 100);
+INSERT INTO public.r_structure
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
+VALUES(150, 'system',now()::DATE, 'f',null, null, 'Produk Layanan Perbankan', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 2, 5, 100);
+INSERT INTO public.r_structure
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
+VALUES(160, 'system',now()::DATE, 'f',null, null, 'Produk Kartu Kredit', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 2, 6, 100);
+INSERT INTO public.r_structure
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
+VALUES(170, 'system',now()::DATE, 'f',null, null, 'Produk Kredit Kosumtif', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 2, 7, 100);
+INSERT INTO public.r_structure
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
+VALUES(180, 'system',now()::DATE, 'f',null, null, 'Produk Kredit Produktif', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 2, 8, 100);
+INSERT INTO public.r_structure
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
+VALUES(125, 'system',now()::DATE, 'f',null, null, 'Obligasi Negara', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 3, 1, 120);
+INSERT INTO public.r_structure
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
+VALUES(126, 'system',now()::DATE, 'f',null, null, 'Sertifikat Berharga BI', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 3, 2, 120);
+INSERT INTO public.r_structure
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
+VALUES(141, 'system',now()::DATE, 'f',null, null, 'Kerja Sama Copart', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 3, 1, 140);
+INSERT INTO public.r_structure
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
+VALUES(142, 'system',now()::DATE, 'f',null, null, 'Kerja Sama Merchant', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 3, 2, 140);
+INSERT INTO public.r_structure
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
+VALUES(143, 'system',now()::DATE, 'f',null, null, 'Kerja Sama Institusi', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 3, 4, 140);
+INSERT INTO public.r_structure
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
+VALUES(144, 'system',now()::DATE, 'f',null, null, 'Kerja Sama Perusahaan Anak', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 3, 5, 140);
+INSERT INTO public.r_structure
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
+VALUES(145, 'system',now()::DATE, 'f',null, null, 'Kerja Sama Perusahaan Khusus', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 3, 6, 140);
+INSERT INTO public.r_structure
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
+VALUES(151, 'system',now()::DATE, 'f',null, null, 'Perbankan Internasional', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 3, 1, 150);
+INSERT INTO public.r_structure
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
+VALUES(152, 'system',now()::DATE, 'f',null, null, 'Treasuri', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 3, 2, 150);
+INSERT INTO public.r_structure
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
+VALUES(153, 'system',now()::DATE, 'f',null, null, 'Perbankan Domesik', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 3, 3, 150);
+INSERT INTO public.r_structure
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
+VALUES(181, 'system',now()::DATE, 'f',null, null, 'SME', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 3, 1, 180);
+INSERT INTO public.r_structure
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
+VALUES(182, 'system',now()::DATE, 'f',null, null, 'Komersial', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 3, 2, 180);
+INSERT INTO public.r_structure
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
+VALUES(183, 'system',now()::DATE, 'f',null, null, 'Korporasi', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 3, 3, 180);
+
+
+---- APLIKASI MESIN---
+INSERT INTO public.r_structure
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
+VALUES(1, 'system',now()::DATE, 'f',null, null, 'Aplikasi/Mesin', 'Daftar operasional cabang yang dikategorikan berdasarkan tugasnya.', 1, 3, null);
+INSERT INTO public.r_structure
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
+VALUES(2, 'system',now()::DATE, 'f',null, null, 'Pendukung Transaksi Umum', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 2, 1, 1);
+INSERT INTO public.r_structure
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
+VALUES(3, 'system',now()::DATE, 'f',null, null, 'Pendukung Transaksi Internasional', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 2, 2, 1);
+INSERT INTO public.r_structure
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
+VALUES(330, 'system',now()::DATE, 'f',null, null, 'Pendukung Transaksi Kredit', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 2, 3, 1);
+INSERT INTO public.r_structure
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
+VALUES(340, 'system',now()::DATE, 'f',null, null, 'Internal BCA', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 2, 4, 1);
+INSERT INTO public.r_structure
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
+VALUES(350, 'system',now()::DATE, 'f',null, null, 'Regulator', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 2, 5, 1);
+INSERT INTO public.r_structure
+(id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
+VALUES(360, 'system',now()::DATE, 'f',null, null, 'Pendukung Operasional', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 2, 6, 1);
+
+
 
 

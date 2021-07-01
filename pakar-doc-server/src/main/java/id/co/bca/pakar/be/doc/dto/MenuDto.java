@@ -14,6 +14,8 @@ public class MenuDto {
 	private String menuDescription;
 	@JsonProperty("icon")
 	private String iconUri;
+	@JsonProperty("image")
+	private String imageUri;
 	@JsonProperty("uri")
 	private String uri;
 	@JsonProperty("level")
@@ -24,8 +26,8 @@ public class MenuDto {
 	private Boolean editStatus = Boolean.TRUE;
 	@JsonProperty("menus")
 	private List<MenuDto> menuChilds = new ArrayList<MenuDto>();
+	@JsonProperty("parent")
 	private Long parent = 0L;
-	private String code;
 
 	public Long getId() {
 		return id;
@@ -57,6 +59,14 @@ public class MenuDto {
 
 	public void setIconUri(String iconUri) {
 		this.iconUri = iconUri;
+	}
+
+	public String getImageUri() {
+		return imageUri;
+	}
+
+	public void setImageUri(String imageUri) {
+		this.imageUri = imageUri;
 	}
 
 	public String getUri() {
@@ -100,14 +110,6 @@ public class MenuDto {
 		this.menuChilds = menuChilds;
 	}
 
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
 	public Long getParent() {
 		return parent;
 	}
@@ -123,10 +125,13 @@ public class MenuDto {
 				", menuName='" + menuName + '\'' +
 				", menuDescription='" + menuDescription + '\'' +
 				", iconUri='" + iconUri + '\'' +
+				", imageUri='" + imageUri + '\'' +
 				", uri='" + uri + '\'' +
 				", level=" + level +
 				", order=" + order +
 				", editStatus=" + editStatus +
+				", menuChilds=" + menuChilds +
+				", parent=" + parent +
 				'}';
 	}
 }

@@ -118,4 +118,20 @@ public class StructureDto {
     public void setLocation_text(String location_text) {
         this.location_text = location_text;
     }
+
+    @Override
+    public String toString() {
+        return "StructureDto{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", desc='" + desc + '\'' +
+                ", sort=" + sort +
+                ", level=" + level +
+                ", parent=" + parent +
+                ", uri='" + uri + '\'' +
+                ", edit=" + edit +
+                ", location='" + location + '\'' +
+                ", location_text='" + location_text + '\'' +
+                '}';
+    }
 }

@@ -1,10 +1,8 @@
 package id.co.bca.pakar.be.oauth2.service.imp;
 
-import id.co.bca.pakar.be.oauth2.dao.MenuIconRepository;
-import id.co.bca.pakar.be.oauth2.dao.MenuImageRepository;
-import id.co.bca.pakar.be.oauth2.dao.MenuRepository;
+import id.co.bca.pakar.be.oauth2.dao.*;
 import id.co.bca.pakar.be.oauth2.dto.MenuDto;
-import id.co.bca.pakar.be.oauth2.model.Menu;
+import id.co.bca.pakar.be.oauth2.model.*;
 import id.co.bca.pakar.be.oauth2.service.MenuService;
 import id.co.bca.pakar.be.oauth2.util.TreeMenu;
 import org.slf4j.Logger;
@@ -26,65 +24,62 @@ public class MenuServiceImpl implements MenuService {
     @Autowired
     private MenuRepository menuRepository;
     @Autowired
+    private StructureRepository structureRepository;
+    @Autowired
     private MenuImageRepository menuImageRepository;
     @Autowired
     private MenuIconRepository menuIconRepository;
-
-    @Override
-    public List<MenuDto> getMenu(String token, String username) {
-        List<MenuDto> burgerMenu = new ArrayList<MenuDto>();
-//        logger.info("masuk sini yaa");
-//        MenuDto tMenu = new MenuDto();
-//        List<Menu> child = new ArrayList<>();
-        try {
-//            List<Menu> menu = menuRepository.getAllMenu();
-//            logger.info("menu service " + menu);
-//            if(menu != null) {
-//                for(Menu menuTemp : menu) {
-//                    IconDto icon = new IconDto();
-//                    ImageDto imageDto = new ImageDto();
-//                    tMenu.setId(menuTemp.getId());
-//                    tMenu.setMenuName(menuTemp.getMenuName());
-//                    tMenu.setMenuDescription(menuTemp.getMenuDescription());
-//                    tMenu.setLevel(menuTemp.getLevel());
-//                    tMenu.setOrder(menuTemp.getOrder());
-//                    tMenu.setMenuName(menuTemp.getMenuName());
-//                    MenuIcons iconMenu = menuIconRepository.findIconbyMenuId(menuTemp.getId());
-//                    MenuImages imageMenu = menuImageRepository.findImagebyMenuId(menuTemp.getId());
-//                    logger.info("icon = " + iconMenu);
-//                    logger.info("images = " + imageMenu);
-//
-////                    tMenu.setIconUri();
-////                    tMenu.setImageUri();
-//                }
-//                burgerMenu.add(tMenu);
-//            }
-
-            return burgerMenu;
-        } catch (Exception e) {
-            logger.error("exception ", e);
-//            throw new Exception(e);
-        }
-
-        return  null;
-    }
+    @Autowired
+    private StructureImageRepository structureImageRepository;
+    @Autowired
+    private StructureIconRepository structureIconRepository;
 
     @Override
     @Transactional
     public List<MenuDto> getMenus(String token, String username) throws Exception {
         try {
+//            List<MenuDto> allMenus = new ArrayList<>();
+//            logger.info("get all top menu");
+//            List<Menu> topMenus = menuRepository.getAllTopMenu();
+//            List<MenuDto> topTreeMenu = new TreeMenu().menuTree(mapToList(topMenus));
+//            allMenus.addAll(topTreeMenu);
+//
+//
+//            logger.info("get all menu");
+//            Iterable<Structure> menus = structureRepository.findAll();
+//            List<MenuDto> treeMenu = new TreeMenu().menuTree(mapToListIterable(menus));
+//            allMenus.addAll(treeMenu);
+//
+//            logger.info("get all bottom menu");
+//            List<Menu> bottomMenus = menuRepository.getAllBottomMenu();
+//            List<MenuDto> bottomTreeMenu = new TreeMenu().menuTree(mapToList(bottomMenus));
+//            allMenus.addAll(bottomTreeMenu);
+
             List<MenuDto> allMenus = new ArrayList<>();
             logger.info("get all top menu");
-            List<Menu> topMenus = menuRepository.getAllTopMenu();
-            List<MenuDto> topTreeMenu = new TreeMenu().menuTree(mapToList(topMenus));
-            allMenus.addAll(topTreeMenu);
+            List<Long> idMenuTop = menuRepository.findMenuId(username);
+            for (Long idTopTemp : idMenuTop) {
+                List<Menu> topMenus = menuRepository.getAllTopMenuById(idTopTemp);
+                List<MenuDto> topTreeMenu = new TreeMenu().menuTree(mapToList(topMenus));
+                allMenus.addAll(topTreeMenu);
+            }
 
-            // TODO structure menu insert here
+
+            logger.info("get all structure");
+//            Long idMenu = menuRepository.findMenuId(username);
+//            Iterable<Structure> menus = menuRepository.getAllStructureById(idMenu);
+            Iterable<Structure> menus = structureRepository.findAll();
+            List<MenuDto> treeMenu = new TreeMenu().menuTree(mapToListIterable(menus));
+            allMenus.addAll(treeMenu);
 
             logger.info("get all bottom menu");
-            List<Menu> bottomMenus = menuRepository.getAllBottomMenu();
-            List<MenuDto> bottomTreeMenu = new TreeMenu().menuTree(mapToList(bottomMenus));
-            allMenus.addAll(bottomTreeMenu);
+            List<Long> idMenuBottom = menuRepository.findMenuId(username);
+            for (Long idBottomTemp : idMenuBottom) {
+                List<Menu> bottomMenus = menuRepository.getAllBottomMenuById(idBottomTemp);
+                List<MenuDto> bottomTreeMenu = new TreeMenu().menuTree(mapToList(bottomMenus));
+                allMenus.addAll(bottomTreeMenu);
+            }
+
             return allMenus;
         } catch (Exception e) {
             logger.error("exception", e);
@@ -103,6 +98,46 @@ public class MenuServiceImpl implements MenuService {
             menuDto.setMenuName(menu.getName());
             menuDto.setMenuDescription(menu.getDescription());
             menuDto.setUri(menu.getUri());
+            try {
+                MenuIcons mic = menuIconRepository.findIconbyMenuId(menu.getId());
+                menuDto.setIconUri(mic != null ? mic.getIcons().getUri() : "");
+            } catch (Exception e) {
+                logger.error("exception",e);
+            }
+            try {
+                MenuImages mim = menuImageRepository.findImagebyMenuId(menu.getId());
+                menuDto.setImageUri(mim != null ? mim.getImages().getUri() : "");
+            } catch (Exception e) {
+                logger.error("exception",e);
+            }
+            listOfMenus.add(menuDto);
+        }
+        return listOfMenus;
+    }
+
+    private List<MenuDto> mapToListIterable(Iterable<Structure> iterable) {
+        List<MenuDto> listOfMenus = new ArrayList<>();
+        for (Structure structure : iterable) {
+            MenuDto menuDto = new MenuDto();
+            menuDto.setId(structure.getId());
+            menuDto.setLevel(structure.getLevel());
+            menuDto.setOrder(structure.getSort());
+            menuDto.setMenuName(structure.getStructureName());
+            menuDto.setMenuDescription(structure.getStructureDescription());
+            menuDto.setParent(structure.getParentStructure());
+            menuDto.setUri(structure.getUri());
+            try {
+                StructureIcons sic = structureIconRepository.findByStructureId(structure.getId());
+                menuDto.setIconUri(sic != null ? sic.getIcons().getUri() : "");
+            } catch (Exception e) {
+                logger.error("exception",e);
+            }
+            try {
+                StructureImages sim = structureImageRepository.findByStructureId(structure.getId());
+                menuDto.setImageUri(sim != null ? sim.getImages().getUri() : "");
+            } catch (Exception e) {
+                logger.error("exception",e);
+            }
             listOfMenus.add(menuDto);
         }
         return listOfMenus;

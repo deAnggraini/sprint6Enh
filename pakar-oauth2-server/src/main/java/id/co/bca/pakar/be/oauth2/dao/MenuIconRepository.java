@@ -1,7 +1,6 @@
 package id.co.bca.pakar.be.oauth2.dao;
 
 import id.co.bca.pakar.be.oauth2.model.MenuIcons;
-import id.co.bca.pakar.be.oauth2.model.MenuImages;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
