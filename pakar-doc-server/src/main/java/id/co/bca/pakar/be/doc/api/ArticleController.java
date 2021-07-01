@@ -33,16 +33,8 @@ public class ArticleController extends BaseController {
 	private UploadService uploadService;
 
 	@GetMapping("/api/doc/theme")
-	public ResponseEntity<RestResponse<ThemeDto>> theme(@RequestHeader(name="Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username) {
+	public ResponseEntity<RestResponse<ThemeDto>> theme() {
 		logger.info("theme process");
-		logger.info("received token bearer --- " + authorization);
-		String tokenValue = "";
-		if (authorization != null && authorization.contains("Bearer")) {
-			tokenValue = authorization.replace("Bearer", "").trim();
-
-			logger.info("token value request header --- "+tokenValue);
-			logger.info("username request header --- "+username);
-		}
 		HttpHeaders headers = new HttpHeaders();
 		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
 

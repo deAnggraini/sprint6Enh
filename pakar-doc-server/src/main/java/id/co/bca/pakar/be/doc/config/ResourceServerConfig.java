@@ -28,7 +28,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 			// -- swagger ui
 			"/v2/api-docs", "/swagger-resources", "/swagger-resources/**", "/configuration/ui",
 			"/configuration/security", "/swagger-ui.html", "/webjars/**", "/api/doc/test",
-			"/api/v1/doc/theme"
+			"/api/doc/theme"
 			// other public endpoints of your API may be appended to this array
 	};
 
