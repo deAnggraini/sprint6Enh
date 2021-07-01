@@ -19,7 +19,7 @@ export class AuthComponent implements OnInit {
   ) {
     this.layoutService.setConfig(null);
     const img = this.theme.getConfig().login.image;
-    const img_url = `${environment.backend_img}/themes/homepage/${img}`;
+    const img_url = `${environment.backend_img}${img}`;
     this.login_image = img_url;
   }
 
