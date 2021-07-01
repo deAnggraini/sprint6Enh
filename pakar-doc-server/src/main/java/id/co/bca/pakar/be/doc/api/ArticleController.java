@@ -35,7 +35,7 @@ public class ArticleController extends BaseController {
 	private UploadService uploadService;
 
 	@GetMapping("/api/v1/doc/theme")
-	public ResponseEntity<RestResponse<ThemeDto>> theme() {
+	public ResponseEntity<RestResponse<ThemeDto>> themeLogin() {
 		logger.info("theme process");
 		try{
 			HttpHeaders headers = new HttpHeaders();
@@ -45,6 +45,33 @@ public class ArticleController extends BaseController {
 
 			logger.info("themeDto" +themeDto);
 
+			return this.createResponse(themeDto, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
+
+		}catch (Exception e) {
+			logger.error("exception", e);
+			return this.createResponse(new ThemeDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
+		}
+
+	}
+
+	@GetMapping("/api/doc/theme")
+	public ResponseEntity<RestResponse<ThemeDto>> theme(@RequestHeader(name="Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username) {
+		logger.info("theme process");
+		try{
+			logger.info("received token bearer --- " + authorization);
+			String tokenValue = "";
+			if (authorization != null && authorization.contains("Bearer")) {
+				tokenValue = authorization.replace("Bearer", "").trim();
+
+				logger.info("token value request header --- "+tokenValue);
+				logger.info("username request header --- "+username);
+			}
+			HttpHeaders headers = new HttpHeaders();
+			headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+
+			ThemeDto themeDto = themeService.getThemeList();
+
+			logger.info("themeDto" +themeDto);
 			return this.createResponse(themeDto, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
 
 		}catch (Exception e) {
