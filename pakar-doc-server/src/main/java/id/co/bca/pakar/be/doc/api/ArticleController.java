@@ -54,7 +54,8 @@ public class ArticleController extends BaseController {
 
 	}
 
-	@GetMapping("/api/doc/theme")
+	@GetMapping(value ="/api/doc/theme", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
+			MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<RestResponse<ThemeDto>> theme(@RequestHeader(name="Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username) {
 		logger.info("theme process");
 		try{
@@ -71,7 +72,7 @@ public class ArticleController extends BaseController {
 
 			ThemeDto themeDto = themeService.getThemeList();
 
-			logger.info("themeDto" +themeDto);
+			logger.info("themeDto" +themeDto.toString());
 			return this.createResponse(themeDto, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
 
 		}catch (Exception e) {
