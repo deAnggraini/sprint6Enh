@@ -6,7 +6,8 @@
   >
   <!-- routerLink="/"  -->
   <a class="brand-logo cursor-pointer" *ngIf="showAside">
-    <app-header-menu></app-header-menu>
+    <!-- <app-header-menu></app-header-menu> -->
+    <span class="pakar-logo" [inlineSVG]="'./assets/media/svg/bca/pakar_logo_white.svg'" cacheSVG="true"></span>
   </a>
 
   <ng-container *ngIf="asideSelfMinimizeToggle">
@@ -16,8 +17,7 @@
           class="svg-icon svg-icon-xl svg-icon-white pl-1"></span>
         <div class="bottom">MENU</div>
       </div>
-      <span [inlineSVG]="'./assets/media/svg/icons/Navigation/Close.svg'" cacheSVG="true" *ngIf="showAside"
-        class="svg-icon svg-icon-xl svg-icon-white" (click)="asideShow()"></span>
+      <span [inlineSVG]="'./assets/media/svg/bca/close_white.svg'" cacheSVG="true" *ngIf="showAside" (click)="asideShow()"></span>
       <!-- <small>Menu</small> -->
     </button>
   </ng-container>
@@ -208,10 +208,12 @@
   <!-- begin::if don't have submenu -->
   <ng-container *ngIf="!item.menus.length">
     <li class="menu-item" aria-haspopup="true" data-menu-toggle="hover">
-      <a class="menu-link" [routerLink]="item.uri" routerLinkActive="active">
+      <a class="menu-link" *ngIf="!item.externalLink" [routerLink]="item.uri" routerLinkActive="active">
         <span [inlineSVG]="imgUrl + item.icon" cacheSVG="true" class="svg-icon menu-icon"></span>
         <span class="menu-text" [translate]="item.translate">{{item.title}}</span>
-        <!-- <i class="menu-icon"></i> -->
+      </a>
+      <a class="menu-link" *ngIf="item.externalLink" href="{{item.uri}}">
+
       </a>
     </li>
   </ng-container>

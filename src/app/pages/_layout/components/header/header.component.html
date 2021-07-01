@@ -33,21 +33,15 @@
       <!-- Don't change id => 'kt_header_menu' -->
       <ng-container *ngIf="headerMenuSelfStatic">
         <!-- STATIC MENU -->
-        <app-header-menu
-          #ktHeaderMenu
-          id="kt_header_menu"
-          class="header-menu header-menu-mobile"
-          [ngClass]="headerMenuCSSClasses"
-        ></app-header-menu>
+        <!-- <app-header-menu #ktHeaderMenu id="kt_header_menu" class="header-menu header-menu-mobile" [ngClass]="headerMenuCSSClasses"></app-header-menu> -->
+        <span #ktHeaderMenu class="header-menu header-menu-mobile" id="kt_header_menu"
+          [inlineSVG]="'./assets/media/svg/bca/pakar_logo_white.svg'" cacheSVG="true" [ngClass]="headerMenuCSSClasses"></span>
       </ng-container>
       <ng-container *ngIf="!headerMenuSelfStatic">
         <!-- DYNAMIC MENU -->
-        <app-header-menu-dynamic
-          #ktHeaderMenu
-          id="kt_header_menu"
-          class="header-menu header-menu-mobile"
-          [ngClass]="headerMenuCSSClasses"
-        ></app-header-menu-dynamic>
+        <!-- <app-header-menu-dynamic #ktHeaderMenu id="kt_header_menu" class="header-menu header-menu-mobile" [ngClass]="headerMenuCSSClasses"></app-header-menu-dynamic> -->
+        <span #ktHeaderMenu class="header-menu header-menu-mobile" id="kt_header_menu"
+          [inlineSVG]="'./assets/media/svg/bca/pakar_logo_white.svg'" cacheSVG="true" [ngClass]="headerMenuCSSClasses"></span>
       </ng-container>
       <!--end::Header Menu-->
     </div>
