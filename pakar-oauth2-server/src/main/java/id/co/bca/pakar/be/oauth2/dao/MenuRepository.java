@@ -16,7 +16,7 @@ public interface MenuRepository extends CrudRepository<Menu, String> {
     @Query(
             value = "select menu_id from r_menu_role rmr join r_user_role rur on rmr.role_id=rur.role_id join r_user_profile rup on rur.username=:username",
             nativeQuery = true)
-    Long findMenuId(@Param("username") String username);
+    List<Long> findMenuId(@Param("username") String username);
 
     @Query(
             value = "SELECT * FROM r_menu m where m.id=:id AND m.nav = 'top' AND m.deleted IS FALSE",
