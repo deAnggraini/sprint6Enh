@@ -667,6 +667,8 @@ public class StructureServiceImp implements StructureService {
             menuDto.setLevel(structure.getLevel());
             menuDto.setOrder(structure.getSort());
             menuDto.setParent(structure.getParentStructure());
+            menuDto.setMenuName(structure.getStructureName());
+            menuDto.setMenuDescription(structure.getStructureDescription());
             try {
                 StructureIcons sic = structureIconRepository.findByStructureId(structure.getId());
                 menuDto.setIconUri(sic != null ? sic.getIcons().getUri() : "");

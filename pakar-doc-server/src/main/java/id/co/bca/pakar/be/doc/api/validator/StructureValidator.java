@@ -38,12 +38,12 @@ public class StructureValidator implements Validator {
             errors.rejectValue("name", "maximum length 50 characters");
             return;
         }
-        Pattern pattern = Pattern.compile("^[a-zA-Z\\s]{1,50}");
-        Matcher matcher = pattern.matcher(dto.getName());
-        if(!matcher.matches()) {
-            errors.rejectValue("name", "name must contain alpha numeric and space only");
-            return;
-        }
+//        Pattern pattern = Pattern.compile("^[a-zA-Z\\s]{1,50}");
+//        Matcher matcher = pattern.matcher(dto.getName());
+//        if(!matcher.matches()) {
+//            errors.rejectValue("name", "name must contain alpha and space only");
+//            return;
+//        }
 
         if(dto.getDesc().isEmpty()) {
             errors.rejectValue("desc", "description is required");
@@ -54,10 +54,10 @@ public class StructureValidator implements Validator {
             errors.rejectValue("desc", "maximum length description 200 characters");
             return;
         }
-        if(!dto.getDesc().matches("^[a-zA-Z\\s]{1,200}")) {
-            errors.rejectValue("desc", "description must contain alpha numeric and space only");
-            return;
-        }
+//        if(!dto.getDesc().matches("^[a-zA-Z\\s]{1,200}")) {
+//            errors.rejectValue("desc", "description must contain alpha and space only");
+//            return;
+//        }
 
         if(dto.getSort().longValue() < 1) {
             errors.rejectValue("sort", "minimum sort value is 1");

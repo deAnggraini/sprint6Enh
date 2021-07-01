@@ -12,8 +12,8 @@ import javax.persistence.Table;
 @Table(name = "r_menu_role")
 public class MenuRole extends EntityBase {
 	@Id
-	@SequenceGenerator(name = "userMenuRoleSeqGen", sequenceName = "userMenuRoleSeq", initialValue = 1, allocationSize = 1)
-	@GeneratedValue(generator = "userMenuRoleSeqGen")
+	@SequenceGenerator(name = "menuRoleSeqGen", sequenceName = "menuRoleSeq", initialValue = 1, allocationSize = 1)
+	@GeneratedValue(generator = "menuRoleSeqGen")
 	private Long id;
 	@ManyToOne
 	@JoinColumn(name = "menu_id", nullable = false)

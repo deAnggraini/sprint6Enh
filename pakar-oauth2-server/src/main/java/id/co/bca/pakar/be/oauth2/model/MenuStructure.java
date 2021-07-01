@@ -12,7 +12,7 @@ import javax.persistence.Table;
 @Table(name = "r_menu_structure")
 public class MenuStructure extends EntityBase {
 	@Id
-	@SequenceGenerator(name = "menuStructureSeqGen", sequenceName = "menuSructureSeq", initialValue = 1, allocationSize = 1)
+	@SequenceGenerator(name = "menuStructureSeqGen", sequenceName = "menuStructureSeq", initialValue = 1, allocationSize = 1)
 	@GeneratedValue(generator = "menuStructureSeqGen")
 	private Long id;
 	@ManyToOne

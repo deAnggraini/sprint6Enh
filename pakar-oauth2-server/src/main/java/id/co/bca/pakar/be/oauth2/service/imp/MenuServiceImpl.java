@@ -38,47 +38,22 @@ public class MenuServiceImpl implements MenuService {
     @Transactional
     public List<MenuDto> getMenus(String token, String username) throws Exception {
         try {
-//            List<MenuDto> allMenus = new ArrayList<>();
-//            logger.info("get all top menu");
-//            List<Menu> topMenus = menuRepository.getAllTopMenu();
-//            List<MenuDto> topTreeMenu = new TreeMenu().menuTree(mapToList(topMenus));
-//            allMenus.addAll(topTreeMenu);
-//
-//
-//            logger.info("get all menu");
-//            Iterable<Structure> menus = structureRepository.findAll();
-//            List<MenuDto> treeMenu = new TreeMenu().menuTree(mapToListIterable(menus));
-//            allMenus.addAll(treeMenu);
-//
-//            logger.info("get all bottom menu");
-//            List<Menu> bottomMenus = menuRepository.getAllBottomMenu();
-//            List<MenuDto> bottomTreeMenu = new TreeMenu().menuTree(mapToList(bottomMenus));
-//            allMenus.addAll(bottomTreeMenu);
-
             List<MenuDto> allMenus = new ArrayList<>();
             logger.info("get all top menu");
-            List<Long> idMenuTop = menuRepository.findMenuId(username);
-            for (Long idTopTemp : idMenuTop) {
-                List<Menu> topMenus = menuRepository.getAllTopMenuById(idTopTemp);
-                List<MenuDto> topTreeMenu = new TreeMenu().menuTree(mapToList(topMenus));
-                allMenus.addAll(topTreeMenu);
-            }
+            List<Menu> topMenus = menuRepository.getAllTopMenuById(username);
+            List<MenuDto> topTreeMenu = new TreeMenu().menuTree(mapToList(topMenus));
+            allMenus.addAll(topTreeMenu);
 
-
-            logger.info("get all structure");
-//            Long idMenu = menuRepository.findMenuId(username);
-//            Iterable<Structure> menus = menuRepository.getAllStructureById(idMenu);
+            logger.info("get all menu");
             Iterable<Structure> menus = structureRepository.findAll();
             List<MenuDto> treeMenu = new TreeMenu().menuTree(mapToListIterable(menus));
             allMenus.addAll(treeMenu);
 
             logger.info("get all bottom menu");
-            List<Long> idMenuBottom = menuRepository.findMenuId(username);
-            for (Long idBottomTemp : idMenuBottom) {
-                List<Menu> bottomMenus = menuRepository.getAllBottomMenuById(idBottomTemp);
-                List<MenuDto> bottomTreeMenu = new TreeMenu().menuTree(mapToList(bottomMenus));
-                allMenus.addAll(bottomTreeMenu);
-            }
+            List<Menu> bottomMenus = menuRepository.getAllBottomMenuById(username);
+            List<MenuDto> bottomTreeMenu = new TreeMenu().menuTree(mapToList(bottomMenus));
+            allMenus.addAll(bottomTreeMenu);
+
 
             return allMenus;
         } catch (Exception e) {
