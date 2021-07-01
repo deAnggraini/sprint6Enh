@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { NgbAccordionConfig } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-form-article',
@@ -22,7 +23,9 @@ export class FormArticleComponent implements OnInit {
     Time Loan - SME merupakan salah satu produk kredit produktif untuk modal kerja kepada debitur segmen Small dan Medium Enterprises (SME) dalam mata uang rupiah ataupun valas yang penarikannya menggunakan Surat Permohonan Penarikan Fasilitas Kredit/Perpanjangan Pembayaran untuk jangka waktu tertentu.`
   };
 
-  constructor() {
+  constructor(private accordionConfig: NgbAccordionConfig) {
+      this.accordionConfig.closeOthers = true;
+      // this.accordionConfig.type = 'info';
   }
 
   ngOnInit(): void {

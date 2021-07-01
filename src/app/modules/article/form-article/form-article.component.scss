@@ -6,3 +6,9 @@
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.16);
   width: 100vw;
 }
+
+:host ::ng-deep .accordion{
+   .card .card-header {
+     background-color: transparent;
+   }
+}
