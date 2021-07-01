@@ -1,0 +1,17 @@
+{
+    "/api/auth/*": {
+        "target": "http://36.89.25.220:13080/api/auth",
+        "secure": false,
+        "logLevel": "debug"
+    },
+    "/api/doc/*": {
+        "target": "http://36.89.25.220:13080/api/doc",
+        "secure": false,
+        "logLevel": "debug"
+    },
+    "/api/images/*": {
+        "target": "http://36.89.25.220:13080/api/images",
+        "secure": false,
+        "logLevel": "debug"
+    }
+}
