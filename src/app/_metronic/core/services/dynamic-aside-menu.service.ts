@@ -216,20 +216,20 @@ export class DynamicAsideMenuService {
     return this.categories$;
   }
 
-  addStruktur(newData: any, level: number = 1, parent: any = null) {
-    newData.showLess = true;
-    let found = this.categories.find(d => d.id == newData.id);
-    if (found) {
-      found.title = newData.title;
-      found.desc = newData.desc;
-      found.icon = newData.icon;
-      found.image = newData.image;
-    } else {
-      this.categories.push(newData);
-    }
-    this.categories$.next(this.categories);
-    this.loadMenu(this.parseToMenu(this.categories));
-  }
+  // addStruktur(newData: any, level: number = 1, parent: any = null) {
+  //   newData.showLess = true;
+  //   let found = this.categories.find(d => d.id == newData.id);
+  //   if (found) {
+  //     found.title = newData.title;
+  //     found.desc = newData.desc;
+  //     found.icon = newData.icon;
+  //     found.image = newData.image;
+  //   } else {
+  //     this.categories.push(newData);
+  //   }
+  //   this.categories$.next(this.categories);
+  //   this.loadMenu(this.parseToMenu(this.categories));
+  // }
 
   removeStruktur(data: any) {
     this.categories = this.categories.filter(d => d.id != data.id);
@@ -245,6 +245,7 @@ export class DynamicAsideMenuService {
       this.loadMenu(this.parseToMenu(dataList));
     } else {
       this.populateCategoryArticle();
+      this.populateMenus();
     }
   }
 
