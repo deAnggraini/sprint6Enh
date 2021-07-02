@@ -72,7 +72,7 @@ public class StructureController extends BaseController {
 	 */
 	@PostMapping(value = "/api/doc/updateStructure", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE }, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<RestResponse<StructureResponseDto>> updateStructure(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, StructureWithFileDto structure, BindingResult bindingResult) {
+	public ResponseEntity<RestResponse<StructureResponseDto>> updateStructure(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @ModelAttribute StructureWithFileDto structure, BindingResult bindingResult) {
 		try {
 			structureValidator.validate(structure, bindingResult);
 			if(bindingResult.hasErrors()) {

@@ -81,13 +81,13 @@ public class StructureValidator implements Validator {
             return;
         }
 
-        logger.debug("validate level {}", dto.getLevel());
-        if(dto.getLevel().longValue() > 1) {
-            if(!dto.getIcon().isEmpty())  {
-                errors.rejectValue("level", "request icon invalid cause level value > 1");
-                return;
-            }
-        }
+//        logger.debug("validate level {}", dto.getLevel());
+//        if(dto.getLevel().longValue() > 1) {
+//            if(!dto.getIcon().isEmpty())  {
+//                errors.rejectValue("level", "request icon invalid cause level value > 1");
+//                return;
+//            }
+//        }
 
         boolean validFileType = false;
         logger.debug("icon value {}", dto.getIcon());

@@ -32,6 +32,8 @@ public class StructureServiceImp implements StructureService {
     private String pathMenu;
     @Value("${upload.path.category}")
     private String pathCategory;
+    @Value("${upload.path.base}")
+    private String basePath;
 
     @Autowired
     private StructureRepository structureRepository;
@@ -187,7 +189,7 @@ public class StructureServiceImp implements StructureService {
                 /*
                 validate duplicate sorting value for same parent id
                 */
-                Boolean isExiststructure = structureRepository.existStructureByParentIdAndSort(_parentOp.getParentStructure(), _parentOp.getSort());
+                Boolean isExiststructure = structureRepository.existStructureByParentIdAndSort(dto.getParent(), dto.getSort());
                 if (isExiststructure.booleanValue()) {
                     logger.info("sort value already exist, stop process {} for parent id {}", dto.getSort(), dto.getParent());
                     throw new InvalidSortException("sort value already exist " + dto.getSort());
@@ -198,7 +200,7 @@ public class StructureServiceImp implements StructureService {
             _dto.setDesc(dto.getDesc());
             Images _images = null;
             if (!dto.getImage().isEmpty()) {
-                String location = pathCategory;
+                String location = basePath + pathCategory;
                 logger.debug("folder location {}", location);
                 logger.debug("image file name {}", dto.getImage().getOriginalFilename());
 
@@ -210,18 +212,20 @@ public class StructureServiceImp implements StructureService {
                 logger.debug("save file name to db {}", path.getFileName().toString());
                 images.setImageName(path.getFileName().toString());
                 logger.debug("save path file to db {}", path.toAbsolutePath().toString());
-                images.setUri(path.toAbsolutePath().toString());
+
+                Path pathLocation = Paths.get(pathCategory + dto.getImage().getOriginalFilename());
+                images.setUri(pathLocation.toAbsolutePath().toString());
+                _dto.setImage(pathLocation.toAbsolutePath().toString());
                 _images = imageRepository.save(images);
 
                 // save image to folder
                 logger.info("saving image to share folder");
-                _dto.setImage(path.toAbsolutePath().toString());
                 FileUploadUtil.saveFile(location, dto.getImage());
             }
 
             Icons _icon = null;
             if (!dto.getIcon().isEmpty()) {
-                String location = pathCategory;
+                String location = basePath + pathCategory;
                 logger.debug("folder location {}", location);
                 logger.debug("icon file name {}", dto.getIcon().getOriginalFilename());
                 Path path = Paths.get(location + dto.getIcon().getOriginalFilename());
@@ -232,12 +236,13 @@ public class StructureServiceImp implements StructureService {
                 logger.debug("save file name to db {}", path.getFileName().toString());
                 icons.setIconName(path.getFileName().toString());
                 logger.debug("save path file to db {}", path.toAbsolutePath().toString());
-                icons.setUri(path.toAbsolutePath().toString());
+                Path pathLocation = Paths.get(pathCategory + dto.getIcon().getOriginalFilename());
+                icons.setUri(pathLocation.toAbsolutePath().toString());
+                _dto.setIcon(pathLocation.toAbsolutePath().toString());
                 _icon = iconRepository.save(icons);
 
                 // save image to folder
                 logger.info("saving icon to share folder");
-                _dto.setIcon(path.toAbsolutePath().toString());
                 FileUploadUtil.saveFile(location, dto.getIcon());
             }
 
@@ -252,6 +257,10 @@ public class StructureServiceImp implements StructureService {
             structure.setUri(dto.getUri());
             structure.setParentStructure(dto.getParent());
             Structure _structure = structureRepository.save(structure);
+
+            // set uri value of struckture
+            _structure.setUri("/struktur/list/"+_structure.getId());
+            _structure = structureRepository.save(_structure);
 
             if (_images != null) {
                 logger.info("saving structure image mapper");
@@ -473,7 +482,7 @@ public class StructureServiceImp implements StructureService {
             _dto.setDesc(dto.getDesc());
             Images _images = null;
             if (!dto.getImage().isEmpty()) {
-                String location = pathCategory;
+                String location = basePath + pathCategory;
                 logger.debug("folder location {}", location);
                 logger.debug("image file name {}", dto.getImage().getOriginalFilename());
 
@@ -485,18 +494,20 @@ public class StructureServiceImp implements StructureService {
                 logger.debug("save file name to db {}", path.getFileName().toString());
                 images.setImageName(path.getFileName().toString());
                 logger.debug("save path file to db {}", path.toAbsolutePath().toString());
-                images.setUri(path.toAbsolutePath().toString());
+                Path pathLocation = Paths.get(pathCategory + dto.getImage().getOriginalFilename());
+                images.setUri(pathLocation.toAbsolutePath().toString());
                 _images = imageRepository.save(images);
 
                 // save image to folder
                 logger.info("saving image to share folder");
-                _dto.setImage(path.toAbsolutePath().toString());
                 FileUploadUtil.saveFile(location, dto.getImage());
+
+                _dto.setImage(pathLocation.toAbsolutePath().toString());
             }
 
             Icons _icon = null;
             if (!dto.getIcon().isEmpty()) {
-                String location = pathCategory;
+                String location = basePath + pathCategory;
                 logger.debug("folder location {}", location);
                 logger.debug("icon file name {}", dto.getIcon().getOriginalFilename());
                 Path path = Paths.get(location + dto.getIcon().getOriginalFilename());
@@ -507,13 +518,15 @@ public class StructureServiceImp implements StructureService {
                 logger.debug("save file name to db {}", path.getFileName().toString());
                 icons.setIconName(path.getFileName().toString());
                 logger.debug("save path file to db {}", path.toAbsolutePath().toString());
-                icons.setUri(path.toAbsolutePath().toString());
+                Path pathLocation = Paths.get(pathCategory + dto.getIcon().getOriginalFilename());
+                icons.setUri(pathLocation.toAbsolutePath().toString());
                 _icon = iconRepository.save(icons);
 
                 // save image to folder
                 logger.info("saving icon to share folder");
-                _dto.setIcon(path.toAbsolutePath().toString());
                 FileUploadUtil.saveFile(location, dto.getIcon());
+
+                _dto.setIcon(pathLocation.toAbsolutePath().toString());
             }
 
             logger.info("update structure");
