@@ -6,6 +6,18 @@
       margin: 0;
     }
   }
+  
+  // test hover aside icons
+  :host ::ng-deep .svg-icon {
+      svg:hover {
+        g {
+          [fill] {
+            fill: greenyellow;
+            stroke: greenyellow;
+          }
+        }
+      }
+  }
 
   // fixed text line break issue on minimized aside hover
   .menu-text {
@@ -25,8 +37,7 @@
     }
   }
 
-  .menu-section{
+  .menu-section {
     background-color: #EFF2FC;
-    ;
   }
 }
