@@ -552,6 +552,8 @@ public class StructureServiceImp implements StructureService {
             structure.setSort(dto.getSort());
             structure.setEdit(dto.getEdit());
             structure.setUri(dto.getUri());
+            structure.setStructureName(dto.getName());
+            structure.setStructureDescription(dto.getDesc());
             Structure _structure = structureRepository.save(structure);
 
             if (_images != null) {
