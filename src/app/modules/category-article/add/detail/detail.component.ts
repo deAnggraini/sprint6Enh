@@ -185,6 +185,8 @@ export class DetailComponent implements OnInit, OnDestroy {
         delete _clone._text;
         delete _clone._value;
         delete _clone.title;
+        delete _clone.icon;
+        delete _clone.image;
 
         result.push(_clone);
         result = result.concat(this.convertTreeToArray(d.menus));
@@ -194,11 +196,15 @@ export class DetailComponent implements OnInit, OnDestroy {
   }
 
   updateSection() {
-    console.log('logs', this.logs);
     const lastLog = this.logs.slice(-1)[0];
-    console.log({lastLog});
     const params = this.convertTreeToArray(lastLog);
-    console.log({ params });
+
+    const moreThanLevel5 = params.find(d => d.level > 4);
+    if (moreThanLevel5) {
+      this.toast.showDanger('Sub-Sub-Kategori tidak boleh memiliki anak');
+      return;
+    }
+
     this.strukturService.updateSection(params).subscribe(resp => {
       if (resp) {
         this.toast.showSuccess('Simpan Data Berhasil');

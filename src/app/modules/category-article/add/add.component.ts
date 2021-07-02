@@ -242,6 +242,7 @@ export class AddComponent implements OnInit, OnDestroy {
   setJsTree(item: any, forceUpdate: boolean = false) {
     if (forceUpdate == false && item.id == this.selected$.value.id) return;
     const found = this.categories.find(d => d.id == item.id);
+    console.log('setJsTree', item.id);
     console.log('setJsTree', found);
     if (found) {
       const _found = JSON.parse(JSON.stringify(found)); // agar master tidak ikut berubah
@@ -252,7 +253,6 @@ export class AddComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initForm();
     const menuSubscr1 = this.strukturService.categories$.subscribe(res => {
-      console.log('menuSubscr1', res);
       this.categories = res;
       this.categories$.next(this.categories);
       // ada perubahan data, dan sudah ada yang terselect, harus di update
@@ -262,7 +262,6 @@ export class AddComponent implements OnInit, OnDestroy {
       // this.cdr.detectChanges();
     });
     const menuSubscr2 = this.menu.menuConfig$.subscribe(res => {
-      console.log('menuSubscr2', res);
       this.menuConfig = res;
       // this.cdr.detectChanges();
     });
