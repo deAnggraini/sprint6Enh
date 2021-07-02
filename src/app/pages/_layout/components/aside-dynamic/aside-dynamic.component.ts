@@ -26,7 +26,7 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
   asideMenuScroll = 1;
   asideSelfMinimizeToggle = false;
   showAside = false;
-  imgUrl = `${environment.apiUrl}/images`;
+  imgUrl = `${environment.backend_img}`;
   currentUrl: string;
   headerBackground: string;
 

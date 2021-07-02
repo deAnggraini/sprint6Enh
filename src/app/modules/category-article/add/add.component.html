@@ -42,7 +42,7 @@
                     'font-bold-700': selected$.value.id && selected$.value.id == item.id, 
                     'pakar-color-dark' : selected$.value.id && selected$.value.id == item.id
                 }">{{item.title}}</span>
-            <span class="navi-arrow" *ngIf="item.menus.length"></span>
+            <span class="navi-arrow" *ngIf="item.menus?.length"></span>
         </a>
     </li>
 </ng-template>

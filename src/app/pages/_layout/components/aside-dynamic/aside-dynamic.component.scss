@@ -28,9 +28,11 @@
   .logo {
     line-height: 0.9;
     color: white;
+
     .top {
       margin-left: 3px;
     }
+
     .bottom {
       font-size: 8px;
       text-align: center;
@@ -39,5 +41,27 @@
 
   .menu-section {
     background-color: #EFF2FC;
+  }
+}
+
+:host ::ng-deep .svg-icon.menu-icon {
+  svg {
+    g {
+      [fill] {
+        fill: red;
+        stroke: red;
+      }
+    }
+  }
+
+  &:hover {
+    svg {
+      g {
+        [fill] {
+          fill: greenyellow;
+          stroke: greenyellow;
+        }
+      }
+    }
   }
 }

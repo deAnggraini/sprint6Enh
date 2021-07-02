@@ -7,8 +7,15 @@
   width: 100vw;
 }
 
-:host ::ng-deep .accordion{
-   .card .card-header {
-     background-color: transparent;
-   }
+:host ::ng-deep .accordion {
+  .btn i.flaticon2-down {
+    color: #0F5EA9 !important;
+  }
+
+  .btn.collapsed i.flaticon2-down {
+    transition: inherit;
+    transform: rotate(-90deg);
+    height: 7px;
+    width: 7px;
+  }
 }
