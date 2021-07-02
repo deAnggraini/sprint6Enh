@@ -185,12 +185,9 @@
 <ng-template #menuItemSectionTemplate let-item="item">
   <li class="menu-section">
     <a style="display: flex;  flex-grow: 1; align-items: stretch; position: relative;">
-      <span [inlineSVG]="imgUrl + item.icon" cacheSVG="true" class="svg-icon menu-icon"></span>
-      <!-- <i class="fa fa-university text-dark mr-1"></i> -->    
+      <div class="icon mr-4" style="content: url( {{imgUrl+item.icon}} );"></div>
       <span class="menu-text" [translate]="item.translate">{{ item.title }}</span>
     </a>
-    <!-- <h4 class="menu-text" [translate]="item.translate">{{ item.section }}</h4> -->
-    <!-- <i class="menu-icon flaticon-more-v2"></i> -->
   </li>
 </ng-template>
 <!-- end::Section -->
