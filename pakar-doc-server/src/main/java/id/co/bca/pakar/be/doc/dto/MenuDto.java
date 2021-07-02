@@ -30,6 +30,10 @@ public class MenuDto {
 	private Long parent = 0L;
 	@JsonProperty("listParent")
 	private List<BreadcumbMenuDto> breadcumbMenuDtoList = new ArrayList<>();
+	@JsonProperty("location")
+	protected String location;
+	@JsonProperty("location_text")
+	protected String location_text;
 
 	public Long getId() {
 		return id;
@@ -126,6 +130,22 @@ public class MenuDto {
 
 	public void setBreadcumbMenuDtoList(List<BreadcumbMenuDto> breadcumbMenuDtoList) {
 		this.breadcumbMenuDtoList = breadcumbMenuDtoList;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	public String getLocation_text() {
+		return location_text;
+	}
+
+	public void setLocation_text(String location_text) {
+		this.location_text = location_text;
 	}
 
 	@Override
