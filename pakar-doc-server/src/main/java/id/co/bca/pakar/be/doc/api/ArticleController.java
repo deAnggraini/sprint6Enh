@@ -54,10 +54,10 @@ public class ArticleController extends BaseController {
 
 	}
 
-	@GetMapping(value ="/api/doc/theme", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
-			MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping("/api/doc/theme")
 	public ResponseEntity<RestResponse<ThemeDto>> theme(@RequestHeader(name="Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username) {
 		logger.info("theme process");
+		ThemeDto themeDto = new ThemeDto();
 		try{
 			logger.info("received token bearer --- " + authorization);
 			String tokenValue = "";
@@ -66,13 +66,15 @@ public class ArticleController extends BaseController {
 
 				logger.info("token value request header --- "+tokenValue);
 				logger.info("username request header --- "+username);
+
+				HttpHeaders headers = new HttpHeaders();
+				headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+
+				themeDto = themeService.getThemeList();
+
+				logger.info("themeDto" +themeDto.toString());
 			}
-			HttpHeaders headers = new HttpHeaders();
-			headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
 
-			ThemeDto themeDto = themeService.getThemeList();
-
-			logger.info("themeDto" +themeDto.toString());
 			return this.createResponse(themeDto, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
 
 		}catch (Exception e) {
