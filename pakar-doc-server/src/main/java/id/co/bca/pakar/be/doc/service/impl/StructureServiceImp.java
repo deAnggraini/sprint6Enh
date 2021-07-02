@@ -473,10 +473,21 @@ public class StructureServiceImp implements StructureService {
 			validate parent with level, if request level <
 			*/
             Long parentLevel = structure.getLevel();
-            if (dto.getLevel().longValue() <= parentLevel.longValue()) {
+            if (dto.getLevel().longValue() < parentLevel.longValue()) {
                 logger.info("level from request invalid, cause new level value {} < than from parent level {}", dto.getLevel(), parentLevel);
                 throw new InvalidLevelException("invalid new level " + dto.getId());
             }
+
+            // validate parent structure value from request if level > 1
+            if (dto.getLevel().longValue() > 1) {
+                if (structureRepository.existsById(dto.getParent())) {
+                    structure.setParentStructure(dto.getParent());
+                } else {
+                    logger.info("parent id {} not found in database, update failed ", dto.getParent());
+                    throw new DataNotFoundException("not found data with parent id " + dto.getParent());
+                }
+            }
+            structure.setParentStructure(dto.getParent());
 
             _dto.setName(dto.getName());
             _dto.setDesc(dto.getDesc());
@@ -541,17 +552,6 @@ public class StructureServiceImp implements StructureService {
             structure.setSort(dto.getSort());
             structure.setEdit(dto.getEdit());
             structure.setUri(dto.getUri());
-
-            // validate parent structure value from request if level > 1
-            if (dto.getLevel().longValue() > 1) {
-                if (structureRepository.existsById(dto.getParent())) {
-                    structure.setParentStructure(dto.getParent());
-                } else {
-                    logger.info("parent id {} not found in database, update failed ", dto.getParent());
-                    throw new DataNotFoundException("not found data with parent id " + dto.getParent());
-                }
-            }
-            structure.setParentStructure(dto.getParent());
             Structure _structure = structureRepository.save(structure);
 
             if (_images != null) {
