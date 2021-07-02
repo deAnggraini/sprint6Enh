@@ -10,25 +10,21 @@ public class StructureDto {
     protected Long id;
     @NotEmpty(message = "name is required")
     @Size(max = 50, message = "maximum length 50 characters")
-    @Pattern(regexp = "[A-Za-z\\s]+$", message = "desc field must contain alpha numeric and space only")
     @JsonProperty("name")
     protected String name;
     @NotEmpty(message = "desc is required")
     @Size(max = 200, message = "maximum length 200 characters")
-    @Pattern(regexp = "[A-Za-z\\s]+$", message = "desc field must contain alpha numeric and space only")
     @JsonProperty("desc")
     protected String desc;
-
     @NotNull(message = "sort is required")
     @Min(value = 1, message = "minimum value is 1")
     @JsonProperty("sort")
     protected Long sort=1L;
-
     @NotNull(message = "level is required")
     @Min(value = 1, message = "minimum value is 1")
+    @Max(value=4, message = "maximum value is 4")
     @JsonProperty("level")
     protected Long level=1L;
-
     @NotNull(message = "parent param must exist in request")
     @Min(value = 0, message = "minimum value is 0")
     @JsonProperty("parent")

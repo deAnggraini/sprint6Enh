@@ -349,11 +349,11 @@ public class StructureServiceImp implements StructureService {
      */
     @Override
     @Transactional(rollbackOn = {Exception.class, InvalidLevelException.class, DataNotFoundException.class})
-    public List<StructureResponseDto> saveBatchStructures(String username, List<StructureDto> dtoList) throws Exception {
+    public List<StructureResponseDto> saveBatchStructures(String username, List<StructureWithFileDto> dtoList) throws Exception {
         // looping save
         try {
             List<StructureResponseDto> newStructureList = new ArrayList<StructureResponseDto>();
-            for (StructureDto structureDto : dtoList) {
+            for (StructureWithFileDto structureDto : dtoList) {
                 try {
                     logger.info("update category");
                     StructureResponseDto _dto = new StructureResponseDto();
@@ -396,7 +396,7 @@ public class StructureServiceImp implements StructureService {
                      *   if child
                      */
                     logger.info("structure will be validated {}", structureDto.toString());
-                    for (StructureDto _structureDto : dtoList) {
+                    for (StructureWithFileDto _structureDto : dtoList) {
                         logger.info("structure compared to {}", _structureDto.toString());
                         if (_structureDto.getId().intValue() == currentPid.intValue()) {
                             Long parentLevel = _structureDto.getLevel();

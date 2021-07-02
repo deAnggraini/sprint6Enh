@@ -123,7 +123,7 @@ public class StructureController extends BaseController {
 	 */
 	@PostMapping(value = "/api/doc/saveBatchStructure", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<RestResponse<List<StructureResponseDto>>> saveBatchStructure(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @RequestBody List<StructureDto> structures, BindingResult bindingResult) {
+	public ResponseEntity<RestResponse<List<StructureResponseDto>>> saveBatchStructure(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @RequestBody List<StructureWithFileDto> structures, BindingResult bindingResult) {
 		try {
 			multiStructureValidator.validate(structures, bindingResult);
 			if(bindingResult.hasErrors()) {
