@@ -106,6 +106,8 @@ export class AddComponent implements OnInit, OnDestroy {
     fd.append('level', this.dataForm.value.level.toString());
     fd.append('sort', String(this.categories.length + 1));
     fd.append('parent', "0");
+    fd.append('location', "");
+    fd.append('location_text', "");
     return fd;
   }
 
