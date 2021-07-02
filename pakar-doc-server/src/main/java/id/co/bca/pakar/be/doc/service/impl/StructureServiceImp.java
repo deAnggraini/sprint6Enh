@@ -576,14 +576,23 @@ public class StructureServiceImp implements StructureService {
             }
 
             if (_icon != null) {
-                logger.info("saving structure icon mapper");
-                StructureIcons sic = new StructureIcons();
-                sic.setModifyBy(username);
-                sic.setModifyDate(new Date());
-                sic.setStructure(_structure);
-                sic.setIcons(_icon);
+                StructureIcons sic = structureIconRepository.findByStructureId(_structure.getId());
+                if(sic != null) {
+                    logger.info("data found from database, update structure icon mapper");
+                    sic.setModifyBy(username);
+                    sic.setModifyDate(new Date());
+                    sic.setStructure(_structure);
+                    sic.setIcons(_icon);
+                } else {
+                    logger.info("saving structure icon mapper");
+                    sic = new StructureIcons();
+                    sic.setCreatedBy(username);
+                    sic.setStructure(_structure);
+                    sic.setIcons(_icon);
+                }
                 structureIconRepository.save(sic);
             }
+
             _dto.setId(_structure.getId());
             _dto.setEdit(_structure.getEdit());
             _dto.setParent(_structure.getParentStructure());
