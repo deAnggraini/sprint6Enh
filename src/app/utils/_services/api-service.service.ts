@@ -59,7 +59,6 @@ export class ApiService {
         return of(data);
       }),
       catchError((err) => {
-        console.log('iki endi', err);
         console.error('ApiService', err);
         setTimeout(() => this.toast.showDanger(err.message), 0);
         throw err.message;

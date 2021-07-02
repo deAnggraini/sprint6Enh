@@ -177,9 +177,15 @@ export class DetailComponent implements OnInit, OnDestroy {
     if (dataList && dataList.length) {
       dataList.forEach(d => {
         const _clone = JSON.parse(JSON.stringify(d));
+        _clone.name = _clone.title;
+        _clone.location = _clone._value;
+        _clone.location_text = _clone._text;
+
         delete _clone.menus;
         delete _clone._text;
         delete _clone._value;
+        delete _clone.title;
+
         result.push(_clone);
         result = result.concat(this.convertTreeToArray(d.menus));
       })
@@ -188,7 +194,11 @@ export class DetailComponent implements OnInit, OnDestroy {
   }
 
   updateSection() {
-    const params = this.convertTreeToArray(this.logs.slice(-1)[0])
+    console.log('logs', this.logs);
+    const lastLog = this.logs.slice(-1)[0];
+    console.log({lastLog});
+    const params = this.convertTreeToArray(lastLog);
+    console.log({ params });
     this.strukturService.updateSection(params).subscribe(resp => {
       if (resp) {
         this.toast.showSuccess('Simpan Data Berhasil');
