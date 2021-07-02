@@ -12,7 +12,7 @@ import java.util.List;
 public interface ThemeComponentHomepageRepository extends CrudRepository<ThemeComponentHomepage, String> {
     @Query(
             value =
-                    "SELECT id, created_by, created_date, deleted, modify_by, modify_date, component_name, order_flag from r_theme_component_homepage order by order_flag asc",
+                    "SELECT * from r_theme_component_homepage order by order_flag asc",
             nativeQuery = true)
     List<ThemeComponentHomepage> findAllThemeComponentHomepage();
 }

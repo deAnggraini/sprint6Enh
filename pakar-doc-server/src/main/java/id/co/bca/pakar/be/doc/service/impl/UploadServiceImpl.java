@@ -1,7 +1,9 @@
 package id.co.bca.pakar.be.doc.service.impl;
 
+import id.co.bca.pakar.be.doc.dao.ImageRepository;
 import id.co.bca.pakar.be.doc.dao.ThemeImageRepository;
 import id.co.bca.pakar.be.doc.dto.UploadFileDto;
+import id.co.bca.pakar.be.doc.model.Images;
 import id.co.bca.pakar.be.doc.model.ThemeImage;
 import id.co.bca.pakar.be.doc.service.UploadService;
 import id.co.bca.pakar.be.doc.util.Constant;
@@ -31,17 +33,22 @@ public class UploadServiceImpl implements UploadService {
     @Autowired
     private Environment env;
 
-//    @Value("${spring.file.upload-dir}")
-//    private String url;
+    @Value("${upload.path.theme}")
+    private String pathTheme;
 
     @Autowired
     ThemeImageRepository themeImageRepository;
 
+    @Autowired
+    ImageRepository imageRepository;
+
     @Override
-    public UploadFileDto storeFile(MultipartFile file, String imageType) {
+    public UploadFileDto storeFile(MultipartFile file, String imageType, String username) {
 
         UploadFileDto uploadFileDto = new UploadFileDto();
-        //String fileLocation = env.getProperty(url);
+        Images images = new Images();
+        ThemeImage themeImage = new ThemeImage();
+
         String fileLocation = "D:/Project/BCA/PAKAR/UploadFile/";
         logger.info("fileLocation >> " + fileLocation);
         Path storageLocation = Paths.get(fileLocation);
@@ -77,19 +84,21 @@ public class UploadServiceImpl implements UploadService {
         String fileDownloadUri = fileLocation.concat(fileName);
         logger.debug("Checking fileDownloadUri >>>" + fileDownloadUri);
 
-        ThemeImage themeImage = new ThemeImage();
-        themeImage.setImage_name(convFile.getName());
-        themeImage.setCreatedBy(Constant.USER_SYSTEM);
+        images.setImageName(fileName);
+        images.setUri(fileDownloadUri);
+        images = imageRepository.save(images);
+
+        themeImage.setCreatedBy(username);
         themeImage.setCreatedDate(new Date());
         themeImage.setDeleted(Constant.DEFAULT_DELETED);
         themeImage.setImageType(imageType);
-        themeImage.setFileLocation(fileDownloadUri);
+
         themeImage = themeImageRepository.save(themeImage);
 
-        uploadFileDto.setImage_name(themeImage.getImage_name());
+        uploadFileDto.setImage_name(images.getImageName());
         uploadFileDto.setImageType(themeImage.getImageType());
-        uploadFileDto.setId(themeImage.getId());
-        uploadFileDto.setFileLocation(themeImage.getFileLocation());
+        uploadFileDto.setId(images.getId());
+        uploadFileDto.setUri(images.getUri());
         return uploadFileDto;
     }
 }

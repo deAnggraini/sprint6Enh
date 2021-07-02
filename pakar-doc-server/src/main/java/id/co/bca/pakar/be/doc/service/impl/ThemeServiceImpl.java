@@ -56,9 +56,9 @@ public class ThemeServiceImpl implements ThemeService {
         if (themeImageList.size() > 0){
             for(int i = 0; i < themeImageList.size(); i ++){
                 if (themeImageList.get(i).getImageType().equalsIgnoreCase(Constant.IMAGE_TYPE_HEADER)){
-                    themeHomepageDto.setBg_img_top(themeImageList.get(i).getFileLocation());
+                    themeHomepageDto.setBg_img_top(themeImageList.get(i).getImages().getUri());
                 }else if (themeImageList.get(i).getImageType().equalsIgnoreCase(Constant.IMAGE_TYPE_LOGIN)){
-                    themeLoginDto.setImage(themeImageList.get(i).getFileLocation());
+                    themeLoginDto.setImage(themeImageList.get(i).getImages().getUri());
                 }
             }
         }
