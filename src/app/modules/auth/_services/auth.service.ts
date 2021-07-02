@@ -54,13 +54,15 @@ export class AuthService implements OnDestroy {
     const params = { refreshToken: auth.refreshToken };
     this.apiService.post(`${this.oauth_url}/refreshToken`, params).subscribe(
       resp => {
-        const { authToken, refreshToken, expiresIn } = resp;
-        auth.authToken = authToken;
-        auth.refreshToken = refreshToken;
-        auth.expiresIn = expiresIn;
-        auth.autoLogout = moment().add(expiresIn, 's').toDate();
-        this.setAuthFromLocalStorage(auth);
-        this.setWorker(auth, expiresIn * 1000);
+        if (resp) {
+          const { authToken, refreshToken, expiresIn } = resp;
+          auth.authToken = authToken;
+          auth.refreshToken = refreshToken;
+          auth.expiresIn = expiresIn;
+          auth.autoLogout = moment().add(expiresIn, 's').toDate();
+          this.setAuthFromLocalStorage(auth);
+          this.setWorker(auth, expiresIn * 1000);
+        }
       }
     );
   }
@@ -112,13 +114,14 @@ export class AuthService implements OnDestroy {
     // };
     this.apiService.post(`${this.oauth_url}/logout`, {}, this.apiService.getHeaders(), false).subscribe(
       resp => {
-        if (resp) {
-          localStorage.removeItem(this.authLocalStorageToken);
-          // this.router.navigate(['/auth/login'], {
-          //   queryParams: {},
-          // });
-          if (isReload) location.replace('/auth/login');
-        }
+        console.log('resp');
+        // if (resp) {
+        localStorage.removeItem(this.authLocalStorageToken);
+        // this.router.navigate(['/auth/login'], {
+        //   queryParams: {},
+        // });
+        if (isReload) location.replace('/auth/login');
+        // }
       }
       // error => {
       //   localStorage.removeItem(this.authLocalStorageToken);
