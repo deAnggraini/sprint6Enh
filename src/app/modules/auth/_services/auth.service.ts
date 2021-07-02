@@ -122,14 +122,12 @@ export class AuthService implements OnDestroy {
         // });
         if (isReload) location.replace('/auth/login');
         // }
+      },
+      error => {
+        localStorage.removeItem(this.authLocalStorageToken);
+        // location.reload();
+        location.replace('/auth/login');
       }
-      // error => {
-      //   localStorage.removeItem(this.authLocalStorageToken);
-      //   this.router.navigate(['/auth/login'], {
-      //     queryParams: {},
-      //   });
-      //   location.reload();
-      // }
     );
   }
 
