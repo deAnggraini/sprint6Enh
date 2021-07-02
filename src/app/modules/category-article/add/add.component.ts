@@ -92,12 +92,12 @@ export class AddComponent implements OnInit, OnDestroy {
     fd.append('name', this.dataForm.value.name);
     fd.append('desc', this.dataForm.value.desc);
     if (typeof (this.dataForm.value.image) == "string") {
-      fd.append('image', null);
+      // fd.append('image', null);
     } else {
       fd.append('image', this.dataForm.value.image);
     }
     if (typeof (this.dataForm.value.icon) == "string") {
-      fd.append('icon', null);
+      // fd.append('icon', null);
     } else {
       fd.append('icon', this.dataForm.value.icon);
     }
