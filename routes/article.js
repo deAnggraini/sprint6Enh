@@ -143,7 +143,7 @@ router.post('/saveStructure', (req, res, next) => {
 
         const imageFile = files['image'];
         if (imageFile) {
-            image = `/struktur/${new_id}-${imageFile.name}`;
+            image = `/structure/${new_id}-${imageFile.name}`;
             imageFile.mv(`${imagesPath}${image}`, function (err) {
                 if (err) console.error(err)
             });
@@ -205,7 +205,7 @@ router.post('/updateStructure', (req, res) => {
 
         const imageFile = files['image'];
         if (imageFile) {
-            image = `/struktur/${id}-${imageFile.name}`;
+            image = `/structure/${id}-${imageFile.name}`;
             imageFile.mv(`${imagesPath}${image}`, function (err) {
                 if (err) console.error(err)
             });
