@@ -28,9 +28,11 @@ export class ThemeService {
 
   private populate() {
     this.apiService.get(`${this._base_url}/theme`).subscribe(resp => {
-      this.theme = resp as ThemeConfig;
-      this.currentTheme.next(this.theme);
-      this.homepageComponent$.next(this.theme.homepage.component);
+      if (resp) {
+        this.theme = resp as ThemeConfig;
+        this.currentTheme.next(this.theme);
+        this.homepageComponent$.next(this.theme.homepage.component);
+      }
     })
   }
 

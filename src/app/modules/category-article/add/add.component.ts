@@ -104,7 +104,13 @@ export class AddComponent implements OnInit, OnDestroy {
     fd.append('edit', this.dataForm.value.edit ? "1" : "0");
     fd.append('uri', this.dataForm.value.uri);
     fd.append('level', this.dataForm.value.level.toString());
-    fd.append('sort', String(this.categories.length + 1));
+
+    // fd.append('sort', String(this.categories.length + 1));
+    const listSort = this.categories.map(d => d.sort);
+    const maxSort = Math.max(...listSort);
+    fd.append('sort', (maxSort + 1).toString());
+
+
     fd.append('parent', "0");
     fd.append('location', "");
     fd.append('location_text', "");
@@ -242,8 +248,6 @@ export class AddComponent implements OnInit, OnDestroy {
   setJsTree(item: any, forceUpdate: boolean = false) {
     if (forceUpdate == false && item.id == this.selected$.value.id) return;
     const found = this.categories.find(d => d.id == item.id);
-    console.log('setJsTree', item.id);
-    console.log('setJsTree', found);
     if (found) {
       const _found = JSON.parse(JSON.stringify(found)); // agar master tidak ikut berubah
       this.selected$.next(_found);
