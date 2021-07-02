@@ -28,6 +28,8 @@ public class MenuDto {
 	private List<MenuDto> menuChilds = new ArrayList<MenuDto>();
 	@JsonProperty("parent")
 	private Long parent = 0L;
+	@JsonProperty("listParent")
+	private List<BreadcumbMenuDto> breadcumbMenuDtoList = new ArrayList<>();
 
 	public Long getId() {
 		return id;
@@ -116,6 +118,14 @@ public class MenuDto {
 
 	public void setParent(Long parent) {
 		this.parent = parent;
+	}
+
+	public List<BreadcumbMenuDto> getBreadcumbMenuDtoList() {
+		return breadcumbMenuDtoList;
+	}
+
+	public void setBreadcumbMenuDtoList(List<BreadcumbMenuDto> breadcumbMenuDtoList) {
+		this.breadcumbMenuDtoList = breadcumbMenuDtoList;
 	}
 
 	@Override

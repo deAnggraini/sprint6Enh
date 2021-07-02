@@ -694,9 +694,45 @@ public class StructureServiceImp implements StructureService {
             } catch (Exception e) {
 
             }
+            menuDto.setBreadcumbMenuDtoList(getParentBc(structure));
             menuDto.setUri(structure.getUri());
             listOfMenus.add(menuDto);
         }
         return listOfMenus;
+    }
+
+    private List<BreadcumbMenuDto> getParentBc(Structure _structure) {
+        // get list parent of new structure
+        List<BreadcumbMenuDto> bcmDtoList = new ArrayList<>();
+        Long parentId = _structure.getParentStructure();
+        boolean parentStatus = Boolean.TRUE;
+        do {
+            Optional<Structure> parentStructure = structureRepository.findById(parentId);
+            if (!parentStructure.isEmpty()) {
+                Structure _parent = parentStructure.get();
+                parentId = _parent.getParentStructure();
+                BreadcumbMenuDto bcDto = new BreadcumbMenuDto();
+                bcDto.setId(_parent.getId());
+                bcDto.setName(_parent.getStructureName());
+                bcDto.setLevel(_parent.getLevel());
+                bcmDtoList.add(bcDto);
+                if (parentId == null)
+                    parentStatus = Boolean.FALSE;
+                else if (parentId.longValue() == 0)
+                    parentStatus = Boolean.FALSE;
+            } else {
+                parentStatus = Boolean.FALSE;
+            }
+        } while (parentStatus);
+
+        // sorting bread crumb
+        Collections.sort(bcmDtoList, new Comparator<BreadcumbMenuDto>() {
+            @Override
+            public int compare(BreadcumbMenuDto o1, BreadcumbMenuDto o2) {
+                return o1.getLevel().intValue() - o2.getLevel().intValue();
+            }
+        });
+
+        return bcmDtoList;
     }
 }
