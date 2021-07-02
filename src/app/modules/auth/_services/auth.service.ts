@@ -55,10 +55,10 @@ export class AuthService implements OnDestroy {
     this.apiService.post(`${this.oauth_url}/refreshToken`, params).subscribe(
       resp => {
         if (resp) {
-          const { authToken, refreshToken, expiresIn } = resp;
+          const { authToken, refreshToken, expiresIn, expires_in } = resp;
           auth.authToken = authToken;
           auth.refreshToken = refreshToken;
-          auth.expiresIn = expiresIn;
+          auth.expiresIn = expiresIn || expires_in;
           auth.autoLogout = moment().add(expiresIn, 's').toDate();
           this.setAuthFromLocalStorage(auth);
           this.setWorker(auth, expiresIn * 1000);
@@ -86,7 +86,7 @@ export class AuthService implements OnDestroy {
   login(username: string, password: string, remember: boolean): Observable<UserModel> {
     this.isLoadingSubject.next(true);
     const params = { username, password, remember };
-    return this.apiService.post(`${this.oauth_url}/login`, params, this.apiService.getHeaders(), false)
+    return this.apiService.post(`${this.oauth_url}/login`, params, this.apiService.getHeaders(true), false)
       .pipe(
         catchError((err) => {
           throw err;
@@ -112,7 +112,7 @@ export class AuthService implements OnDestroy {
     clearTimeout(this.logoutWorker);
     this.logoutWorker = null;
     // };
-    this.apiService.post(`${this.oauth_url}/logout`, {}, this.apiService.getHeaders(), false).subscribe(
+    this.apiService.post(`${this.oauth_url}/logout`, {}, this.apiService.getHeaders(true), false).subscribe(
       resp => {
         console.log('resp');
         // if (resp) {
