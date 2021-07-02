@@ -36,24 +36,24 @@
   }
 }
 
-:host ::ng-deep .svg-icon.menu-icon {
-  svg {
-    g {
-      [fill] {
-        fill: red;
-        stroke: red;
-      }
-    }
-  }
+// :host ::ng-deep .svg-icon.menu-icon {
+//   svg {
+//     g {
+//       [fill] {
+//         fill: red;
+//         stroke: red;
+//       }
+//     }
+//   }
 
-  &:hover {
-    svg {
-      g {
-        [fill] {
-          fill: greenyellow;
-          stroke: greenyellow;
-        }
-      }
-    }
-  }
-}
+//   &:hover {
+//     svg {
+//       g {
+//         [fill] {
+//           fill: greenyellow;
+//           stroke: greenyellow;
+//         }
+//       }
+//     }
+//   }
+// }
