@@ -105,6 +105,7 @@ export class AddComponent implements OnInit, OnDestroy {
     if (this.dataForm.valid) {
       this.strukturService.save(this.convertToFormData()).subscribe(resp => {
         if (resp) {
+          resp.menus = [];
           this.menu.addStruktur(resp);
           this.modalService.dismissAll();
           this.toast.showSuccess('Simpan Data Berhasil');
