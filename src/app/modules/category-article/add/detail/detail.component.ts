@@ -188,10 +188,7 @@ export class DetailComponent implements OnInit, OnDestroy {
   }
 
   updateSection() {
-    const params = {
-      id: this.section.id,
-      children: this.convertTreeToArray(this.logs.slice(-1)[0]),
-    }
+    const params = this.convertTreeToArray(this.logs.slice(-1)[0])
     this.strukturService.updateSection(params).subscribe(resp => {
       if (resp) {
         this.toast.showSuccess('Simpan Data Berhasil');
