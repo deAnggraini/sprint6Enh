@@ -18,7 +18,8 @@ interface Menu {
   section?: string,
   isFunction?: boolean,
   parent?: Menu,
-  showMore?: boolean
+  showMore?: boolean,
+  level?: number,
 }
 
 const emptyMenuConfig = {
@@ -75,9 +76,9 @@ export class DynamicAsideMenuService {
       // submenu: [],
     }
     const parseItem = (item: any): Menu => {
-      const { id, title, desc, icon, uri } = item;
+      const { id, title, desc, icon, uri, level } = item;
       const svg = './assets/media/svg/icons/Navigation/Angle-right.svg';
-      let res: Menu = Object.assign({}, dumm_template, { id, title, icon, svg, uri, submenu: [] });
+      let res: Menu = Object.assign({}, dumm_template, { id, title, icon, svg, uri, submenu: [], level });
       return res;
     }
     const readChild = (item: any): Menu => {
@@ -149,6 +150,7 @@ export class DynamicAsideMenuService {
       //   }
       // }
     })
+    console.log({ items });
     return items;
   }
 

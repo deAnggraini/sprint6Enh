@@ -40,19 +40,23 @@
       <!-- begin::Menu Nav -->
       <ul class="menu-nav" [ngClass]="ulCSSClasses">
         <ng-container *ngFor="let item of menuConfig.items">
-          <ng-container *ngIf="item.level == 1 && item.id > 10000 && item.id < 11000" [ngTemplateOutlet]="menuItemTopTemplate"
+          <ng-container *ngIf="item.level == 1 && item.edit == false" [ngTemplateOutlet]="menuItemTopTemplate"
             [ngTemplateOutletContext]="{ item: item }"></ng-container>
           <!-- <ng-container *ngIf="item.section" [ngTemplateOutlet]="menuItemSectionTemplate"
             [ngTemplateOutletContext]="{ item: item }"></ng-container> -->
           <ng-container *ngIf="item.desc && item.level == 1" [ngTemplateOutlet]="menuItemSectionTemplate"
             [ngTemplateOutletContext]="{ item: item }"></ng-container>
+
           <ng-container *ngIf="item.separator" [ngTemplateOutlet]="menuItemSeparatorTemplate"></ng-container>
-          <ng-container *ngIf="item.title && !item.isFunction && !item.level" [ngTemplateOutlet]="menu1LevelTemplate"
+
+          <ng-container *ngIf="item.title && item.level > 1" [ngTemplateOutlet]="menu1LevelTemplate"
             [ngTemplateOutletContext]="{ item: item }"></ng-container>
-          <ng-container *ngIf="item.title && item.isFunction" [ngTemplateOutlet]="lihatSemuaTemplate"
+
+          <ng-container *ngIf="item.title && item.level < 0" [ngTemplateOutlet]="lihatSemuaTemplate"
             [ngTemplateOutletContext]="{ item: item }"></ng-container>
-          <ng-container *ngIf="item.level == 1 && item.id > 11000" [ngTemplateOutlet]="menuItemBottomTemplate"
-              [ngTemplateOutletContext]="{ item: item }"></ng-container>
+
+          <!-- <ng-container *ngIf="item.level == 1 && item.id > 11000" [ngTemplateOutlet]="menuItemBottomTemplate"
+              [ngTemplateOutletContext]="{ item: item }"></ng-container> -->
         </ng-container>
       </ul>
       <!-- end::Menu Nav -->

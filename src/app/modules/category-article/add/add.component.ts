@@ -27,7 +27,7 @@ export class AddComponent implements OnInit, OnDestroy {
     level: 1,
     sort: 0
   }
-  menuConfig: any;
+  menuConfig: any = { items: [] };
   subscriptions: Subscription[] = [];
   categories: any[];
   selected$: BehaviorSubject<any> = new BehaviorSubject({});
@@ -240,6 +240,7 @@ export class AddComponent implements OnInit, OnDestroy {
   setJsTree(item: any, forceUpdate: boolean = false) {
     if (forceUpdate == false && item.id == this.selected$.value.id) return;
     const found = this.categories.find(d => d.id == item.id);
+    console.log('setJsTree', found);
     if (found) {
       const _found = JSON.parse(JSON.stringify(found)); // agar master tidak ikut berubah
       this.selected$.next(_found);
@@ -248,18 +249,23 @@ export class AddComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.initForm();
-    const menuSubscr = this.menu.menuConfig$.subscribe(res => {
-      this.categories = this.menu.categories;
+    const menuSubscr1 = this.strukturService.categories$.subscribe(res => {
+      console.log('menuSubscr1', res);
+      this.categories = res;
       this.categories$.next(this.categories);
-      this.menuConfig = res;
-
       // ada perubahan data, dan sudah ada yang terselect, harus di update
       if (this.selected$.value.id) {
         this.setJsTree({ id: this.selected$.value.id }, true);
       }
-      this.cdr.detectChanges();
+      // this.cdr.detectChanges();
     });
-    this.subscriptions.push(menuSubscr);
+    const menuSubscr2 = this.menu.menuConfig$.subscribe(res => {
+      console.log('menuSubscr2', res);
+      this.menuConfig = res;
+      // this.cdr.detectChanges();
+    });
+    this.subscriptions.push(menuSubscr1);
+    this.subscriptions.push(menuSubscr2);
   }
 
   ngOnDestroy() {
