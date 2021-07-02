@@ -56,10 +56,12 @@ export class DynamicAsideMenuService {
 
     this.strukturService.categories$.subscribe(
       (_articles: any[]) => {
-        _articles.map(d => d.showLess = true);
-        this.categories = JSON.parse(JSON.stringify(_articles));
-        this.categories$.next(this.categories);
-        this.loadMenu(this.parseToMenu(_articles));
+        if (_articles) {
+          _articles.map(d => d.showLess = true);
+          this.categories = JSON.parse(JSON.stringify(_articles));
+          this.categories$.next(this.categories);
+          // this.loadMenu(this.parseToMenu(_articles));
+        }
       });
 
     this.populateCategoryArticle();
@@ -72,13 +74,13 @@ export class DynamicAsideMenuService {
       // root: false,
       // submenu: [],
     }
-    const parseItem = (item: any): Menu => { 
-      const { id, title, desc, icon, uri} = item;
+    const parseItem = (item: any): Menu => {
+      const { id, title, desc, icon, uri } = item;
       const svg = './assets/media/svg/icons/Navigation/Angle-right.svg';
       let res: Menu = Object.assign({}, dumm_template, { id, title, icon, svg, uri, submenu: [] });
       return res;
     }
-    const readChild = (item: any): Menu => {     
+    const readChild = (item: any): Menu => {
       if (item.id) {
         const menu = parseItem(item);
         if (item.menus && item.menus.length) {
@@ -95,9 +97,9 @@ export class DynamicAsideMenuService {
 
     // loop top level
     const items = [];
-    articles.map(item => {     
+    articles.map(item => {
       // items.push({ title: item.title, section: item.title, id: item.id, level: 0, root: true, edit: item.edit });
-      items.push( item );
+      items.push(item);
       // Add item.id condition exclude menu top and bottom
       if (item.menus && item.menus.length && item.edit) {
         const maxLoop = item.showLess ? 2 : item.menus.length;
@@ -146,7 +148,7 @@ export class DynamicAsideMenuService {
       //     });
       //   }
       // }
-    })   
+    })
     return items;
   }
 
@@ -154,9 +156,14 @@ export class DynamicAsideMenuService {
     // codeing disini
     this.apiService.get(`${this._auth_url}/menu`).subscribe(
       (_menus: any[]) => {
-        _menus.map(d => d.showLess = true);
-        this.menus = JSON.parse(JSON.stringify(_menus));
-        this.loadMenu(this.parseToMenu(_menus));
+        if (_menus) {
+          _menus.map(d => d.showLess = true);
+          this.menus = JSON.parse(JSON.stringify(_menus));
+          console.log('this.menus', this.menus);
+          const parse = this.parseToMenu(_menus);
+          console.log('hasil parse', parse);
+          this.loadMenu(parse);
+        }
       }
     );
   }
@@ -191,7 +198,7 @@ export class DynamicAsideMenuService {
     //   .concat({ section: ' ' }) // agar menu tidak terlalu mepet kebawah
     //   ;
 
-   const items = [].concat(_server);
+    const items = [].concat(_server);
     this.setMenu({ items });
   }
 
@@ -209,7 +216,7 @@ export class DynamicAsideMenuService {
     if (found) {
       found.showLess = !found.showLess;
     }
-    this.loadMenu(this.parseToMenu(this.categories));
+    // this.loadMenu(this.parseToMenu(this.categories));
     this.loadMenu(this.parseToMenu(this.menus));
   }
 
@@ -232,22 +239,22 @@ export class DynamicAsideMenuService {
   //   this.loadMenu(this.parseToMenu(this.categories));
   // }
 
-  removeStruktur(data: any) {
+  private removeStruktur(data: any) {
     this.categories = this.categories.filter(d => d.id != data.id);
     this.categories$.next(this.categories);
     this.loadMenu(this.parseToMenu(this.categories));
   }
 
   refreshStruktur(dataList: any[] = []) {
-    if (dataList.length) {
-      dataList.map(d => d.showLess = true);
-      this.categories = dataList;
-      this.categories$.next(dataList);
-      this.loadMenu(this.parseToMenu(dataList));
-    } else {
-      this.populateCategoryArticle();
-      this.populateMenus();
-    }
+    // if (dataList.length) {
+    //   dataList.map(d => d.showLess = true);
+    //   this.categories = dataList;
+    //   this.categories$.next(dataList);
+    //   this.loadMenu(this.parseToMenu(dataList));
+    // } else {
+    this.populateCategoryArticle();
+    this.populateMenus();
+    // }
   }
 
 }
