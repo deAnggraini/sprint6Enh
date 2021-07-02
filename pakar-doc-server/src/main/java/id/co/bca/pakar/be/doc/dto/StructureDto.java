@@ -33,10 +33,13 @@ public class StructureDto {
     @Min(value = 0, message = "minimum value is 0")
     @JsonProperty("parent")
     protected Long parent = 0L;
-
+    @JsonProperty("uri")
     protected String uri;
+    @JsonProperty("edit")
     protected Boolean edit;
+    @JsonProperty("location")
     protected String location;
+    @JsonProperty("location_text")
     protected String location_text;
 
     public Long getId() {

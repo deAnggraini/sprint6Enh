@@ -136,5 +136,25 @@ public class StructureValidator implements Validator {
                 }
             }
         }
+
+        if(dto.getLocation() == null) {
+            errors.rejectValue("location", "location field is required");
+            return;
+        }
+
+        if(dto.getLocation().isEmpty()) {
+            errors.rejectValue("location", "location field is required");
+            return;
+        }
+
+        if(dto.getLocation_text() == null) {
+            errors.rejectValue("location_text", "location_text field is required");
+            return;
+        }
+
+        if(dto.getLocation_text().isEmpty()) {
+            errors.rejectValue("location_text", "location_text field is required");
+            return;
+        }
     }
 }

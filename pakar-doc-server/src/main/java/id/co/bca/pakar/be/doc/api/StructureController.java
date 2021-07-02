@@ -46,7 +46,6 @@ public class StructureController extends BaseController {
 				return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.REQUEST_PARAM_INVALID.getAction()[0], Constant.ApiResponseCode.REQUEST_PARAM_INVALID.getAction()[1]);
 			}
 			logger.info("name structure >> {}", structure.getName());
-			logger.info("size image "+structure.getImage().getSize());
 			StructureResponseDto responseDto = structureService.add(username, structure);
 			return createResponse(responseDto, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
 		} catch (DataNotFoundException e) {

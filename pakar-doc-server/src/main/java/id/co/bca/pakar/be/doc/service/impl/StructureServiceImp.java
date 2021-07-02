@@ -260,6 +260,8 @@ public class StructureServiceImp implements StructureService {
             structure.setEdit(dto.getEdit());
             structure.setUri(dto.getUri());
             structure.setParentStructure(dto.getParent());
+            structure.setLocation(dto.getLocation());
+            structure.setLocation_text(dto.getLocation_text());
             Structure _structure = structureRepository.save(structure);
 
             // set uri value of struckture
@@ -318,6 +320,8 @@ public class StructureServiceImp implements StructureService {
             _dto.setEdit(_structure.getEdit());
             _dto.setParent(_structure.getParentStructure());
             _dto.setUri(_structure.getUri());
+            _dto.setLocation(_structure.getLocation());
+            _dto.setLocation_text(_structure.getLocation_text());
             return _dto;
         } catch (DataNotFoundException e) {
             logger.error("data not found", e);
@@ -558,6 +562,8 @@ public class StructureServiceImp implements StructureService {
             structure.setUri(dto.getUri());
             structure.setStructureName(dto.getName());
             structure.setStructureDescription(dto.getDesc());
+            structure.setLocation(dto.getLocation());
+            structure.setLocation_text(dto.getLocation_text());
             Structure _structure = structureRepository.save(structure);
 
             if (_images != null) {
@@ -603,6 +609,8 @@ public class StructureServiceImp implements StructureService {
             _dto.setEdit(_structure.getEdit());
             _dto.setParent(_structure.getParentStructure());
             _dto.setUri(_structure.getUri());
+            _dto.setLocation(_structure.getLocation());
+            _dto.setLocation_text(_structure.getLocation_text());
             return _dto;
         } catch (DataNotFoundException e) {
             logger.error("data not found", e);
