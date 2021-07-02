@@ -35,7 +35,7 @@ spring:
       max-request-size: 10MB
   multipart:
     max-size: 2000000
-    file-type: image/png,image/jpg,image/jpeg
+    file-type: image/png,image/jpeg,image/gif,image/avif,image/apng,image/svg+xml,image/bmp,image/x-icon,image/tiff
 ---
 spring:
   profiles: dev-local
