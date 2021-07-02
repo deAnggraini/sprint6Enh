@@ -13,8 +13,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit, OnDestroy {
   defaultAuth = {
-    username: 'super123',
-    password: '123456',
+    username: '',
+    password: '',
     remember: true,
   };
   loginForm: FormGroup;
