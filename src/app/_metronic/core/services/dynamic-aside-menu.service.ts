@@ -99,7 +99,7 @@ export class DynamicAsideMenuService {
       // items.push({ title: item.title, section: item.title, id: item.id, level: 0, root: true, edit: item.edit });
       items.push( item );
       // Add item.id condition exclude menu top and bottom
-      if (item.menus && item.menus.length && item.id < 10000) {
+      if (item.menus && item.menus.length && item.edit) {
         const maxLoop = item.showLess ? 2 : item.menus.length;
         for (let i = 0; i < maxLoop; i++) {
           const menu = item.menus[i];
@@ -122,29 +122,30 @@ export class DynamicAsideMenuService {
         }
       }
       // for menu top and bottom
-      else  if (item.menus && item.menus.length && item.id > 10000) {
-        const maxLoop = item.showLess ? 2 : item.menus.length;
-        for (let i = 0; i < maxLoop; i++) {
-          const menu = item.menus[i];
-          if (menu) {
-            item.menus[i] = parseItem(menu);
-            if (item.menus[i].submenu && item.menus[i].submenu.length == 0) delete item.menus[i].submenu;
-          }
-        }
-        if (item.menus.length > 2) {
-          let title = 'Lihat Lebih Sedikit ' + item.title;
-          if (item.showLess) {
-            title = 'Lihat Semua' + item.title;
-          }
-          items.push({
-            isFunction: true,
-            title,
-            page: '/lihatsemua/title',
-            data: item,
-            level: -1
-          });
-        }
-      }
+      // else  
+      // if (item.menus && item.menus.length && item.edit) {
+      //   const maxLoop = item.showLess ? 2 : item.menus.length;
+      //   for (let i = 0; i < maxLoop; i++) {
+      //     const menu = item.menus[i];
+      //     if (menu) {
+      //       item.menus[i] = parseItem(menu);
+      //       if (item.menus[i].submenu && item.menus[i].submenu.length == 0) delete item.menus[i].submenu;
+      //     }
+      //   }
+      //   if (item.menus.length > 2) {
+      //     let title = 'Lihat Lebih Sedikit ' + item.title;
+      //     if (item.showLess) {
+      //       title = 'Lihat Semua' + item.title;
+      //     }
+      //     items.push({
+      //       isFunction: true,
+      //       title,
+      //       page: '/lihatsemua/title',
+      //       data: item,
+      //       level: -1
+      //     });
+      //   }
+      // }
     })   
     return items;
   }
@@ -216,20 +217,20 @@ export class DynamicAsideMenuService {
     return this.categories$;
   }
 
-  addStruktur(newData: any, level: number = 1, parent: any = null) {
-    newData.showLess = true;
-    let found = this.categories.find(d => d.id == newData.id);
-    if (found) {
-      found.title = newData.title;
-      found.desc = newData.desc;
-      found.icon = newData.icon;
-      found.image = newData.image;
-    } else {
-      this.categories.push(newData);
-    }
-    this.categories$.next(this.categories);
-    this.loadMenu(this.parseToMenu(this.categories));
-  }
+  // addStruktur(newData: any, level: number = 1, parent: any = null) {
+  //   newData.showLess = true;
+  //   let found = this.categories.find(d => d.id == newData.id);
+  //   if (found) {
+  //     found.title = newData.title;
+  //     found.desc = newData.desc;
+  //     found.icon = newData.icon;
+  //     found.image = newData.image;
+  //   } else {
+  //     this.categories.push(newData);
+  //   }
+  //   this.categories$.next(this.categories);
+  //   this.loadMenu(this.parseToMenu(this.categories));
+  // }
 
   removeStruktur(data: any) {
     this.categories = this.categories.filter(d => d.id != data.id);
@@ -245,6 +246,7 @@ export class DynamicAsideMenuService {
       this.loadMenu(this.parseToMenu(dataList));
     } else {
       this.populateCategoryArticle();
+      this.populateMenus();
     }
   }
 

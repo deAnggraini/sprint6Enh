@@ -49,7 +49,6 @@ export class ApiService {
   }): Observable<any> {
     return this.http.post(url, body, options == null ? this.getHeaders() : options).pipe(
       concatMap((res: CommonHttpResponse) => {
-        console.log({ res });
         if (res.error && res.error !== '00') throw Error(res.msg);
         if (res.status && res.status.code !== '00' && res.status.code !== 'OO') {
           console.error('error', res.status);
