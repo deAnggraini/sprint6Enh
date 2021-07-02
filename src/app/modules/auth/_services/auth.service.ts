@@ -58,7 +58,7 @@ export class AuthService implements OnDestroy {
           const { authToken, refreshToken, expiresIn, expires_in } = resp;
           auth.authToken = authToken;
           auth.refreshToken = refreshToken;
-          auth.expiresIn = expiresIn || expires_in;
+          auth.expiresIn = expiresIn ? expiresIn : expires_in; // expiresIn : expires_in
           auth.autoLogout = moment().add(expiresIn, 's').toDate();
           this.setAuthFromLocalStorage(auth);
           this.setWorker(auth, expiresIn * 1000);
@@ -69,7 +69,7 @@ export class AuthService implements OnDestroy {
 
   setWorker(auth: AuthModel, duration: number) {
     if (this.logoutWorker === null) {
-      console.log('set worker ', duration / 1000, 'seconds');
+      console.log('set worker ', duration, duration / 1000, 'seconds');
       this.logoutWorker = setTimeout(() => {
         if (auth.remember == true) {
           console.log('doing auto refresh token');
