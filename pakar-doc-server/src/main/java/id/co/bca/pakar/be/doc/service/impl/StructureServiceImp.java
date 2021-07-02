@@ -199,51 +199,55 @@ public class StructureServiceImp implements StructureService {
             _dto.setName(dto.getName());
             _dto.setDesc(dto.getDesc());
             Images _images = null;
-            if (!dto.getImage().isEmpty()) {
-                String location = basePath + pathCategory;
-                logger.debug("folder location {}", location);
-                logger.debug("image file name {}", dto.getImage().getOriginalFilename());
+            if(dto.getImage() != null) {
+                if (!dto.getImage().isEmpty()) {
+                    String location = basePath + pathCategory;
+                    logger.debug("folder location {}", location);
+                    logger.debug("image file name {}", dto.getImage().getOriginalFilename());
 
-                Path path = Paths.get(location + dto.getImage().getOriginalFilename());
+                    Path path = Paths.get(location + dto.getImage().getOriginalFilename());
 
-                logger.info("saving image");
-                Images images = new Images();
-                images.setCreatedBy(username);
-                logger.debug("save file name to db {}", path.getFileName().toString());
-                images.setImageName(path.getFileName().toString());
-                logger.debug("save path file to db {}", path.toAbsolutePath().toString());
+                    logger.info("saving image");
+                    Images images = new Images();
+                    images.setCreatedBy(username);
+                    logger.debug("save file name to db {}", path.getFileName().toString());
+                    images.setImageName(path.getFileName().toString());
+                    logger.debug("save path file to db {}", path.toAbsolutePath().toString());
 
-                Path pathLocation = Paths.get(pathCategory + dto.getImage().getOriginalFilename());
-                images.setUri(pathLocation.toAbsolutePath().toString());
-                _dto.setImage(pathLocation.toAbsolutePath().toString());
-                _images = imageRepository.save(images);
+                    Path pathLocation = Paths.get(pathCategory + dto.getImage().getOriginalFilename());
+                    images.setUri(pathLocation.toAbsolutePath().toString());
+                    _dto.setImage(pathLocation.toAbsolutePath().toString());
+                    _images = imageRepository.save(images);
 
-                // save image to folder
-                logger.info("saving image to share folder");
-                FileUploadUtil.saveFile(location, dto.getImage());
+                    // save image to folder
+                    logger.info("saving image to share folder");
+                    FileUploadUtil.saveFile(location, dto.getImage());
+                }
             }
 
             Icons _icon = null;
-            if (!dto.getIcon().isEmpty()) {
-                String location = basePath + pathCategory;
-                logger.debug("folder location {}", location);
-                logger.debug("icon file name {}", dto.getIcon().getOriginalFilename());
-                Path path = Paths.get(location + dto.getIcon().getOriginalFilename());
+            if(dto.getIcon() != null) {
+                if (!dto.getIcon().isEmpty()) {
+                    String location = basePath + pathCategory;
+                    logger.debug("folder location {}", location);
+                    logger.debug("icon file name {}", dto.getIcon().getOriginalFilename());
+                    Path path = Paths.get(location + dto.getIcon().getOriginalFilename());
 
-                logger.info("saving icon");
-                Icons icons = new Icons();
-                icons.setCreatedBy(username);
-                logger.debug("save file name to db {}", path.getFileName().toString());
-                icons.setIconName(path.getFileName().toString());
-                logger.debug("save path file to db {}", path.toAbsolutePath().toString());
-                Path pathLocation = Paths.get(pathCategory + dto.getIcon().getOriginalFilename());
-                icons.setUri(pathLocation.toAbsolutePath().toString());
-                _dto.setIcon(pathLocation.toAbsolutePath().toString());
-                _icon = iconRepository.save(icons);
+                    logger.info("saving icon");
+                    Icons icons = new Icons();
+                    icons.setCreatedBy(username);
+                    logger.debug("save file name to db {}", path.getFileName().toString());
+                    icons.setIconName(path.getFileName().toString());
+                    logger.debug("save path file to db {}", path.toAbsolutePath().toString());
+                    Path pathLocation = Paths.get(pathCategory + dto.getIcon().getOriginalFilename());
+                    icons.setUri(pathLocation.toAbsolutePath().toString());
+                    _dto.setIcon(pathLocation.toAbsolutePath().toString());
+                    _icon = iconRepository.save(icons);
 
-                // save image to folder
-                logger.info("saving icon to share folder");
-                FileUploadUtil.saveFile(location, dto.getIcon());
+                    // save image to folder
+                    logger.info("saving icon to share folder");
+                    FileUploadUtil.saveFile(location, dto.getIcon());
+                }
             }
 
             logger.info("saving structure");
