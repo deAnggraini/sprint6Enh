@@ -199,11 +199,11 @@ export class DetailComponent implements OnInit, OnDestroy {
     const lastLog = this.logs.slice(-1)[0];
     const params = this.convertTreeToArray(lastLog);
 
-    const moreThanLevel5 = params.find(d => d.level > 4);
-    if (moreThanLevel5) {
-      this.toast.showDanger('Sub-Sub-Kategori tidak boleh memiliki anak');
-      return;
-    }
+    // const moreThanLevel5 = params.find(d => d.level > 4);
+    // if (moreThanLevel5) {
+    //   this.toast.showDanger('Sub-Sub-Kategori tidak boleh memiliki anak');
+    //   return;
+    // }
 
     this.strukturService.updateSection(params).subscribe(resp => {
       if (resp) {
