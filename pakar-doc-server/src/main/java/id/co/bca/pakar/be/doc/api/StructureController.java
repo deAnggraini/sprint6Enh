@@ -1,5 +1,6 @@
 package id.co.bca.pakar.be.doc.api;
 
+import id.co.bca.pakar.be.doc.api.validator.MultiStructureValidator;
 import id.co.bca.pakar.be.doc.api.validator.StructureValidator;
 import id.co.bca.pakar.be.doc.common.Constant;
 import id.co.bca.pakar.be.doc.dto.*;
@@ -28,6 +29,9 @@ public class StructureController extends BaseController {
 
 	@Autowired
 	private StructureValidator structureValidator;
+
+	@Autowired
+	private MultiStructureValidator multiStructureValidator;
 
 	/**
 	 * add method add structure menu
@@ -119,8 +123,13 @@ public class StructureController extends BaseController {
 	 */
 	@PostMapping(value = "/api/doc/saveBatchStructure", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<RestResponse<List<StructureResponseDto>>> saveBatchStructure(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @RequestBody List<StructureDto> structures) {
+	public ResponseEntity<RestResponse<List<StructureResponseDto>>> saveBatchStructure(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @RequestBody List<StructureDto> structures, BindingResult bindingResult) {
 		try {
+			multiStructureValidator.validate(structures, bindingResult);
+			if(bindingResult.hasErrors()) {
+				logger.info("binding result "+bindingResult.getAllErrors());
+				return createResponse(new ArrayList<StructureResponseDto>(), Constant.ApiResponseCode.REQUEST_PARAM_INVALID.getAction()[0], Constant.ApiResponseCode.REQUEST_PARAM_INVALID.getAction()[1]);
+			}
 			List<StructureResponseDto> response = structureService.saveBatchStructures(username, structures);
 			return createResponse(response, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
 		} catch (DataNotFoundException e) {
