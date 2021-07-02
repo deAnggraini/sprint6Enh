@@ -91,8 +91,16 @@ export class AddComponent implements OnInit, OnDestroy {
     fd.append('id', this.dataForm.value.id.toString());
     fd.append('name', this.dataForm.value.name);
     fd.append('desc', this.dataForm.value.desc);
-    fd.append('image', this.dataForm.value.image);
-    fd.append('icon', this.dataForm.value.icon);
+    if (typeof (this.dataForm.value.image) == "string") {
+      fd.append('image', null);
+    } else {
+      fd.append('image', this.dataForm.value.image);
+    }
+    if (typeof (this.dataForm.value.icon) == "string") {
+      fd.append('icon', null);
+    } else {
+      fd.append('icon', this.dataForm.value.icon);
+    }
     fd.append('edit', this.dataForm.value.edit ? "1" : "0");
     fd.append('uri', this.dataForm.value.uri);
     fd.append('level', this.dataForm.value.level.toString());
@@ -105,8 +113,6 @@ export class AddComponent implements OnInit, OnDestroy {
     if (this.dataForm.valid) {
       this.strukturService.save(this.convertToFormData()).subscribe(resp => {
         if (resp) {
-          // resp.menus = [];
-          // if(!resp.title) resp.title = resp.name;
           this.menu.refreshStruktur();
           this.modalService.dismissAll();
           this.toast.showSuccess('Simpan Data Berhasil');
@@ -194,7 +200,7 @@ export class AddComponent implements OnInit, OnDestroy {
           } else {
             this.strukturService.delete({ id: this.selected$.value.id, changeTo: [] }).subscribe(resp => {
               if (resp) {
-                this.menu.refreshStruktur(resp);
+                this.menu.refreshStruktur();
                 this.selected$.next({});
                 this.toast.showSuccess('Hapus Data Berhasil');
               }
