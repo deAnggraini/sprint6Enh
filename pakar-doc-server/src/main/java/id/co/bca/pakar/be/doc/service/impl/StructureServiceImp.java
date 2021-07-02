@@ -9,6 +9,7 @@ import id.co.bca.pakar.be.doc.model.*;
 import id.co.bca.pakar.be.doc.service.StructureService;
 import id.co.bca.pakar.be.doc.util.FileUploadUtil;
 import id.co.bca.pakar.be.doc.util.TreeMenu;
+import org.bouncycastle.math.ec.custom.sec.SecT113R1Curve;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -418,6 +419,8 @@ public class StructureServiceImp implements StructureService {
                     structure.setEdit(structureDto.getEdit());
                     structure.setUri(structureDto.getUri());
                     structure.setParentStructure(structureDto.getParent());
+                    structure.setLocation(structureDto.getLocation());
+                    structure.setLocation_text(structureDto.getLocation_text());
                     Structure _structure = structureRepository.save(structure);
 
                     // populate data
@@ -426,6 +429,8 @@ public class StructureServiceImp implements StructureService {
                     _dto.setId(structureDto.getId());
                     _dto.setLevel(structureDto.getLevel());
                     _dto.setParent(structureDto.getParent());
+                    _dto.setLocation(_structure.getLocation());
+                    _dto.setLocation_text(_structure.getLocation_text());
                     newStructureList.add(_dto);
                 } catch (DataNotFoundException e) {
                     logger.error("there is data not found in database, stop process update");

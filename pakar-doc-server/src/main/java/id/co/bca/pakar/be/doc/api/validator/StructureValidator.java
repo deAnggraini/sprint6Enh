@@ -8,9 +8,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 @Component
 public class StructureValidator implements Validator {
     private Logger logger = LoggerFactory.getLogger(getClass());
@@ -64,8 +61,8 @@ public class StructureValidator implements Validator {
             return;
         }
 
-        if(dto.getLevel() < 1) {
-            errors.rejectValue("level", "minimum level value is 1");
+        if(dto.getLevel() < 1 || dto.getLevel() > 4) {
+            errors.rejectValue("level", "minimum level value 1 or maximum value 4");
             return;
         }
 
@@ -80,14 +77,6 @@ public class StructureValidator implements Validator {
             errors.rejectValue("parent", "minimum parent value is 0");
             return;
         }
-
-//        logger.debug("validate level {}", dto.getLevel());
-//        if(dto.getLevel().longValue() > 1) {
-//            if(!dto.getIcon().isEmpty())  {
-//                errors.rejectValue("level", "request icon invalid cause level value > 1");
-//                return;
-//            }
-//        }
 
         boolean validFileType = false;
         logger.debug("icon value {}", dto.getIcon());
