@@ -5,7 +5,7 @@ public class UploadFileDto {
     private Long id;
     private String image_name;
     private String imageType;
-    private String fileLocation;
+    private String uri;
 
     public Long getId() {
         return id;
@@ -31,11 +31,11 @@ public class UploadFileDto {
         this.imageType = imageType;
     }
 
-    public String getFileLocation() {
-        return fileLocation;
+    public String getUri() {
+        return uri;
     }
 
-    public void setFileLocation(String fileLocation) {
-        this.fileLocation = fileLocation;
+    public void setUri(String uri) {
+        this.uri = uri;
     }
 }

@@ -9,9 +9,10 @@ public class ThemeImage extends EntityBase {
         @SequenceGenerator(name = "themeImageSeqGen", sequenceName = "themeImageSeq", initialValue = 1, allocationSize = 1)
         @GeneratedValue(generator = "themeImageSeqGen")
         private Long id;
-        private String image_name;
         private String imageType;
-        private String fileLocation;
+        @ManyToOne
+        @JoinColumn(name = "image_id")
+        private Images images;
 
         public Long getId() {
                 return id;
@@ -19,14 +20,6 @@ public class ThemeImage extends EntityBase {
 
         public void setId(Long id) {
                 this.id = id;
-        }
-
-        public String getImage_name() {
-                return image_name;
-        }
-
-        public void setImage_name(String image_name) {
-                this.image_name = image_name;
         }
 
         public String getImageType() {
@@ -37,11 +30,11 @@ public class ThemeImage extends EntityBase {
                 this.imageType = imageType;
         }
 
-        public String getFileLocation() {
-                return fileLocation;
+        public Images getImages() {
+                return images;
         }
 
-        public void setFileLocation(String fileLocation) {
-                this.fileLocation = fileLocation;
+        public void setImages(Images images) {
+                this.images = images;
         }
 }

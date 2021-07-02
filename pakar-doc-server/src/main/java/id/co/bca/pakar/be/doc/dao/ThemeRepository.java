@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 public interface ThemeRepository extends CrudRepository<Theme, String> {
     @Query(
             value =
-                    "select id, background, color, hover, deleted, created_by, created_date, modify_by, modify_date from r_theme",
+                    "select * from r_theme",
             nativeQuery = true)
     Theme findAllTheme();
 }
