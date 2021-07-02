@@ -30,6 +30,10 @@
   .menu-section {
     background-color: #EFF2FC;
   }
+
+  .icon {
+    max-width: 20px;
+  }
 }
 
 :host ::ng-deep .svg-icon.menu-icon {
