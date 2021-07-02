@@ -9,7 +9,6 @@ import id.co.bca.pakar.be.doc.model.*;
 import id.co.bca.pakar.be.doc.service.StructureService;
 import id.co.bca.pakar.be.doc.util.FileUploadUtil;
 import id.co.bca.pakar.be.doc.util.TreeMenu;
-import org.bouncycastle.math.ec.custom.sec.SecT113R1Curve;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -323,6 +322,7 @@ public class StructureServiceImp implements StructureService {
             _dto.setUri(_structure.getUri());
             _dto.setLocation(_structure.getLocation());
             _dto.setLocation_text(_structure.getLocation_text());
+            _dto.setSort(_structure.getSort());
             return _dto;
         } catch (DataNotFoundException e) {
             logger.error("data not found", e);
@@ -431,6 +431,7 @@ public class StructureServiceImp implements StructureService {
                     _dto.setParent(structureDto.getParent());
                     _dto.setLocation(_structure.getLocation());
                     _dto.setLocation_text(_structure.getLocation_text());
+                    _dto.setSort(_structure.getSort());
                     newStructureList.add(_dto);
                 } catch (DataNotFoundException e) {
                     logger.error("there is data not found in database, stop process update");
@@ -616,6 +617,7 @@ public class StructureServiceImp implements StructureService {
             _dto.setUri(_structure.getUri());
             _dto.setLocation(_structure.getLocation());
             _dto.setLocation_text(_structure.getLocation_text());
+            _dto.setSort(_structure.getSort());
             return _dto;
         } catch (DataNotFoundException e) {
             logger.error("data not found", e);

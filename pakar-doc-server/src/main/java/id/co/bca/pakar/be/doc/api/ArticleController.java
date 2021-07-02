@@ -1,15 +1,12 @@
 package id.co.bca.pakar.be.doc.api;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import id.co.bca.pakar.be.doc.common.Constant;
+import id.co.bca.pakar.be.doc.dto.SearchHistoryDto;
+import id.co.bca.pakar.be.doc.dto.SearchHistoryItem;
 import id.co.bca.pakar.be.doc.dto.ThemeDto;
-import id.co.bca.pakar.be.doc.dto.UploadFileDto;
-import id.co.bca.pakar.be.doc.model.Theme;
 import id.co.bca.pakar.be.doc.service.ThemeService;
 import id.co.bca.pakar.be.doc.service.UploadService;
+import id.co.bca.pakar.be.doc.util.JSONMapperAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +15,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import id.co.bca.pakar.be.doc.dto.SearchHistoryDto;
-import id.co.bca.pakar.be.doc.dto.SearchHistoryItem;
-import id.co.bca.pakar.be.doc.util.JSONMapperAdapter;
-import org.springframework.web.multipart.MultipartFile;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @CrossOrigin
 @RestController
