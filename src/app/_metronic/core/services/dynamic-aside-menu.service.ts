@@ -124,33 +124,7 @@ export class DynamicAsideMenuService {
           });
         }
       }
-      // for menu top and bottom
-      // else  
-      // if (item.menus && item.menus.length && item.edit) {
-      //   const maxLoop = item.showLess ? 2 : item.menus.length;
-      //   for (let i = 0; i < maxLoop; i++) {
-      //     const menu = item.menus[i];
-      //     if (menu) {
-      //       item.menus[i] = parseItem(menu);
-      //       if (item.menus[i].submenu && item.menus[i].submenu.length == 0) delete item.menus[i].submenu;
-      //     }
-      //   }
-      //   if (item.menus.length > 2) {
-      //     let title = 'Lihat Lebih Sedikit ' + item.title;
-      //     if (item.showLess) {
-      //       title = 'Lihat Semua' + item.title;
-      //     }
-      //     items.push({
-      //       isFunction: true,
-      //       title,
-      //       page: '/lihatsemua/title',
-      //       data: item,
-      //       level: -1
-      //     });
-      //   }
-      // }
     })
-    console.log({ items });
     return items;
   }
 
@@ -161,9 +135,7 @@ export class DynamicAsideMenuService {
         if (_menus) {
           _menus.map(d => d.showLess = true);
           this.menus = JSON.parse(JSON.stringify(_menus));
-          console.log('this.menus', this.menus);
           const parse = this.parseToMenu(_menus);
-          console.log('hasil parse', parse);
           this.loadMenu(parse);
         }
       }

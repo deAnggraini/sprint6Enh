@@ -8,6 +8,7 @@ import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
 import { ApiService } from 'src/app/utils/_services/api-service.service';
 import * as moment from 'moment';
+import { ToastService } from 'src/app/utils/_services/toast.service';
 
 @Injectable({
   providedIn: 'root',
@@ -23,7 +24,7 @@ export class AuthService implements OnDestroy {
   isLoading$: Observable<boolean>;
   currentUserSubject: BehaviorSubject<UserModel>;
   isLoadingSubject: BehaviorSubject<boolean>;
-  logoutWorker: Object = null;
+  logoutWorker: any = null;
 
 
   get currentUserValue(): UserModel {
@@ -37,7 +38,8 @@ export class AuthService implements OnDestroy {
   constructor(
     private authHttpService: AuthHTTPService,
     private router: Router,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private toast: ToastService
   ) {
     this.isLoadingSubject = new BehaviorSubject<boolean>(false);
     this.currentUserSubject = new BehaviorSubject<UserModel>(undefined);
@@ -66,17 +68,15 @@ export class AuthService implements OnDestroy {
   setWorker(auth: AuthModel, duration: number) {
     if (this.logoutWorker === null) {
       console.log('set worker ', duration / 1000, 'seconds');
-      setTimeout(() => {
+      this.logoutWorker = setTimeout(() => {
         if (auth.remember == true) {
           console.log('doing auto refresh token');
           this.refreshToken(auth);
         } else {
           console.log('doing auto logout');
-          this.logout();
-          location.reload();
+          this.logout(true);
         }
       }, duration);
-      this.logoutWorker = new Object();
     }
   }
 
@@ -84,7 +84,7 @@ export class AuthService implements OnDestroy {
   login(username: string, password: string, remember: boolean): Observable<UserModel> {
     this.isLoadingSubject.next(true);
     const params = { username, password, remember };
-    return this.apiService.post(`${this.oauth_url}/login`, params)
+    return this.apiService.post(`${this.oauth_url}/login`, params, this.apiService.getHeaders(), false)
       .pipe(
         catchError((err) => {
           throw err;
@@ -92,6 +92,7 @@ export class AuthService implements OnDestroy {
         }),
         map((auth: AuthModel) => {
           if (auth) {
+            this.toast.clear();
             const { expiresIn } = auth;
             const autoLogout = moment().add(expiresIn, 's').toDate();
             auth = Object.assign({}, auth, { autoLogout, remember });
@@ -105,14 +106,28 @@ export class AuthService implements OnDestroy {
       );
   }
 
-  logout() {
-    // if(check cookie tidak kosong) {
-    this.apiService.post(`${this.oauth_url}/logout`, {}).subscribe(resp => console.log({ resp }));
-    // }
-    localStorage.removeItem(this.authLocalStorageToken);
-    this.router.navigate(['/auth/login'], {
-      queryParams: {},
-    });
+  logout(isReload = false) {
+    clearTimeout(this.logoutWorker);
+    this.logoutWorker = null;
+    // };
+    this.apiService.post(`${this.oauth_url}/logout`, {}, this.apiService.getHeaders(), false).subscribe(
+      resp => {
+        if (resp) {
+          localStorage.removeItem(this.authLocalStorageToken);
+          // this.router.navigate(['/auth/login'], {
+          //   queryParams: {},
+          // });
+          if (isReload) location.replace('/auth/login');
+        }
+      }
+      // error => {
+      //   localStorage.removeItem(this.authLocalStorageToken);
+      //   this.router.navigate(['/auth/login'], {
+      //     queryParams: {},
+      //   });
+      //   location.reload();
+      // }
+    );
   }
 
   getUserByToken(): Observable<UserModel> {
@@ -131,12 +146,16 @@ export class AuthService implements OnDestroy {
     const { authToken, username } = auth;
     const params = { authToken, username };
     return this.apiService.post(`${this.oauth_url}/getUser`, params).pipe(
+      catchError((err) => {
+        this.logout(true);
+        return of(undefined);
+      }),
       map((user: UserModel) => {
         if (user) {
           this.currentUserSubject = new BehaviorSubject<UserModel>(user);
           // this.setWorker();
         } else {
-          this.logout();
+          this.logout(true);
         }
         return user;
       }),

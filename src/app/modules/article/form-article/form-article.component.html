@@ -33,7 +33,7 @@
                 <div class="border border-light rounded-sm p-2 mb-3">Prosedure Tahapan <span>info</span></div>
                 <div class="border border-light rounded-sm p-2 mb-3">Formulir Tahapan <span>info</span></div>
 
-                <ngb-accordion #a="ngbAccordion" class="accordion-bordered">
+                <ngb-accordion #accDesc="ngbAccordion" class="accordion-bordered">
                     <ngb-panel cardClass="border border-light rounded-sm p-2 mb-3">
                         <ng-template ngbPanelHeader let-opened="opened">
                             <div class="d-flex align-items-center justify-content-between">
@@ -70,8 +70,7 @@
                                     <button type="button" class="btn btn-sm btn-outline-secondary ml-2">
                                         able third
                                     </button>
-                                    <button type="button" class="btn btn-sm btn-outline-danger ml-2"
-                                        (click)="a.collapseAll()">Collapse all</button>
+                                    <button type="button" class="btn btn-sm btn-outline-danger ml-2">Collapse all</button>
                                 </div>
                             </div>
                         </ng-template>
@@ -91,9 +90,9 @@
                     </ngb-panel>
                     <ngb-panel>
                         <ng-template ngbPanelHeader>
-                            <div class="card-title">
+                            <div class="card-title" ngbPanelToggle>
                                 <div>
-                                    <button ngbPanelToggle class="btn btn-link btn-xs"><i class="flaticon2-down icon-xs "></i></button>
+                                    <button class="btn btn-link btn-xs"><i class="flaticon2-down icon-xs "></i></button>
                                     <span>Formulir Tahapan</span> <span>info</span>
                                 </div>
                                 <div>
