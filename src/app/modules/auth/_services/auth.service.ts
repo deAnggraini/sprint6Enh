@@ -58,10 +58,10 @@ export class AuthService implements OnDestroy {
           const { authToken, refreshToken, expiresIn, expires_in } = resp;
           auth.authToken = authToken;
           auth.refreshToken = refreshToken;
-          auth.expiresIn = expiresIn ? expiresIn : expires_in; // expiresIn : expires_in
-          auth.autoLogout = moment().add(expiresIn, 's').toDate();
+          auth.expiresIn = parseInt(expiresIn ? expiresIn : expires_in); // expiresIn : expires_in
+          auth.autoLogout = moment().add(auth.expiresIn, 's').toDate();
           this.setAuthFromLocalStorage(auth);
-          this.setWorker(auth, expiresIn * 1000);
+          this.setWorker(auth, auth.expiresIn * 1000);
         }
       }
     );
