@@ -6,20 +6,36 @@ import { environment } from 'src/environments/environment';
 import { AuthService, UserModel } from 'src/app/modules/auth';
 import { StrukturService } from 'src/app/modules/_services/struktur.service';
 
+// interface Menu {    //old
+//   id?: number,
+//   root?: boolean,
+//   bullet?: string,
+//   title?: string,
+//   icon?: string,
+//   svg?: string,
+//   page?: string,
+//   submenu?: Menu[],
+//   section?: string,
+//   isFunction?: boolean,
+//   parent?: Menu,
+//   showMore?: boolean,
+//   level?: number,
+// }
+
 interface Menu {
   id?: number,
-  root?: boolean,
-  bullet?: string,
   title?: string,
-  icon?: string,
-  svg?: string,
-  page?: string,
-  submenu?: Menu[],
-  section?: string,
-  isFunction?: boolean,
-  parent?: Menu,
-  showMore?: boolean,
   level?: number,
+  desc?: string;
+  sort?: number;
+  parent?: Menu,
+  menus?: Menu[],
+  icon?: string,
+  image?: string;
+  uri?: string;
+  edit?: boolean;
+
+  submenu?: Menu[],
 }
 
 const emptyMenuConfig = {
@@ -124,31 +140,6 @@ export class DynamicAsideMenuService {
           });
         }
       }
-      // for menu top and bottom
-      // else  
-      // if (item.menus && item.menus.length && item.edit) {
-      //   const maxLoop = item.showLess ? 2 : item.menus.length;
-      //   for (let i = 0; i < maxLoop; i++) {
-      //     const menu = item.menus[i];
-      //     if (menu) {
-      //       item.menus[i] = parseItem(menu);
-      //       if (item.menus[i].submenu && item.menus[i].submenu.length == 0) delete item.menus[i].submenu;
-      //     }
-      //   }
-      //   if (item.menus.length > 2) {
-      //     let title = 'Lihat Lebih Sedikit ' + item.title;
-      //     if (item.showLess) {
-      //       title = 'Lihat Semua' + item.title;
-      //     }
-      //     items.push({
-      //       isFunction: true,
-      //       title,
-      //       page: '/lihatsemua/title',
-      //       data: item,
-      //       level: -1
-      //     });
-      //   }
-      // }
     })
     console.log({ items });
     return items;

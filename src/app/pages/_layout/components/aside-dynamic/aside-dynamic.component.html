@@ -40,10 +40,9 @@
       <!-- begin::Menu Nav -->
       <ul class="menu-nav" [ngClass]="ulCSSClasses">
         <ng-container *ngFor="let item of menuConfig.items">
-          <ng-container *ngIf="item.level == 1 && item.edit == false" [ngTemplateOutlet]="menuItemTopTemplate"
+          <ng-container *ngIf="item.level == 1 && item.edit == false" [ngTemplateOutlet]="menuItemTemplate"
             [ngTemplateOutletContext]="{ item: item }"></ng-container>
-          <!-- <ng-container *ngIf="item.section" [ngTemplateOutlet]="menuItemSectionTemplate"
-            [ngTemplateOutletContext]="{ item: item }"></ng-container> -->
+
           <ng-container *ngIf="item.desc && item.level == 1" [ngTemplateOutlet]="menuItemSectionTemplate"
             [ngTemplateOutletContext]="{ item: item }"></ng-container>
 
@@ -54,9 +53,6 @@
 
           <ng-container *ngIf="item.title && item.level < 0" [ngTemplateOutlet]="lihatSemuaTemplate"
             [ngTemplateOutletContext]="{ item: item }"></ng-container>
-
-          <!-- <ng-container *ngIf="item.level == 1 && item.id > 11000" [ngTemplateOutlet]="menuItemBottomTemplate"
-              [ngTemplateOutletContext]="{ item: item }"></ng-container> -->
         </ng-container>
       </ul>
       <!-- end::Menu Nav -->
@@ -211,7 +207,7 @@
 </ng-template>
 
 
-<ng-template #menuItemTopTemplate let-item="item">
+<ng-template #menuItemTemplate let-item="item">
   <!-- begin::if don't have submenu -->
   <ng-container *ngIf="!item.menus.length">
     <li class="menu-item" aria-haspopup="true" data-menu-toggle="hover"
@@ -227,53 +223,6 @@
       </a>
     </li>
   </ng-container>
-  <!-- end::if don't have submenu -->
-
-  <!-- begin::if has submenu -->
-  <ng-container *ngIf="item.menus.length">
-    <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover"
-      [ngClass]="{ 'menu-item-open': isMenuItemActive(item.uri) }" routerLinkActive="menu-item-open">
-      <a class="menu-link menu-toggle" [attr.href]="item.uri" routerLinkActive="active"
-        [ngClass]="{ 'active ': isMenuItemActive(item.uri) }">
-        <span [inlineSVG]="imgUrl + item.icon" cacheSVG="true" class="svg-icon menu-icon"></span>
-        <span class="menu-text" [translate]="item.translate">{{
-          item.title
-          }}</span>
-        <i class="menu-arrow"></i>
-      </a>
-      <div class="menu-submenu">
-        <i class="menu-arrow"></i>
-        <ul class="menu-subnav">
-          <li class="menu-item menu-item-parent" aria-haspopup="true">
-            <span class="menu-link">
-              <span class="menu-text" [translate]="item.translate">{{
-                item.title
-                }}</span>
-            </span>
-          </li>
-          <ng-container *ngFor="let sub of item.menus" [ngTemplateOutlet]="menu1LevelTemplate"
-            [ngTemplateOutletContext]="{ item: sub }"></ng-container>
-        </ul>
-      </div>
-    </li>
-  </ng-container>
-  <!-- end::if has submenu -->
-</ng-template>
-
-<ng-template #menuItemBottomTemplate let-item="item">
-  <!-- begin::if don't have submenu -->
-  <ng-container *ngIf="!item.menus.length">
-      <li class="menu-item" aria-haspopup="true" data-menu-toggle="hover" style="padding-top: 15px;">
-        <a class="menu-link" *ngIf="!externalLink(item.uri)" [routerLink]="item.uri" routerLinkActive="active">
-          <span [inlineSVG]="imgUrl + item.icon" cacheSVG="true" class="svg-icon menu-icon"></span>
-          <span class="menu-text" [translate]="item.translate">{{item.title}}</span>
-        </a>
-        <a class="menu-link" *ngIf="externalLink(item.uri)" href="{{item.uri}}">
-          <span [inlineSVG]="imgUrl + item.icon" cacheSVG="true" class="svg-icon menu-icon"></span>
-          <span class="menu-text" [translate]="item.translate">{{item.title}}</span>
-        </a>
-      </li>
-    </ng-container>
   <!-- end::if don't have submenu -->
 
   <!-- begin::if has submenu -->
