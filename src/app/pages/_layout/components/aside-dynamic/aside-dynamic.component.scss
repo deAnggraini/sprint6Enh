@@ -12,6 +12,10 @@
     white-space: nowrap;
   }
 
+  .menu-item .menu-link .menu-text, .menu-section .menu-text {
+    color: #201F1E;
+  }
+
   //burger menu
   .logo {
     line-height: 0.9;
@@ -33,6 +37,10 @@
 
   .icon {
     max-width: 20px;
+  }
+  
+  .arrow {
+    filter: invert(19%) sepia(95%) saturate(2662%) hue-rotate(197deg) brightness(87%) contrast(88%);
   }
 }
 

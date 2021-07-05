@@ -127,7 +127,7 @@ export class DynamicAsideMenuService {
           }
         }
         if (item.menus.length > 2) {
-          let title = 'Lihat Lebih Sedikit ' + item.title;
+          let title = 'Tutup ' + item.title;
           if (item.showLess) {
             title = 'Lihat Semua ' + item.title;
           }
