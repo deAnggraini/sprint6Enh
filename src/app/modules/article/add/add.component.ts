@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Option } from 'src/app/utils/_model/option';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-add',
@@ -13,6 +14,7 @@ export class AddComponent implements OnInit {
     location: '',
     usedBy: '',
   }
+  backend_img = environment.backend_img;
 
   // state
   dataForm: FormGroup;
@@ -31,7 +33,8 @@ export class AddComponent implements OnInit {
   }
 
   check() {
-    console.log({ location1: this.location1, errors: this.dataForm.errors, isValid: this.dataForm.valid });
+    this.dataForm.markAllAsTouched();
+    console.log({ location1: this.location1, errors: this.dataForm.errors, isValid: this.dataForm.valid, data: this.dataForm.value });
   }
 
   changeLocation1(e) {

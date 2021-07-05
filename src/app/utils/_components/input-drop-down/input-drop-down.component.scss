@@ -22,13 +22,3 @@
     }
   }
 }
-
-:host ::ng-deep .combo-box-tree {
-  i.jstree-icon.jstree-ocl {
-    background: none;
-  }
-
-  & .jstree-container-ul li.jstree-node {
-    background: none;
-  }
-}
