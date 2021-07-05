@@ -1,9 +1,19 @@
+const empty = {
+    id: 1001,
+    name: 'Empty',
+    categori: [],
+    desc: '<p>Digunakan untuk artikel dengan template yang dapat di-custom.</p>',
+    image: '/templates/empty.svg',
+    thumb: '/templates/basic_thumb.svg',
+    content: [],
+}
 const basic = {
     id: 1000,
-    name: 'Basic Template',
+    name: 'Basic',
     categori: [],
     desc: '<p>Pilih template ini jika template yang direkomendasikan kurang sesuai dengan atribut page yang akan Kamu buat.</p>',
-    images: '/templates/basic.svg',
+    image: '/templates/basic.jpeg',
+    thumb: '/templates/basic_thumb.svg',
     content: [
         {
             id: 1001,
@@ -30,4 +40,5 @@ const basic = {
 }
 
 module.exports.basic_template = basic;
-module.exports.templates = [basic];
+module.exports.empty_template = empty;
+module.exports.templates = [empty, basic];
