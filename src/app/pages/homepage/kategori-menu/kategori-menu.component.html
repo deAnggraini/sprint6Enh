@@ -13,20 +13,18 @@
             <div class="kategori-menu-card card-shadow border-1 rounded-sm mt-n15 p-5">
                 <div class="pt-15"></div>
                 <div>
-                    <!-- /struktur/list/{{item.id}} -->
-                    <a routerLink="" class="text-dark font-weight-bold font-size-h6 mb-1 text-ellipsis-1">{{item.title}}</a>
+                    <a routerLink="/struktur/list/{{item.id}}"
+                        class="text-dark font-weight-bold font-size-h6 mb-1 text-ellipsis-1">{{item.title}}</a>
                 </div>
                 <small class="text-ellipsis-2">{{item.desc}}</small>
                 <ul class="navi navi-hover">
                     <li class="navi-item" *ngFor="let link of item.menus | slice:0:3">
-                        <!-- /struktur/list/{{link.id}} -->
-                        <a routerLink="" class="navi-link cursor-pointer">
+                        <a routerLink="/struktur/list/{{link.id}}" class="navi-link cursor-pointer">
                             <span class="text-ellipsis-1">{{link.title}}</span>
                         </a>
                     </li>
                     <li class="navi-item">
-                        <!-- /struktur/list/{{item.id}} -->
-                        <a routerLink="" class="navi-link cursor-pointer">Lihat Semua ></a>
+                        <a routerLink="/struktur/list/{{item.id}}" class="navi-link cursor-pointer">Lihat Semua ></a>
                     </li>
                 </ul>
             </div>

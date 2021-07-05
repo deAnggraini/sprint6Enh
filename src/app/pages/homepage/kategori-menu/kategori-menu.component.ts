@@ -11,8 +11,7 @@ export class KategoriMenuComponent implements OnInit {
 
   backend_img: string = environment.backend_img;
   listData: any[] = [];
-  constructor(private categori: StrukturService) {
-  }
+  constructor(private categori: StrukturService) { }
 
   ngOnInit(): void {
     this.categori.categories$.subscribe(d => {
