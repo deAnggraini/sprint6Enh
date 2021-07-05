@@ -20,6 +20,7 @@ import { UserOffcanvasComponent } from './offcanvas/user-offcanvas/user-offcanva
 import { CoreModule } from '../../../core';
 import { ScrollTopComponent } from './scroll-top/scroll-top.component';
 import { ToolbarComponent } from './toolbar/toolbar.component';
+import { ScrollDownComponent } from './scroll-down/scroll-down.component';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
@@ -41,6 +42,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     UserOffcanvasComponent,
     ScrollTopComponent,
     ToolbarComponent,
+    ScrollDownComponent,
   ],
   imports: [CommonModule, InlineSVGModule, PerfectScrollbarModule, CoreModule, RouterModule],
   providers: [
@@ -63,6 +65,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     UserOffcanvasComponent,
     ToolbarComponent,
     ScrollTopComponent,
+    ScrollDownComponent
   ],
 })
 export class ExtrasModule { }
