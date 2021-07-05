@@ -209,7 +209,7 @@ INSERT INTO public.r_structure
 VALUES(160, 'system',now()::DATE, 'f',null, null, 'Produk Kartu Kredit', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 2, 6, 100);
 INSERT INTO public.r_structure
 (id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
-VALUES(170, 'system',now()::DATE, 'f',null, null, 'Produk Kredit Kosumtif', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 2, 7, 100);
+VALUES(170, 'system',now()::DATE, 'f',null, null, 'Produk Kredit Konsumtif', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 2, 7, 100);
 INSERT INTO public.r_structure
 (id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
 VALUES(180, 'system',now()::DATE, 'f',null, null, 'Produk Kredit Produktif', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 2, 8, 100);
@@ -242,7 +242,7 @@ INSERT INTO public.r_structure
 VALUES(152, 'system',now()::DATE, 'f',null, null, 'Treasuri', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 3, 2, 150);
 INSERT INTO public.r_structure
 (id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
-VALUES(153, 'system',now()::DATE, 'f',null, null, 'Perbankan Domesik', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 3, 3, 150);
+VALUES(153, 'system',now()::DATE, 'f',null, null, 'Perbankan Domestik', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 3, 3, 150);
 INSERT INTO public.r_structure
 (id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
 VALUES(181, 'system',now()::DATE, 'f',null, null, 'SME', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 3, 1, 180);
@@ -277,6 +277,129 @@ INSERT INTO public.r_structure
 (id, created_by, created_date, deleted, modify_by, modify_date, name, description, level, sort, parent)
 VALUES(360, 'system',now()::DATE, 'f',null, null, 'Pendukung Operasional', 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.', 2, 6, 1);
 
+-------- MENU ROLE ------------
+INSERT INTO public.r_menu_role
+(id, created_by, created_date, deleted, modify_by, modify_date, menu_id, role_id)
+VALUES(1, 'system',now()::DATE, 'f',null, null, 10001, 'READER');
+INSERT INTO public.r_menu_role
+(id, created_by, created_date, deleted, modify_by, modify_date, menu_id, role_id)
+VALUES(2, 'system',now()::DATE, 'f',null, null, 10001, 'EDITOR');
+INSERT INTO public.r_menu_role
+(id, created_by, created_date, deleted, modify_by, modify_date, menu_id, role_id)
+VALUES(3, 'system',now()::DATE, 'f',null, null, 10001, 'PUBLISHER');
+INSERT INTO public.r_menu_role
+(id, created_by, created_date, deleted, modify_by, modify_date, menu_id, role_id)
+VALUES(4, 'system',now()::DATE, 'f',null, null, 10001, 'SUPERADMIN');
 
+INSERT INTO public.r_menu_role
+(id, created_by, created_date, deleted, modify_by, modify_date, menu_id, role_id)
+VALUES(5, 'system',now()::DATE, 'f',null, null, 10002, 'READER');
+INSERT INTO public.r_menu_role
+(id, created_by, created_date, deleted, modify_by, modify_date, menu_id, role_id)
+VALUES(6, 'system',now()::DATE, 'f',null, null, 10002, 'EDITOR');
+INSERT INTO public.r_menu_role
+(id, created_by, created_date, deleted, modify_by, modify_date, menu_id, role_id)
+VALUES(7, 'system',now()::DATE, 'f',null, null, 10002, 'PUBLISHER');
+INSERT INTO public.r_menu_role
+(id, created_by, created_date, deleted, modify_by, modify_date, menu_id, role_id)
+VALUES(8, 'system',now()::DATE, 'f',null, null, 10002, 'SUPERADMIN');
+
+INSERT INTO public.r_menu_role
+(id, created_by, created_date, deleted, modify_by, modify_date, menu_id, role_id)
+VALUES(9, 'system',now()::DATE, 'f','system',now()::DATE, 10003, 'READER');
+INSERT INTO public.r_menu_role
+(id, created_by, created_date, deleted, modify_by, modify_date, menu_id, role_id)
+VALUES(10, 'system',now()::DATE, 'f','system',now()::DATE, 10003, 'EDITOR');
+INSERT INTO public.r_menu_role
+(id, created_by, created_date, deleted, modify_by, modify_date, menu_id, role_id)
+VALUES(11, 'system',now()::DATE, 'f','system',now()::DATE, 10003, 'PUBLISHER');
+INSERT INTO public.r_menu_role
+(id, created_by, created_date, deleted, modify_by, modify_date, menu_id, role_id)
+VALUES(12, 'system',now()::DATE, 'f','system',now()::DATE, 10003, 'SUPERADMIN');
+
+INSERT INTO public.r_menu_role
+(id, created_by, created_date, deleted, modify_by, modify_date, menu_id, role_id)
+VALUES(13, 'system',now()::DATE, 'f','system',now()::DATE, 10004, 'READER');
+INSERT INTO public.r_menu_role
+(id, created_by, created_date, deleted, modify_by, modify_date, menu_id, role_id)
+VALUES(14, 'system',now()::DATE, 'f','system',now()::DATE, 10004, 'EDITOR');
+INSERT INTO public.r_menu_role
+(id, created_by, created_date, deleted, modify_by, modify_date, menu_id, role_id)
+VALUES(15, 'system',now()::DATE, 'f','system',now()::DATE, 10004, 'PUBLISHER');
+INSERT INTO public.r_menu_role
+(id, created_by, created_date, deleted, modify_by, modify_date, menu_id, role_id)
+VALUES(16, 'system',now()::DATE, 'f','system',now()::DATE, 10004, 'SUPERADMIN');
+
+INSERT INTO public.r_menu_role
+(id, created_by, created_date, deleted, modify_by, modify_date, menu_id, role_id)
+VALUES(17, 'system',now()::DATE, 'f','system',now()::DATE, 10005, 'EDITOR');
+INSERT INTO public.r_menu_role
+(id, created_by, created_date, deleted, modify_by, modify_date, menu_id, role_id)
+VALUES(18, 'system',now()::DATE, 'f','system',now()::DATE, 10005, 'PUBLISHER');
+INSERT INTO public.r_menu_role
+(id, created_by, created_date, deleted, modify_by, modify_date, menu_id, role_id)
+VALUES(19, 'system',now()::DATE, 'f','system',now()::DATE, 10005, 'SUPERADMIN');
+
+INSERT INTO public.r_menu_role
+(id, created_by, created_date, deleted, modify_by, modify_date, menu_id, role_id)
+VALUES(20, 'system',now()::DATE, 'f','system',now()::DATE, 10006, 'EDITOR');
+INSERT INTO public.r_menu_role
+(id, created_by, created_date, deleted, modify_by, modify_date, menu_id, role_id)
+VALUES(21, 'system',now()::DATE, 'f','system',now()::DATE, 10006, 'PUBLISHER');
+INSERT INTO public.r_menu_role
+(id, created_by, created_date, deleted, modify_by, modify_date, menu_id, role_id)
+VALUES(22, 'system',now()::DATE, 'f','system',now()::DATE, 10006, 'SUPERADMIN');
+
+INSERT INTO public.r_menu_role
+(id, created_by, created_date, deleted, modify_by, modify_date, menu_id, role_id)
+VALUES(23, 'system',now()::DATE, 'f','system',now()::DATE, 10013, 'READER');
+INSERT INTO public.r_menu_role
+(id, created_by, created_date, deleted, modify_by, modify_date, menu_id, role_id)
+VALUES(24, 'system',now()::DATE, 'f','system',now()::DATE, 10013, 'EDITOR');
+INSERT INTO public.r_menu_role
+(id, created_by, created_date, deleted, modify_by, modify_date, menu_id, role_id)
+VALUES(25, 'system',now()::DATE, 'f','system',now()::DATE, 10013, 'PUBLISHER');
+INSERT INTO public.r_menu_role
+(id, created_by, created_date, deleted, modify_by, modify_date, menu_id, role_id)
+VALUES(26, 'system',now()::DATE, 'f','system',now()::DATE, 10013, 'SUPERADMIN');
+
+INSERT INTO public.r_menu_role
+(id, created_by, created_date, deleted, modify_by, modify_date, menu_id, role_id)
+VALUES(27, 'system',now()::DATE, 'f','system',now()::DATE, 10023, 'READER');
+INSERT INTO public.r_menu_role
+(id, created_by, created_date, deleted, modify_by, modify_date, menu_id, role_id)
+VALUES(28, 'system',now()::DATE, 'f','system',now()::DATE, 10023, 'EDITOR');
+INSERT INTO public.r_menu_role
+(id, created_by, created_date, deleted, modify_by, modify_date, menu_id, role_id)
+VALUES(29, 'system',now()::DATE, 'f','system',now()::DATE, 10023, 'PUBLISHER');
+INSERT INTO public.r_menu_role
+(id, created_by, created_date, deleted, modify_by, modify_date, menu_id, role_id)
+VALUES(30, 'system',now()::DATE, 'f','system',now()::DATE, 10023, 'SUPERADMIN');
+
+INSERT INTO public.r_menu_role
+(id, created_by, created_date, deleted, modify_by, modify_date, menu_id, role_id)
+VALUES(31, 'system',now()::DATE, 'f','system',now()::DATE, 11001, 'READER');
+INSERT INTO public.r_menu_role
+(id, created_by, created_date, deleted, modify_by, modify_date, menu_id, role_id)
+VALUES(32, 'system',now()::DATE, 'f','system',now()::DATE, 11001, 'EDITOR');
+INSERT INTO public.r_menu_role
+(id, created_by, created_date, deleted, modify_by, modify_date, menu_id, role_id)
+VALUES(33, 'system',now()::DATE, 'f','system',now()::DATE, 11001, 'PUBLISHER');
+INSERT INTO public.r_menu_role
+(id, created_by, created_date, deleted, modify_by, modify_date, menu_id, role_id)
+VALUES(34, 'system',now()::DATE, 'f','system',now()::DATE, 11001, 'SUPERADMIN');
+
+INSERT INTO public.r_menu_role
+(id, created_by, created_date, deleted, modify_by, modify_date, menu_id, role_id)
+VALUES(35, 'system',now()::DATE, 'f','system',now()::DATE, 11002, 'READER');
+INSERT INTO public.r_menu_role
+(id, created_by, created_date, deleted, modify_by, modify_date, menu_id, role_id)
+VALUES(36, 'system',now()::DATE, 'f','system',now()::DATE, 11002, 'EDITOR');
+INSERT INTO public.r_menu_role
+(id, created_by, created_date, deleted, modify_by, modify_date, menu_id, role_id)
+VALUES(37, 'system',now()::DATE, 'f','system',now()::DATE, 11002, 'PUBLISHER');
+INSERT INTO public.r_menu_role
+(id, created_by, created_date, deleted, modify_by, modify_date, menu_id, role_id)
+VALUES(38, 'system',now()::DATE, 'f','system',now()::DATE, 11002, 'SUPERADMIN');
 
 
