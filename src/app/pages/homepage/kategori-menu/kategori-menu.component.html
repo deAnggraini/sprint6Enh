@@ -16,7 +16,7 @@
                     <a routerLink="/struktur/list/{{item.id}}"
                         class="text-dark font-weight-bold font-size-h6 mb-1 text-ellipsis-1">{{item.title}}</a>
                 </div>
-                <small class="text-ellipsis-2">{{item.desc}}</small>
+                <small class="text-ellipsis-2" style="color: #605E5C">{{item.desc}}</small>
                 <ul class="navi navi-hover">
                     <li class="navi-item" *ngFor="let link of item.menus | slice:0:3">
                         <a routerLink="/struktur/list/{{link.id}}" class="navi-link cursor-pointer">

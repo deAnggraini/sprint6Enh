@@ -6,20 +6,36 @@ import { environment } from 'src/environments/environment';
 import { AuthService, UserModel } from 'src/app/modules/auth';
 import { StrukturService } from 'src/app/modules/_services/struktur.service';
 
+// interface Menu {    //old
+//   id?: number,
+//   root?: boolean,
+//   bullet?: string,
+//   title?: string,
+//   icon?: string,
+//   svg?: string,
+//   page?: string,
+//   submenu?: Menu[],
+//   section?: string,
+//   isFunction?: boolean,
+//   parent?: Menu,
+//   showMore?: boolean,
+//   level?: number,
+// }
+
 interface Menu {
   id?: number,
-  root?: boolean,
-  bullet?: string,
   title?: string,
-  icon?: string,
-  svg?: string,
-  page?: string,
-  submenu?: Menu[],
-  section?: string,
-  isFunction?: boolean,
-  parent?: Menu,
-  showMore?: boolean,
   level?: number,
+  desc?: string;
+  sort?: number;
+  parent?: Menu,
+  menus?: Menu[],
+  icon?: string,
+  image?: string;
+  uri?: string;
+  edit?: boolean;
+
+  submenu?: Menu[],
 }
 
 const emptyMenuConfig = {
@@ -111,7 +127,7 @@ export class DynamicAsideMenuService {
           }
         }
         if (item.menus.length > 2) {
-          let title = 'Lihat Lebih Sedikit ' + item.title;
+          let title = 'Tutup ' + item.title;
           if (item.showLess) {
             title = 'Lihat Semua ' + item.title;
           }
