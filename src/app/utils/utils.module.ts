@@ -13,6 +13,7 @@ import { GeneralModule } from '../_metronic/partials/content/general/general.mod
 import { InlineSVGModule } from 'ng-inline-svg';
 import { SanitizeHtmlPipe } from './pipe/sanitize-html.pipe';
 import { ComboBoxComponent } from './_components/combo-box/combo-box.component';
+import { InputDropDownComponent } from './_components/input-drop-down/input-drop-down.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { ComboBoxComponent } from './_components/combo-box/combo-box.component';
     PakarSearchComponent,
     SanitizeHtmlPipe,
     ComboBoxComponent,
+    InputDropDownComponent,
   ],
   imports: [
     CommonModule,
@@ -42,6 +44,7 @@ import { ComboBoxComponent } from './_components/combo-box/combo-box.component';
     BreadcrumbsComponent,
     PakarSearchComponent,
     ComboBoxComponent,
+    InputDropDownComponent,
   ]
 })
 export class UtilsModule {

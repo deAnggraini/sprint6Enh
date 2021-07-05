@@ -1,73 +1,103 @@
-import { Component, OnInit, Input, OnDestroy, Output, EventEmitter, forwardRef } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, Output, EventEmitter, forwardRef, AfterViewInit, ViewChild, TemplateRef, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { Option } from '../../_model/option';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormControl, Validator, AbstractControl, ValidationErrors, Validators } from '@angular/forms';
 import { isFunction } from 'util';
+import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
+
+declare var $: any;
 
 const sampleOptions: Option[] = [
   {
-    value: '1', text: "Level 1 #1",
+    id: '1', value: '1', text: "Level 1 #1",
     children: [
-      { value: '1.1', text: "Level 2 #1-1" },
-      { value: '1.2', text: "Level 2 #1-2" },
-      { value: '1.3', text: "Level 2 #1-3" },
-      { value: '1.4', text: "Level 2 #1-4" },
-      { value: '1.5', text: "Level 2 #1-5" },
+      { id: '2', value: '1.1', text: "Level 2 #1-1" },
+      { id: '3', value: '1.2', text: "Level 2 #1-2" },
+      { id: '4', value: '1.3', text: "Level 2 #1-3" },
+      { id: '5', value: '1.4', text: "Level 2 #1-4" },
+      { id: '6', value: '1.5', text: "Level 2 #1-5" },
     ]
   },
   {
-    value: '2', text: "Level 1 #2",
+    id: '7', value: '2', text: "Level 1 #2",
     children: [
-      { value: '2.1', text: "Level 2 #2-1" },
-      { value: '2.2', text: "Level 2 #2-2" },
-      { value: '2.3', text: "Level 2 #2-3" },
-      { value: '2.4', text: "Level 2 #2-4" },
-      { value: '2.5', text: "Level 2 #2-5" },
+      { id: '8', value: '2.1', text: "Level 2 #2-1" },
+      { id: '9', value: '2.2', text: "Level 2 #2-2" },
+      { id: '10', value: '2.3', text: "Level 2 #2-3" },
+      { id: '11', value: '2.4', text: "Level 2 #2-4" },
+      { id: '12', value: '2.5', text: "Level 2 #2-5" },
     ]
   },
   {
-    value: '3', text: "Level 1 #3",
+    id: '13', value: '13', text: "Level 1 #3",
     children: [
-      { value: '3.1', text: "Level 2 #2-1" },
-      { value: '3.2', text: "Level 2 #2-2" },
-      { value: '3.3', text: "Level 2 #2-3" },
-      { value: '3.4', text: "Level 2 #2-4" },
-      { value: '3.5', text: "Level 2 #2-5" },
+      { id: '14', value: '3.1', text: "Level 2 #2-1" },
+      { id: '15', value: '3.2', text: "Level 2 #2-2" },
+      { id: '16', value: '3.3', text: "Level 2 #2-3" },
+      { id: '17', value: '3.4', text: "Level 2 #2-4" },
+      { id: '18', value: '3.5', text: "Level 2 #2-5" },
     ]
   }
 ]
+const empty = { id: '0', value: '', text: '' };
 
 @Component({
   selector: 'pakar-combo-box-accordion',
   templateUrl: './combo-box.component.html',
   styleUrls: ['./combo-box.component.scss'],
-  providers: [{
-    provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => ComboBoxComponent),
-    multi: true
-  }]
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => ComboBoxComponent),
+      multi: true
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => ComboBoxComponent),
+      multi: true
+    }
+  ]
 })
-export class ComboBoxComponent implements OnInit, OnDestroy, ControlValueAccessor {
+export class ComboBoxComponent implements OnInit, OnDestroy, ControlValueAccessor, AfterViewInit, Validator {
 
   @Input() options: BehaviorSubject<Option[]>;
+  @Input() placeholder: string;
+  @Input() class: string;
   @Output() onChange = new EventEmitter<any>();
 
-  selected: Option = { value: '', text: '' };
+  @ViewChild('comboBoxDrop') comboBoxDrop: NgbDropdown;
+  @ViewChild('comboBox') comboBox: ElementRef<HTMLDivElement>;
+
+  selected: Option = { id: '0', value: '', text: '' };
   hasError: boolean = false;
   subscriptions: Subscription[] = [];
+  randomId: number = Math.ceil(Math.random() * 1000000);
+  tree_id = ".combo-box-tree";
+  datasource: any[];
 
-  constructor() { }
-
-  onHidden(target) {
-
+  constructor(
+    private cdr: ChangeDetectorRef) {
+    this.tree_id = `#tree-cbx-${this.randomId}`;
   }
 
-  onShow(target) {
+  openChange(open: boolean) {
+    const div = this.comboBox.nativeElement;
+    if (div) {
+      if (open) {
+        div.classList.add('focus');
+      } else {
+        div.classList.remove('focus');
+      }
+    }
+  }
 
+  toggleMenu(event) {
+    event.stopPropagation();
+    this.comboBoxDrop.open();
   }
 
   onClick(item) {
-    console.log('click', { item });
+    // console.log('click', { item });
     // single click == select, double click == expand content
     this.onSelect(item);
   }
@@ -77,26 +107,98 @@ export class ComboBoxComponent implements OnInit, OnDestroy, ControlValueAccesso
     this.selected = item;
     this.onChange.emit(item);
     if (isFunction(this.propogateChange)) {
-      this.propogateChange(item);
+      this.comboBoxDrop.close();
+      this.propogateChange(item.id);
+      this._onChange();
     }
+  }
+
+  private findNode(id: number, datasource: Option[] = null): Option {
+    if (datasource == null) {
+      datasource = this.options.value;
+    }
+    let found: Option = datasource.find(d => parseInt(d.id) == id);
+    if (!found) {
+      datasource.forEach(d => {
+        if (found) return;
+        if (d.children && d.children.length) {
+          found = this.findNode(id, d.children)
+        }
+      })
+    }
+    return found;
+  }
+
+  selectNode(id) {
+    const found = this.findNode(parseInt(id));
+    if (found.children && found.children.length) {
+      return;
+    }
+    this.onSelect(found);
   }
 
   ngOnInit(): void {
     if (!this.options) {
       this.options = new BehaviorSubject(sampleOptions);
     }
+    if (!this.placeholder) this.placeholder = 'Pilih lokasi yang tepat untuk artikel yang ingin ditambahkan';
+  }
+
+  ngAfterViewInit(): void {
+    this.initJsTree();
+  }
+
+  private initJsTree() {
+    const $this = this;
+    $(this.tree_id).jstree({
+      "core": {
+        "multiple": false,
+        "check_callback": true,
+        "themes": {
+          "responsive": false,
+          "variant": "small",
+          icons: true,
+        },
+        "data": this.options.value
+      },
+      "types": {
+        "default": {
+          "icon": "ki ki-arrow-next icon-xs pakar-color-dark"
+        },
+        'f-open': {
+          'icon': 'ki ki-arrow-down icon-xs pakar-color-dark'
+        },
+        'f-closed': {
+          'icon': 'ki ki-arrow-next icon-xs pakar-color-dark'
+        }
+      },
+      "state": {
+        "key": "demo1"
+      },
+      "plugins": ['themes', "types"]
+    });
+    $(this.tree_id).on('open_node.jstree', function (event, data) {
+      data.instance.set_type(data.node, 'f-open');
+    });
+    $(this.tree_id).on('close_node.jstree', function (event, data) {
+      data.instance.set_type(data.node, 'f-closed');
+    });
+    $(this.tree_id).on("changed.jstree", function (e, data) {
+      if (data && data.action == "select_node") {
+        $this.selectNode(data.selected[0]);
+      }
+    });
   }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(sb => sb.unsubscribe());
   }
 
-
-  propogateChange: (_) => {}
   // ControlValueAccessor interface
+  propogateChange: (_) => {}
   writeValue(value: any): void {
-    console.log('writeValue', { value });
-    if (value) this.selected = value;
+    if (value) { this.selected = value; }
+    // this.cdr.detectChanges();
   }
   registerOnChange(fn: any): void {
     this.propogateChange = fn;
@@ -104,6 +206,41 @@ export class ComboBoxComponent implements OnInit, OnDestroy, ControlValueAccesso
   registerOnTouched(fn: any): void { }
   setDisabledState?(isDisabled: boolean): void {
     throw new Error("Method not implemented.");
+  }
+
+  // formControl
+  validate(control: AbstractControl): ValidationErrors {
+    // console.log({ control });
+    if (!this.comboBox) return null;
+    const div = this.comboBox.nativeElement;
+    const { touched, errors, dirty, value } = control;
+    console.log({ value, touched, errors, dirty, selected: this.selected });
+    if (control.touched) {
+      div.classList.add('ng-touched');
+      div.classList.remove('ng-untouched');
+    } else {
+      div.classList.add('ng-untouched');
+    }
+    if (control.dirty) {
+      div.classList.add('ng-dirty');
+    } else {
+      div.classList.remove('ng-dirty');
+    }
+    if (value) {
+      div.classList.add('ng-valid');
+      div.classList.remove('ng-invalid');
+    } else {
+      div.classList.remove('ng-valid');
+      div.classList.add('ng-invalid');
+    }
+    this.cdr.detectChanges();
+    // return value && parseInt(value) < 1 ? Validators.required(control) : null;
+    return null;
+  }
+  private _onChange?: () => void;
+  registerOnValidatorChange?(fn: () => void): void {
+    this._onChange = fn;
+    // console.log('registerOnValidatorChange called', fn);
   }
 
 }

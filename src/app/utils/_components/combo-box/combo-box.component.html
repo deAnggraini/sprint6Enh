@@ -1,39 +1,34 @@
-<div class="input-group">
-    <input type="text" class="form-control" placeholder="-- Silahkan Pilih --" required autocomplete="off"
-        [ngClass]="{ 'is-invalid': hasError}" [value]="selected.text" disabled>
-    <div class="input-group-append">
-        <button class="btn btn-xs btn-clean" (click)="$event.stopPropagation(); comboBoxDrop.open();">
-            <i class="ki ki-arrow-down text-primary"></i>
-        </button>
-    </div>
-    <div class="d-inline-block" ngbDropdown #comboBoxDrop="ngbDropdown"
-        style="width: calc(100% + 2px); left:-1px; top:-1px">
-        <button style="display: none;" ngbDropdownAnchor (focus)="comboBoxDrop.open()"></button>
-        <div ngbDropdownMenu
-            style="width: calc(100% + 2px); max-height: 200px; overflow-y: auto; border :1px solid #0F5EA9; border-radius: 0;">
-            <ngb-accordion class="accordion-light accordion-light-borderless accordion-combo-box"
-                [destroyOnHide]="false" (hidden)="onHidden($event)" (shown)="onShow($event)">
-                <ngb-panel *ngFor="let content of options.value">
-                    <ng-template ngbPanelHeader>
-                        <div class="card-title d-flex align-items-center justify-content-between">
-                            <div>
-                                <button ngbPanelToggle class="btn btn-link btn-xs">
-                                    <i class="ki ki-arrow-next text-primary icon-xs "></i></button>
-                                <span (click)="onClick(content)">{{content.text}}</span>
-                            </div>
+<div #comboBox class="combo-box d-flex align-items-center justify-content-between"
+    [ngClass]="{ 'is-invalid': hasError}">
+    {{class}}
+    <div class="text-muted text-ellipsis-1">{{selected.text || placeholder}}</div>
+    <input type="text" [placeholder]="placeholder" required autocomplete="off" [value]="selected.text"
+        style="display: none;">
+    <button class="btn btn-xs btn-clean" (click)="$event.stopPropagation(); comboBoxDrop.open();">
+        <i class="ki ki-arrow-down text-primary icon-xs"></i>
+    </button>
+</div>
+<div ngbDropdown #comboBoxDrop="ngbDropdown" style="width: 100%; left:0px; top:-3px" (openChange)="openChange($event)"
+    display="static">
+    <button style="display: none;" ngbDropdownAnchor (focus)="comboBoxDrop.open()"></button>
+    <div ngbDropdownMenu class="combo-box-dropdown">
+        <!-- <ngb-accordion class="accordion-light accordion-light-borderless accordion-combo-box" [destroyOnHide]="false"
+            (hidden)="onHidden($event)" (shown)="onShow($event)">
+            <ngb-panel *ngFor="let content of options.value">
+                <ng-template ngbPanelHeader>
+                    <div class="card-title d-flex align-items-center justify-content-between">
+                        <div>
+                            <button ngbPanelToggle class="btn btn-link btn-xs">
+                                <i class="ki ki-arrow-next text-primary icon-xs "></i></button>
+                            <span (click)="onClick(content)">{{content.text}}</span>
                         </div>
-                    </ng-template>
-                    <ng-template ngbPanelContent>
-                        <div class="content">
-                            <input type="text" class="txt-desc-lvl1"
-                                placeholder="Masukkan kalimat pengantar terkait {{content.title}} disini.">
-                            <!-- <ng-container *ngIf="content.children.length" [ngTemplateOutlet]="accordionChild"
-                                [ngTemplateOutletContext]="{ children: content.children}">
-                            </ng-container> -->
-                        </div>
-                    </ng-template>
-                </ngb-panel>
-            </ngb-accordion>
-        </div>
+                    </div>
+                </ng-template>
+                <ng-template ngbPanelContent>
+
+                </ng-template>
+            </ngb-panel>
+        </ngb-accordion> -->
+        <div [id]="'tree-cbx-'+randomId" class="combo-box-tree tree-demo"></div>
     </div>
 </div>

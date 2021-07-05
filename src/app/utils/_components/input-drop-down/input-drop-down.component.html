@@ -1,0 +1,17 @@
+<div #comboBox class="combo-box d-flex align-items-center justify-content-between"
+    [ngClass]="{ 'is-invalid': hasError}">
+    {{class}}
+    <div class="text-muted text-ellipsis-1">{{selected.text || placeholder}}</div>
+    <input type="text" [placeholder]="placeholder" required autocomplete="off" [value]="selected.text"
+        style="display: none;">
+    <button class="btn btn-xs btn-clean" (click)="$event.stopPropagation(); comboBoxDrop.open();">
+        <i class="ki ki-arrow-down text-primary icon-xs"></i>
+    </button>
+</div>
+<div ngbDropdown #comboBoxDrop="ngbDropdown" style="width: 100%; left:0px; top:-3px" (openChange)="openChange($event)"
+    display="static">
+    <button style="display: none;" ngbDropdownAnchor (focus)="comboBoxDrop.open()"></button>
+    <div ngbDropdownMenu class="combo-box-dropdown">
+        <button ngbDropdownItem *ngFor="let item of options" (click)="onSelect(item)">{{item.text}}</button>
+    </div>
+</div>

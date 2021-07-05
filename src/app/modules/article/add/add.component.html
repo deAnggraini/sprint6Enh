@@ -10,89 +10,24 @@
                     <ng-container [ngTemplateOutlet]="formError"
                         [ngTemplateOutletContext]="{ control: dataForm.controls['title']}"></ng-container>
                 </div>
-                <div class="form-group col-sm-10 col-md-10 col-lg-8">
+                <!-- <div class="form-group col-sm-10 col-md-10 col-lg-8">
                     <label>Lokasi Artikel 1 <span class="text-danger">*</span></label>
                     <pakar-combo-box-accordion (onChange)="changeLocation1($event)" [(ngModel)]="location1"
                         [ngModelOptions]="{standalone: true}">
                     </pakar-combo-box-accordion>
-                </div>
-                <div class="form-group col-sm-10 col-md-10 col-lg-8">
-                    <label>Lokasi Artikel 2 <span class="text-danger">*</span></label>
-                    <pakar-combo-box-accordion></pakar-combo-box-accordion>
-                </div>
+                </div> -->
                 <div class="form-group col-sm-10 col-md-10 col-lg-8">
                     <label>Lokasi Artikel <span class="text-danger">*</span></label>
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Masukkan nama artikel disini" required
-                            formControlName="location" autocomplete="off" [ngClass]="{ 'is-invalid': hasError}">
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-primary"
-                                (click)="$event.stopPropagation(); locationDrop.open();">V</button>
-                        </div>
-                        <ng-container [ngTemplateOutlet]="formError"
-                            [ngTemplateOutletContext]="{ control: dataForm.controls['location']}"></ng-container>
-                        <div class="d-inline-block" ngbDropdown #locationDrop="ngbDropdown" style="width: 100%;">
-                            <button style="display: none;" ngbDropdownAnchor (focus)="locationDrop.open()"></button>
-                            <div ngbDropdownMenu style="width: 100%; max-height: 200px; overflow-y: auto;">
-                                <button ngbDropdownItem>Action - 1</button>
-                                <button ngbDropdownItem>Another Action</button>
-                                <button ngbDropdownItem>Something else is here</button>
-                                <button ngbDropdownItem>Action - 1</button>
-                                <button ngbDropdownItem>Another Action</button>
-                                <button ngbDropdownItem>Something else is here</button>
-                                <button ngbDropdownItem>Action - 1</button>
-                                <button ngbDropdownItem>Another Action</button>
-                                <button ngbDropdownItem>Something else is here</button>
-                                <button ngbDropdownItem>Action - 1</button>
-                                <button ngbDropdownItem>Another Action</button>
-                                <button ngbDropdownItem>Something else is here</button>
-                                <button ngbDropdownItem>Action - 1</button>
-                                <button ngbDropdownItem>Another Action</button>
-                                <button ngbDropdownItem>Something else is here</button>
-                                <button ngbDropdownItem>Action - 1</button>
-                                <button ngbDropdownItem>Another Action</button>
-                                <button ngbDropdownItem>Something else is here</button>
-                            </div>
-                        </div>
-                    </div>
+                    <pakar-combo-box-accordion formControlName="location"></pakar-combo-box-accordion>
                 </div>
                 <div class="form-group col-sm-10 col-md-10 col-lg-6">
                     <label>Artikel digunakan oleh <span class="text-danger">*</span></label>
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Masukkan nama artikel disini" required
-                            formControlName="location" autocomplete="off" [ngClass]="{ 'is-invalid': hasError}">
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-primary"
-                                (click)="$event.stopPropagation(); digunakan.open();">V</button>
-                        </div>
-                        <ng-container [ngTemplateOutlet]="formError"
-                            [ngTemplateOutletContext]="{ control: dataForm.controls['location']}"></ng-container>
-                        <div class="d-inline-block" ngbDropdown #digunakan="ngbDropdown" style="width: 100%;">
-                            <button style="display: none;" ngbDropdownAnchor (focus)="digunakan.open()"></button>
-                            <div ngbDropdownMenu style="width: 100%; max-height: 200px; overflow-y: auto;">
-                                <button ngbDropdownItem>Action - 1</button>
-                                <button ngbDropdownItem>Another Action</button>
-                                <button ngbDropdownItem>Something else is here</button>
-                                <button ngbDropdownItem>Action - 1</button>
-                                <button ngbDropdownItem>Another Action</button>
-                                <button ngbDropdownItem>Something else is here</button>
-                                <button ngbDropdownItem>Action - 1</button>
-                                <button ngbDropdownItem>Another Action</button>
-                                <button ngbDropdownItem>Something else is here</button>
-                                <button ngbDropdownItem>Action - 1</button>
-                                <button ngbDropdownItem>Another Action</button>
-                                <button ngbDropdownItem>Something else is here</button>
-                                <button ngbDropdownItem>Action - 1</button>
-                                <button ngbDropdownItem>Another Action</button>
-                                <button ngbDropdownItem>Something else is here</button>
-                                <button ngbDropdownItem>Action - 1</button>
-                                <button ngbDropdownItem>Another Action</button>
-                                <button ngbDropdownItem>Something else is here</button>
-                            </div>
-                        </div>
-                    </div>
+                    <!-- formControlName="usedBy" -->
+                    <pakar-input-drop-down formControlName="usedBy"></pakar-input-drop-down>
+                    <ng-container [ngTemplateOutlet]="formError"
+                        [ngTemplateOutletContext]="{ control: dataForm.controls['location']}"></ng-container>
                 </div>
-                <div class="col-sm-10 col-md-10 col-lg-6">
+                <div class="form-group col-sm-10 col-md-10 col-lg-6">
                     <label>Rekomendasi Template<span class="text-danger">*</span></label>
                     <div>Pilih salah satu template dibawah ini untuk memudahkan Kamu dalam membuat artikel.
                         Template yang disediakan masih dapat diubah sesuai dengan kebutuhan Kamu.</div>
@@ -100,21 +35,21 @@
                         <div class="col">
                             <label class="d-flex flex-row">
                                 <input type="radio">
-                                <div class="d-flex flex-column">
-                                    <img style="height: 210px; width: 158px; border:1px solid red">
+                                <div class="d-flex flex-column pl-1">
+                                    <img style="height: 210px; width: 158px; border:1px solid #C8C6C4">
                                     <span>Empty</span>
-                                    <span>Digunakan untuk artikel dengan template yang dapat di-custom</span>
+                                    <span class="font-weight-normal">Digunakan untuk artikel dengan template yang dapat di-custom</span>
                                 </div>
                             </label>
                         </div>
                         <div class="col">
                             <label class="d-flex flex-row">
                                 <input type="radio">
-                                <div class="d-flex flex-column">
-                                    <span [inlineSVG]="'./assets/media/images/template_basic.svg'"
+                                <div class="d-flex flex-column pl-1">
+                                    <span [inlineSVG]="backend_img+'/templates/basic_thumb.svg'"
                                         cacheSVG="true"></span>
                                     <span>Basic</span>
-                                    <span>Pilih template ini jika template yang direkomendasikan kurang sesuai dengan
+                                    <span class="font-weight-normal">Pilih template ini jika template yang direkomendasikan kurang sesuai dengan
                                         artikel
                                         yang
                                         akan
@@ -125,7 +60,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col">
+            <div class="col" style="max-width: 400px; max-height: 600px;">
                 <div class="right-preview">
                     <div class="top-bg"></div>
                     <div class="content">
