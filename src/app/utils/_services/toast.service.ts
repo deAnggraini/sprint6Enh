@@ -27,4 +27,9 @@ export class ToastService {
   showDanger(msg: string) {
     this.show(msg, { classname: 'bg-danger text-light', delay: 3000 });
   }
+
+  clear() {
+    this.toasts = [];
+    this.toasts$.next(this.toasts);
+  }
 }

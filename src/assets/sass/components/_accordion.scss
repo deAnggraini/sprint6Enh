@@ -285,25 +285,106 @@
       background-color: transparent;
 
       .card-title {
-        background-color: #F3F2F1;
+        color: #201F1E;
         padding: 0.5rem;
+        background-color: transparent;
         border: 1px solid #C8C6C4;
         border-radius: 0.28rem;
-        border-bottom-width: 0;
+        @include border-radius($border-radius);
+      }
 
-        &.collapsed {
-          background-color: transparent !important;
-          @include border-radius($border-radius);
-          @include border-bottom-left-radius($border-radius);
-          @include border-bottom-right-radius($border-radius);
+      &.panel-open {
+        .card-title {
+          background-color: #F3F2F1 !important;
+          border-bottom-width: 0;
+          @include border-bottom-left-radius(0);
+          @include border-bottom-right-radius(0);
         }
       }
     }
 
     .card-body {
-      border: 1px solid #C8C6C4;
-      @include border-bottom-left-radius($border-radius);
-      @include border-bottom-right-radius($border-radius);
+      padding: 0;
+
+      .content {
+        padding-bottom: 0.5rem;
+        border: 1px solid #C8C6C4;
+        @include border-bottom-left-radius($border-radius);
+        @include border-bottom-right-radius($border-radius);
+      }
+    }
+
+    &:last-child {
+      margin: 0;
+    }
+  }
+}
+
+
+.accordion.as-tree-child {
+  .card {
+    margin: 0;
+
+    .card-header {
+      padding-left: 30px;
+      background-image: url('../../media/images/tree-line.png');
+      background-position: 0px 0px;
+      background-repeat: repeat-y;
+      padding-top: 1rem;
+
+
+      &.panel-open {
+        padding-bottom: 0;
+      }
+    }
+
+    .card-body {
+      padding-left: 30px;
+      background-image: url('../../media/images/tree-line-2.png');
+      background-repeat: repeat-y;
+      padding-bottom: 0.75rem;
+    }
+
+    &:last-of-type {
+      .card-header {
+        background-position: 0px 85px;
+      }
+
+      .card-body {
+        background-image: none;
+      }
+    }
+  }
+}
+
+.accordion.accordion-combo-box {
+  .card {
+    padding: 0;
+    border-width: 0;
+
+    .card-header {
+      padding: 0;
+      background-color: transparent;
+
+      .card-title {
+        color: #201F1E;
+        padding: 0.25rem;
+        background-color: transparent;
+      }
+
+      &.panel-open {
+        .card-title {
+          background-color: #F3F2F1 !important;
+        }
+      }
+    }
+
+    .card-body {
+      padding-left: 1rem;
+
+      .content {
+        padding-bottom: 0.5rem;
+      }
     }
 
     &:last-child {

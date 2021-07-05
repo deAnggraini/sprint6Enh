@@ -140,7 +140,11 @@ export class DetailComponent implements OnInit, OnDestroy {
     fd.append('edit', this.dataForm.value.edit ? "1" : "0");
     fd.append('uri', this.dataForm.value.uri);
     fd.append('level', this.dataForm.value.level.toString());
-    fd.append('sort', String(this.section.menus.length + 1));
+
+    // let nextSort = String(this.section.menus.length + 1);
+    const listSort = this.section.menus.map(d => d.sort);
+    const maxSort = Math.max(...listSort);
+    fd.append('sort', (maxSort + 1).toString());
     fd.append('parent', this.dataForm.value.parent);
     fd.append('location', this.dataForm.value.location);
     fd.append('location_text', this.locations.find(d => d._value == this.dataForm.value.location)._text);
@@ -185,6 +189,8 @@ export class DetailComponent implements OnInit, OnDestroy {
         delete _clone._text;
         delete _clone._value;
         delete _clone.title;
+        delete _clone.icon;
+        delete _clone.image;
 
         result.push(_clone);
         result = result.concat(this.convertTreeToArray(d.menus));
@@ -194,11 +200,15 @@ export class DetailComponent implements OnInit, OnDestroy {
   }
 
   updateSection() {
-    console.log('logs', this.logs);
     const lastLog = this.logs.slice(-1)[0];
-    console.log({lastLog});
     const params = this.convertTreeToArray(lastLog);
-    console.log({ params });
+
+    const moreThanLevel5 = params.find(d => d.level > 4);
+    if (moreThanLevel5) {
+      this.toast.showDanger('Sub-Sub-Kategori tidak boleh memiliki anak');
+      return;
+    }
+
     this.strukturService.updateSection(params).subscribe(resp => {
       if (resp) {
         this.toast.showSuccess('Simpan Data Berhasil');

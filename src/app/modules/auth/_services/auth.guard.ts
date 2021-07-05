@@ -23,8 +23,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     if (currentUser) {
       return true;
     }
-
-    this.authService.logout();
+    this.authService.logout(true);
     return false;
   }
 
@@ -48,7 +47,6 @@ export class AuthGuard implements CanActivate, CanActivateChild {
 
     const convertRole = currentUser.roles[0];
     const hasil = allowedRoles.includes(convertRole);
-    console.log({ allowedRoles, convertRole, hasil });
     return hasil;
   }
 }

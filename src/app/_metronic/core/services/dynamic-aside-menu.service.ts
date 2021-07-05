@@ -141,7 +141,6 @@ export class DynamicAsideMenuService {
         }
       }
     })
-    console.log({ items });
     return items;
   }
 
@@ -152,9 +151,7 @@ export class DynamicAsideMenuService {
         if (_menus) {
           _menus.map(d => d.showLess = true);
           this.menus = JSON.parse(JSON.stringify(_menus));
-          console.log('this.menus', this.menus);
           const parse = this.parseToMenu(_menus);
-          console.log('hasil parse', parse);
           this.loadMenu(parse);
         }
       }

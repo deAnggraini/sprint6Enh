@@ -1,14 +1,41 @@
-:host {
-  ::ng-deep {
+:host ::ng-deep {
 
-    .btn.btn-clean .svg-icon svg g [fill] {
-      transition: fill 0.3s ease;
+  .btn.btn-clean .svg-icon svg g [fill] {
+    transition: fill 0.3s ease;
+    fill: white;
+  }
+
+  .btn.btn-clean {
+    color: white;
+    border-radius: 0;
+    height: 100% !important;
+
+    &:hover {
+      background-color: #0F5EA9 !important;
+      color: white !important;
+
+      .svg-icon svg g [fill] {
+        fill: white !important;
+      }
+    }
+  }
+
+  .show .btn.btn-clean {
+    background-color: #0F5EA9 !important;
+    color: white !important;
+
+    .svg-icon svg g [fill] {
       fill: white;
     }
-
-    .btn.btn-clean {
-        color: white;
-    }
-
   }
+
+
+  .dropdown-menu {
+    border: 1px solid #dddddd;
+    box-shadow: 0px 4px 8px 0px #0000001a;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    width: 100%;
+  }
+
 }

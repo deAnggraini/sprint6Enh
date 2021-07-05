@@ -23,129 +23,92 @@
             <input type="file" class="form-control">
         </div>
         <div class="form-group">
-            <label>View Artikel *</label>
+            <label>Video Artikel *</label>
             <input type="url" class="form-control">
         </div>
         <div class="form-group">
             <label>Content Artikel *</label>
             <div class="border border-light rounded-sm p-3">
-                <div class="border border-light rounded-sm p-2 mb-3">Ketentuan Tahapan <span>info</span></div>
-                <div class="border border-light rounded-sm p-2 mb-3">Prosedure Tahapan <span>info</span></div>
-                <div class="border border-light rounded-sm p-2 mb-3">Formulir Tahapan <span>info</span></div>
 
-                <ngb-accordion #a="ngbAccordion" class="accordion-bordered">
-                    <ngb-panel cardClass="border border-light rounded-sm p-2 mb-3">
-                        <ng-template ngbPanelHeader let-opened="opened">
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div>
-                                    <button ngbPanelToggle class="btn btn-xs btn-clean">Toggle first</button>
-                                    <span>First panel - {{ opened ? 'opened' : 'collapsed' }}</span>
-                                </div>
-                                <div>
-                                    Plus Edit Delete
-                                </div>
-                            </div>
-                        </ng-template>
-                        <ng-template ngbPanelContent>
-                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad
-                            squid. 3 wolf moon officia
-                            aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod.
-                            Brunch 3 wolf moon tempor,
-                            sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil
-                            anim keffiyeh helvetica,
-                            craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur
-                            butcher vice lomo. Leggings
-                            occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't
-                            heard of them accusamus
-                            labore sustainable VHS.
-                        </ng-template>
-                    </ngb-panel>
-                    <ngb-panel>
+                <ngb-accordion class="accordion-bordered" [destroyOnHide]="false" (hidden)="onHidden($event)"
+                    (shown)="onShow($event)">
+                    <ngb-panel *ngFor="let content of formData.contents">
                         <ng-template ngbPanelHeader>
-                            <div class="d-flex align-items-center justify-content-between">
-                                <h5 class="m-0">Second panel</h5>
+                            <div class="card-title d-flex align-items-center justify-content-between">
                                 <div>
-                                    <button ngbPanelToggle class="btn btn-sm btn-outline-primary ml-2">Toggle
-                                        second</button>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary ml-2">
-                                        able third
-                                    </button>
-                                    <button type="button" class="btn btn-sm btn-outline-danger ml-2"
-                                        (click)="a.collapseAll()">Collapse all</button>
+                                    <button ngbPanelToggle class="btn btn-link btn-xs"><i
+                                            class="flaticon2-down icon-xs "></i></button>
+                                    <span>{{content.title}} </span>
+                                    <span [inlineSVG]="'./assets/media/svg/bca/icon/info.svg'" cacheSVG="true"
+                                        class="svg-icon svg-icon-sm"></span>
                                 </div>
+                                <ng-container [ngTemplateOutlet]="rightIcon"></ng-container>
                             </div>
                         </ng-template>
                         <ng-template ngbPanelContent>
-                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad
-                            squid. 3 wolf moon officia
-                            aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod.
-                            Brunch 3 wolf moon tempor,
-                            sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil
-                            anim keffiyeh helvetica,
-                            craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur
-                            butcher vice lomo. Leggings
-                            occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't
-                            heard of them accusamus
-                            labore sustainable VHS.
-                        </ng-template>
-                    </ngb-panel>
-                    <ngb-panel>
-                        <ng-template ngbPanelHeader>
-                            <div class="card-title">
-                                <div>
-                                    <button ngbPanelToggle class="btn btn-link btn-xs"><i class="flaticon2-down icon-xs "></i></button>
-                                    <span>Formulir Tahapan</span> <span>info</span>
-                                </div>
-                                <div>
-                                    Plus Edit Delete
-                                </div>
+                            <div class="content">
+                                <input type="text" class="txt-desc-lvl1"
+                                    placeholder="Masukkan kalimat pengantar terkait {{content.title}} disini.">
+                                <ng-container *ngIf="content.children.length" [ngTemplateOutlet]="accordionChild"
+                                    [ngTemplateOutletContext]="{ children: content.children}">
+                                </ng-container>
                             </div>
-                            <!-- <div class="d-flex align-items-center justify-content-between">
-                                <button ngbPanelToggle class="btn btn-link container-fluid text-left pl-0">Third
-                                    panel</button>
-                                <p *ngIf="disabled" class="text-muted m-0 small">[I'm&nbsp;disabled]</p>
-                            </div> -->
-                        </ng-template>
-                        <ng-template ngbPanelContent>
-                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad
-                            squid. 3 wolf moon officia
-                            aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod.
-                            Brunch 3 wolf moon tempor,
-                            sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil
-                            anim keffiyeh helvetica,
-                            craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur
-                            butcher vice lomo. Leggings
-                            occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't
-                            heard of them accusamus
-                            labore sustainable VHS.
                         </ng-template>
                     </ngb-panel>
                 </ngb-accordion>
+
             </div>
         </div>
     </form>
 </div>
 
-<ng-template #accordionItem>
-    <ngb-panel cardClass="border border-light rounded-sm p-3">
-        <ng-template ngbPanelHeader let-opened="opened">
-            <div class="d-flex align-items-center justify-content-between">
-                <span>Ketentuan Tahapan</span>
-                <button ngbPanelToggle class="btn btn-link p-0">Toggle first</button>
-            </div>
-        </ng-template>
-        <ng-template ngbPanelContent>
-            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad
-            squid. 3 wolf moon officia
-            aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod.
-            Brunch 3 wolf moon tempor,
-            sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil
-            anim keffiyeh helvetica,
-            craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur
-            butcher vice lomo. Leggings
-            occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't
-            heard of them accusamus
-            labore sustainable VHS.
-        </ng-template>
-    </ngb-panel>
+<ng-template #rightIcon let-data="data">
+    <div>
+        <span [inlineSVG]="'./assets/media/svg/bca/icon/plus.svg'" cacheSVG="true"
+            class="svg-icon svg-icon-sm mr-2"></span>
+        <span [inlineSVG]="'./assets/media/svg/bca/icon/pencil.svg'" cacheSVG="true"
+            class="svg-icon svg-icon-sm mr-2"></span>
+        <span [inlineSVG]="'./assets/media/svg/bca/icon/trash-bin.svg'" cacheSVG="true"
+            class="svg-icon svg-icon-sm mr-2"></span>
+    </div>
+</ng-template>
+
+<ng-template #accordionChild let-children="children">
+    <div class="border-top-1 border-light">
+        <ngb-accordion class="accordion-bordered as-tree-child" [destroyOnHide]="false" (hidden)="onHidden($event)"
+            (shown)="onShow($event)">
+            <ngb-panel *ngFor="let content of children; let i = index">
+                <ng-template ngbPanelHeader>
+                    <div class="card-title d-flex align-items-center justify-content-between">
+                        <div>
+                            <button ngbPanelToggle class="btn btn-link btn-xs"><i
+                                    class="flaticon2-down icon-xs "></i></button>
+                            <span>{{i+1}}. {{content.title}} </span> <span>info</span>
+                        </div>
+                        <ng-container [ngTemplateOutlet]="rightIcon"></ng-container>
+                    </div>
+                </ng-template>
+                <ng-template ngbPanelContent>
+                    <div class="content p-3">
+                        <div class="form-group">
+                            <label>Judul Topik *</label>
+                            <input type="text" class="form-control" [(ngModel)]="content.title">
+                        </div>
+                        <div class="form-group">
+                            <label>Isi Topik *</label>
+                            <ckeditor [editor]="editor" [config]="config" tagName="textarea" [(ngModel)]="content.desc">
+                            </ckeditor>
+                        </div>
+                        <div class="text-right">
+                            <button type="button" class="btn btn-outline-light btn-sm rounded-lg px-5">Batal</button>
+                            <button type="button" class="btn btn-sm btn-blue rounded-lg px-5">Simpan</button>
+                        </div>
+                        <ng-container *ngIf="content.children.length" [ngTemplateOutlet]="accordionChild"
+                            [ngTemplateOutletContext]="{ children: content.children}">
+                        </ng-container>
+                    </div>
+                </ng-template>
+            </ngb-panel>
+        </ngb-accordion>
+    </div>
 </ng-template>

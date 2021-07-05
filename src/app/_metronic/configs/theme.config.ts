@@ -18,10 +18,10 @@ export const DefaultThemeConfig : ThemeConfig = {
         background: 'red',
     },
     homepage: {
-        bg_img_top: 'newsdefault_top.svg',
+        bg_img_top: '/themes/default_top.svg',
         component: [],
     },
     login: {
-        image: 'default_login.svg'
+        image: '/themes/default_login.svg'
     }
 }

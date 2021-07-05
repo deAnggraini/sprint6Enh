@@ -46,7 +46,7 @@ export class ApiService {
     reportProgress?: boolean;
     responseType?: 'json';
     withCredentials?: boolean;
-  }): Observable<any> {
+  }, showError: boolean = true): Observable<any> {
     return this.http.post(url, body, options == null ? this.getHeaders() : options).pipe(
       concatMap((res: CommonHttpResponse) => {
         if (res.error && res.error !== '00') throw Error(res.msg);
@@ -60,7 +60,7 @@ export class ApiService {
       }),
       catchError((err) => {
         console.error('ApiService', err);
-        setTimeout(() => this.toast.showDanger(err.message), 0);
+        if (showError) setTimeout(() => this.toast.showDanger(err.message), 0);
         throw err.message;
         return of(undefined);
       }),
