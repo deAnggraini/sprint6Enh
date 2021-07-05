@@ -13,6 +13,7 @@ export class AddComponent implements OnInit {
     title: '',
     location: '',
     usedBy: '',
+    template: '',
   }
   backend_img = environment.backend_img;
 
@@ -51,7 +52,8 @@ export class AddComponent implements OnInit {
       id: [0],
       title: [this.defaultValue.title, Validators.compose([Validators.required])],
       location: [this.defaultValue.location, Validators.compose([Validators.required])],
-      usedBy: [this.defaultValue.usedBy, Validators.compose([Validators.required])]
+      usedBy: [this.defaultValue.usedBy, Validators.compose([Validators.required])],
+      template: [this.defaultValue.template, Validators.compose([Validators.required])],
     });
   }
 
