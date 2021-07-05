@@ -1,0 +1,39 @@
+<div class="input-group">
+    <input type="text" class="form-control" placeholder="-- Silahkan Pilih --" required autocomplete="off"
+        [ngClass]="{ 'is-invalid': hasError}" [value]="selected.text" disabled>
+    <div class="input-group-append">
+        <button class="btn btn-xs btn-clean" (click)="$event.stopPropagation(); comboBoxDrop.open();">
+            <i class="ki ki-arrow-down text-primary"></i>
+        </button>
+    </div>
+    <div class="d-inline-block" ngbDropdown #comboBoxDrop="ngbDropdown"
+        style="width: calc(100% + 2px); left:-1px; top:-1px">
+        <button style="display: none;" ngbDropdownAnchor (focus)="comboBoxDrop.open()"></button>
+        <div ngbDropdownMenu
+            style="width: calc(100% + 2px); max-height: 200px; overflow-y: auto; border :1px solid #0F5EA9; border-radius: 0;">
+            <ngb-accordion class="accordion-light accordion-light-borderless accordion-combo-box"
+                [destroyOnHide]="false" (hidden)="onHidden($event)" (shown)="onShow($event)">
+                <ngb-panel *ngFor="let content of options.value">
+                    <ng-template ngbPanelHeader>
+                        <div class="card-title d-flex align-items-center justify-content-between">
+                            <div>
+                                <button ngbPanelToggle class="btn btn-link btn-xs">
+                                    <i class="ki ki-arrow-next text-primary icon-xs "></i></button>
+                                <span (click)="onClick(content)">{{content.text}}</span>
+                            </div>
+                        </div>
+                    </ng-template>
+                    <ng-template ngbPanelContent>
+                        <div class="content">
+                            <input type="text" class="txt-desc-lvl1"
+                                placeholder="Masukkan kalimat pengantar terkait {{content.title}} disini.">
+                            <ng-container *ngIf="content.children.length" [ngTemplateOutlet]="accordionChild"
+                                [ngTemplateOutletContext]="{ children: content.children}">
+                            </ng-container>
+                        </div>
+                    </ng-template>
+                </ngb-panel>
+            </ngb-accordion>
+        </div>
+    </div>
+</div>

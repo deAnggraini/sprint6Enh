@@ -12,6 +12,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { GeneralModule } from '../_metronic/partials/content/general/general.module';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { SanitizeHtmlPipe } from './pipe/sanitize-html.pipe';
+import { ComboBoxComponent } from './_components/combo-box/combo-box.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { SanitizeHtmlPipe } from './pipe/sanitize-html.pipe';
     BreadcrumbsComponent,
     PakarSearchComponent,
     SanitizeHtmlPipe,
+    ComboBoxComponent,
   ],
   imports: [
     CommonModule,
@@ -38,7 +40,8 @@ import { SanitizeHtmlPipe } from './pipe/sanitize-html.pipe';
     PaginationComponent,
     ConfirmComponent,
     BreadcrumbsComponent,
-    PakarSearchComponent
+    PakarSearchComponent,
+    ComboBoxComponent,
   ]
 })
 export class UtilsModule {

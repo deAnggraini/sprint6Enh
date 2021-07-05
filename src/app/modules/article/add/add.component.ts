@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
+import { Option } from 'src/app/utils/_model/option';
 
 @Component({
   selector: 'app-add',
@@ -16,6 +17,7 @@ export class AddComponent implements OnInit {
   // state
   dataForm: FormGroup;
   hasError: boolean = false;
+  location1: Option;
 
   constructor(
     private fb: FormBuilder) { }
@@ -26,6 +28,15 @@ export class AddComponent implements OnInit {
 
   save() {
 
+  }
+
+  check() {
+    console.log({ location1: this.location1, errors: this.dataForm.errors, isValid: this.dataForm.valid });
+  }
+
+  changeLocation1(e) {
+    console.log({ e });
+    this.dataForm.setValue(Object.assign({}, this.dataForm.value, { location: e.text }));
   }
 
   ngOnInit(): void {

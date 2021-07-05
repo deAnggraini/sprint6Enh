@@ -11,6 +11,16 @@
                         [ngTemplateOutletContext]="{ control: dataForm.controls['title']}"></ng-container>
                 </div>
                 <div class="form-group col-sm-10 col-md-10 col-lg-8">
+                    <label>Lokasi Artikel 1 <span class="text-danger">*</span></label>
+                    <pakar-combo-box-accordion (onChange)="changeLocation1($event)" [(ngModel)]="location1"
+                        [ngModelOptions]="{standalone: true}">
+                    </pakar-combo-box-accordion>
+                </div>
+                <div class="form-group col-sm-10 col-md-10 col-lg-8">
+                    <label>Lokasi Artikel 2 <span class="text-danger">*</span></label>
+                    <pakar-combo-box-accordion></pakar-combo-box-accordion>
+                </div>
+                <div class="form-group col-sm-10 col-md-10 col-lg-8">
                     <label>Lokasi Artikel <span class="text-danger">*</span></label>
                     <div class="input-group">
                         <input type="text" class="form-control" placeholder="Masukkan nama artikel disini" required
@@ -126,6 +136,9 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div>
+            <button type="button" (click)="check()">Check Data</button>
         </div>
     </form>
 </div>
