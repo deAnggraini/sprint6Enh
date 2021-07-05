@@ -27,9 +27,9 @@
                         <div class="content">
                             <input type="text" class="txt-desc-lvl1"
                                 placeholder="Masukkan kalimat pengantar terkait {{content.title}} disini.">
-                            <ng-container *ngIf="content.children.length" [ngTemplateOutlet]="accordionChild"
+                            <!-- <ng-container *ngIf="content.children.length" [ngTemplateOutlet]="accordionChild"
                                 [ngTemplateOutletContext]="{ children: content.children}">
-                            </ng-container>
+                            </ng-container> -->
                         </div>
                     </ng-template>
                 </ngb-panel>

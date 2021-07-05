@@ -16,7 +16,7 @@ export class KategoriMenuComponent implements OnInit {
   ngOnInit(): void {
     this.categori.categories$.subscribe(d => {
       this.listData = d;
-    })
+    });
   }
 
 }

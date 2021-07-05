@@ -1,28 +1,19 @@
 <!--begin::Container-->
-<div
-  [ngClass]="headerContainerCSSClasses"
-  class="d-flex align-items-stretch justify-content-between"
-  style="background: {{headerBackground}}; padding-left:0;"
->
+<!-- style="background: {{headerBackground}}; padding-left:0;" -->
+<div [ngClass]="headerContainerCSSClasses" class="d-flex align-items-stretch justify-content-between"
+  [ngStyle]="{'background':headerBackground, 'padding-left':0,'padding-right':'5px'}">
   <ng-container *ngIf="loader$ | async as _loader">
-    <ngb-progressbar
-      class="loading-bar"
-      height="3px"
-      [value]="_loader"
-    ></ngb-progressbar>
+    <ngb-progressbar class="loading-bar" height="3px" [value]="_loader"></ngb-progressbar>
   </ng-container>
 
   <ng-container *ngIf="headerMenuSelfDisplay">
     <!--begin::Header Menu Wrapper-->
-    <div
-      class="header-menu-wrapper header-menu-wrapper-left pl-3"
-      id="kt_header_menu_wrapper"
-      style=" border-left: 1px solid white; margin-block: 13px;"
-    >
+    <div class="header-menu-wrapper header-menu-wrapper-left pl-3" id="kt_header_menu_wrapper"
+      style=" border-left: 1px solid white; margin-block: 13px;">
       <ng-container *ngIf="!asideSelfDisplay">
         <!--begin::Header Logo-->
         <div class="header-logo">
-          <a routerLink="/">
+          <a routerLink="/homepage">
             <img alt="Logo" [attr.src]="headerLogo" />
           </a>
         </div>
@@ -34,14 +25,18 @@
       <ng-container *ngIf="headerMenuSelfStatic">
         <!-- STATIC MENU -->
         <!-- <app-header-menu #ktHeaderMenu id="kt_header_menu" class="header-menu header-menu-mobile" [ngClass]="headerMenuCSSClasses"></app-header-menu> -->
+        <a routerLink="/homepage">
         <span #ktHeaderMenu class="header-menu header-menu-mobile" id="kt_header_menu"
-          [inlineSVG]="'./assets/media/svg/bca/pakar_logo_white.svg'" cacheSVG="true" [ngClass]="headerMenuCSSClasses"></span>
+          [inlineSVG]="'./assets/media/svg/bca/pakar_logo_white.svg'" cacheSVG="true"
+          [ngClass]="headerMenuCSSClasses"></span></a>
       </ng-container>
       <ng-container *ngIf="!headerMenuSelfStatic">
         <!-- DYNAMIC MENU -->
         <!-- <app-header-menu-dynamic #ktHeaderMenu id="kt_header_menu" class="header-menu header-menu-mobile" [ngClass]="headerMenuCSSClasses"></app-header-menu-dynamic> -->
-        <span #ktHeaderMenu class="header-menu header-menu-mobile" id="kt_header_menu"
-          [inlineSVG]="'./assets/media/svg/bca/pakar_logo_white.svg'" cacheSVG="true" [ngClass]="headerMenuCSSClasses"></span>
+        <a routerLink="/homepage">
+          <span #ktHeaderMenu class="header-menu header-menu-mobile" id="kt_header_menu"
+            [inlineSVG]="'./assets/media/svg/bca/pakar_logo_white.svg'" cacheSVG="true"
+            [ngClass]="headerMenuCSSClasses"></span></a>
       </ng-container>
       <!--end::Header Menu-->
     </div>
@@ -52,6 +47,6 @@
     <div></div>
   </ng-container>
 
-  <app-topbar class="topbar" style="background: {{headerBackground}};"></app-topbar>
+  <app-topbar class="topbar" [ngStyle]="{'background':headerBackground, 'padding-left':0}"></app-topbar>
 </div>
 <!--end::Container-->
