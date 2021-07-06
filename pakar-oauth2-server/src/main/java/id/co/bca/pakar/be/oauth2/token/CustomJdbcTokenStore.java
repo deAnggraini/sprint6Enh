@@ -38,8 +38,8 @@ public class CustomJdbcTokenStore extends JdbcTokenStore {
 		super(dataSource);
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}
-    
-    private static final String DEFAULT_ACCESS_TOKEN_INSERT_STATEMENT = "insert into oauth_access_token (token_id, token, authentication_id, user_name, client_id, authentication, refresh_token) values (?, ?, ?, ?, ?, ?, ?)";
+
+	private static final String DEFAULT_ACCESS_TOKEN_INSERT_STATEMENT = "insert into oauth_access_token (token_id, token, authentication_id, user_name, client_id, authentication, refresh_token) values (?, ?, ?, ?, ?, ?, ?)";
 
 	private static final String DEFAULT_ACCESS_TOKEN_SELECT_STATEMENT = "select token_id, token from oauth_access_token where token_id = ?";
 
@@ -50,7 +50,7 @@ public class CustomJdbcTokenStore extends JdbcTokenStore {
 	private static final String DEFAULT_ACCESS_TOKENS_FROM_USERNAME_AND_CLIENT_SELECT_STATEMENT = "select token_id, token from oauth_access_token where user_name = ? and client_id = ?";
 
 	private static final String DEFAULT_ACCESS_TOKENS_FROM_USERNAME_SELECT_STATEMENT = "select token_id, token from oauth_access_token where user_name = ?";
-	
+
 	private static final String DEFAULT_ACCESS_TOKENS_FROM_TOKEN_AND_USERNAME_SELECT_STATEMENT = "select token_id, token, user_name from oauth_access_token where token_id = ? AND user_name = ?";
 
 	private static final String DEFAULT_ACCESS_TOKENS_FROM_CLIENTID_SELECT_STATEMENT = "select token_id, token from oauth_access_token where client_id = ?";
@@ -78,7 +78,7 @@ public class CustomJdbcTokenStore extends JdbcTokenStore {
 	private String selectAccessTokensFromUserNameAndClientIdSql = DEFAULT_ACCESS_TOKENS_FROM_USERNAME_AND_CLIENT_SELECT_STATEMENT;
 
 	private String selectAccessTokensFromUserNameSql = DEFAULT_ACCESS_TOKENS_FROM_USERNAME_SELECT_STATEMENT;
-	
+
 	private String selectAccessTokensFromTokenAndUserNameSql = DEFAULT_ACCESS_TOKENS_FROM_TOKEN_AND_USERNAME_SELECT_STATEMENT;
 
 	private String selectAccessTokensFromClientIdSql = DEFAULT_ACCESS_TOKENS_FROM_CLIENTID_SELECT_STATEMENT;
@@ -140,17 +140,17 @@ public class CustomJdbcTokenStore extends JdbcTokenStore {
 			refreshToken = token.getRefreshToken().getValue();
 			LOG.debug("refresh token value "+refreshToken);
 		}
-		
+
 		if (readAccessToken(token.getValue())!=null) {
-			removeAccessToken(token.getValue());			
-			
+			removeAccessToken(token.getValue());
+
 		}
 
 		// delete token before insert
 		final String key = authenticationKeyGenerator.extractKey(authentication);
 		LOG.debug("delete oauth_access_token with authentication id "+key);
 		jdbcTemplate.update("delete from oauth_access_token where authentication_id = ?", key);
-		
+
 		jdbcTemplate.update(insertAccessTokenSql, new Object[] { extractTokenKey(token.getValue()),
 				new SqlLobValue(serializeAccessToken(token)), authenticationKeyGenerator.extractKey(authentication),
 				authentication.isClientOnly() ? null : authentication.getName(),
@@ -182,10 +182,10 @@ public class CustomJdbcTokenStore extends JdbcTokenStore {
 
 		return accessToken;
 	}
-	
+
 	public OAuth2AccessToken readAccessToken(String tokenValue, String username) {
 		OAuth2AccessToken accessToken = null;
-		try {			
+		try {
 			accessToken = jdbcTemplate.queryForObject(selectAccessTokensFromTokenAndUserNameSql, new RowMapper<OAuth2AccessToken>() {
 				public OAuth2AccessToken mapRow(ResultSet rs, int rowNum) throws SQLException {
 					return deserializeAccessToken(rs.getBytes(2));
