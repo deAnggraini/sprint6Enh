@@ -1,20 +1,20 @@
 const empty = {
     id: 1001,
     name: 'Empty',
-    categori: [],
+    categories: [],
     desc: '<p>Digunakan untuk artikel dengan template yang dapat di-custom.</p>',
     image: '/templates/empty.svg',
-    thumb: '/templates/basic_thumb.svg',
-    content: [],
+    thumb: '/templates/empty_thumb.svg',
+    contents: [],
 }
 const basic = {
     id: 1000,
     name: 'Basic',
-    categori: [],
+    categories: [],
     desc: '<p>Pilih template ini jika template yang direkomendasikan kurang sesuai dengan atribut page yang akan Kamu buat.</p>',
     image: '/templates/basic.jpeg',
     thumb: '/templates/basic_thumb.svg',
-    content: [
+    contents: [
         {
             id: 1001,
             title: 'Ketentuan [Nama Produk]',
