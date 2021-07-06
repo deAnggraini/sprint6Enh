@@ -1,12 +1,12 @@
 <svg width="1444" height="304" viewBox="0 0 1444 304" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g filter="url(#filter0_f)">
-<rect x="2" y="2" width="1440" height="300" fill="url(#paint0_linear)"/>
+<rect width="1444" height="304" fill="url(#paint0_linear)"/>
 </g>
 <defs>
 <filter id="filter0_f" x="0" y="0" width="1444" height="304" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
 <feFlood flood-opacity="0" result="BackgroundImageFix"/>
 <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
-<feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur"/>
+<!-- <feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur"/> -->
 </filter>
 <linearGradient id="paint0_linear" x1="732" y1="22" x2="732" y2="398" gradientUnits="userSpaceOnUse">
 <stop offset="0.0558511" stop-color="#1995D1"/>
