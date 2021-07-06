@@ -9,10 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import id.co.bca.pakar.be.oauth2.common.Constant;
 import id.co.bca.pakar.be.oauth2.dto.CredentialDto;
@@ -46,12 +43,12 @@ public class AuthenticationController extends BaseController {
 	
 	@PostMapping(value = Constant.ApiEndpoint.LOGOUT_URL, consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<RestResponse<String>> logout(HttpServletRequest request, HttpServletResponse response) {		
-		String authHeader = request.getHeader("Authorization");
+	public ResponseEntity<RestResponse<String>> logout(@RequestHeader("Authorization") String authorization) {
+//		String authHeader = request.getHeader("Authorization");
 		try {
-			logger.info("logout proces for token value " + authHeader);
-			if (authHeader != null) {
-			    String tokenValue = authHeader.replace("Bearer", "").trim();
+			logger.info("logout proces for token value " + authorization);
+			if (authorization != null) {
+			    String tokenValue = authorization.replace("Bearer", "").trim();
 			    Boolean logoutStatus = authenticationService.logout(tokenValue);
 			    if(logoutStatus) {
 			    	return this.createResponse("0", Constant.ApiResponseCode.LOGOUT_SUCCEED.getAction()[0], Constant.ApiResponseCode.LOGOUT_SUCCEED.getAction()[1]);
