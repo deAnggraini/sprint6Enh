@@ -23,7 +23,7 @@ import id.co.bca.pakar.be.oauth2.model.UserRole;
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-	boolean shouldAuthenticateAgainstThirdPartySystem = true;
+//	boolean shouldAuthenticateAgainstThirdPartySystem = true;
 
 	@Autowired
 	private RemoteEaiAuthentication remoteEaiAuthentication;
