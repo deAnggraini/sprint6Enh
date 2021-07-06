@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/auth-services/auth-service.iml" filepath="$PROJECT_DIR$/auth-services/auth-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pakar-doc-server/pakar-doc-server.iml" filepath="$PROJECT_DIR$/pakar-doc-server/pakar-doc-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pakar-oauth2-server/pakar-oauth2-server.iml" filepath="$PROJECT_DIR$/pakar-oauth2-server/pakar-oauth2-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pakar-wf-server/pakar-wf-server.iml" filepath="$PROJECT_DIR$/pakar-wf-server/pakar-wf-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/pakarAuthService.iml" filepath="$PROJECT_DIR$/.idea/pakarAuthService.iml" />
+    </modules>
+  </component>
+</project>
