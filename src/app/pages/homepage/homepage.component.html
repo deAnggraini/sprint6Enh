@@ -1,7 +1,12 @@
 <div style="background:white">
-    <div class="container-homepage pt-25 px-40 container-search" style="
-        background-image: url('{{background_image}}');
-        background-size: auto;">
+    <!-- <div class="container-homepage pt-25 px-40 container-search" style="
+        background-image: url('{{background_image}}');">
+        <app-search></app-search>
+    </div> -->
+    <div class="container-bg" 
+    style="background-image: url('{{background_image}}');">
+    </div>
+    <div class="container-search px-40">
         <app-search></app-search>
     </div>
     <ng-container *ngFor="let row of sortingList$ | async">

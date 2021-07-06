@@ -3,10 +3,34 @@
     // background-image: url('http://localhost:8080/themes/homepage/detault_top.svg');
     background-repeat: no-repeat;
     margin-top: -2px;
-    margin-left: -1px;
+    // margin-left: -1px;
     background-color: white;
     background-position: center top -10px;
     background-size: 110% auto;
+    // background-position: absolute;
+    // background-size: cover;
+    
+  }
+
+  .container-bg {
+    background-repeat: no-repeat;
+    margin-top: -2px;
+    background-color: white;
+    background-position: absolute;
+    background-size: cover;
+    height: 300px;
+
+    @media (max-width: 770px) {
+      height: 250px;
+    }
+  }
+
+  .container-search {
+    margin-top: -15rem;
+
+    @media (max-width: 480px) {
+      margin-top: -17rem;
+    }
   }
 
   @media (max-width: 992px) {
