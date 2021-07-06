@@ -175,3 +175,17 @@ $bca-color-dark: #0F5EA9;
     }
   }
 }
+
+
+// Custom Components
+pakar-input-drop-down.ng-touched.ng-invalid {
+  .combo-box {
+    border-color: red !important;
+  }
+}
+
+pakar-combo-box-accordion.ng-touched.ng-invalid {
+  .combo-box {
+    border-color: red !important;
+  }
+}

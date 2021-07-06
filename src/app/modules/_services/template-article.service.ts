@@ -14,12 +14,17 @@ export class TemplateArticleService {
   constructor(private http: ApiService) { }
 
   list() {
-    const params = {};
-    return this.http.post(`${this._base_url}/`, params).subscribe(resp => {
+    const params = { structureId: null };
+    return this.http.post(`${this._base_url}/templates`, params).subscribe(resp => {
       if (resp) {
         this.templates.next(resp);
       }
     });
+  }
+
+  findByCategories(id) {
+    const params = { structureId: id };
+    return this.http.post(`${this._base_url}/templates`, params);
   }
 
   // searching from local variables

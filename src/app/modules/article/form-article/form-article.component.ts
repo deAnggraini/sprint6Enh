@@ -1,6 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { NgbAccordionConfig, NgbPanelChangeEvent, NgbAccordion } from '@ng-bootstrap/ng-bootstrap';
+import { ArticleService } from '../../_services/article.service';
+import { Router } from '@angular/router';
 
 const sample = {
   id: 0,
@@ -64,7 +66,7 @@ const sample = {
       children: []
     }
   ],
-  references: [{id:1, title:'Perilhal Ketentuan Tahapan', no : '025/SKSE/TL/2020'}, {}, {}],
+  references: [{ id: 1, title: 'Perilhal Ketentuan Tahapan', no: '025/SKSE/TL/2020' }, {}, {}],
   related: [{}, {}, {}]
 }
 
@@ -93,7 +95,9 @@ export class FormArticleComponent implements OnInit {
 
   formData = JSON.parse(JSON.stringify(sample));
 
-  constructor(private accordionConfig: NgbAccordionConfig) {
+  constructor(private accordionConfig: NgbAccordionConfig,
+    private article: ArticleService,
+    private router: Router) {
     this.accordionConfig.closeOthers = true;
     // this.accordionConfig.type = 'info';
   }
@@ -126,6 +130,9 @@ export class FormArticleComponent implements OnInit {
   };
 
   ngOnInit(): void {
+    if (this.article.formParam == null) {
+      this.router.navigate(['article/add']);
+    }
     console.log(this.formData);
   }
 

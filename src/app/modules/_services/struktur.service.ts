@@ -3,6 +3,7 @@ import { environment } from 'src/environments/environment';
 import { ApiService } from 'src/app/utils/_services/api-service.service';
 import { of, Observable, BehaviorSubject } from 'rxjs';
 import { StrukturDTO } from '../_model/struktur.dto';
+import { Option } from 'src/app/utils/_model/option';
 
 @Injectable({
   providedIn: 'root'
@@ -64,5 +65,34 @@ export class StrukturService {
       }
     })
     return found;
+  }
+
+  // global helper
+  public parseToOptions(listStructure: any[]) {
+    function parseListParent(item: any): string {
+      let parents : string[] = [];
+      if (item.listParent && item.listParent.length) {
+        parents = parents.concat(item.listParent.map(d => d.title));
+      }
+      parents.push(item.title);
+      return parents.join(' > ');
+    }
+    function parseItem(structures): Option[] {
+      const newOptions: Option[] = [];
+      structures.forEach(d => {
+        const option: Option = {
+          id: d.id,
+          value: parseListParent(d),
+          text: d.title,
+          children: []
+        };
+        newOptions.push(option);
+        if (d.menus && d.menus.length) {
+          option.children = parseItem(d.menus);
+        }
+      });
+      return newOptions;
+    }
+    return parseItem(listStructure);
   }
 }

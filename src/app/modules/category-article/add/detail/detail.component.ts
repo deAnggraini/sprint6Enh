@@ -491,7 +491,6 @@ export class DetailComponent implements OnInit, OnDestroy {
       $that.moving(data);
     });
     $(this.tree_id).on("create_node.jstree", function (e, data) {
-      console.log('create_node');
       $("li#" + data.node.id).find("a").append('test');
     });
     $(this.tree_id).on("changed.jstree", function (e, data) {

@@ -9,6 +9,9 @@ import * as moment from 'moment';
 })
 export class ArticleService {
 
+  // parameter article form add
+  public formParam: any = null;
+
   private _base_url = `${environment.apiUrl}/doc`;
   private empty_search: any[] = [
     { state: 0, text: 'Ketentuan Time Loan' },

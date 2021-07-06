@@ -7,16 +7,10 @@
     border-radius: 0;
   }
 
-  .combo-box.ng-touched.ng-invalid {
-    border-color: red !important;
-  }
-
   .combo-box {
     border: 1px solid #E4E6EF;
     padding: 0.65rem 2px 0.65rem 1rem;
 
-    &:focus,
-    &:active,
     &.focus {
       border-color: #69b3ff;
     }

@@ -16,7 +16,7 @@
     padding: 1.5rem;">
     <button type="button" class="btn btn-outline-light btn-sm rounded-lg px-5 mr-5" [disabled]="!moved"
         (click)="cancel()">Batal</button>
-    <button type="button" class="btn btn-sm btn-blue rounded-lg px-5" [disabled]="!moved"
+    <button type="button" class="btn btn-sm btn-blue rounded-lg px-5" [disabled]="dataForm.valid"
         (click)="updateSection()">Simpan</button>
 </div>
 

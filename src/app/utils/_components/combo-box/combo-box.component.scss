@@ -21,6 +21,10 @@
       border-color: #69b3ff;
     }
   }
+
+  button:disabled i.ki {
+    color: gray !important;
+  }
 }
 
 :host ::ng-deep .combo-box-tree {

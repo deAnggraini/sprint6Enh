@@ -1,6 +1,6 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, forwardRef } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, forwardRef, HostBinding, OnChanges, SimpleChanges } from '@angular/core';
 import { Option } from '../../_model/option';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl } from '@angular/forms';
 import { isFunction } from 'util';
 import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 
@@ -40,6 +40,7 @@ const empty = { id: '0', value: '', text: '' };
 
 @Component({
   selector: 'pakar-input-drop-down',
+  host: { class: 'hq-test' },
   templateUrl: './input-drop-down.component.html',
   styleUrls: ['./input-drop-down.component.scss'],
   providers: [
@@ -52,18 +53,30 @@ const empty = { id: '0', value: '', text: '' };
 })
 export class InputDropDownComponent implements OnInit, ControlValueAccessor {
 
+  @HostBinding('class.ng-invalid') ngInvalid: any = '';
+
   @Input() options: Option[];
   @Input() placeholder: string;
   @Input() class: string;
   @Input() hasError: boolean;
+  @Output() control: FormControl;
   @Output() onChange = new EventEmitter<any>();
 
   @ViewChild('comboBoxDrop') comboBoxDrop: NgbDropdown;
   @ViewChild('comboBox') comboBox: ElementRef<HTMLDivElement>;
 
   selected: Option = { id: '0', value: '', text: '' };
+  disabled: boolean = false;
 
   constructor() { }
+
+
+  get isValid() {
+    if (this.control) {
+      return this.control.valid;
+    }
+    return true;
+  }
 
   openChange(open: boolean) {
     const div = this.comboBox.nativeElement;
@@ -101,6 +114,8 @@ export class InputDropDownComponent implements OnInit, ControlValueAccessor {
     this.propogateChange = fn;
   }
   registerOnTouched(fn: any): void { }
-  setDisabledState?(isDisabled: boolean): void { }
+  setDisabledState?(isDisabled: boolean): void {
+    this.disabled = isDisabled;
+  }
 
 }

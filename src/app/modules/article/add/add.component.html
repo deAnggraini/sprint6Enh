@@ -3,77 +3,63 @@
     <form class="form" [formGroup]="dataForm" novalidate="novalidate" (ngSubmit)="save()">
         <div class="row">
             <div class="col">
-                <div class="form-group col-sm-10 col-md-10 col-lg-6">
-                    <label>Judul Artikel <span class="text-danger">*</span></label>
-                    <input class="form-control" type="text" maxlength="50" placeholder="Masukkan nama artikel disini"
-                        required formControlName="title" autocomplete="off" [ngClass]="{ 'is-invalid': hasError}">
-                    <ng-container [ngTemplateOutlet]="formError"
-                        [ngTemplateOutletContext]="{ control: dataForm.controls['title']}"></ng-container>
-                </div>
-                <!-- <div class="form-group col-sm-10 col-md-10 col-lg-8">
-                    <label>Lokasi Artikel 1 <span class="text-danger">*</span></label>
-                    <pakar-combo-box-accordion (onChange)="changeLocation1($event)" [(ngModel)]="location1"
-                        [ngModelOptions]="{standalone: true}">
-                    </pakar-combo-box-accordion>
-                </div> -->
-                <div class="form-group col-sm-10 col-md-10 col-lg-8">
-                    <label>Lokasi Artikel <span class="text-danger">*</span></label>
-                    <pakar-combo-box-accordion formControlName="location"></pakar-combo-box-accordion>
-                </div>
-                <div class="form-group col-sm-10 col-md-10 col-lg-6">
-                    <label>Artikel digunakan oleh <span class="text-danger">*</span></label>
-                    <!-- formControlName="usedBy" -->
-                    <pakar-input-drop-down formControlName="usedBy"></pakar-input-drop-down>
-                    <ng-container [ngTemplateOutlet]="formError"
-                        [ngTemplateOutletContext]="{ control: dataForm.controls['location']}"></ng-container>
-                </div>
-                <div class="form-group col-sm-10 col-md-10 col-lg-6">
-                    <label>Rekomendasi Template<span class="text-danger">*</span></label>
-                    <div>Pilih salah satu template dibawah ini untuk memudahkan Kamu dalam membuat artikel.
-                        Template yang disediakan masih dapat diubah sesuai dengan kebutuhan Kamu.</div>
-                    <div class="row">
-                        <div class="col">
-                            <label class="d-flex flex-row">
-                                <input type="radio">
-                                <div class="d-flex flex-column pl-1">
-                                    <img style="height: 210px; width: 158px; border:1px solid #C8C6C4">
-                                    <span>Empty</span>
-                                    <span class="font-weight-normal">Digunakan untuk artikel dengan template yang dapat di-custom</span>
-                                </div>
-                            </label>
-                        </div>
-                        <div class="col">
-                            <label class="d-flex flex-row">
-                                <input type="radio">
-                                <div class="d-flex flex-column pl-1">
-                                    <span [inlineSVG]="backend_img+'/templates/basic_thumb.svg'"
-                                        cacheSVG="true"></span>
-                                    <span>Basic</span>
-                                    <span class="font-weight-normal">Pilih template ini jika template yang direkomendasikan kurang sesuai dengan
-                                        artikel
-                                        yang
-                                        akan
-                                        Kamu buat.</span>
-                                </div>
-                            </label>
+                <div class="row">
+                    <div class="form-group col-sm-10 col-md-10 col-lg-6">
+                        <label>Judul Artikel <span class="text-danger">*</span></label>
+                        <input class="form-control" type="text" maxlength="50"
+                            placeholder="Masukkan nama artikel disini" required formControlName="title"
+                            autocomplete="off" [ngClass]="{ 'is-invalid': hasError}">
+                        <ng-container [ngTemplateOutlet]="formError"
+                            [ngTemplateOutletContext]="{ control: dataForm.controls['title']}"></ng-container>
+                    </div>
+                    <div class="form-group col-sm-10 col-md-10 col-lg-8">
+                        <label>Lokasi Artikel <span class="text-danger">*</span></label>
+                        <pakar-combo-box-accordion formControlName="location" (onChange)="changeLocation($event)"
+                            [options]="locationOptions"></pakar-combo-box-accordion>
+                    </div>
+                    <div class="form-group col-sm-10 col-md-10 col-lg-6">
+                        <label>Artikel digunakan oleh <span class="text-danger">*</span></label>
+                        <pakar-input-drop-down formControlName="usedBy" [options]="usedByOptions"
+                            placeholder="Pilih pengguna aplikasi/mesin">
+                        </pakar-input-drop-down>
+                        <ng-container [ngTemplateOutlet]="formError"
+                            [ngTemplateOutletContext]="{ control: dataForm.controls['usedBy']}"></ng-container>
+                    </div>
+
+                    <div class="form-group col-11" *ngIf="!disabledUsedBy">
+                        <label>Rekomendasi Template<span class="text-danger">*</span></label>
+                        <div>Pilih salah satu template dibawah ini untuk memudahkan Kamu dalam membuat artikel.
+                            Template yang disediakan masih dapat diubah sesuai dengan kebutuhan Kamu.</div>
+                        <div class="row mt-3">
+                            <div class="col template-item" *ngFor="let template of listTemplate">
+                                <label class="d-flex flex-row">
+                                    <input type="radio" [value]="template.id" formControlName="template">
+                                    <div class="d-flex flex-column pl-1">
+                                        <img class="template-thumbnail"
+                                            [src]="'/assets/media/images/' + (template.name == 'Empty' ? 'empty_thumb.svg' : 'basic_thumb.svg')">
+                                        <span>{{template.name}}</span>
+                                        <span class="font-weight-normal" [innerHTML]="template.desc"></span>
+                                    </div>
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col" style="max-width: 400px; max-height: 600px;">
-                <div class="right-preview">
-                    <div class="top-bg"></div>
-                    <div class="content">
-                        KANAN<br>
-                        KANAN<br>
-                        KANAN<br>
-                        KANAN<br>
-                    </div>
+            <div class="col mr-5" style="max-width: 400px; max-height: 620px;">
+                <div class="font-weight-bolder">Template</div>
+                <div class="right-preview" *ngIf="!disabledUsedBy"
+                    [ngStyle]="{'background-image': 'url(' + preview_img +')'}">
+                    <!-- <img [src]="preview_img"> -->
                 </div>
             </div>
         </div>
-        <div>
-            <button type="button" (click)="check()">Check Data</button>
+        <div class="d-flex justify-content-end">
+            <!-- <button>Check Data</button> -->
+            <button type="button" (click)="reset()"
+                class="btn btn-outline-light btn-sm rounded-lg px-5 ml-3">Batal</button>
+            <button type="button" (click)="save()" class="btn btn-sm btn-blue rounded-lg px-5 ml-3"
+                [disabled]="dataForm.invalid">Tambah Artikel</button>
         </div>
     </form>
 </div>

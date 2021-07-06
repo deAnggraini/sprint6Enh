@@ -1,7 +1,7 @@
-import { Component, OnInit, Input, OnDestroy, Output, EventEmitter, forwardRef, AfterViewInit, ViewChild, TemplateRef, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, Output, EventEmitter, forwardRef, AfterViewInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { Option } from '../../_model/option';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormControl, Validator, AbstractControl, ValidationErrors, Validators } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, } from '@angular/forms';
 import { isFunction } from 'util';
 import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 
@@ -51,18 +51,18 @@ const empty = { id: '0', value: '', text: '' };
       useExisting: forwardRef(() => ComboBoxComponent),
       multi: true
     },
-    {
-      provide: NG_VALIDATORS,
-      useExisting: forwardRef(() => ComboBoxComponent),
-      multi: true
-    }
+    // {
+    //   provide: NG_VALIDATORS,
+    //   useExisting: ComboBoxComponent,
+    //   multi: true
+    // }
   ]
 })
-export class ComboBoxComponent implements OnInit, OnDestroy, ControlValueAccessor, AfterViewInit, Validator {
+export class ComboBoxComponent implements OnInit, OnDestroy, ControlValueAccessor, AfterViewInit {
 
   @Input() options: BehaviorSubject<Option[]>;
   @Input() placeholder: string;
-  @Input() class: string;
+  // @Input() class: string;
   @Output() onChange = new EventEmitter<any>();
 
   @ViewChild('comboBoxDrop') comboBoxDrop: NgbDropdown;
@@ -73,10 +73,9 @@ export class ComboBoxComponent implements OnInit, OnDestroy, ControlValueAccesso
   subscriptions: Subscription[] = [];
   randomId: number = Math.ceil(Math.random() * 1000000);
   tree_id = ".combo-box-tree";
-  datasource: any[];
+  datasource: Option[];
 
-  constructor(
-    private cdr: ChangeDetectorRef) {
+  constructor() {
     this.tree_id = `#tree-cbx-${this.randomId}`;
   }
 
@@ -91,31 +90,22 @@ export class ComboBoxComponent implements OnInit, OnDestroy, ControlValueAccesso
     }
   }
 
-  toggleMenu(event) {
-    event.stopPropagation();
-    this.comboBoxDrop.open();
-  }
-
   onClick(item) {
-    // console.log('click', { item });
-    // single click == select, double click == expand content
     this.onSelect(item);
   }
 
   onSelect(item: Option) {
-    console.log('select', { item });
     this.selected = item;
     this.onChange.emit(item);
     if (isFunction(this.propogateChange)) {
       this.comboBoxDrop.close();
       this.propogateChange(item.id);
-      this._onChange();
     }
   }
 
   private findNode(id: number, datasource: Option[] = null): Option {
     if (datasource == null) {
-      datasource = this.options.value;
+      datasource = this.datasource;
     }
     let found: Option = datasource.find(d => parseInt(d.id) == id);
     if (!found) {
@@ -138,14 +128,18 @@ export class ComboBoxComponent implements OnInit, OnDestroy, ControlValueAccesso
   }
 
   ngOnInit(): void {
-    if (!this.options) {
-      this.options = new BehaviorSubject(sampleOptions);
-    }
     if (!this.placeholder) this.placeholder = 'Pilih lokasi yang tepat untuk artikel yang ingin ditambahkan';
   }
 
   ngAfterViewInit(): void {
     this.initJsTree();
+    const subscribe = this.options.subscribe(resp => {
+      this.datasource = resp;
+      const $tree = $(this.tree_id).jstree(true);
+      $tree.settings.core.data = this.datasource;
+      $tree.refresh(true);
+    });
+    this.subscriptions.push(subscribe);
   }
 
   private initJsTree() {
@@ -159,7 +153,7 @@ export class ComboBoxComponent implements OnInit, OnDestroy, ControlValueAccesso
           "variant": "small",
           icons: true,
         },
-        "data": this.options.value
+        "data": [],
       },
       "types": {
         "default": {
@@ -209,38 +203,34 @@ export class ComboBoxComponent implements OnInit, OnDestroy, ControlValueAccesso
   }
 
   // formControl
-  validate(control: AbstractControl): ValidationErrors {
-    // console.log({ control });
-    if (!this.comboBox) return null;
-    const div = this.comboBox.nativeElement;
-    const { touched, errors, dirty, value } = control;
-    console.log({ value, touched, errors, dirty, selected: this.selected });
-    if (control.touched) {
-      div.classList.add('ng-touched');
-      div.classList.remove('ng-untouched');
-    } else {
-      div.classList.add('ng-untouched');
-    }
-    if (control.dirty) {
-      div.classList.add('ng-dirty');
-    } else {
-      div.classList.remove('ng-dirty');
-    }
-    if (value) {
-      div.classList.add('ng-valid');
-      div.classList.remove('ng-invalid');
-    } else {
-      div.classList.remove('ng-valid');
-      div.classList.add('ng-invalid');
-    }
-    this.cdr.detectChanges();
-    // return value && parseInt(value) < 1 ? Validators.required(control) : null;
-    return null;
-  }
-  private _onChange?: () => void;
-  registerOnValidatorChange?(fn: () => void): void {
-    this._onChange = fn;
-    // console.log('registerOnValidatorChange called', fn);
-  }
+  // validate(control: AbstractControl): ValidationErrors {
+  //   if (!this.comboBox) return null;
+  //   const div = this.comboBox.nativeElement;
+  //   const { touched, errors, dirty, value } = control;
+  //   if (control.touched) {
+  //     div.classList.add('ng-touched');
+  //     div.classList.remove('ng-untouched');
+  //   } else {
+  //     div.classList.add('ng-untouched');
+  //   }
+  //   if (control.dirty) {
+  //     div.classList.add('ng-dirty');
+  //   } else {
+  //     div.classList.remove('ng-dirty');
+  //   }
+  //   if (value) {
+  //     div.classList.add('ng-valid');
+  //     div.classList.remove('ng-invalid');
+  //   } else {
+  //     div.classList.remove('ng-valid');
+  //     div.classList.add('ng-invalid');
+  //   }
+  //   this.cdr.detectChanges();
+  //   return null;
+  // }
+  // private _onChange?: () => void;
+  // registerOnValidatorChange?(fn: () => void): void {
+  //   this._onChange = fn;
+  // }
 
 }
