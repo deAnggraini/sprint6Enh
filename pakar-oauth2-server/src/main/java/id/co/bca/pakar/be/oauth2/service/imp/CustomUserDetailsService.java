@@ -35,10 +35,12 @@ public class CustomUserDetailsService implements UserDetailsService {
 			logger.info("load user by user name " + username);
 			User user = userRepository.findUserByUsername(username);
 			List<GrantedAuthority> roles = new ArrayList<>();
+			logger.info("load roles by user name " + username);
 			List<UserRole> uRoles = roleRepository.findUserRolesByUsername(username);
 			for (UserRole ur : uRoles) {
 				roles.add(new SimpleGrantedAuthority(ur.getRole().getId()));
 			}
+			logger.info("populate username {} with roles {}", username, roles);
 			SecUserDto dto = new SecUserDto(user.getUsername(), user.getPassword(), user.getEnabled().booleanValue(),
 					true, true, true, roles);
 			return dto;
