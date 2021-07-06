@@ -5,7 +5,7 @@
   [ngStyle]="{'background': headerBackground, 'box-shadow': showAside ? '0px 4px 8px 0px #0202027b' : '-2px 4px 8px 0px #0000001A'}"
   >
   <!-- routerLink="/"  -->
-  <a class="brand-logo cursor-pointer" *ngIf="showAside">
+  <a class="brand-logo cursor-pointer" *ngIf="showAside" routerLink="/homepage">
     <!-- <app-header-menu></app-header-menu> -->
     <span class="pakar-logo" [inlineSVG]="'./assets/media/svg/bca/pakar_logo_white.svg'" cacheSVG="true"></span>
   </a>
@@ -68,13 +68,19 @@
   <ng-container *ngIf="!item.submenu">
     <li class="menu-item" aria-haspopup="true" routerLinkActive="menu-item-active">
       <a class="menu-link" *ngIf="!externalLink(item.uri)" [routerLink]="item.uri" routerLinkActive="active">
-        <span [inlineSVG]="item.svg" cacheSVG="true" class="arrow svg-icon menu-icon" ></span>
+        <span *ngIf="item.svg" [inlineSVG]="item.svg" cacheSVG="true" class="arrow svg-icon menu-icon" ></span>
+        <i *ngIf="!item.svg" class="menu-bullet menu-bullet-dot">
+          <span></span>
+        </i>
         <span class="menu-text" [translate]="item.translate">{{
           item.title
         }}</span>
       </a>
       <a class="menu-link" *ngIf="externalLink(item.uri)" href="{{item.uri}}">
-        <span [inlineSVG]="item.svg" cacheSVG="true" class="arrow svg-icon menu-icon"></span>
+        <span *ngIf="item.svg" [inlineSVG]="item.svg" cacheSVG="true" class="arrow svg-icon menu-icon"></span>
+        <i *ngIf="!item.svg" class="menu-bullet menu-bullet-dot">
+          <span></span>
+        </i>
         <span class="menu-text" [translate]="item.translate">{{
           item.title
         }}</span>

@@ -21,7 +21,7 @@ export class HeaderMobileComponent implements OnInit, AfterViewInit {
       'header_mobile'
     );
 
-    this.headerLogo = this.getLogoUrl();
+    this.headerLogo = this.getLogoUrl();  
     this.asideSelfDisplay = this.layout.getProp('aside.self.display');
     this.headerMenuSelfDisplay = this.layout.getProp(
       'header.menu.self.display'
@@ -36,16 +36,16 @@ export class HeaderMobileComponent implements OnInit, AfterViewInit {
   private getLogoUrl() {
     const headerSelfTheme = this.layout.getProp('header.self.theme') || '';
     const brandSelfTheme = this.layout.getProp('brand.self.theme') || '';
-    let result = 'logo-light.png';
+    let result = 'pakar_logo_white.svg';
     if (!this.asideSelfDisplay) {
       if (headerSelfTheme === 'light') {
-        result = 'logo-dark.png';
+        result = 'pakar-logo.svg';
       }
     } else {
       if (brandSelfTheme === 'light') {
-        result = 'logo-dark.png';
+        result = 'pakar_logo_white.svg';
       }
     }
-    return `./assets/media/logos/${result}`;
+    return `./assets/media/svg/bca/${result}`;
   }
 }

@@ -7,10 +7,19 @@
     // background-position: center top -10px;
     background-position: absolute;
     background-size: cover;
+    height: 300px;
+
+    @media (max-width: 770px) {
+      height: 250px;
+    }
   }
 
   .container-search {
     margin-top: -15rem;
+
+    @media (max-width: 480px) {
+      margin-top: -17rem;
+    }
   }
 
   @media (max-width: 992px) {
