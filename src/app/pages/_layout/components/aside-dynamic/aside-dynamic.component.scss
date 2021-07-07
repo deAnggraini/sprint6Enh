@@ -12,8 +12,8 @@
     white-space: nowrap;
   }
 
-  .menu-item .menu-link .menu-text{
-    color: #201F1E;
+  .menu-item .menu-link .menu-text {
+    color: #201f1e;
   }
 
   //burger menu
@@ -32,10 +32,10 @@
   }
 
   .menu-section {
-    background-color: #EFF2FC;
+    background-color: #eff2fc;
 
     .menu-text {
-      color: #201F1E;
+      color: #201f1e;
       text-transform: initial;
       font-size: 14px;
     }
@@ -44,17 +44,25 @@
   .icon {
     max-width: 20px;
   }
-  
+
   .arrow {
-    filter: invert(19%) sepia(95%) saturate(2662%) hue-rotate(197deg) brightness(87%) contrast(88%);
+    filter: invert(19%) sepia(95%) saturate(2662%) hue-rotate(197deg)
+      brightness(87%) contrast(88%);
   }
 
-  .menu-item.menu-item-active .menu-link {
-    background-color: transparent;
+  .menu-item.menu-item-active {
+    .menu-link,
+    .menu-link.active {
+      background-color: transparent;
+      .menu-text {
+        color: #0070c0;
+        font-weight: bold;
+      }
 
-    .menu-text {
-      color: #0070C0;
-      font-weight: bold;
+      .menu-icon {
+        filter: invert(46%) sepia(68%) saturate(1770%) hue-rotate(182deg)
+          brightness(74%) contrast(104%);
+      }
     }
   }
 }
