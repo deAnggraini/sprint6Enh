@@ -10,4 +10,5 @@ import org.springframework.stereotype.Repository;
 public interface StructureRepository extends CrudRepository<Structure, Long>{
     @Query("SELECT CASE WHEN COUNT(m) > 0 THEN TRUE ELSE FALSE END FROM Structure m WHERE m.parentStructure=:parentId AND m.sort=:sort AND m.deleted IS FALSE")
     Boolean existStructureByParentIdAndSort(@Param("parentId") Long parentId, @Param("sort") Long sort);
+
 }

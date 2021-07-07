@@ -19,8 +19,20 @@ public class Article extends EntityBase {
 	private Long id;
 	
 	@ManyToOne
-	@JoinColumn(name = "article_category_id", nullable = false)
-	private ArticleCategory articleCategory;
+	@JoinColumn(name = "structure_id", nullable = false)
+	private Structure structure;
+
+	@Column(name ="article_template_id")
+	private Long articleTemplate;
+
+	@Column(name = "title")
+	private String judulArticle;
+
+	@Column(name = "article_used_by")
+	private String articleUsedBy;
+
+	@Column(name = "short_desc", columnDefinition="TEXT", length = 1000)
+	private String shortDescription;
 
 	public Long getId() {
 		return id;
@@ -30,11 +42,35 @@ public class Article extends EntityBase {
 		this.id = id;
 	}
 
-	public ArticleCategory getArticleCategory() {
-		return articleCategory;
+	public Structure getStructure() {
+		return structure;
 	}
 
-	public void setArticleCategory(ArticleCategory articleCategory) {
-		this.articleCategory = articleCategory;
+	public void setStructure(Structure structure) {
+		this.structure = structure;
+	}
+
+	public Long getArticleTemplate() {
+		return articleTemplate;
+	}
+
+	public void setArticleTemplate(Long articleTemplate) {
+		this.articleTemplate = articleTemplate;
+	}
+
+	public String getJudulArticle() {
+		return judulArticle;
+	}
+
+	public void setJudulArticle(String judulArticle) {
+		this.judulArticle = judulArticle;
+	}
+
+	public String getArticleUsedBy() {
+		return articleUsedBy;
+	}
+
+	public void setArticleUsedBy(String articleUsedBy) {
+		this.articleUsedBy = articleUsedBy;
 	}
 }

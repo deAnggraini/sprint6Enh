@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface StructureImageRepository extends CrudRepository<StructureImages, Long>{
-    @Query("SELECT m FROM StructureImages m WHERE m.structure.id=:structureId")
+    @Query("SELECT m FROM StructureImages m WHERE m.structure.id=:structureId AND m.deleted IS FALSE")
     StructureImages findByStructureId(@Param("structureId") Long structureId);
 }
