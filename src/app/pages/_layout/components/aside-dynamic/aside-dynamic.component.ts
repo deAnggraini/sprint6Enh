@@ -113,6 +113,13 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
     this.showAside = !this.showAside;
   }
 
+  onRightClick(event) {
+    console.log("*** event aside RIGHT >> ", event);
+    // event.preventDefault();
+    event.stopPropagation();
+    return false;
+  }
+
   externalLink(uri): boolean {   
     if (uri.includes("http")) {
       return true;

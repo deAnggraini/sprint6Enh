@@ -11,13 +11,13 @@
   </a>
 
   <ng-container *ngIf="asideSelfMinimizeToggle">
-    <button class="brand-toggle btn btn-sm px-0" id="kt_aside_toggle">
-      <div class="logo" *ngIf="!showAside" (click)="asideShow()">
+    <button class="brand-toggle btn btn-sm px-0" id="kt_aside_toggle" >
+      <div class="logo" *ngIf="!showAside" (click)="asideShow()" (contextmenu)="onRightClick($event)">
         <span [inlineSVG]="'./assets/media/svg/icons/Text/Menu.svg'" cacheSVG="true"
           class="svg-icon svg-icon-xl svg-icon-white pl-1"></span>
         <div class="bottom">MENU</div>
       </div>
-      <span [inlineSVG]="'./assets/media/svg/bca/close_white.svg'" cacheSVG="true" *ngIf="showAside" (click)="asideShow()"></span>
+      <span [inlineSVG]="'./assets/media/svg/bca/close_white.svg'" cacheSVG="true" *ngIf="showAside" (click)="asideShow()" (contextmenu)="onRightClick($event)"></span>
       <!-- <small>Menu</small> -->
     </button>
   </ng-container>
@@ -147,7 +147,7 @@
         <i class="menu-bullet menu-bullet-dot">
           <span></span>
         </i>
-        <span class="menu-text" [translate]="item.translate">{{
+        <span class="menu-text parent-level3" [translate]="item.translate">{{
           item.title
         }}</span>
         <i class="menu-arrow"></i>
@@ -217,6 +217,7 @@
   <!-- begin::if don't have submenu -->
   <ng-container *ngIf="!item.menus.length">
     <li class="menu-item" aria-haspopup="true" data-menu-toggle="hover"
+        routerLinkActive="menu-item-active"
         [ngStyle]="{'margin-top': item.sort == 100 ? '20px' : ''}"
     >
       <a class="menu-link" *ngIf="!externalLink(item.uri)" [routerLink]="item.uri" routerLinkActive="active">
