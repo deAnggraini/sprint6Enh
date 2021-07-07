@@ -46,8 +46,8 @@
                     <div *ngIf="pakar.data.length">
                         <div class="mt-3">Hasil Pencarian {{pakar.total}} Informasi terkait</div>
                         <div class="mt-3" *ngIf="suggestion">
-                            <span>Apakah yang Kamu maksut </span>
-                            <span class="text-suggestion">{{suggestion}}</span>
+                            <span>Apakah yang Kamu maksud </span>
+                            <span class="text-suggestion"><i>{{suggestion}}</i></span>
                         </div>
                         <ul class="nav">
                             <li class="nav-item mt-5 col-xx-lg" style="width: 75%;" *ngFor="let item of pakar.data">
@@ -61,7 +61,7 @@
                 <a ngbNavLink><i class="far fa-question-circle mr-2"></i> FAQ ({{faq.total}})</a>
                 <ng-template ngbNavContent class="data-item">
                     <div *ngIf="pakar.data.length == 0">
-                        <div class="my-5">Pencarian Kamu terkait '<b>{{keyword}}</b>'' tidak dapat ditemukan</div>
+                        <div class="my-5">Pencarian Kamu terkait '<b>{{keyword}}</b>' tidak dapat ditemukan</div>
                         <div>Saran:</div>
                         <ul>
                             <li>Pastikan Kata kunci yang Kamu ketik sudah benar</li>
@@ -71,8 +71,8 @@
                     <div *ngIf="pakar.data.length">
                         <div class="mt-3">Hasil Pencarian {{faq.total}} Informasi terkait</div>
                         <div class="mt-3" *ngIf="suggestion">
-                            <span>Apakah yang Kamu maksut </span>
-                            <span class="text-suggestion">{{suggestion}}</span>
+                            <span>Apakah yang Kamu maksud </span>
+                            <span class="text-suggestion"><i>{{suggestion}}</i></span>
                         </div>
                         <ul class="nav">
                             <li class="nav-item mt-5 col-xx-lg" style="width: 75%;" *ngFor="let item of faq.data">
