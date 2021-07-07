@@ -74,7 +74,7 @@ export class TopbarComponent implements OnInit, AfterViewInit {
 
       const role = u.roles[0];
       this.showSettingButton = ["SUPERADMIN"].includes(role);
-      this.showAddButton = ["ADMIN", "EDITOR", "PUBLISHER"].includes(role);
+      this.showAddButton = ["ADMIN", "EDITOR"].includes(role);
     });
   }
 

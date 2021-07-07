@@ -24,8 +24,18 @@ const routes: Routes = [
     children: [
       { path: 'list', component: ListComponent, },
       { path: 'list/:category', component: ListComponent, },
-      { path: 'add', component: AddComponent, },
-      { path: 'form', component: FormArticleComponent, },
+      {
+        path: 'add', component: AddComponent,
+        data: {
+          allowedRoles: ['SUPERADMIN', 'ADMIN', 'EDITOR']
+        }
+      },
+      {
+        path: 'form', component: FormArticleComponent,
+        data: {
+          allowedRoles: ['SUPERADMIN', 'ADMIN', , 'EDITOR', 'PUBLISHER']
+        }
+      },
       { path: 'search', component: SearchComponent, },
       { path: 'recommendation', component: RecommendationComponent, },
       { path: 'terbaru', component: TerbaruComponent, },

@@ -1,16 +1,31 @@
-.btn {
-  background-color: black;
-  justify-content: center;
-  display: flex;
-  align-items: stretch;
-  position: absolute;
-  width: 215px;
-  height: 60px;
-  opacity: 20%;
-  border-radius: 100px;
-  background-blend-mode: overlay;
-  top: 715px;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.16);
+:host ::ng-deep .scrolldown {
+  position: fixed;
+  bottom: 20px;
+  width: 100%;
+  z-index: 100;
+
+  .btn {
+    background-color: black;
+    justify-content: center;
+    display: flex;
+    align-items: stretch;
+    // position: absolute;
+    width: 215px;
+    height: 60px;
+    opacity: 20%;
+    border-radius: 100px;
+    // background-blend-mode: overlay;
+    opacity: 0.3;
+    // top: 715px;
+    // left: 50%;
+    // transform: translate(-50%, -50%);
+    box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.16);
+    animation: animation-scrolltop 0.4s ease-out 1;
+
+    &:hover {
+      transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+      opacity: 0.6;
+    }
+
+  }
 }
