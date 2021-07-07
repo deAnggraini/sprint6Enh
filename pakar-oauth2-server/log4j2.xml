@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="INFO">
+<Configuration status="DEBUG">
     <Appenders>
         <Console name="LogToConsole" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </Console>
         <File name="LogToFile" fileName="/var/bca/logs/app.log">
             <PatternLayout>
-                <Pattern>%d %p [%t] %c{1.}:%L %m%n</Pattern>
+                <Pattern>%d %p [%t] %c{1.}:%l %m%n</Pattern>
             </PatternLayout>
         </File>
     </Appenders>
     <Loggers>
-        <Logger name="id.co.bca.pakar.be.oauth2" level="info" additivity="false">
+        <Logger name="id.co.bca.pakar.be.oauth2" level="debug" additivity="false">
             <AppenderRef ref="LogToFile"/>
             <AppenderRef ref="LogToConsole"/>
         </Logger>

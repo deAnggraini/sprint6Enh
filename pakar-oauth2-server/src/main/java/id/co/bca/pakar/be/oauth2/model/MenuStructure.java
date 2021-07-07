@@ -8,8 +8,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-@Entity
-@Table(name = "r_menu_structure")
+//@Entity
+//@Table(name = "r_menu_structure")
 public class MenuStructure extends EntityBase {
 	@Id
 	@SequenceGenerator(name = "menuStructureSeqGen", sequenceName = "menuStructureSeq", initialValue = 1, allocationSize = 1)

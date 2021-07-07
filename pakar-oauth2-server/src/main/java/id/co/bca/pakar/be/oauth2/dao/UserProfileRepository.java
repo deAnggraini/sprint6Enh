@@ -9,6 +9,6 @@ import id.co.bca.pakar.be.oauth2.model.UserProfile;
 
 @Repository
 public interface UserProfileRepository extends CrudRepository<UserProfile, Long>{
-	@Query("SELECT m FROM UserProfile m WHERE m.user.username=:username")
+	@Query("SELECT m FROM UserProfile m WHERE m.user.username=:username AND m.deleted IS FALSE ")
 	UserProfile findByUsername(@Param("username") String username);
 }

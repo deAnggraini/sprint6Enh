@@ -33,7 +33,8 @@ import org.springframework.stereotype.Component;
 @Component
 @Transactional
 public class CustomJdbcTokenStore extends JdbcTokenStore {
-	private Logger LOG = LoggerFactory.getLogger(this.getClass());
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	
 	public CustomJdbcTokenStore(DataSource dataSource) {
 		super(dataSource);
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
@@ -95,7 +96,8 @@ public class CustomJdbcTokenStore extends JdbcTokenStore {
 
 	private String deleteAccessTokenFromRefreshTokenSql = DEFAULT_ACCESS_TOKEN_DELETE_FROM_REFRESH_TOKEN_STATEMENT;
 
-	protected AuthenticationKeyGenerator authenticationKeyGenerator = new DefaultAuthenticationKeyGenerator();
+//	protected AuthenticationKeyGenerator authenticationKeyGenerator = new DefaultAuthenticationKeyGenerator();
+	protected AuthenticationKeyGenerator authenticationKeyGenerator = new CustomAuthenticationKeyGenerator();
 
 	protected final JdbcTemplate jdbcTemplate;
 
@@ -108,6 +110,7 @@ public class CustomJdbcTokenStore extends JdbcTokenStore {
 
 		String key = authenticationKeyGenerator.extractKey(authentication);
 		try {
+			logger.debug("get access token with key {}", key);
 			accessToken = jdbcTemplate.queryForObject(selectAccessTokenFromAuthenticationSql,
 					new RowMapper<OAuth2AccessToken>() {
 						public OAuth2AccessToken mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -116,19 +119,21 @@ public class CustomJdbcTokenStore extends JdbcTokenStore {
 					}, key);
 		}
 		catch (EmptyResultDataAccessException e) {
-			if (LOG.isDebugEnabled()) {
-				LOG.debug("Failed to find access token for authentication " + authentication);
+			if (logger.isDebugEnabled()) {
+				logger.debug("could not find access token for authentication " + authentication);
 			}
 		}
 		catch (IllegalArgumentException e) {
-			LOG.error("Could not extract access token for authentication " + authentication, e);
+			logger.error("Could not extract access token for authentication " + authentication, e);
 		}
 
 		if (accessToken != null
 				&& !key.equals(authenticationKeyGenerator.extractKey(readAuthentication(accessToken.getValue())))) {
+			logger.debug("remove access token {} first", accessToken.getValue());
 			removeAccessToken(accessToken.getValue());
 			// Keep the store consistent (maybe the same user is represented by this authentication but the details have
 			// changed)
+			logger.debug("store access token {}", accessToken);
 			storeAccessToken(accessToken, authentication);
 		}
 		return accessToken;
@@ -138,17 +143,16 @@ public class CustomJdbcTokenStore extends JdbcTokenStore {
 		String refreshToken = null;
 		if (token.getRefreshToken() != null) {
 			refreshToken = token.getRefreshToken().getValue();
-			LOG.debug("refresh token value "+refreshToken);
+			logger.debug("refresh token value {}", refreshToken);
 		}
 
 		if (readAccessToken(token.getValue())!=null) {
 			removeAccessToken(token.getValue());
-
 		}
 
 		// delete token before insert
 		final String key = authenticationKeyGenerator.extractKey(authentication);
-		LOG.debug("delete oauth_access_token with authentication id "+key);
+		logger.debug("delete oauth_access_token with authentication id {}", key);
 		jdbcTemplate.update("delete from oauth_access_token where authentication_id = ?", key);
 
 		jdbcTemplate.update(insertAccessTokenSql, new Object[] { extractTokenKey(token.getValue()),
@@ -163,7 +167,7 @@ public class CustomJdbcTokenStore extends JdbcTokenStore {
 		OAuth2AccessToken accessToken = null;
 
 		try {
-			LOG.debug("find access token from db with token id "+tokenValue);
+			logger.debug("find access token from db with token id {}",tokenValue);
 			accessToken = jdbcTemplate.queryForObject(selectAccessTokenSql, new RowMapper<OAuth2AccessToken>() {
 				public OAuth2AccessToken mapRow(ResultSet rs, int rowNum) throws SQLException {
 					return deserializeAccessToken(rs.getBytes(2));
@@ -171,12 +175,12 @@ public class CustomJdbcTokenStore extends JdbcTokenStore {
 			}, extractTokenKey(tokenValue));
 		}
 		catch (EmptyResultDataAccessException e) {
-			if (LOG.isInfoEnabled()) {
-				LOG.info("Failed to find access token");
+			if (logger.isInfoEnabled()) {
+				logger.info("could not find access token {}", tokenValue);
 			}
 		}
 		catch (IllegalArgumentException e) {
-			LOG.warn("Failed to deserialize access token", e);
+			logger.warn("Failed to deserialize access token", e);
 			removeAccessToken(tokenValue);
 		}
 
@@ -186,6 +190,7 @@ public class CustomJdbcTokenStore extends JdbcTokenStore {
 	public OAuth2AccessToken readAccessToken(String tokenValue, String username) {
 		OAuth2AccessToken accessToken = null;
 		try {
+			logger.debug("find access token from db with token id {} and username {}",tokenValue, username);
 			accessToken = jdbcTemplate.queryForObject(selectAccessTokensFromTokenAndUserNameSql, new RowMapper<OAuth2AccessToken>() {
 				public OAuth2AccessToken mapRow(ResultSet rs, int rowNum) throws SQLException {
 					return deserializeAccessToken(rs.getBytes(2));
@@ -193,12 +198,12 @@ public class CustomJdbcTokenStore extends JdbcTokenStore {
 			}, extractTokenKey(tokenValue), username);
 		}
 		catch (EmptyResultDataAccessException e) {
-			if (LOG.isInfoEnabled()) {
-				LOG.info("Failed to find access token");
+			if (logger.isInfoEnabled()) {
+				logger.info("could not find access token {}", tokenValue);
 			}
 		}
 		catch (IllegalArgumentException e) {
-			LOG.warn("Failed to deserialize access token", e);
+			logger.warn("Failed to deserialize access token", e);
 			removeAccessToken(tokenValue);
 		}
 
@@ -210,6 +215,7 @@ public class CustomJdbcTokenStore extends JdbcTokenStore {
 	}
 
 	public void removeAccessToken(String tokenValue) {
+		logger.debug("remove access token from db with token id {}",tokenValue);
 		jdbcTemplate.update(deleteAccessTokenSql, extractTokenKey(tokenValue));
 	}
 
@@ -229,12 +235,12 @@ public class CustomJdbcTokenStore extends JdbcTokenStore {
 					}, extractTokenKey(token));
 		}
 		catch (EmptyResultDataAccessException e) {
-			if (LOG.isInfoEnabled()) {
-				LOG.info("Failed to find access token");
+			if (logger.isInfoEnabled()) {
+				logger.info("access token {} not found", token);
 			}
 		}
 		catch (IllegalArgumentException e) {
-			LOG.warn("Failed to deserialize authentication", e);
+			logger.warn("Failed to deserialize authentication", e);
 			removeAccessToken(token);
 		}
 
@@ -242,6 +248,7 @@ public class CustomJdbcTokenStore extends JdbcTokenStore {
 	}
 
 	public void storeRefreshToken(OAuth2RefreshToken refreshToken, OAuth2Authentication authentication) {
+		logger.debug("store refresh token with token value {} and token id {}", refreshToken.getValue(), extractTokenKey(refreshToken.getValue()));
 		jdbcTemplate.update(insertRefreshTokenSql, new Object[] { extractTokenKey(refreshToken.getValue()),
 				new SqlLobValue(serializeRefreshToken(refreshToken)),
 				new SqlLobValue(serializeAuthentication(authentication)) }, new int[] { Types.VARCHAR, Types.BLOB,
@@ -259,12 +266,12 @@ public class CustomJdbcTokenStore extends JdbcTokenStore {
 			}, extractTokenKey(token));
 		}
 		catch (EmptyResultDataAccessException e) {
-			if (LOG.isInfoEnabled()) {
-				LOG.info("Failed to find refresh token");
+			if (logger.isInfoEnabled()) {
+				logger.info("could not find refresh token {}", token);
 			}
 		}
 		catch (IllegalArgumentException e) {
-			LOG.warn("Failed to deserialize refresh token", e);
+			logger.warn("Failed to deserialize refresh token", e);
 			removeRefreshToken(token);
 		}
 
@@ -287,6 +294,7 @@ public class CustomJdbcTokenStore extends JdbcTokenStore {
 		OAuth2Authentication authentication = null;
 
 		try {
+			logger.debug("find refresh token with token id {} from token {}", extractTokenKey(value), value);
 			authentication = jdbcTemplate.queryForObject(selectRefreshTokenAuthenticationSql,
 					new RowMapper<OAuth2Authentication>() {
 						public OAuth2Authentication mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -295,12 +303,12 @@ public class CustomJdbcTokenStore extends JdbcTokenStore {
 					}, extractTokenKey(value));
 		}
 		catch (EmptyResultDataAccessException e) {
-			if (LOG.isInfoEnabled()) {
-				LOG.info("Failed to find access token");
+			if (logger.isInfoEnabled()) {
+				logger.info("could not find access token {}", value);
 			}
 		}
 		catch (IllegalArgumentException e) {
-			LOG.warn("Failed to deserialize access token", e);
+			logger.warn("Failed to deserialize access token", e);
 			removeRefreshToken(value);
 		}
 
@@ -312,6 +320,7 @@ public class CustomJdbcTokenStore extends JdbcTokenStore {
 	}
 
 	public void removeAccessTokenUsingRefreshToken(String refreshToken) {
+		logger.debug("remove refresh token {}", refreshToken);
 		jdbcTemplate.update(deleteAccessTokenFromRefreshTokenSql, new Object[] { extractTokenKey(refreshToken) },
 				new int[] { Types.VARCHAR });
 	}
@@ -324,8 +333,8 @@ public class CustomJdbcTokenStore extends JdbcTokenStore {
 					clientId);
 		}
 		catch (EmptyResultDataAccessException e) {
-			if (LOG.isInfoEnabled()) {
-				LOG.info("Failed to find access token for clientId " + clientId);
+			if (logger.isInfoEnabled()) {
+				logger.info("Failed to find access token for clientId " + clientId);
 			}
 		}
 		accessTokens = removeNulls(accessTokens);
@@ -341,8 +350,8 @@ public class CustomJdbcTokenStore extends JdbcTokenStore {
 					userName);
 		}
 		catch (EmptyResultDataAccessException e) {
-			if (LOG.isInfoEnabled())
-				LOG.info("Failed to find access token for userName " + userName);
+			if (logger.isInfoEnabled())
+				logger.info("Failed to find access token for userName " + userName);
 		}
 		accessTokens = removeNulls(accessTokens);
 
@@ -357,8 +366,8 @@ public class CustomJdbcTokenStore extends JdbcTokenStore {
 					userName, clientId);
 		}
 		catch (EmptyResultDataAccessException e) {
-			if (LOG.isInfoEnabled()) {
-				LOG.info("Failed to find access token for clientId " + clientId + " and userName " + userName);
+			if (logger.isInfoEnabled()) {
+				logger.info("Failed to find access token for clientId " + clientId + " and userName " + userName);
 			}
 		}
 		accessTokens = removeNulls(accessTokens);
@@ -382,15 +391,17 @@ public class CustomJdbcTokenStore extends JdbcTokenStore {
 		}
 		MessageDigest digest;
 		try {
-			digest = MessageDigest.getInstance("MD5");
+			digest = MessageDigest.getInstance("SHA-256");
 		}
 		catch (NoSuchAlgorithmException e) {
-			throw new IllegalStateException("MD5 algorithm not available.  Fatal (should be in the JDK).");
+			throw new IllegalStateException("SHA-256 algorithm not available.  Fatal (should be in the JDK).");
 		}
 
 		try {
 			byte[] bytes = digest.digest(value.getBytes("UTF-8"));
-			return String.format("%032x", new BigInteger(1, bytes));
+			String tokenKey = String.format("%032x", new BigInteger(1, bytes));
+			logger.debug("token key {}", value);
+			return tokenKey;
 		}
 		catch (UnsupportedEncodingException e) {
 			throw new IllegalStateException("UTF-8 encoding not available.  Fatal (should be in the JDK).");

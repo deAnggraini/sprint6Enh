@@ -78,7 +78,10 @@ public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
 	public void configure(final AuthorizationServerSecurityConfigurer cfg) throws Exception {
 		logger.info("configure AuthorizationServerSecurityConfigurer");
 		cfg.allowFormAuthenticationForClients();
+		// Enable /oauth/token_key URL used by resource server to validate JWT tokens
 		cfg.tokenKeyAccess("permitAll()");
+
+		// Enable /oauth/check_token URL
 		cfg.checkTokenAccess("isAuthenticated()");
 		cfg.passwordEncoder(clientPasswordEncoder());
 		cfg.authenticationEntryPoint(customAuthenticationEntryPoint);

@@ -14,7 +14,7 @@ import java.util.List;
 public interface MenuRepository extends CrudRepository<Menu, String> {
 
     @Query(
-            value = "select menu_id from r_menu_role rmr join r_user_role rur on rmr.role_id=rur.role_id join r_user_profile rup on rur.username=:username",
+            value = "select menu_id from r_menu_role rmr join r_user_role rur on rmr.role_id=rur.role_id join r_user_profile rup on rur.username=:username AND m.deleted IS FALSE ",
             nativeQuery = true)
     List<Long> findMenuId(@Param("username") String username);
 
@@ -30,7 +30,7 @@ public interface MenuRepository extends CrudRepository<Menu, String> {
 
 
     @Query(
-            value = "SELECT * FROM r_structure m where m.id=:id ",
+            value = "SELECT * FROM r_structure m where m.id=:id AND m.deleted IS FALSE ",
             nativeQuery = true)
     List<Structure> getAllStructureById(@Param("id") Long id);
 

@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MenuIconRepository extends CrudRepository<MenuIcons, String> {
-    @Query("SELECT m FROM MenuIcons m WHERE m.menu.id=:menu_id")
+    @Query("SELECT m FROM MenuIcons m WHERE m.menu.id=:menu_id AND m.deleted IS FALSE ")
     MenuIcons findIconbyMenuId(@Param("menu_id") Long menu_id);
 }
