@@ -22,7 +22,15 @@ public class Constant {
 		MAX_UPLOAD_EXCEEDED(new String[] { "01", "Exceeded file size" }),
 		DATA_NOT_FOUND(new String[] { "01", "Not found data" }),
 		INVALID_STRUCTURE_LEVEL(new String[] { "01", "Level Structure Invalid" }),
-		INVALID_SORT_STRUCTURE(new String[] { "01", "Sort value exist in same parent  id" });
+		INVALID_SORT_STRUCTURE(new String[] { "01", "Sort value exist in same parent  id" }),
+		ACCESS_TOKEN_EXPIRED(new String[] {"100", "Access Token Expired"}),
+		INVALID_TOKEN(new String[] {"101", "Invalid Token"}),
+		INVALID_ACCESS_TOKEN(new String[] {"102", "Invalid Access Token"}),
+		INVALID_REFRESH_TOKEN(new String[] {"103", "Invalid Refresh Token"}),
+		INVALID_GRANT(new String[] {"104", "Invalid Grant"}),
+		REFRESH_TOKEN_EXPIRED(new String[] {"105", "Invalid Refresh Token (expired)"}),
+		INVALID_CLIENT_ID(new String[] {"106", "Client not valid"}),
+		TOKEN_HAS_EXPIRED(new String[] {"107", "Token Has Expired"});
 
 		// declaring private variable for getting values
 		private String action[];
