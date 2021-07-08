@@ -17,6 +17,10 @@ import { UtilsModule } from 'src/app/utils/utils.module';
 import { FormArticleComponent } from './form-article/form-article.component';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { CdkTreeModule } from '@angular/cdk/tree';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatExpansionModule } from "@angular/material/expansion";
 
 const routes: Routes = [
   {
@@ -68,7 +72,11 @@ const routes: Routes = [
     InlineSVGModule,
     UtilsModule,
     CKEditorModule,
+    MatExpansionModule,
     DragDropModule,
+    CdkTreeModule,
+    MatIconModule,
+    MatButtonModule,
   ]
 })
 export class ArticleModule { }

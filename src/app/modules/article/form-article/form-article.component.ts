@@ -6,6 +6,11 @@ import { Router } from '@angular/router';
 import { ChangeEvent, CKEditorComponent } from '@ckeditor/ckeditor5-angular';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 
+import { FlatTreeControl } from '@angular/cdk/tree';
+import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
+import {ArrayDataSource} from '@angular/cdk/collections';
+import {NestedTreeControl} from '@angular/cdk/tree';
+
 const sample = {
   id: 0,
   title: '',
@@ -70,6 +75,45 @@ const sample = {
   ],
   references: [{ id: 1, title: 'Perilhal Ketentuan Tahapan', no: '025/SKSE/TL/2020' }, {}, {}],
   related: [{}, {}, {}]
+}
+
+const TREE_DATA: FoodNode[] = [
+  {
+    name: 'Fruit',
+    children: [
+      { name: 'Apple' },
+      { name: 'Banana' },
+      { name: 'Fruit loops' },
+    ]
+  }, {
+    name: 'Vegetables',
+    children: [
+      {
+        name: 'Green',
+        children: [
+          { name: 'Broccoli' },
+          { name: 'Brussel sprouts' },
+        ]
+      }, {
+        name: 'Orange',
+        children: [
+          { name: 'Pumpkins' },
+          { name: 'Carrots' },
+        ]
+      },
+    ]
+  },
+];
+
+interface ExampleFlatNode {
+  expandable: boolean;
+  name: string;
+  level: number;
+}
+
+interface FoodNode {
+  name: string;
+  children?: FoodNode[];
 }
 
 @Component({
@@ -157,6 +201,19 @@ export class FormArticleComponent implements OnInit, AfterViewInit {
   };
 
   formData = JSON.parse(JSON.stringify(sample));
+
+
+  // tree vew
+  private _transformer = (node: FoodNode, level: number) => {
+    return {
+      expandable: !!node.children && node.children.length > 0,
+      name: node.name,
+      level: level,
+    };
+  }
+  treeControl = new NestedTreeControl<FoodNode> (node => node.children);
+  dataSource = new ArrayDataSource(TREE_DATA);
+  hasChild = (_: number, node: FoodNode) => !!node.children && node.children.length > 0;
 
   constructor(private accordionConfig: NgbAccordionConfig,
     private article: ArticleService,
