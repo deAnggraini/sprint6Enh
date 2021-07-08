@@ -163,12 +163,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			logger.info("refresh token to url "+access_token_url);
 			response = restTemplate.exchange(access_token_url, HttpMethod.POST, request, OAuthTokenDto.class);
 			logger.info("http status response  --- " + ((ResponseEntity<OAuthTokenDto>) response).getStatusCode());
-			logger.info("generated new response oauth2 token ---" + response.getBody());
+//			logger.info("generated new response oauth2 token ---" + response.getBody());
 			if(((ResponseEntity<OAuthTokenDto>) response).getStatusCode().equals(HttpStatus.OK)) {
 				RefreshTokenResponseDto dto = new RefreshTokenResponseDto();
 				dto.setAccess_token(response.getBody().getAccess_token());
-//				dto.setRefresh_token(response.getBody().getRefresh_token());
-				dto.setRefresh_token(refreshToken);
+				dto.setRefresh_token(response.getBody().getRefresh_token());
+//				dto.setRefresh_token(refreshToken);
 				dto.setExpires_in(response.getBody().getExpires_in());		
 				return dto;
 			} else {
