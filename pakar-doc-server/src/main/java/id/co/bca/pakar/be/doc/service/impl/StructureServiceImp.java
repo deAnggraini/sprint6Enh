@@ -2,6 +2,7 @@ package id.co.bca.pakar.be.doc.service.impl;
 
 import id.co.bca.pakar.be.doc.dao.*;
 import id.co.bca.pakar.be.doc.dto.*;
+import id.co.bca.pakar.be.doc.exception.DataNotActiveException;
 import id.co.bca.pakar.be.doc.exception.DataNotFoundException;
 import id.co.bca.pakar.be.doc.exception.InvalidLevelException;
 import id.co.bca.pakar.be.doc.exception.InvalidSortException;
@@ -176,7 +177,13 @@ public class StructureServiceImp implements StructureService {
                         throw new DataNotFoundException("not found parent data with structure id " + dto.getParent());
                     }
                 }
+
                 Structure _parentOp = parentOp.get();
+                if(_parentOp.getDeleted().booleanValue()) {
+                    logger.info("not active structure with id {}", dto.getParent());
+                    throw new DataNotActiveException("data with id {} not active" + dto.getParent());
+                }
+
                 /*
                 validate parent with level, if request level <
                 */
@@ -652,17 +659,31 @@ public class StructureServiceImp implements StructureService {
             StructureIcons sic = structureIconRepository.findByStructureId(deleteStructureDto.getStructureId());
             if (sic != null) {
                 logger.info("remove structure icon with id {}", sic.getId());
-                structureIconRepository.deleteById(sic.getId());
+//                structureIconRepository.deleteById(sic.getId());
+                // soft delete
+                sic.setModifyBy(username);
+                sic.setModifyDate(new Date());
+                sic.setDeleted(Boolean.TRUE);
+                structureIconRepository.save(sic);
             }
 
             // delete structure icon first
             StructureImages sim = structureImageRepository.findByStructureId(deleteStructureDto.getStructureId());
             if (sim != null) {
                 logger.info("remove structure image with id {}", sim.getId());
-                structureImageRepository.deleteById(sim.getId());
+//                structureImageRepository.deleteById(sim.getId());
+                // soft delete
+                sim.setModifyBy(username);
+                sim.setModifyDate(new Date());
+                sim.setDeleted(Boolean.TRUE);
+                structureImageRepository.save(sim);
             }
 
             // delete structure
+//            structureRepository.delete(_deletedEntity);
+            _deletedEntity.setModifyDate(new Date());
+            _deletedEntity.setModifyBy(username);
+            _deletedEntity.setDeleted(Boolean.TRUE);
             structureRepository.delete(_deletedEntity);
 
             // move child structures, to other structures

@@ -8,8 +8,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-@Entity
-@Table(name = "r_menu_resources")
+//@Entity
+//@Table(name = "r_menu_resources")
 public class MenuResources {
 	@Id
 	@SequenceGenerator(name = "menuResourcesSeqGen", sequenceName = "menuResourcesSeq", initialValue = 1, allocationSize = 1)

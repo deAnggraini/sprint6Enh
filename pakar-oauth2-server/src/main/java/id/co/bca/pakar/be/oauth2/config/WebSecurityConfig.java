@@ -1,13 +1,13 @@
 package id.co.bca.pakar.be.oauth2.config;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
+import id.co.bca.pakar.be.oauth2.authenticate.CustomAuthenticationProvider;
+import id.co.bca.pakar.be.oauth2.service.imp.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -17,15 +17,14 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import id.co.bca.pakar.be.oauth2.authenticate.CustomAuthenticationProvider;
-import id.co.bca.pakar.be.oauth2.eai.RemoteEaiAuthentication;
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-	@Autowired
-	private CustomAuthenticationProvider authenticationProvider;
-	
+    @Autowired
+    private CustomUserDetailsService customUserDetailsService;
+
 //	@Override
 //	protected void configure(HttpSecurity httpSecurity) {
 //		try {
@@ -40,41 +39,37 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //		}
 //	}
 
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		http.anonymous().disable().csrf().disable().cors();
-	}
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.anonymous().disable().csrf().disable().cors().disable();
+    }
 
-	@Bean
-	public AuthenticationProvider getAuthenticationProvider() throws Exception {
-		return new CustomAuthenticationProvider();
-	}
-	
-	@Bean
-    public BCryptPasswordEncoder passwordEncoder(){
+    @Bean
+    public AuthenticationProvider getAuthenticationProvider() throws Exception {
+        return new CustomAuthenticationProvider();
+    }
+
+    @Bean("userPasswordEncoder")
+    public BCryptPasswordEncoder userPasswordEncoder() {
+        //        return new BCryptPasswordEncoder(4);
         return new BCryptPasswordEncoder();
     }
 
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.authenticationProvider(authenticationProvider);
-	}
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(customUserDetailsService).passwordEncoder(userPasswordEncoder());
+    }
 
-	@Override
-	@Bean
-	public AuthenticationManager authenticationManagerBean() throws Exception {
-		return super.authenticationManagerBean();
-	}
+    @Override
+    @Bean
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
 
-	@Bean
-	public RemoteEaiAuthentication getRemoteEaiAuthenticcation() {
-		return new RemoteEaiAuthentication();
-	}
-	
 //	@Bean
 //    public CorsConfigurationSource corsConfigurationSource() {
 //        CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.setAllowedOrigins(Arrays.asList("https://example.com"));
+//        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
 //        configuration.setAllowedMethods(Arrays.asList("GET","POST"));
 //        configuration.setAllowedHeaders(Arrays.asList("Authorization", "X-USERNAME", "refreshToken"));
 //        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

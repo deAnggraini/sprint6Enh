@@ -80,11 +80,6 @@
 			<artifactId>jjwt</artifactId>
 			<version>${jjwt.version}</version>
 		</dependency>
-<!--		<dependency>-->
-<!--			<groupId>org.apache.commons</groupId>-->
-<!--			<artifactId>commons-lang3</artifactId>-->
-<!--			<version>3.11</version>-->
-<!--		</dependency>-->
 		<!-- bean validation -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

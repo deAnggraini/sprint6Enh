@@ -6,7 +6,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class RefreshTokenResponseDto {	
 	@JsonProperty("authToken")
 	private String access_token;
-	@JsonInclude(JsonInclude.Include.NON_NULL) 
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	@JsonProperty("expiresIn")
 	private String expires_in;
 	@JsonProperty("refreshToken")
 	private String refresh_token;

@@ -22,23 +22,27 @@ import id.co.bca.pakar.be.oauth2.service.UserService;
 @RestController
 public class UserController extends BaseController {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-	
+
 	@Autowired
 	private UserService userService;
-	
+
 	/**
 	 * decode token object to authorization object
 	 * @param principal
 	 * @return
 	 */
 	@GetMapping("/api/auth/me")
-    public ResponseEntity<RestResponse<Principal>> get(final Principal principal) {
-        return createResponse(principal, "00",  "SUCCESS");
-    }
-	
+	public ResponseEntity<RestResponse<Principal>> get(final Principal principal) {
+		if(principal != null)
+			return createResponse(principal, Constant.ApiResponseCode.OK.getAction()[0],  Constant.ApiResponseCode.OK.getAction()[1]);
+		else
+			return createResponse(principal, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0],  Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
+	}
+
 	/**
-	 * 
-	 * @param get user profile by token
+	 *
+	 * @param authorization
+	 * @param username
 	 * @return
 	 */
 	@PostMapping(value = "/api/auth/getUser", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
@@ -48,11 +52,11 @@ public class UserController extends BaseController {
 			logger.info("received token bearer --- " + authorization);
 			String tokenValue = "";
 			if (authorization != null && authorization.contains("Bearer")) {
-	            tokenValue = authorization.replace("Bearer", "").trim();
+				tokenValue = authorization.replace("Bearer", "").trim();
 
-	            logger.info("token value request header --- "+tokenValue);
-	            logger.info("username request header --- "+username);
-	        }
+				logger.info("token value request header --- "+tokenValue);
+				logger.info("username request header --- "+username);
+			}
 			HttpHeaders headers = new HttpHeaders();
 			headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
 			logger.info("get user by token ");

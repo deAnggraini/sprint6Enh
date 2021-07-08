@@ -8,8 +8,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-@Entity
-@Table(name = "r_structure_resources")
+//@Entity
+//@Table(name = "r_structure_resources")
 public class StructureResources {
 	@Id
 	@SequenceGenerator(name = "structureResourcesSeqGen", sequenceName = "structureResourcesSeq", initialValue = 1, allocationSize = 1)

@@ -15,13 +15,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	    http  
 	        .httpBasic().disable()  
 	        .formLogin().disable()  
-	        .csrf().disable()  
+	        .csrf().disable()
 	        .authorizeRequests(authorize -> authorize
 	            .anyRequest().authenticated()  
 	        )  
 	        .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)  
 	        .sessionManagement(sessionManagement ->  
 	            sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))  
-	    ;  
+	    ;
 	  }  
 }

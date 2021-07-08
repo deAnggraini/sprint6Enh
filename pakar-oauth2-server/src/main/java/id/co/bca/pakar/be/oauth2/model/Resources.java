@@ -7,8 +7,8 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-@Entity
-@Table(name = "r_resources")
+//@Entity
+//@Table(name = "r_resources")
 public class Resources extends EntityBase {
 	@Id
 	@SequenceGenerator(name = "resourcesSeqGen", sequenceName = "resourcesSeq", initialValue = 1, allocationSize = 1)
