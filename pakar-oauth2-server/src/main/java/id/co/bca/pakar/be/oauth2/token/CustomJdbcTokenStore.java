@@ -1,19 +1,5 @@
 package id.co.bca.pakar.be.oauth2.token;
 
-import java.io.UnsupportedEncodingException;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import javax.sql.DataSource;
-import javax.transaction.Transactional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -25,9 +11,21 @@ import org.springframework.security.oauth2.common.OAuth2RefreshToken;
 import org.springframework.security.oauth2.common.util.SerializationUtils;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.AuthenticationKeyGenerator;
-import org.springframework.security.oauth2.provider.token.DefaultAuthenticationKeyGenerator;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 import org.springframework.stereotype.Component;
+
+import javax.sql.DataSource;
+import javax.transaction.Transactional;
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @SuppressWarnings("deprecation")
 @Component
@@ -151,6 +149,7 @@ public class CustomJdbcTokenStore extends JdbcTokenStore {
 		}
 
 		// delete token before insert
+		logger.debug("authentication prinsipal {}", authentication.getPrincipal().toString());
 		final String key = authenticationKeyGenerator.extractKey(authentication);
 		logger.debug("delete oauth_access_token with authentication id {}", key);
 		jdbcTemplate.update("delete from oauth_access_token where authentication_id = ?", key);
@@ -392,18 +391,13 @@ public class CustomJdbcTokenStore extends JdbcTokenStore {
 		MessageDigest digest;
 		try {
 			digest = MessageDigest.getInstance("SHA-256");
-		}
-		catch (NoSuchAlgorithmException e) {
-			throw new IllegalStateException("SHA-256 algorithm not available.  Fatal (should be in the JDK).");
-		}
-
-		try {
 			byte[] bytes = digest.digest(value.getBytes("UTF-8"));
 			String tokenKey = String.format("%032x", new BigInteger(1, bytes));
 			logger.debug("token key {}", value);
 			return tokenKey;
-		}
-		catch (UnsupportedEncodingException e) {
+		} catch (NoSuchAlgorithmException e) {
+			throw new IllegalStateException("SHA-256 algorithm not available.  Fatal (should be in the JDK).");
+		} catch (UnsupportedEncodingException e) {
 			throw new IllegalStateException("UTF-8 encoding not available.  Fatal (should be in the JDK).");
 		}
 	}
