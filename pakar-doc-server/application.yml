@@ -43,7 +43,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: https://login.domain.com/xxx/keys # JSON Web Key URI to use to verify the JWT token.
+          jwk-set-uri: http://pakar-oauth-server:12081/oauth/token_key # JSON Web Key URI to use to verify the JWT token.
           issuer-uri: http://pakar-oauth-server:12081/api/auth/me
         token-info-uri: http://pakar-oauth-server:12081/oauth/check_token
       server:
