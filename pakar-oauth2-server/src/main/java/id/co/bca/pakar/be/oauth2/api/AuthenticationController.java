@@ -1,9 +1,11 @@
 package id.co.bca.pakar.be.oauth2.api;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-
+import id.co.bca.pakar.be.oauth2.common.Constant;
+import id.co.bca.pakar.be.oauth2.dto.CredentialDto;
+import id.co.bca.pakar.be.oauth2.dto.LoggedinDto;
+import id.co.bca.pakar.be.oauth2.dto.NewAccessTokenDto;
+import id.co.bca.pakar.be.oauth2.dto.RefreshTokenResponseDto;
+import id.co.bca.pakar.be.oauth2.service.AuthenticationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,12 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import id.co.bca.pakar.be.oauth2.common.Constant;
-import id.co.bca.pakar.be.oauth2.dto.CredentialDto;
-import id.co.bca.pakar.be.oauth2.dto.LoggedinDto;
-import id.co.bca.pakar.be.oauth2.dto.NewAccessTokenDto;
-import id.co.bca.pakar.be.oauth2.dto.RefreshTokenResponseDto;
-import id.co.bca.pakar.be.oauth2.service.AuthenticationService;
+import javax.validation.Valid;
 
 @RestController
 @CrossOrigin
