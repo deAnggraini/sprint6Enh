@@ -52,9 +52,9 @@
     },
     {
         "id": 3,
-        "username": "editor",
+        "username": "editor12",
         "email" : "editor@local.host",
-        "password" : "12345",
+        "password" : "123456",
         "authToken": "ASDNLQWEPO123-",
         "refreshToken" : "POIUYHJKLMNHGBJ",
         "expiresIn": "",
@@ -69,9 +69,9 @@
     },
     {
         "id": 4,
-        "username": "publisher",
+        "username": "publish1",
         "email" : "publisher@local.host",
-        "password" : "12345",
+        "password" : "123456",
         "authToken": "JKHADQWHASDLKJHASDOIHJNh1821",
         "refreshToken" : "POIUYHJKLMNHGBJ",
         "expiresIn": "",
