@@ -3,6 +3,7 @@ package id.co.bca.pakar.be.oauth2.config;
 import id.co.bca.pakar.be.oauth2.authenticate.CustomAuthenticationEntryPoint;
 import id.co.bca.pakar.be.oauth2.authenticate.CustomAuthenticationProvider;
 import id.co.bca.pakar.be.oauth2.authenticate.CustomExceptionTranslator;
+import id.co.bca.pakar.be.oauth2.service.imp.CustomTokenServices;
 import id.co.bca.pakar.be.oauth2.service.imp.CustomUserDetailsService;
 import id.co.bca.pakar.be.oauth2.token.CustomJdbcTokenStore;
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -21,17 +23,15 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
-import org.springframework.security.oauth2.provider.error.WebResponseExceptionTranslator;
+import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
-import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 import javax.sql.DataSource;
 
 @SuppressWarnings("deprecation")
 @Configuration
 @EnableAuthorizationServer
-//@EnableConfigurationProperties(SecurityProperties.class)
 public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -59,7 +59,6 @@ public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
 
 	@Bean("clientPasswordEncoder")
 	PasswordEncoder clientPasswordEncoder() {
-//        return new BCryptPasswordEncoder(8);
 		return new BCryptPasswordEncoder();
 	}
 
@@ -72,6 +71,7 @@ public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
 		endpoints.accessTokenConverter(accessTokenConverter());
 		endpoints.userDetailsService(userDetailsService);
 		endpoints.exceptionTranslator(customExceptionTranslator);
+		endpoints.tokenServices(customTokenServices());
 	}
 
 	@Override
@@ -79,10 +79,9 @@ public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
 		logger.info("configure AuthorizationServerSecurityConfigurer");
 		cfg.allowFormAuthenticationForClients();
 		// Enable /oauth/token_key URL used by resource server to validate JWT tokens
-		cfg.tokenKeyAccess("permitAll()");
-
+		cfg.tokenKeyAccess("permitAll");
 		// Enable /oauth/check_token URL
-		cfg.checkTokenAccess("isAuthenticated()");
+		cfg.checkTokenAccess("permitAll");
 		cfg.passwordEncoder(clientPasswordEncoder());
 		cfg.authenticationEntryPoint(customAuthenticationEntryPoint);
 	}
@@ -113,5 +112,22 @@ public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
 		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
 		converter.setSigningKey(signingKey);
 		return converter;
+	}
+
+	@Bean
+	public  CustomTokenServices customTokenServices() {
+		CustomTokenServices customTokenServices = new CustomTokenServices();
+		customTokenServices.setSupportRefreshToken(true);
+		customTokenServices.setReuseRefreshToken(false);
+		customTokenServices.setTokenStore(tokenStore());
+		customTokenServices.setTokenEnhancer(accessTokenConverter());
+		customTokenServices.setClientDetailsService(clientDetailsService());
+		return customTokenServices;
+	}
+
+	@Bean(name="myClientDetailsService")
+	@Primary
+	public JdbcClientDetailsService clientDetailsService() {
+		return new JdbcClientDetailsService(dataSource);
 	}
 }
