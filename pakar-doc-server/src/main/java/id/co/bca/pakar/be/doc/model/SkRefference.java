@@ -11,11 +11,22 @@ public class SkRefference extends EntityBase {
     @Column(name = "id")
     private Long id;
 
+    @Column(name = "number")
+    public String skNumber;
+
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getSkNumber() {
+        return skNumber;
+    }
+
+    public void setSkNumber(String skNumber) {
+        this.skNumber = skNumber;
     }
 }
