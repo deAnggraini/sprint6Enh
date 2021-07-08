@@ -4,6 +4,7 @@ import { NgbAccordionConfig, NgbPanelChangeEvent, NgbAccordion } from '@ng-boots
 import { ArticleService } from '../../_services/article.service';
 import { Router } from '@angular/router';
 import { ChangeEvent, CKEditorComponent } from '@ckeditor/ckeditor5-angular';
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 
 const sample = {
   id: 0,
@@ -149,7 +150,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit {
       options: [11, 13, 16, 18],
       supportAllValues: false
     },
-    placeholder: `Berisi penjelasan singkat tentang produk/aplikasi, dapat berupa definisi atas produk/aplikasi tersebut.\r\n
+    placeholder: `Berisi penjelasan singkat tentang produk/aplikasi, <br>dapat berupa definisi atas produk/aplikasi tersebut.\r\n
     \r\n
     Contoh : \r\n
     Time Loan - SME merupakan salah satu produk kredit produktif untuk modal kerja kepada debitur segmen Small dan Medium Enterprises (SME) dalam mata uang rupiah ataupun valas yang penarikannya menggunakan Surat Permohonan Penarikan Fasilitas Kredit/Perpanjangan Pembayaran untuk jangka waktu tertentu.`
@@ -160,8 +161,13 @@ export class FormArticleComponent implements OnInit, AfterViewInit {
   constructor(private accordionConfig: NgbAccordionConfig,
     private article: ArticleService,
     private router: Router) {
-    this.accordionConfig.closeOthers = true;
+    this.accordionConfig.closeOthers = false;
     // this.accordionConfig.type = 'info';
+  }
+
+  drop(event: CdkDragDrop<any[]>) {
+    console.log({ event });
+    // moveItemInArray(this.movies, event.previousIndex, event.currentIndex);
   }
 
   onHidden(panelId) {
@@ -206,7 +212,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit {
 
   // CKEDITOR5 function
   public onReady(editor) {
-    console.log(this.editor.builtinPlugins.map( plugin => plugin.pluginName ));
+    console.log(this.editor.builtinPlugins.map(plugin => plugin.pluginName));
     console.log({ editor });
     console.log(Array.from(editor.ui.componentFactory.names()));
     // editor.ui.getEditableElement().parentElement.insertBefore(

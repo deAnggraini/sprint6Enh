@@ -32,7 +32,7 @@
             <div class="border border-light rounded-sm p-3">
 
                 <ngb-accordion class="accordion-bordered" [destroyOnHide]="false" (hidden)="onHidden($event)"
-                    (shown)="onShow($event)">
+                    (shown)="onShow($event)" cdkDropListGroup>
                     <ngb-panel *ngFor="let content of formData.contents">
                         <ng-template ngbPanelHeader>
                             <div class="card-title d-flex align-items-center justify-content-between">
@@ -77,10 +77,10 @@
 <ng-template #accordionChild let-children="children">
     <div class="border-top-1 border-light">
         <ngb-accordion class="accordion-bordered as-tree-child" [destroyOnHide]="false" (hidden)="onHidden($event)"
-            (shown)="onShow($event)">
+            (shown)="onShow($event)" cdkDropList (cdkDropListDropped)="drop($event)">
             <ngb-panel *ngFor="let content of children; let i = index">
                 <ng-template ngbPanelHeader>
-                    <div class="card-title d-flex align-items-center justify-content-between">
+                    <div cdkDrag class="card-title d-flex align-items-center justify-content-between">
                         <div>
                             <button ngbPanelToggle class="btn btn-link btn-xs"><i
                                     class="flaticon2-down icon-xs "></i></button>

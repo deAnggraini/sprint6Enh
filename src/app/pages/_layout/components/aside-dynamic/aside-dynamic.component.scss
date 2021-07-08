@@ -18,7 +18,7 @@
 
   //burger menu
   .logo {
-    line-height: 0.9;
+    line-height: 0.4;
     color: white;
 
     .top {
@@ -26,7 +26,7 @@
     }
 
     .bottom {
-      font-size: 8px;
+      font-size: 7px;
       text-align: center;
     }
   }
@@ -46,22 +46,22 @@
   }
 
   .arrow {
-    filter: invert(19%) sepia(95%) saturate(2662%) hue-rotate(197deg)
-      brightness(87%) contrast(88%);
+    filter: invert(19%) sepia(95%) saturate(2662%) hue-rotate(197deg) brightness(87%) contrast(88%);
   }
 
   .menu-item.menu-item-active {
+
     .menu-link,
     .menu-link.active {
       background-color: transparent;
+
       .menu-text {
         color: #0070c0;
         font-weight: bold;
       }
 
       .menu-icon {
-        filter: invert(46%) sepia(68%) saturate(1770%) hue-rotate(182deg)
-          brightness(74%) contrast(104%);
+        filter: invert(46%) sepia(68%) saturate(1770%) hue-rotate(182deg) brightness(74%) contrast(104%);
       }
     }
   }
@@ -89,6 +89,26 @@
   }
 }
 
+:host ::ng-deep #kt_aside_toggle {
+  .close_ {
+    display: block !important;
+  }
+
+  .logo {
+    display: none !important;
+  }
+
+  &.active {
+    .close_ {
+      display: none !important;
+    }
+
+    .logo {
+      display: block !important;
+    }
+  }
+}
+
 // :host ::ng-deep .svg-icon.menu-icon {
 //   svg {
 //     g {
@@ -98,7 +118,6 @@
 //       }
 //     }
 //   }
-
 //   &:hover {
 //     svg {
 //       g {

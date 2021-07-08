@@ -73,7 +73,7 @@ export class TopbarComponent implements OnInit, AfterViewInit {
       this.aliasName = aliasNameArr.map(d => d ? d[0] : '').join('');
 
       const role = u.roles[0];
-      this.showSettingButton = ["SUPERADMIN"].includes(role);
+      this.showSettingButton = ["SUPERADMIN", "ADMIN"].includes(role);
       this.showAddButton = ["ADMIN", "EDITOR"].includes(role);
     });
   }

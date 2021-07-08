@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { config, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -12,6 +12,8 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./aside-dynamic.component.scss']
 })
 export class AsideDynamicComponent implements OnInit, OnDestroy {
+
+  @ViewChild('kt_aside_toggle') kt_aside_toggle: ElementRef;
   menuConfig: any;
   subscriptions: Subscription[] = [];
 
@@ -25,7 +27,7 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
   brandClasses: string;
   asideMenuScroll = 1;
   asideSelfMinimizeToggle = false;
-  showAside = false;
+  // showAside = false;
   imgUrl = `${environment.backend_img}`;
   currentUrl: string;
   headerBackground: string;
@@ -79,9 +81,11 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
 
   private getLogo() {
     if (this.brandSkin === 'light') {
-      return './assets/media/logos/logo-dark.png';
+      // return './assets/media/logos/logo-dark.png';
+      return './assets/media/svg/bca/pakar_logo_white.svg';
     } else {
-      return './assets/media/logos/logo-light.png';
+      // return './assets/media/logos/logo-light.png';
+      return './assets/media/svg/bca/pakar_logo_white.svg';
     }
   }
 
@@ -109,18 +113,28 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(sb => sb.unsubscribe());
   }
 
-  asideShow() {
-    this.showAside = !this.showAside;
-  }
+  // asideShow() {
+  //   this.showAside = !this.showAside;
+  //   console.log('showAside', this.showAside);
+  // }
 
-  onRightClick(event) {
-    console.log("*** event aside RIGHT >> ", event);
-    // event.preventDefault();
-    event.stopPropagation();
+  showAside(): boolean {
+    if (this.kt_aside_toggle) {
+      const hasActiveClass = this.kt_aside_toggle.nativeElement.classList.contains('active');
+      return hasActiveClass;
+    }
     return false;
+    // const hasActiveClass = document.getElementById('kt_aside_toggle').classList.contains('active');
   }
 
-  externalLink(uri): boolean {   
+  // onRightClick(event) {
+  //   console.log("*** event aside RIGHT >> ", event);
+  //   // event.preventDefault();
+  //   event.stopPropagation();
+  //   return false;
+  // }
+
+  externalLink(uri): boolean {
     if (uri.includes("http")) {
       return true;
     } else {

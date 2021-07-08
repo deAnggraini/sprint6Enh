@@ -16,6 +16,7 @@ import { TerbaruComponent } from './terbaru/terbaru.component';
 import { UtilsModule } from 'src/app/utils/utils.module';
 import { FormArticleComponent } from './form-article/form-article.component';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 const routes: Routes = [
   {
@@ -66,7 +67,8 @@ const routes: Routes = [
     FormsModule,
     InlineSVGModule,
     UtilsModule,
-    CKEditorModule
+    CKEditorModule,
+    DragDropModule,
   ]
 })
 export class ArticleModule { }
