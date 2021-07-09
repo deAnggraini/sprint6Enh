@@ -6,7 +6,7 @@ import javax.persistence.*;
 @Table(name = "t_article_template_role")
 public class ArticleTemplateRole extends EntityBase {
     @Id
-    @SequenceGenerator(name = "xArticleTemplateRoleSeqGen", sequenceName = "xArticleTemplateRoleSeq", initialValue = 1, allocationSize = 1)
-    @GeneratedValue(generator = "xArticleTemplateRoleSeqGen")
+    @SequenceGenerator(name = "articleTemplateRoleSeqGen", sequenceName = "articleTemplateRoleSeq", initialValue = 1, allocationSize = 1)
+    @GeneratedValue(generator = "articleTemplateRoleSeqGen")
     private Long id;
 }

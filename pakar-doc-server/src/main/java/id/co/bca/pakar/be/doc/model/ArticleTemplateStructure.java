@@ -2,6 +2,11 @@ package id.co.bca.pakar.be.doc.model;
 
 import javax.persistence.*;
 
+/**
+ * class model to define relation between structure (category with article template)
+ * 1 template could have more than 1 structure and
+ * 1 structure could have more than 1 template
+ */
 @Entity
 @Table(name = "t_article_template_structure")
 public class ArticleTemplateStructure extends EntityBase {

@@ -13,10 +13,6 @@ public class ArticleTemplate extends EntityBase {
     @Column(name = "template_name")
     private String templateName;
 
-    @ManyToOne
-    @JoinColumn(name = "structure_id")
-    private Structure structure;
-
     @Column(name = "description")
     private String description;
 
@@ -34,14 +30,6 @@ public class ArticleTemplate extends EntityBase {
 
     public void setTemplateName(String templateName) {
         this.templateName = templateName;
-    }
-
-    public Structure getStructure() {
-        return structure;
-    }
-
-    public void setStructure(Structure structure) {
-        this.structure = structure;
     }
 
     public String getDescription() {
