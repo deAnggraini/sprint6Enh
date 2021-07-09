@@ -121,6 +121,10 @@ interface FoodNode {
   templateUrl: './form-article.component.html',
   styleUrls: ['./form-article.component.scss']
 })
+/*
+ * TODO : convert template ke article == backend
+ * UI : kirim form 4 field saja
+ */
 export class FormArticleComponent implements OnInit, AfterViewInit {
 
   @ViewChild('accDesc') accordion: NgbAccordion;

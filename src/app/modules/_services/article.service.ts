@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from 'src/app/utils/_services/api-service.service';
 import { environment } from 'src/environments/environment';
-import { of, BehaviorSubject } from 'rxjs';
+import { of, BehaviorSubject, Observable } from 'rxjs';
 import * as moment from 'moment';
 
 @Injectable({
@@ -46,8 +46,12 @@ export class ArticleService {
     return this.apiService.post(`${this._base_url}/suggestion`, { keyword });
   }
 
-  search(keyword: string) {
-    return this.apiService.post(`${this._base_url}/search`, { keyword });
+  search(params: { keyword: string, page: number } = null): Observable<any> {
+    if (params) {
+      return this.apiService.post(`${this._base_url}/search`, params);
+    } else {
+      return of(false);
+    }
   }
 
   news() {

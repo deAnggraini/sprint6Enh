@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef, HostListener } from '@angular/core';
 import { ArticleService } from 'src/app/modules/_services/article.service';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, tap, switchMap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 

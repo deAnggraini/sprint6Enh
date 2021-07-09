@@ -1,23 +1,38 @@
-import { Component, OnInit } from '@angular/core';
-import { PaginationModel } from '../../_model/pagination';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { PaginationModel, PaginationEvent } from '../../_model/pagination';
 
 @Component({
   selector: 'app-pagination',
   templateUrl: './pagination.component.html',
   styleUrls: ['./pagination.component.scss']
 })
-export class PaginationComponent implements OnInit {
+export class PaginationComponent implements OnInit, OnChanges, PaginationEvent {
 
-  paging: PaginationModel;
+  // parameters
+  @Input() page: number; // tidak perlu, sudah terhandle di object PaginationModel
+  @Input() paging: PaginationModel;
+  @Input() showFirst: boolean = false;
+  @Input() showPrev: boolean = true;
+  @Input() showNext: boolean = true;
+  @Input() showLast: boolean = false;
 
-  constructor() { }
+  // event
+  @Output() onChange = new EventEmitter<any>();
 
-  ngOnInit(): void {
-    this.paging = new PaginationModel(1, 100);
+  constructor() {
+    if (!this.paging) this.paging = new PaginationModel(1, 100);
   }
 
-  setPage(page) {
+  ngOnChanges(changes: SimpleChanges): void {
+    // console.log(this.paging);
+  }
+
+  ngOnInit(): void {
+  }
+
+  setPage(page: number): void {
     this.paging.setPage(page);
+    this.onChange.emit(page);
   }
 
 }

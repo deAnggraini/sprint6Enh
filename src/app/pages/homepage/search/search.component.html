@@ -22,14 +22,16 @@
         <div class="show my-data" *ngIf="show" (click)="$event.stopPropagation()">
             <div class="search-scroll">
                 <ng-container *ngIf="!emptySearch; else tmpEmptySearch">
-                    <div class="header-top mx-3 mb-5">
+                    <!-- <div class="header-top mx-3 mb-5">
                         <div>Hasil Pencarian '<b>{{keyword}}</b>'</div>
-                    </div>
+                    </div> -->
                     <div class="mx-3" *ngFor="let item of data;">
                         <span class="navi-text"><b>{{item.parent}}</b></span>
                         <ul class="navi result navi-hover">
                             <li class="navi-item" *ngFor="let row of item.items;">
                                 <a (click)="setKeyword(row.title, true)" class="navi-link cursor-pointer">
+                                    <span *ngIf="item.parent == 'FAQ'" [inlineSVG]="'./assets/media/svg/bca/icon/faq-gray.svg'" cacheSVG="true"
+                                        class="svg-icon svg-icon-sm mr-2 text-gray"></span>
                                     <span class="navi-text" [innerHTML]="formatter(row.title, keyword)"></span>
                                 </a>
                             </li>

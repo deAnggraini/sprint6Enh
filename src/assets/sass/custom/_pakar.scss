@@ -10,7 +10,7 @@ $bca-color-dark: #0F5EA9;
 }
 
 .font-size-14 {
-  font-size: 0.875rem !important;
+  font-size: 14px !important;
 }
 
 .font-size-16 {
@@ -173,6 +173,20 @@ $bca-color-dark: #0F5EA9;
     .fas {
       color: #0078D4;
     }
+  }
+}
+
+.background-overlay {
+  position: relative;
+
+  &:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, .6);
   }
 }
 

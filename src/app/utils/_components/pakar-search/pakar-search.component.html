@@ -2,7 +2,7 @@
     <div class="input-group {{show ? 'show' : ''}}" (click)="$event.stopPropagation()">
         <input type="text" class="form-control" placeholder="Cari di PAKAR..." aria-label="Cari di PAKAR..."
             aria-describedby="basic-addon2" maxlength="2048" [(ngModel)]="keyword" (keyup.enter)="doSearch()"
-            [ngbTypeahead]="search"  (focus)="setKeyword(keyword)" #inputSearch>
+            [ngbTypeahead]="search" (focus)="setKeyword(keyword)" #inputSearch>
         <div class="form-control-clear btn btn-icon btn-clean" *ngIf="keyword" (click)="setKeyword('');">
             <span class="hidden svg-icon mr-1 ml-1">x </span>
         </div>
@@ -14,15 +14,19 @@
     <div class="show my-data" *ngIf="show" (click)="$event.stopPropagation()">
         <div class="search-scroll">
             <ng-container *ngIf="keyword; else tmpEmptySearch">
-                <div class="header-top mx-3 mb-5">
+                <!-- <div class="header-top mx-3 mb-5">
                     <div>Hasil Pencarian '<b>{{keyword}}</b>'</div>
-                </div>
+                </div> -->
                 <div class="mx-3" *ngFor="let item of data;">
                     <span class="navi-text"><b>{{item.parent}}</b></span>
                     <ul class="navi result navi-hover">
                         <li class="navi-item" *ngFor="let row of item.items;">
                             <a (click)="setKeyword(row.title, true)" class="navi-link cursor-pointer">
-                                <span class="navi-text" [innerHTML]="formatter(row.title, keyword) | sanitizeHtml"></span>
+                                <span *ngIf="item.parent == 'FAQ'"
+                                    [inlineSVG]="'./assets/media/svg/bca/icon/faq-gray.svg'" cacheSVG="true"
+                                    class="svg-icon svg-icon-sm mr-2 text-gray"></span>
+                                <span class="navi-text"
+                                    [innerHTML]="formatter(row.title, keyword) | sanitizeHtml"></span>
                             </a>
                         </li>
                     </ul>

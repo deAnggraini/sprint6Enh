@@ -28,7 +28,7 @@ const routes: Routes = [
     component: ArticleComponent,
     children: [
       { path: 'list', component: ListComponent, },
-      { path: 'list/:category', component: ListComponent, },
+      { path: 'list/:category', component: ListComponent },
       {
         path: 'add', component: AddComponent,
         data: {
@@ -42,7 +42,9 @@ const routes: Routes = [
         }
       },
       { path: 'search', component: SearchComponent, },
+      { path: 'search/:page', component: SearchComponent, },
       { path: 'recommendation', component: RecommendationComponent, },
+      { path: 'recommendation/:page', component: RecommendationComponent, },
       { path: 'terbaru', component: TerbaruComponent, },
       { path: '', redirectTo: 'list', pathMatch: 'full' },
       { path: '**', redirectTo: 'list', pathMatch: 'full' },

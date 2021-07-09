@@ -1,6 +1,8 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ArticleService } from '../../_services/article.service';
+import { Subscription, BehaviorSubject } from 'rxjs';
+import { PaginationModel } from 'src/app/utils/_model/pagination';
 
 interface Response {
   result?: DataItem,
@@ -16,7 +18,8 @@ interface Grouping {
 interface DataItem {
   total?: number,
   length?: number,
-  data?: any[]
+  data?: any[],
+  page?: number,
 }
 
 @Component({
@@ -24,7 +27,9 @@ interface DataItem {
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss']
 })
-export class SearchComponent implements OnInit {
+export class SearchComponent implements OnInit, OnDestroy {
+
+  subscriptions: Subscription[] = [];
 
   suggestion: string = '';
   keyword: string = '';
@@ -39,17 +44,25 @@ export class SearchComponent implements OnInit {
     data: [],
     length: 0
   };
+  page: BehaviorSubject<number> = new BehaviorSubject(1);
+  paging: PaginationModel = PaginationModel.createEmpty();
 
   constructor(
-    private route: ActivatedRoute, 
-    private articleService: ArticleService, 
+    private route: ActivatedRoute,
+    private articleService: ArticleService,
     private changeDetectorRef: ChangeDetectorRef) {
     this.route.params.subscribe(params => {
       this.keyword = params.keyword
-      if (this.keyword) {
-        this.search();
+      if (!this.keyword) this.keyword = '';
+      this.search();
+      if (params.page) {
+        this.page.next(parseInt(params.page));
       }
     });
+  }
+
+  public setPage(page: number) {
+    // this.page.next(page);
   }
 
   emptyDataItem(): DataItem {
@@ -77,6 +90,8 @@ export class SearchComponent implements OnInit {
         this.faq = this.emptyDataItem();
       }
       this.pakar = resp.result;
+      this.paging = new PaginationModel(resp.result.page, resp.result.total);
+      // this.paging.setShowMaxPage(true);
     }
     if (resp.keys) {
       this.keys = resp.keys;
@@ -87,13 +102,32 @@ export class SearchComponent implements OnInit {
     setTimeout(_ => { this.changeDetectorRef.detectChanges() }, 0);
   }
 
+  private getQParams() {
+    return {
+      keyword: this.keyword,
+      page: this.page.value
+    }
+  }
+
   search() {
-    this.articleService.search(this.keyword).subscribe(resp => {
-      this.parseResponse(resp as Response);
-    })
+    const searchSubscr = this.articleService.search(this.getQParams()).subscribe(resp => {
+      if (resp) {
+        this.parseResponse(resp as Response);
+      }
+    });
+    this.subscriptions.push(searchSubscr);
   }
 
   ngOnInit(): void {
+    // const pageSubscr = this.page.subscribe(page => {
+    //   if (page < 1) page = 1;
+    //   this.search();
+    // });
+    // this.subscriptions.push(pageSubscr);
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(sb => sb.unsubscribe());
   }
 
 }

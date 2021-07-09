@@ -1,19 +1,22 @@
 <div class="d-flex flex-wrap py-2 mr-3">
-    <a class="btn btn-icon btn-sm btn-light-primary mr-2 my-1" [ngClass]="paging.page == 1 ? 'disabled' : ''">
-        <i class="ki ki-bold-double-arrow-back icon-xs"></i>
+    <a *ngIf="showFirst" class="btn btn-icon btn-sm btn-clean btn-blue mr-2 my-1"
+        [ngClass]="paging.page <= 1 ? 'disabled' : ''" (click)="setPage(1)">
+        <i class="ki ki-bold-double-arrow-back icon-md"></i>
     </a>
-    <a href="#" class="btn btn-icon btn-sm btn-light-primary mr-2 my-1" [ngClass]="paging.page == 1 ? 'disabled' : ''">
-        <i class="ki ki-bold-arrow-back icon-xs"></i>
+    <a *ngIf="showPrev" class="btn btn-icon btn-sm btn-clean btn-blue mr-2 my-1"
+        [ngClass]="paging.page <= 1 ? 'disabled' : ''" (click)="setPage(paging.page-1)">
+        <i class="ki ki-bold-arrow-back icon-md"></i>
+
+    </a>
+    <a *ngFor="let page of paging.listPage;" class="btn btn-icon btn-sm border-0 btn-clean mr-2 my-1"
+        (click)="setPage(page)" [ngClass]="{'active' : paging.page == page, disabled: page < 1}">
+        <span class="font-size-14 font-bold-600">{{page > 0 ? page : '...'}}</span>
     </a>
 
-    <a *ngFor="let page of [].constructor(paging.rowPage); let i = index;"
-        class="btn btn-icon btn-sm border-0 btn-hover-primary mr-2 my-1" (click)="setPage(i+1)"
-        [ngClass]="paging.page == i+1 ? 'active' : ''">
-        {{i + 1}}
-    </a>
-
-    <a href="#" class="btn btn-icon btn-sm btn-light-primary mr-2 my-1" [ngClass]="paging.page == paging.totalPage ? 'disabled' : ''">
-        <i class="ki ki-bold-arrow-next icon-xs"></i></a>
-    <a href="#" class="btn btn-icon btn-sm btn-light-primary mr-2 my-1" [ngClass]="paging.page == paging.totalPage ? 'disabled' : ''">
-        <i class="ki ki-bold-double-arrow-next icon-xs"></i></a>
+    <a *ngIf="showNext" class="btn btn-icon btn-sm btn-clean btn-blue mr-2 my-1"
+        [ngClass]="paging.page >= paging.totalPage ? 'disabled' : ''" (click)="setPage(paging.page+1)">
+        <i class="ki ki-bold-arrow-next icon-md"></i></a>
+    <a *ngIf="showLast" class="btn btn-icon btn-sm btn-clean btn-blue mr-2 my-1"
+        [ngClass]="paging.page >= paging.totalPage ? 'disabled' : ''" (click)="setPage(paging.totalPage)">
+        <i class="ki ki-bold-double-arrow-next icon-md"></i></a>
 </div>

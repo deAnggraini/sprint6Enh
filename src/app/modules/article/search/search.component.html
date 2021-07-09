@@ -5,31 +5,17 @@
     height: 184px;
 "></div>
 <div class="mx-15 mt-n40">
-    <div class="mb-10 back-panel">
+    <div class="mb-5 back-panel">
         <a routerLink="/homepage" class="cursor-pointer">
             <i class="fas fa-angle-left mr-2"></i> Kembali ke Halaman Utama PAKAR
         </a>
     </div>
     <div class="card card-custom p-10" style="overflow-x: hidden;">
         <div class="col-lg-6 col-xxl-6 input-search my-5">
-            <div class="input-group" (click)="$event.stopPropagation()">
-                <!-- [ngbTypeahead]="search"  (focus)="setKeyword(keyword)" -->
-                <input type="text" class="form-control" placeholder="Cari di PAKAR..." aria-label="Cari di PAKAR..."
-                    aria-describedby="basic-addon2" maxlength="2048" [(ngModel)]="keyword" (keyup.enter)="search()"
-                    #inputSearch>
-                <div class="form-control-clear btn btn-icon btn-clean" *ngIf="keyword" (click)="keyword='';">
-                    <span [inlineSVG]="'./assets/media/svg/icons/Navigation/Close.svg'" cacheSVG="true"
-                        class="hidden svg-icon mr-1 ml-1"></span>
-                </div>
-                <button class="btn btn-outline-secondary btn-success" type="button" (click)="search()">
-                    <i class="fa fa-search"></i>
-                </button>
-            </div>
+            <pakar-search></pakar-search>
         </div>
 
-        <!-- [(activeId)]="active" [destroyOnHide]="false" -->
         <ul ngbNav #nav="ngbNav" class="nav-tabs">
-            <!-- [destroyOnHide]="true" -->
             <li [ngbNavItem]="1">
                 <a ngbNavLink>
                     <i class="fa fa-search mr-2"></i> PAKAR ({{pakar.total}})
@@ -86,9 +72,9 @@
         <div [ngbNavOutlet]="nav" class="mt-2"></div>
 
         <div class="d-flex justify-content-center align-items-center flex-wrap mt-5" *ngIf="pakar.data.length">
-            <app-pagination></app-pagination>
+            <app-pagination (onChange)="setPage($event)" [paging]="paging"></app-pagination>
         </div>
-        
+
     </div>
 
 </div>
@@ -99,7 +85,8 @@
             <span class="svg mr-2" [inlineSVG]="'./assets/media/svg/bca/icon/'+item.type+'.svg'" cacheSVG="true"></span>
             <span class="nav-text-article">{{item.title}}</span>
         </a>
-        <div class="text-muted mb-2 font-size-sm" [innerHTML]="formatterCategory(item.category)">&nbsp;</div>
+        <div class="text-muted mb-2 font-size-sm" [innerHTML]="formatterCategory(item.category) | sanitizeHtml">&nbsp;
+        </div>
         <div class="text-desc">{{item.desc}}</div>
     </li>
 </ng-template>
