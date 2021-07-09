@@ -554,7 +554,6 @@ module.exports.suggestion = [
             { id: 3, title: 'TAHAKA' },
             { id: 4, title: 'Xpresi' },
             { id: 5, title: 'Time Loan SME' },
-            { id: 5, title: 'GIRO' },
         ]
     },
     {
@@ -563,6 +562,7 @@ module.exports.suggestion = [
         items: [
             { id: 11, title: 'Bagaimana solusi ketika Teller melakukan input kode penalti pada nasabah' },
             { id: 12, title: 'Apakah bisa membuka Deposito dari Data RTGS Masuk?' },
+            { id: 13, title: 'Apakah bisa membuka Deposito?' },
         ]
     },
 ];

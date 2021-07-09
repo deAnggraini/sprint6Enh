@@ -24,7 +24,8 @@ router.post('/keyword', (req, res) => {
     res.send({ error: false, msg: "", data: lastKeyword });
 });
 router.post('/search', (req, res) => {
-    const { keyword } = req.body;
+    const { keyword, page } = req.body;
+    console.log('search article', { keyword, page });
     if (!keyword || keyword == 'kosong') {
         res.send({
             error: false, msg: "", data: {
@@ -49,7 +50,8 @@ router.post('/search', (req, res) => {
         result: {
             data: articles,
             total: Math.floor(Math.random() * 100 + 10),
-            length: articles.length
+            length: articles.length,
+            page,
         },
         keys,
         group,
