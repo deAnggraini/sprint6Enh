@@ -1,8 +1,11 @@
 package id.co.bca.pakar.be.oauth2.api;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
+import id.co.bca.pakar.be.oauth2.dto.MenuDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +71,19 @@ public class UserController extends BaseController {
 			headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
 			RestResponse<LoggedinDto> tResponse = new RestResponse(new LoggedinDto(),  Constant.ApiResponseCode.USER_PROFILE_NOT_FOUND.getAction()[0], Constant.ApiResponseCode.USER_PROFILE_NOT_FOUND.getAction()[1]);
 			return new ResponseEntity<RestResponse<LoggedinDto>>(tResponse, HttpStatus.OK);
+		}
+	}
+
+	@PostMapping(value = "/api/auth/getRoles", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
+			MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<RestResponse<List<String>>> getRoles(@RequestHeader (name="Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username) {
+		try {
+			logger.info("get role by username {}", username);
+			List<String> roles = userService.findRolesByUser(username);
+			return createResponse(roles, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
+		} catch (Exception e) {
+			logger.error("exception", e);
+			return this.createResponse(new ArrayList<String>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
 		}
 	}
 }
