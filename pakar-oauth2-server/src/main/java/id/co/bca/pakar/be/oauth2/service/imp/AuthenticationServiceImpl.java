@@ -67,7 +67,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 		HttpEntity<String> request = new HttpEntity<String>(headers);
 
-		String access_token_url = uri;
+		String access_token_url = uri+"/oauth/token";
 		access_token_url += "?username=" + cred.getUsername();
 		access_token_url += "&password=" + cred.getPassword();
 		access_token_url += "&grant_type=" + cred.getGrant_type();
@@ -156,7 +156,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 			HttpEntity<String> request = new HttpEntity<String>(headers);
 
-			String access_token_url = uri;
+			String access_token_url = uri+"/oauth/token";
 			access_token_url += "?grant_type=" + "refresh_token";
 			access_token_url += "&refresh_token=" + refreshToken;
 			ResponseEntity<OAuthTokenDto> response = null;
