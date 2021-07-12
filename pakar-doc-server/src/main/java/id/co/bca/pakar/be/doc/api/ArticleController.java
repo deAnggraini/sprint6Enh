@@ -1,15 +1,15 @@
 package id.co.bca.pakar.be.doc.api;
 
 import id.co.bca.pakar.be.doc.common.Constant;
-import id.co.bca.pakar.be.doc.dto.SearchHistoryDto;
-import id.co.bca.pakar.be.doc.dto.SearchHistoryItem;
-import id.co.bca.pakar.be.doc.dto.ThemeDto;
+import id.co.bca.pakar.be.doc.dto.*;
+import id.co.bca.pakar.be.doc.service.ArticleTemplateService;
 import id.co.bca.pakar.be.doc.service.ThemeService;
 import id.co.bca.pakar.be.doc.service.UploadService;
 import id.co.bca.pakar.be.doc.util.JSONMapperAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +29,9 @@ public class ArticleController extends BaseController {
 
 	@Autowired
 	private UploadService uploadService;
+
+	@Autowired
+	private ArticleTemplateService articleTemplateService;
 
 	@GetMapping("/api/v1/doc/theme")
 	public ResponseEntity<RestResponse<ThemeDto>> themeLogin() {
@@ -178,5 +181,38 @@ public class ArticleController extends BaseController {
 		logger.info("json input value "+jsonString);
 		
 		return createResponse(list, "00", "SUCCESS");
+	}
+
+	/**
+	 * get article templates by structure id and usedBy
+	 */
+	@PostMapping(value = "/api/doc/templates", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
+			MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<RestResponse<List<ArticleTemplateDto>>> articleTemplates(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @RequestBody RequestTemplateDto requestTemplateDto) {
+		try {
+			logger.info("received token bearer --- " + authorization);
+			String tokenValue = "";
+			if (authorization != null && authorization.contains("Bearer")) {
+				tokenValue = authorization.replace("Bearer", "").trim();
+
+				logger.info("token value request header --- "+tokenValue);
+				logger.info("username request header --- "+username);
+			}
+			logger.info("get article templates by structure id {}", requestTemplateDto.getStructureId());
+			List<ArticleTemplateDto> templates = articleTemplateService.findTemplatesByStructureId(tokenValue, requestTemplateDto.getStructureId(), username);
+			return createResponse(templates, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
+		} catch (Exception e) {
+			logger.error("exception", e);
+			return createResponse(new ArrayList<ArticleTemplateDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
+		}
+	}
+
+	/**
+	 * check judul article tidak boleh sama
+	 */
+	@PostMapping(value = "/api/doc/checkUnique", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
+			MediaType.APPLICATION_JSON_VALUE })
+	public void cheqkUnique(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username) {
+		return;
 	}
 }
