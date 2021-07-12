@@ -23,7 +23,7 @@ import java.util.List;
 @RestController
 public class ArticleController extends BaseController {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-	
+
 	@Autowired
 	private ThemeService themeService;
 
@@ -116,26 +116,26 @@ public class ArticleController extends BaseController {
 //	public String categoriArticle(@RequestBody String message) {
 //		return String.format("Message was created. Content: %s", message);
 //	}
-	
+
 	@PostMapping("/api/doc/recomendation")
 	public String recomendation(@RequestBody String message) {
 		return String.format("Message was created. Content: %s", message);
 	}
-	
+
 	@PostMapping("/api/doc/news")
 	public String news(@RequestBody String message) {
 		return String.format("Message was created. Content: %s", message);
 	}
-	
+
 	@PostMapping("/api/doc/popular")
 	public String popular(@RequestBody String message) {
 		return String.format("Message was created. Content: %s", message);
 	}
-	
+
 	@PostMapping("/api/doc/search")
 	public ResponseEntity<RestResponse<List<SearchHistoryDto>>> search(@RequestBody String message) {
 		logger.info("search article process");
-		
+
 //		String jsonString = " [\r\n"
 //				+ "    {\r\n"
 //				+ "        id: 1,\r\n"
@@ -158,7 +158,7 @@ public class ArticleController extends BaseController {
 //				+ "        ]\r\n"
 //				+ "    }\r\n"
 //				+ "]";
-		
+
 		// next change to db
 		List<SearchHistoryDto> list = new ArrayList<SearchHistoryDto>();
 		SearchHistoryDto searcHistoryDto = new SearchHistoryDto();
@@ -179,7 +179,7 @@ public class ArticleController extends BaseController {
 		list.add(searcHistoryDto);
 		String jsonString = JSONMapperAdapter.objectToJson(list);
 		logger.info("json input value "+jsonString);
-		
+
 		return createResponse(list, "00", "SUCCESS");
 	}
 
@@ -214,5 +214,33 @@ public class ArticleController extends BaseController {
 			MediaType.APPLICATION_JSON_VALUE })
 	public void cheqkUnique(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username) {
 		return;
+	}
+
+	/**
+	 * endpoint to generate article
+	 * @param authorization
+	 * @param username
+	 * @param requestTemplateDto
+	 * @return
+	 */
+	@PostMapping(value = "/api/doc/generateArticle", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
+			MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<RestResponse<List<ArticleTemplateDto>>> generateArticle(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @RequestBody RequestTemplateDto requestTemplateDto) {
+		try {
+			logger.info("received token bearer --- {}", authorization);
+			String tokenValue = "";
+			if (authorization != null && authorization.contains("Bearer")) {
+				tokenValue = authorization.replace("Bearer", "").trim();
+
+				logger.info("token value request header --- {}",tokenValue);
+				logger.info("username request header --- {}",username);
+			}
+			logger.info("get article templates by structure id {}", requestTemplateDto.getStructureId());
+			List<ArticleTemplateDto> templates = articleTemplateService.findTemplatesByStructureId(tokenValue, requestTemplateDto.getStructureId(), username);
+			return createResponse(templates, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
+		} catch (Exception e) {
+			logger.error("exception", e);
+			return createResponse(new ArrayList<ArticleTemplateDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
+		}
 	}
 }
