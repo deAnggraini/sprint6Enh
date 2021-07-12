@@ -30,7 +30,8 @@ spring:
   security:
     oauth2:
       server: 
-        url: http://127.0.0.1:12081/oauth/token
+#        url: http://127.0.0.1:12081/oauth/token
+        url: http://127.0.0.1:12081
       clientId: 8C21EBEEB1AA3FBFE05400144FFBD319
       clientSecret: da82edc6dcc1af30
       authorize-grant-type: password,refresh_token
@@ -58,7 +59,8 @@ spring:
   security:
     oauth2:
       server: 
-        url: http://127.0.0.1:12081/oauth/token
+#        url: http://127.0.0.1:12081/oauth/token
+        url: http://127.0.0.1:12081
       clientId: 8C21EBEEB1AA3FBFE05400144FFBD319
       clientSecret: da82edc6dcc1af30
       authorize-grant-type: password,refresh_token
