@@ -53,8 +53,7 @@ public class MenuServiceImpl implements MenuService {
             List<Menu> bottomMenus = menuRepository.getAllBottomMenuById(username);
             List<MenuDto> bottomTreeMenu = new TreeMenu().menuTree(mapToList(bottomMenus));
             allMenus.addAll(bottomTreeMenu);
-
-
+            
             return allMenus;
         } catch (Exception e) {
             logger.error("exception", e);
