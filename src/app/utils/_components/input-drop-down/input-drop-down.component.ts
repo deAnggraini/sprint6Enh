@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, forwardRef, HostBinding, OnChanges, SimpleChanges } from '@angular/core';
 import { Option } from '../../_model/option';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl } from '@angular/forms';
-import { isFunction } from 'util';
+// import { isFunction } from 'util';
 import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 
 const sampleOptions: Option[] = [
@@ -92,9 +92,9 @@ export class InputDropDownComponent implements OnInit, ControlValueAccessor {
   onSelect(item: Option) {
     this.selected = item;
     this.onChange.emit(item);
-    if (isFunction(this.propogateChange)) {
-      this.propogateChange(item.id);
-    }
+    // if (typeof this.propogateChange === 'function') {
+    this.propogateChange(item.id);
+    // }
     this.comboBoxDrop.close();
   }
 

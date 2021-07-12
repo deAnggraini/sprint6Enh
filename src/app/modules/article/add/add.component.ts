@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, ValidationErrors, FormControl } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { Location } from '@angular/common';
 import { Subscription, BehaviorSubject } from 'rxjs';
@@ -8,6 +8,13 @@ import { StrukturService } from '../../_services/struktur.service';
 import { Option } from 'src/app/utils/_model/option';
 import { Router } from '@angular/router';
 import { ArticleService } from '../../_services/article.service';
+
+const ALPHA_NUMERIC_REGEX = /^[a-zA-Z0-9_]*$/;
+const ALPHA_NUMERIC_VALIDATION_ERROR = { alphaNumericError: 'only alpha numeric values are allowed' }
+
+function alphaNumericValidator(control: FormControl): ValidationErrors | null {
+  return ALPHA_NUMERIC_REGEX.test(control.value) ? null : ALPHA_NUMERIC_VALIDATION_ERROR;
+}
 
 @Component({
   selector: 'app-add',
@@ -96,7 +103,7 @@ export class AddComponent implements OnInit, OnDestroy {
   private initForm() {
     this.dataForm = this.fb.group({
       id: [0],
-      title: [this.defaultValue.title, Validators.compose([Validators.required])],
+      title: [this.defaultValue.title, Validators.compose([Validators.required, Validators.maxLength(50), alphaNumericValidator])],
       location: [this.defaultValue.location, Validators.compose([Validators.required])],
       usedBy: [{ value: this.defaultValue.usedBy, disabled: true }, Validators.compose([Validators.required])],
       template: [this.defaultValue.template, Validators.compose([Validators.required])],

@@ -2,7 +2,6 @@ import { Component, OnInit, Input, OnDestroy, Output, EventEmitter, forwardRef, 
 import { Option } from '../../_model/option';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, } from '@angular/forms';
-import { isFunction } from 'util';
 import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 
 declare var $: any;
@@ -97,10 +96,8 @@ export class ComboBoxComponent implements OnInit, OnDestroy, ControlValueAccesso
   onSelect(item: Option) {
     this.selected = item;
     this.onChange.emit(item);
-    if (isFunction(this.propogateChange)) {
-      this.comboBoxDrop.close();
-      this.propogateChange(item.id);
-    }
+    this.propogateChange(item.id);
+    this.comboBoxDrop.close();
   }
 
   private findNode(id: number, datasource: Option[] = null): Option {

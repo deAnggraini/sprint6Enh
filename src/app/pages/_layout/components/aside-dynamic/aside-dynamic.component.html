@@ -194,7 +194,7 @@
 <ng-template #menuItemSectionTemplate let-item="item">
   <li class="menu-section">
     <a style="display: flex;  flex-grow: 1; align-items: stretch; position: relative;">
-      <div class="icon mr-4" style="content: url( {{imgUrl+item.icon}} );"></div>
+      <div class="icon mr-4" style="content: url('{{imgUrl+item.icon}}');"></div>
       <span class="menu-text" [translate]="item.translate">{{ item.title }}</span>
     </a>
   </li>
