@@ -27,6 +27,9 @@ public class Structure extends EntityBase {
 	private String location;
 	@Column(name = "location_text")
 	private String location_text;
+	// flag to identify structur has article or no, for reader role structur appeared if structure has published structure
+	@Column(name = "has_article")
+	private Boolean isHasArticle = Boolean.FALSE;
 
 	public Long getId() {
 		return id;
@@ -106,5 +109,13 @@ public class Structure extends EntityBase {
 
 	public void setLocation_text(String location_text) {
 		this.location_text = location_text;
+	}
+
+	public Boolean getHasArticle() {
+		return isHasArticle;
+	}
+
+	public void setHasArticle(Boolean hasArticle) {
+		isHasArticle = hasArticle;
 	}
 }
