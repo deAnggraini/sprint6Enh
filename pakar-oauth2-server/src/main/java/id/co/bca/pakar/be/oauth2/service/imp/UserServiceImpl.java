@@ -3,6 +3,7 @@
  */
 package id.co.bca.pakar.be.oauth2.service.imp;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -28,8 +29,6 @@ import id.co.bca.pakar.be.oauth2.token.CustomJdbcTokenStore;
 @Service
 public class UserServiceImpl implements UserService {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-	
-//	private DataSource dataSource;
 	
 	@Autowired
 //	@Qualifier("tokenStore2")
@@ -121,8 +120,15 @@ public class UserServiceImpl implements UserService {
 		}
 		return loggedinDto;
 	}
-	
 
-	
 
+	@Override
+	public List<String> findRolesByUser(String username) {
+		List<UserRole> uRoles = roleRepository.findUserRolesByUsername(username);
+		List<String> roles = new ArrayList<>();
+		for(UserRole ur : uRoles) {
+			roles.add(ur.getRole().getId());
+		}
+		return roles;
+	}
 }
