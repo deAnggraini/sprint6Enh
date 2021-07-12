@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ArticleTemplateDto {
@@ -14,17 +15,19 @@ public class ArticleTemplateDto {
     @JsonProperty("name")
     private String name;
     @NotEmpty(message = "location is required")
-    @JsonProperty("categori")
-    private List<StructureDto> categori;
+    @JsonProperty("categories")
+    private List<StructureDto> categori = new ArrayList<>();
     @NotEmpty(message = "desc is required")
     @JsonProperty("desc")
     private String desc;
     @NotEmpty(message = "image is required")
-    @JsonProperty("images")
-    private String images;
+    @JsonProperty("image")
+    private String image;
+    @JsonProperty("thumb")
+    private String thumb;
     @NotEmpty(message = "content is required")
-    @JsonProperty("content")
-    private List<ContentTemplateDto> content;
+    @JsonProperty("contents")
+    private List<ContentTemplateDto> content = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -58,12 +61,20 @@ public class ArticleTemplateDto {
         this.desc = desc;
     }
 
-    public String getImages() {
-        return images;
+    public String getImage() {
+        return image;
     }
 
-    public void setImages(String images) {
-        this.images = images;
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getThumb() {
+        return thumb;
+    }
+
+    public void setThumb(String thumb) {
+        this.thumb = thumb;
     }
 
     public List<ContentTemplateDto> getContent() {
@@ -81,7 +92,8 @@ public class ArticleTemplateDto {
                 ", name='" + name + '\'' +
                 ", categori=" + categori +
                 ", desc='" + desc + '\'' +
-                ", images='" + images + '\'' +
+                ", image='" + image + '\'' +
+                ", thumb='" + thumb + '\'' +
                 ", content=" + content +
                 '}';
     }

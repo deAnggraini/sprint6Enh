@@ -11,10 +11,16 @@ public class ContentTemplateDto {
     private String title;
     @JsonProperty("desc")
     private String desc;
+    @JsonProperty("sort")
+    private Long order;
+    @JsonProperty("level")
+    private Long level;
     @JsonProperty("params")
     private List<String> params;
     @JsonProperty("children")
-    private List<String> children;
+    private List<ContentTemplateDto> childs;
+    @JsonProperty("parent")
+    private Long parent=0L;
 
     public Long getId() {
         return id;
@@ -48,12 +54,36 @@ public class ContentTemplateDto {
         this.params = params;
     }
 
-    public List<String> getChildren() {
-        return children;
+    public List<ContentTemplateDto> getChilds() {
+        return childs;
     }
 
-    public void setChildren(List<String> children) {
-        this.children = children;
+    public void setChilds(List<ContentTemplateDto> childs) {
+        this.childs = childs;
+    }
+
+    public Long getOrder() {
+        return order;
+    }
+
+    public void setOrder(Long order) {
+        this.order = order;
+    }
+
+    public Long getLevel() {
+        return level;
+    }
+
+    public void setLevel(Long level) {
+        this.level = level;
+    }
+
+    public Long getParent() {
+        return parent;
+    }
+
+    public void setParent(Long parent) {
+        this.parent = parent;
     }
 
     @Override
@@ -62,8 +92,11 @@ public class ContentTemplateDto {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", desc='" + desc + '\'' +
+                ", order=" + order +
+                ", level=" + level +
                 ", params=" + params +
-                ", children=" + children +
+                ", childs=" + childs +
+                ", parent=" + parent +
                 '}';
     }
 }
