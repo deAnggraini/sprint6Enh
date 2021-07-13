@@ -25,7 +25,7 @@ public class Article extends EntityBase {
 	@Column(name ="article_template_id")
 	private Long articleTemplate;
 
-	@Column(name = "title")
+	@Column(name = "title", unique = true, nullable = false)
 	private String judulArticle;
 
 	@Column(name = "article_used_by")
