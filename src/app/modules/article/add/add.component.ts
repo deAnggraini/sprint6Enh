@@ -71,7 +71,7 @@ export class AddComponent implements OnInit, OnDestroy {
       )
       .subscribe(
         resp => {
-          if (resp) {
+          if (resp === false) {
             this.hasError = false;
             this.errorMsg = '';
           }
