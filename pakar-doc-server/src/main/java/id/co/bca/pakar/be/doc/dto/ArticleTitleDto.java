@@ -9,7 +9,7 @@ import javax.validation.constraints.Size;
 public class ArticleTitleDto {
     @NotEmpty(message = "name is required")
     @Size(max = 50, message = "maximum length 50 characters")
-    @Pattern(regexp="[0-9a-zA-Z\\/\\s\\-\\(\\)]*$", message = "Password must contain at least 1 number and uppercase character")
+    @Pattern(regexp="[0-9a-zA-Z\\/\\s\\-\\(\\)]*$", message = "title must alpha or numeric, whitespace, - , /, ()")
     @JsonProperty("title")
     protected String judulArticle;
 

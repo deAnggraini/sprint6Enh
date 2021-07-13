@@ -230,7 +230,7 @@ public class ArticleController extends BaseController {
 	 */
 	@PostMapping(value = "/api/doc/generateArticle", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<RestResponse<Long>> generateArticle(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @RequestBody BaseArticleDto articleDto) {
+	public ResponseEntity<RestResponse<Long>> generateArticle(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @Valid @RequestBody BaseArticleDto articleDto) {
 		try {
 			logger.info("generate article process");
 			logger.info("received token bearer --- {}", authorization);
@@ -243,7 +243,8 @@ public class ArticleController extends BaseController {
 			}
 //			logger.info("get article templates by structure id {}", requestTemplateDto.getStructureId());
 //			List<ArticleTemplateDto> templates = articleTemplateService.findTemplatesByStructureId(tokenValue, requestTemplateDto.getStructureId(), username);
-			return createResponse(1L, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
+			Long articleId = articleService.generateArticle(articleDto);
+			return createResponse(articleId, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
 		} catch (Exception e) {
 			logger.error("exception", e);
 			return createResponse(0L, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);

@@ -1,6 +1,12 @@
 package id.co.bca.pakar.be.doc.service.impl;
 
 import id.co.bca.pakar.be.doc.dao.ArticleRepository;
+import id.co.bca.pakar.be.doc.dao.ArticleTemplateRepository;
+import id.co.bca.pakar.be.doc.dao.ArticleTemplateStructureRepository;
+import id.co.bca.pakar.be.doc.dto.BaseArticleDto;
+import id.co.bca.pakar.be.doc.model.Article;
+import id.co.bca.pakar.be.doc.model.ArticleTemplate;
+import id.co.bca.pakar.be.doc.model.ArticleTemplateStructure;
 import id.co.bca.pakar.be.doc.service.ArticleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +21,13 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Autowired
     private ArticleRepository articleRepository;
+
+    @Autowired
+    private ArticleTemplateRepository articleTemplateRepository;
+
+    @Autowired
+    private ArticleTemplateStructureRepository articleTemplateStructureRepository;
+
     @Override
     @Transactional
     public Boolean existArticle(String title) {
@@ -26,6 +39,31 @@ public class ArticleServiceImpl implements ArticleService {
         } catch (Exception e) {
             logger.error("exception", e);
             return Boolean.FALSE;
+        }
+    }
+
+    /**
+     *
+     * @param articleDto
+     * @return
+     */
+    @Override
+    @Transactional
+    public Long generateArticle(BaseArticleDto articleDto) {
+        try {
+            ArticleTemplateStructure articleTemplateStructure = articleTemplateStructureRepository.findArticleTemplates(articleDto.getTemplateId(), articleDto.getStructureId());
+            ArticleTemplate template = articleTemplateStructure.getArticleTemplate();
+            Article article = new Article();
+            article.setJudulArticle(articleDto.getJudulArticle());
+            article.setArticleTemplate(template.getId());
+            article.setArticleUsedBy(articleDto.getUsedBy());
+            article.setStructure(articleTemplateStructure.getStructure());
+
+            article = articleRepository.save(article);
+            return article.getId();
+        } catch (Exception e) {
+            logger.error("",e);
+            return 0L;
         }
     }
 }
