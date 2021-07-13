@@ -27,4 +27,11 @@ public interface StructureRepository extends CrudRepository<Structure, Long>{
             ") m ORDER BY m.id ASC ",
             nativeQuery = true)
     List<Structure> findAll();
+
+    @Query(value="SELECT m FROM Structure m WHERE m.parentStructure=:parentId AND m.deleted IS FALSE ")
+    List<Structure> findByParentId(@Param("parentId") Long parentId);
+
+    @Query(value = "SELECT max(m.sort) FROM Structure m WHERE m.parentStructure=:parentId AND m.deleted IS FALSE ")
+    public Long maxSort(@Param("parentId") Long parentId);
+
 }
