@@ -31,7 +31,7 @@ public class Constant {
 		REFRESH_TOKEN_EXPIRED(new String[] {"105", "Invalid Refresh Token (expired)"}),
 		INVALID_CLIENT_ID(new String[] {"106", "Client not valid"}),
 		TOKEN_HAS_EXPIRED(new String[] {"107", "Token Has Expired"}),
-		ARTICLE_EXIST_IN_DATABASE(new String[] {"01", "Article exist in database"});;
+		ARTICLE_EXIST_IN_DATABASE(new String[] {"01", "Judul Article Sudah Ada"});;
 
 		// declaring private variable for getting values
 		private String action[];

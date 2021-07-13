@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -188,15 +188,8 @@ public class ArticleController extends BaseController {
 	public ResponseEntity<RestResponse<List<ArticleTemplateDto>>> articleTemplates(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @RequestBody RequestTemplateDto requestTemplateDto) {
 		try {
 			logger.info("received token bearer --- " + authorization);
-			String tokenValue = "";
-			if (authorization != null && authorization.contains("Bearer")) {
-				tokenValue = authorization.replace("Bearer", "").trim();
-
-				logger.info("token value request header --- "+tokenValue);
-				logger.info("username request header --- "+username);
-			}
 			logger.info("get article templates by structure id {}", requestTemplateDto.getStructureId());
-			List<ArticleTemplateDto> templates = articleTemplateService.findTemplatesByStructureId(tokenValue, requestTemplateDto.getStructureId(), username);
+			List<ArticleTemplateDto> templates = articleTemplateService.findTemplatesByStructureId(getTokenFromHeader(authorization), requestTemplateDto.getStructureId(), username);
 			return createResponse(templates, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
 		} catch (Exception e) {
 			logger.error("exception", e);
@@ -234,20 +227,30 @@ public class ArticleController extends BaseController {
 		try {
 			logger.info("generate article process");
 			logger.info("received token bearer --- {}", authorization);
-			String tokenValue = "";
-			if (authorization != null && authorization.contains("Bearer")) {
-				tokenValue = authorization.replace("Bearer", "").trim();
-
-				logger.info("token value request header --- {}",tokenValue);
-				logger.info("username request header --- {}",username);
-			}
-//			logger.info("get article templates by structure id {}", requestTemplateDto.getStructureId());
-//			List<ArticleTemplateDto> templates = articleTemplateService.findTemplatesByStructureId(tokenValue, requestTemplateDto.getStructureId(), username);
+			articleDto.setUsername(username);
+			articleDto.setToken(getTokenFromHeader(authorization));
 			Long articleId = articleService.generateArticle(articleDto);
-			return createResponse(articleId, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
+			return articleId.longValue() > 0 ? createResponse(articleId, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]) :
+					createResponse(articleId, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
 		} catch (Exception e) {
 			logger.error("exception", e);
 			return createResponse(0L, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
+		}
+	}
+
+	@PostMapping(value = "/api/doc/saveArticle", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE }, produces = {
+			MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<RestResponse<ArticleDto>> saveArticle(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @ModelAttribute ArticleDto articleDto, BindingResult bindingResult) {
+		try {
+			logger.info("save article process");
+			logger.info("received token bearer --- {}", authorization);
+			articleDto.setUsername(username);
+			articleDto.setToken(getTokenFromHeader(authorization));
+			articleDto = articleService.saveArticle(articleDto);
+			return createResponse(articleDto, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
+		} catch (Exception e) {
+			logger.error("exception", e);
+			return createResponse(new ArticleDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
 		}
 	}
 }

@@ -3,6 +3,7 @@ package id.co.bca.pakar.be.doc.service.impl;
 import id.co.bca.pakar.be.doc.dao.ArticleRepository;
 import id.co.bca.pakar.be.doc.dao.ArticleTemplateRepository;
 import id.co.bca.pakar.be.doc.dao.ArticleTemplateStructureRepository;
+import id.co.bca.pakar.be.doc.dto.ArticleDto;
 import id.co.bca.pakar.be.doc.dto.BaseArticleDto;
 import id.co.bca.pakar.be.doc.model.Article;
 import id.co.bca.pakar.be.doc.model.ArticleTemplate;
@@ -48,22 +49,42 @@ public class ArticleServiceImpl implements ArticleService {
      * @return
      */
     @Override
-    @Transactional
+    @Transactional(rollbackOn = {Exception.class})
     public Long generateArticle(BaseArticleDto articleDto) {
         try {
+            logger.info("generate article process");
             ArticleTemplateStructure articleTemplateStructure = articleTemplateStructureRepository.findArticleTemplates(articleDto.getTemplateId(), articleDto.getStructureId());
             ArticleTemplate template = articleTemplateStructure.getArticleTemplate();
             Article article = new Article();
+            article.setCreatedBy(articleDto.getUsername());
             article.setJudulArticle(articleDto.getJudulArticle());
             article.setArticleTemplate(template.getId());
             article.setArticleUsedBy(articleDto.getUsedBy());
             article.setStructure(articleTemplateStructure.getStructure());
+            article.setShortDescription(template.getDescription());
 
+            logger.info("save article");
             article = articleRepository.save(article);
+
+            // save content article
+
+
             return article.getId();
         } catch (Exception e) {
             logger.error("",e);
             return 0L;
+        }
+    }
+
+    @Override
+    @Transactional(rollbackOn = {Exception.class})
+    public ArticleDto saveArticle(ArticleDto articleDto) {
+        try {
+            logger.info("save article process");
+            return null;
+        } catch (Exception e) {
+            logger.error("",e);
+            return new ArticleDto();
         }
     }
 }

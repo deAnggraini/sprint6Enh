@@ -95,4 +95,12 @@ public abstract class BaseController {
 	protected Claims getAllClaimsFromToken(String token) {
 		return Jwts.parser().setSigningKey("pakar123").parseClaimsJws(token).getBody();
 	}
+
+	protected String getTokenFromHeader(String header) {
+		String tokenValue = "";
+		if (header != null && header.contains("Bearer")) {
+			tokenValue = header.replace("Bearer", "").trim();
+		}
+		return tokenValue;
+	}
 }
