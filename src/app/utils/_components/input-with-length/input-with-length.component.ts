@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, forwardRef } from '@angular/core';
+import { Component, OnInit, Input, forwardRef, Output, EventEmitter } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
@@ -17,6 +17,9 @@ export class InputWithLengthComponent implements OnInit, ControlValueAccessor {
 
   @Input() placeholder: string;
   @Input() maxlength: number;
+  @Input() hasError: boolean;
+
+  @Output() onChange = new EventEmitter<any>();
 
   _onTouched: (_) => {};
   _onChange: (_) => {};
@@ -25,6 +28,10 @@ export class InputWithLengthComponent implements OnInit, ControlValueAccessor {
   disabled: boolean = false;
 
   constructor() { }
+
+  // change(value) {
+  //   this.onChange.emit(value);
+  // }
 
   ngOnInit(): void {
   }

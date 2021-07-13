@@ -2,18 +2,18 @@ import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, ValidationErrors, FormControl } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { Location } from '@angular/common';
-import { Subscription, BehaviorSubject } from 'rxjs';
+import { Subscription, BehaviorSubject, of } from 'rxjs';
 import { TemplateArticleService } from '../../_services/template-article.service';
 import { StrukturService } from '../../_services/struktur.service';
 import { Option } from 'src/app/utils/_model/option';
 import { Router } from '@angular/router';
 import { ArticleService } from '../../_services/article.service';
+import { catchError, map } from 'rxjs/operators';
 
-const ALPHA_NUMERIC_REGEX = /^[a-zA-Z0-9_]*$/;
-const ALPHA_NUMERIC_VALIDATION_ERROR = { alphaNumericError: 'only alpha numeric values are allowed' }
 
 function alphaNumericValidator(control: FormControl): ValidationErrors | null {
-  return ALPHA_NUMERIC_REGEX.test(control.value) ? null : ALPHA_NUMERIC_VALIDATION_ERROR;
+  const ALPHA_NUMERIC_REGEX = /^(?:[a-zA-Z0-9\s\-\/]+)?$/;
+  return ALPHA_NUMERIC_REGEX.test(control.value) ? null : { alphaNumericError: 'Hanya angka dan huruf yang diperbolehkan' };
 }
 
 @Component({
@@ -35,6 +35,7 @@ export class AddComponent implements OnInit, OnDestroy {
   // state
   dataForm: FormGroup;
   hasError: boolean = false;
+  errorMsg: string = '';
   disabledUsedBy: boolean = true;
   listTemplate: any[] = [];
   locationOptions: BehaviorSubject<Option[]> = new BehaviorSubject([]);
@@ -57,8 +58,31 @@ export class AddComponent implements OnInit, OnDestroy {
     return this.dataForm.controls;
   }
 
+  checkUniq(value) {
+    const checkUniqSubrcr = this.article.checkUniq(value)
+      .pipe(
+        catchError((err) => {
+          // this.dataForm.controls['title'].setAsyncValidators() //.updateValueAndValidity();
+          this.hasError = true;
+          this.errorMsg = err;
+          return of(null);
+        }),
+        map(resp => resp),
+      )
+      .subscribe(
+        resp => {
+          if (resp) {
+            this.hasError = false;
+            this.errorMsg = '';
+          }
+          this.cdr.detectChanges();
+        }
+      );
+    this.subscriptions.push(checkUniqSubrcr);
+  }
+
   save() {
-    if (this.dataForm.valid) {
+    if (this.dataForm.valid && !this.hasError) {
       this.article.formParam = this.dataForm.value;
       this.router.navigate(['/article/form']);
     } else {

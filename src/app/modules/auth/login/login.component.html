@@ -1,6 +1,7 @@
 <div class="login-form login-signin">
 
-  <form class="form" [formGroup]="loginForm" novalidate="novalidate" id="kt_login_signin_form" (ngSubmit)="submit()">
+  <form class="form" [formGroup]="loginForm" novalidate="novalidate" id="kt_login_signin_form" (ngSubmit)="submit()"
+    autocomplete="off">
 
     <div class="pb-3 pt-lg-0 pt-5">
       <h3 class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg">
@@ -12,7 +13,7 @@
     </div>
     <hr>
 
-<!-- 
+    <!-- 
     <ng-container *ngIf="!hasError">
       <div class="mb-10 alert alert-custom alert-light-info alert-dismissible">
         <div class="alert-text">
@@ -24,10 +25,8 @@
     <div class="form-group pt-4">
       <label class="font-size-h6 font-weight-bolder text-dark">User ID</label>
       <div class="form-control-iconless">
-        <input class="form-control h-42px py-7 px-6 rounded-lg" type="text" name="username"
-          formControlName="username" autocomplete="off"
-          [ngClass]="{ 'is-invalid': hasError || loginForm.controls['username'].invalid }" 
-          placeholder="Masukkan domain Kamu" />
+        <input class="form-control h-42px py-7 px-6 rounded-lg" type="text" name="u_name" formControlName="username"
+          autocomplete="off" [ngClass]="{ 'is-invalid': hasError }" placeholder="Masukkan domain Kamu" />
       </div>
       <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
           validation: 'required',
@@ -58,11 +57,11 @@
       </div>
 
       <div class="input-icon input-icon-right form-control-iconless">
-      <input class="form-control h-42px py-7 px-6 rounded-lg" type={{typePass}} name="password"
-        autocomplete="off" formControlName="password" placeholder="Masukkan password domain Kamu"
-        [ngClass]="{ 'is-invalid': hasError || loginForm.controls['password'].invalid }" />
+        <input class="form-control h-42px py-7 px-6 rounded-lg" type={{typePass}} name="u_pass" autocomplete="new-password"
+          formControlName="password" placeholder="Masukkan password domain Kamu"
+          [ngClass]="{ 'is-invalid': hasError}" />
         <span (click)="showPassword()">
-          <i class="far fa-eye icon-md" *ngIf="!revealPass" ></i>
+          <i class="far fa-eye icon-md" *ngIf="!revealPass"></i>
           <i class="far fa-eye-slash icon-md" *ngIf="revealPass"></i>
         </span>
       </div>
@@ -91,9 +90,10 @@
 
     <div class="pb-lg-0 pb-5">
       <button type="submit" id="kt_login_signin_submit"
-        class="btn btn-block btn-pill font-weight-bolder font-size-h6 h-48px px-8 py-4 my-3 mr-3" [disabled]="loginForm.invalid">
+        class="btn btn-block btn-pill font-weight-bolder font-size-h6 h-48px px-8 py-4 my-3 mr-3"
+        [disabled]="loginForm.invalid">
         Sign In
-      </button> 
+      </button>
 
       <!-- <button type="button" class="btn btn-light-primary font-weight-bolder px-8 py-4 my-3 font-size-lg">
         <span class="svg-icon svg-icon-md">

@@ -66,4 +66,8 @@ export class ArticleService {
     return this.apiService.post(`${this._base_url}/popular`, {});
   }
 
+  checkUniq(title: string) {
+    return this.apiService.post(`${this._base_url}/checkUnique`, { title }, this.apiService.getHeaders(true), false);
+  }
+
 }

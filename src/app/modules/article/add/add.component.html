@@ -7,9 +7,15 @@
                     <div class="form-group col-sm-10 col-md-10 col-lg-8  col-xxl-8">
                         <label>Judul Artikel <span class="text-danger">*</span></label>
                         <pakar-input-length placeholder="Masukkan nama artikel disini (maks. 50 karakter)"
-                            formControlName="title" maxlength="50"></pakar-input-length>
+                            formControlName="title" maxlength="50" (onChange)="checkUniq($event)" [hasError]="hasError">
+                        </pakar-input-length>
                         <ng-container [ngTemplateOutlet]="formError"
                             [ngTemplateOutletContext]="{ control: dataForm.controls['title']}"></ng-container>
+                        <ng-container *ngIf="hasError">
+                            <div class="fv-plugins-message-container">
+                                <div class="fv-help-block"><span>{{errorMsg}}</span></div>
+                            </div>
+                        </ng-container>
                     </div>
                     <div class="form-group col-sm-10 col-md-10 col-lg-11 col-xxl-11">
                         <label>Lokasi Artikel <span class="text-danger">*</span></label>
@@ -48,11 +54,11 @@
                 </div>
             </div>
             <div class="col mr-5" style="max-width: 400px; max-height: 620px;">
-                <div class="font-weight-bolder">Template</div>
-                <div class="right-preview" *ngIf="!disabledUsedBy"
-                    [ngStyle]="{'background-image': 'url(' + preview_img +')'}">
-                    <!-- <img [src]="preview_img"> -->
-                </div>
+                <ng-container *ngIf="!disabledUsedBy">
+                    <div class="font-weight-bolder">Template</div>
+                    <div class="right-preview" [ngStyle]="{'background-image': 'url(' + preview_img +')'}">
+                    </div>
+                </ng-container>
             </div>
         </div>
         <div class="d-flex justify-content-end">
@@ -60,7 +66,7 @@
             <button type="button" (click)="reset()"
                 class="btn btn-outline-light btn-sm rounded-lg px-5 ml-3">Batal</button>
             <button type="button" (click)="save()" class="btn btn-sm btn-blue rounded-lg px-5 ml-3"
-                [disabled]="dataForm.invalid">Tambah Artikel</button>
+                [disabled]="dataForm.invalid || hasError">Tambah Artikel</button>
         </div>
     </form>
 </div>
@@ -69,11 +75,16 @@
     <ng-container *ngIf="control.errors && control.dirty">
         <div class="fv-plugins-message-container">
             <div class="fv-help-block">
+                <!-- {{control.errors | json}} -->
                 <ng-container *ngIf="control.errors.required"><span>Field harus disi</span></ng-container>
                 <ng-container *ngIf="control.errors.minlength"><span>Panjang minimal
                         {{control.errors.minlength.requiredLength}}</span></ng-container>
                 <ng-container *ngIf="control.errors.maxlength"><span>Panjang maximal
                         {{control.errors.maxlength.requiredLength}}</span></ng-container>
+                <ng-container *ngIf="control.errors.pattern"><span>Pola tidak diperbolehkan</span></ng-container>
+                <ng-container *ngIf="control.errors.alphaNumericError">
+                    <span>{{control.errors.alphaNumericError}}</span>
+                </ng-container>
             </div>
         </div>
     </ng-container>
