@@ -142,8 +142,13 @@ export class DetailComponent implements OnInit, OnDestroy {
     fd.append('level', this.dataForm.value.level.toString());
 
     // let nextSort = String(this.section.menus.length + 1);
-    const listSort = this.section.menus.map(d => d.sort);
+    const nodeParent = this.locations.find(d => d.id == this.dataForm.value.parent);
+    if (!(nodeParent.menus && nodeParent.menus.length)) {
+      nodeParent.menus = [];
+    }
+    const listSort = nodeParent.menus.map(d => d.sort);
     const maxSort = Math.max(...listSort) | 0;
+
     fd.append('sort', (maxSort + 1).toString());
     fd.append('parent', this.dataForm.value.parent);
     fd.append('location', this.dataForm.value.location);
@@ -503,6 +508,7 @@ export class DetailComponent implements OnInit, OnDestroy {
           const node = $that.findNode(parseInt(selected[0]));
           const myLocation = $that.findLocation(node);
           const defaultValue = Object.assign({}, $that.defaultValue, { level: node.level + 1, parent: node.id, location: myLocation._value });
+          console.log({ defaultValue });
           $that.setTxtLevelName(node.level + 1);
           $that.dataForm.reset(defaultValue);
           $that.isEdit = false;
