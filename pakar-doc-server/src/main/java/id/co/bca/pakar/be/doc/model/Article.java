@@ -73,4 +73,12 @@ public class Article extends EntityBase {
 	public void setArticleUsedBy(String articleUsedBy) {
 		this.articleUsedBy = articleUsedBy;
 	}
+
+	public String getShortDescription() {
+		return shortDescription;
+	}
+
+	public void setShortDescription(String shortDescription) {
+		this.shortDescription = shortDescription;
+	}
 }
