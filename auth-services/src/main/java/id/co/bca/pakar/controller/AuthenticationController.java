@@ -89,54 +89,7 @@ public class AuthenticationController {
 	public static String readFileAsString(String file)throws Exception {
         return new String(Files.readAllBytes(Paths.get(file)));
     }
-	
-//	public static void main(String[] args) {
-////		String password = "";
-////		try {
-////			password = new DESedeEncryption("123456789013245678901234").decryptFromHex("7e4ec02231ed5cd4");
-////		} catch (Exception e) {
-////			// TODO Auto-generated catch block
-////			e.printStackTrace();
-////		}
-////		System.out.println(password);
-//		List<AuthenticationDto> authDtos = new ArrayList();
-//		authDtos.add(new AuthenticationDto("user", "password"));
-//		authDtos.add(new AuthenticationDto("test1", "password1"));
-//		authDtos.add(new AuthenticationDto("saifulhq", "12345"));
-//		authDtos.add(new AuthenticationDto("admin", "12345"));
-//		authDtos.add(new AuthenticationDto("super", "12345"));
-//		authDtos.add(new AuthenticationDto("editor", "12345"));
-//		authDtos.add(new AuthenticationDto("publisher", "12345"));
-//		authDtos.add(new AuthenticationDto("guest", "12345"));
-//		authDtos.add(new AuthenticationDto("superadmin", "12345"));
-//		authDtos.add(new AuthenticationDto("test", "12345"));
-//		authDtos.add(new AuthenticationDto("reader", "12345"));
-//
-//		EaiLoginResponse response = new EaiLoginResponse();
-//		boolean loginStatus = false;
-//		for (AuthenticationDto dto : authDtos) {
-////			if (dto.getUsername().equals(credential.getUserId())) {
-//				String password = "";
-//				try {
-//					password = (new TrippleDesEncryption("123456789013245678901234".getBytes())).decrypt("da82edc6dcc1af30");
-//					System.out.println(password);
-//				} catch (Exception e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//
-//				if (dto.getPassword().equals(password)) {
-//					response.getErrorSchema().setErroCode("ESB-00-000");
-//					response.getErrorSchema().getErrorMessage().put("Indonesian", "Berhasil");
-//					response.getErrorSchema().getErrorMessage().put("English", "Success");
-//					response.getOutputSchema().setStatus("0");
-//					loginStatus = true;
-//					break;
-//				}
-////			}
-//		}
-//	}
-	
+
 	public static void main(String[] args) throws Exception {
         String file = "src/test/resources/myUser.json";
         String json = readFileAsString(file);
