@@ -93,9 +93,7 @@ public class ArticleTemplateServiceImp implements ArticleTemplateService {
             headers.add(Constant.Headers.X_USERNAME, username);
             HttpEntity<String> request = new HttpEntity<String>(headers);
             String url_api = uri + "/api/auth/getRoles";
-//            RestEntity.RestResponse response = null;
             logger.debug("get roles from api {}", url_api);
-//            response = restTemplate.exchange(url_api, HttpMethod.POST, request, RestEntity.RestResponse.class);
             Map map = restTemplate.exchange(url_api, HttpMethod.POST, request, Map.class).getBody();
             logger.debug("response body {}", map);
             if(map.containsKey("status")) {

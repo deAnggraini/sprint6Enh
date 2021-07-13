@@ -16,7 +16,7 @@ public class Constant {
 		EXIST_USER_PROFILE(new String[] { "00", "User Profile Exist" }),
 		USER_PROFILE_NOT_FOUND(new String[] { "01", "User Profile Not Found" }),
 		MENU_PROFILE_SUCCESS(new String[] { "00", "Menu Success Load" }),
-		OK(new String[] { "00", "Response OK" }),
+		OK(new String[] { "00", "Success" }),
 		GENERAL_ERROR(new String[] { "01", "Undefined Error" }),
 		REQUEST_PARAM_INVALID(new String[] { "01", "Request Param Invalid" }),
 		MAX_UPLOAD_EXCEEDED(new String[] { "01", "Exceeded file size" }),

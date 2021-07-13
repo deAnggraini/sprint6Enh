@@ -13,8 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -205,12 +207,12 @@ public class ArticleController extends BaseController {
 	/**
 	 * check judul article tidak boleh sama
 	 */
-	@PostMapping(value = "/api/doc/checkUnique/{title}", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
+	@PostMapping(value = "/api/doc/checkUnique", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<RestResponse<Boolean>> checkUnique(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @PathVariable("title") String title) {
+	public ResponseEntity<RestResponse<Boolean>> checkUnique(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @Valid @RequestBody ArticleTitleDto articleTitleDto) {
 		try {
-			logger.info("verify article title {} exist in database ", title);
-			Boolean exist = articleService.existArticle(title);
+			logger.info("verify article title {} exist in database ", articleTitleDto.getJudulArticle());
+			Boolean exist = articleService.existArticle(articleTitleDto.getJudulArticle());
 			return exist.booleanValue() ? createResponse(exist, Constant.ApiResponseCode.ARTICLE_EXIST_IN_DATABASE.getAction()[0], Constant.ApiResponseCode.ARTICLE_EXIST_IN_DATABASE.getAction()[1]) :
 					createResponse(exist, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
 		} catch (Exception e) {
@@ -220,16 +222,17 @@ public class ArticleController extends BaseController {
 	}
 
 	/**
-	 * endpoint to generate article
+	 *
 	 * @param authorization
 	 * @param username
-	 * @param requestTemplateDto
+	 * @param articleDto
 	 * @return
 	 */
 	@PostMapping(value = "/api/doc/generateArticle", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<RestResponse<List<ArticleTemplateDto>>> generateArticle(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @RequestBody RequestTemplateDto requestTemplateDto) {
+	public ResponseEntity<RestResponse<Long>> generateArticle(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @RequestBody BaseArticleDto articleDto) {
 		try {
+			logger.info("generate article process");
 			logger.info("received token bearer --- {}", authorization);
 			String tokenValue = "";
 			if (authorization != null && authorization.contains("Bearer")) {
@@ -238,12 +241,12 @@ public class ArticleController extends BaseController {
 				logger.info("token value request header --- {}",tokenValue);
 				logger.info("username request header --- {}",username);
 			}
-			logger.info("get article templates by structure id {}", requestTemplateDto.getStructureId());
-			List<ArticleTemplateDto> templates = articleTemplateService.findTemplatesByStructureId(tokenValue, requestTemplateDto.getStructureId(), username);
-			return createResponse(templates, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
+//			logger.info("get article templates by structure id {}", requestTemplateDto.getStructureId());
+//			List<ArticleTemplateDto> templates = articleTemplateService.findTemplatesByStructureId(tokenValue, requestTemplateDto.getStructureId(), username);
+			return createResponse(1L, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
 		} catch (Exception e) {
 			logger.error("exception", e);
-			return createResponse(new ArrayList<ArticleTemplateDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
+			return createResponse(0L, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
 		}
 	}
 }
