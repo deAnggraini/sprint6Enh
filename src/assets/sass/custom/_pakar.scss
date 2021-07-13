@@ -203,3 +203,9 @@ pakar-combo-box-accordion.ng-touched.ng-invalid {
     border-color: red !important;
   }
 }
+
+pakar-input-length.ng-touched.ng-invalid {
+  .input-with-length {
+    border-color: red !important;
+  }
+}

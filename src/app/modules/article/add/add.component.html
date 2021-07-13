@@ -6,9 +6,8 @@
                 <div class="row">
                     <div class="form-group col-sm-10 col-md-10 col-lg-8  col-xxl-8">
                         <label>Judul Artikel <span class="text-danger">*</span></label>
-                        <input class="form-control" type="text" maxlength="50"
-                            placeholder="Masukkan nama artikel disini (maks. 50 karakter)" required
-                            formControlName="title" autocomplete="off" [ngClass]="{ 'is-invalid': hasError}">
+                        <pakar-input-length placeholder="Masukkan nama artikel disini (maks. 50 karakter)"
+                            formControlName="title" maxlength="50"></pakar-input-length>
                         <ng-container [ngTemplateOutlet]="formError"
                             [ngTemplateOutletContext]="{ control: dataForm.controls['title']}"></ng-container>
                     </div>

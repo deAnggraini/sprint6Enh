@@ -14,6 +14,7 @@ import { InlineSVGModule } from 'ng-inline-svg';
 import { SanitizeHtmlPipe } from './pipe/sanitize-html.pipe';
 import { ComboBoxComponent } from './_components/combo-box/combo-box.component';
 import { InputDropDownComponent } from './_components/input-drop-down/input-drop-down.component';
+import { InputWithLengthComponent } from './_components/input-with-length/input-with-length.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { InputDropDownComponent } from './_components/input-drop-down/input-drop
     SanitizeHtmlPipe,
     ComboBoxComponent,
     InputDropDownComponent,
+    InputWithLengthComponent,
   ],
   imports: [
     CommonModule,
@@ -45,6 +47,7 @@ import { InputDropDownComponent } from './_components/input-drop-down/input-drop
     PakarSearchComponent,
     ComboBoxComponent,
     InputDropDownComponent,
+    InputWithLengthComponent
   ]
 })
 export class UtilsModule {

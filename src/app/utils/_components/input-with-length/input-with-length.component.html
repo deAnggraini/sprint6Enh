@@ -1,0 +1,5 @@
+<div #inputLength class="input-with-length d-flex align-items-center justify-content-between pr-1">
+    <input type="text" class="form-control" [placeholder]="placeholder" required autocomplete="off" [(ngModel)]="value"
+        [maxlength]="maxlength" (ngModelChange)="_onChange($event)" (blur)="_onTouched()">
+    <span *ngIf="maxlength" class="text-muted">{{value ? value.length : 0}}/{{maxlength}}</span>
+</div>

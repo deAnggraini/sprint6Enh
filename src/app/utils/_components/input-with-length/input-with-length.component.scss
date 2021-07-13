@@ -1,0 +1,13 @@
+:host ::ng-deep .input-with-length {
+
+  background-color: #ffffff;
+  background-clip: padding-box;
+  border: 1px solid #E4E6EF;
+  border-radius: 0.42rem;
+  box-shadow: none;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
+  input {
+    border: none;
+  }
+}
