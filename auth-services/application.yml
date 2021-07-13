@@ -1,0 +1,47 @@
+server:
+  port: ${port:8085}
+spring:
+  profiles:
+    active: "dev-local"
+  main:
+    banner-mode: "off"
+  jpa:
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+---
+spring:
+  config:
+    activate:
+      on-profile: dev-local
+  dataSource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password:
+    hikari:
+      connectionTimeout: 20000
+      maximumPoolSize: 5
+  json:
+    file:
+      user: /var/bca/file/user.json
+---
+spring:
+  config:
+    activate:
+      on-profile: dev-ogya
+  dataSource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password:
+    hikari:
+      connectionTimeout: 20000
+      maximumPoolSize: 5
+  json:
+    file:
+      user: /var/bca/file/user.json
