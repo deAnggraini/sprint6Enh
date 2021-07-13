@@ -6,4 +6,4 @@ spring.datasource.username=sa
 spring.datasource.password=
 spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
 
-json.file.user=/var/bca/file/user.json
+spring.json.file.user=/var/bca/file/user.json
