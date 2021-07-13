@@ -352,4 +352,13 @@ router.post('/saveBatchStructure', (req, res) => {
     res.send({ error: false, msg: "debug", data: new_child });
 });
 
+router.post('/checkUnique', (req, res) => {
+    const { title } = req.body;
+    if (title == 'test') {
+        res.send({ status: { code: '09', message: "title sudah ada" } });
+    } else {
+        res.send({ error: false, msg: "", data: {} });
+    }
+});
+
 module.exports = router;
