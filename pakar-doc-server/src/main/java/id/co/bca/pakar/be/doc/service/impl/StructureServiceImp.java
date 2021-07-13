@@ -684,7 +684,7 @@ public class StructureServiceImp implements StructureService {
             _deletedEntity.setModifyDate(new Date());
             _deletedEntity.setModifyBy(username);
             _deletedEntity.setDeleted(Boolean.TRUE);
-            structureRepository.delete(_deletedEntity);
+            structureRepository.save(_deletedEntity);
 
             // move child structures, to other structures
             for (ChangeToStructureDto changeTo : deleteStructureDto.getChangeTo()) {
