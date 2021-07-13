@@ -1,5 +1,6 @@
 package id.co.bca.pakar.be.doc.service.impl;
 
+import id.co.bca.pakar.be.doc.common.Constant;
 import id.co.bca.pakar.be.doc.dao.ArticleTemplateContentRepository;
 import id.co.bca.pakar.be.doc.dao.ArticleTemplateRepository;
 import id.co.bca.pakar.be.doc.dao.ArticleTemplateStructureRepository;
@@ -59,10 +60,14 @@ public class ArticleTemplateServiceImp implements ArticleTemplateService {
             List<ArticleTemplateContent> contents = articleTemplateContentRepository.findByTemplateId(template.getArticleTemplate().getId());
             List<ContentTemplateDto> contentTemplateDtos = new TreeContents().menuTree(mapToList(contents));
             ArticleTemplateDto dto = new ArticleTemplateDto();
+            dto.setId(template.getId());
             dto.setName(template.getArticleTemplate().getTemplateName());
             dto.setDesc(template.getArticleTemplate().getDescription());
             dto.setImage("");
-            dto.setThumb("");
+            ArticleTemplateThumbnail articleTemplateThumbnail = articleTemplateThumbnailRepository.findArticleTemplatesThumbnail(template.getId());
+            if(articleTemplateThumbnail != null) {
+                dto.setThumb(articleTemplateThumbnail.getImages().getUri());
+            }
             dto.setContent(contentTemplateDtos);
             dtoTemplates.add(dto);
         }
@@ -84,8 +89,8 @@ public class ArticleTemplateServiceImp implements ArticleTemplateService {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-            headers.add("Authorization", "Bearer " + tokenValue);
-            headers.add("X-USERNAME", username);
+            headers.add(Constant.Headers.AUTHORIZATION, Constant.Headers.BEARER + tokenValue);
+            headers.add(Constant.Headers.X_USERNAME, username);
             HttpEntity<String> request = new HttpEntity<String>(headers);
             String url_api = uri + "/api/auth/getRoles";
 //            RestEntity.RestResponse response = null;
@@ -114,6 +119,7 @@ public class ArticleTemplateServiceImp implements ArticleTemplateService {
                 List<ArticleTemplateContent> contents = articleTemplateContentRepository.findByTemplateId(template.getArticleTemplate().getId());
                 List<ContentTemplateDto> contentTemplateDtos = new TreeContents().menuTree(mapToList(contents));
                 ArticleTemplateDto dto = new ArticleTemplateDto();
+                dto.setId(template.getId());
                 dto.setName(template.getArticleTemplate().getTemplateName());
                 dto.setDesc(template.getArticleTemplate().getDescription());
                 dto.setImage("");
@@ -174,39 +180,5 @@ public class ArticleTemplateServiceImp implements ArticleTemplateService {
             }
         }
         return params;
-    }
-
-    public static void main(String[] args) {
-        String text = "Ketentuan [nama produk] dengan formulir [nama produk 2]";
-        String tagParam = "[]|{}";
-        String[] tags = tagParam.split("\\|");
-
-        List<String> params = new ArrayList<>();
-        for(int i = 0; i < tags.length; i++) {
-            String tagEl = tags[i];
-            Character openTag = tagEl.charAt(0);
-            Character closeTag = tagEl.charAt(1);
-            System.out.println("open tag "+openTag);
-            boolean startExtract = false;
-            String param = "";
-            for(int j = 0 ; j < text.length(); j++) {
-                if(text.charAt(j) == closeTag) {
-                    startExtract = false;
-                    params.add(param);
-                }
-
-                if(startExtract) {
-                    param = param + text.charAt(j);
-                }
-
-                if(text.charAt(j) == openTag) {
-                    startExtract = true;
-                }
-            }
-
-            String[] myArray = new String[params.size()];
-            params.toArray(myArray);
-            System.out.println("params "+myArray);
-        }
     }
 }

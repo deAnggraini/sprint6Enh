@@ -45,4 +45,10 @@ public class Constant {
 			this.action = action;
 		}
 	}
+
+	public static class Headers {
+		public static final String AUTHORIZATION = "Authorization";
+		public static final String X_USERNAME = "X-USERNAME";
+		public static final String BEARER = "Bearer";
+	}
 }
