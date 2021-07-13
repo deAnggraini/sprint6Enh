@@ -109,9 +109,7 @@ export class AddComponent implements OnInit, OnDestroy {
     const listSort = this.categories.map(d => d.sort);
     const maxSort = Math.max(...listSort) | 0;
 
-    // console.log({ listSort, maxSort });
     fd.append('sort', (maxSort + 1).toString());
-
 
     fd.append('parent', "0");
     fd.append('location', "");
@@ -253,6 +251,8 @@ export class AddComponent implements OnInit, OnDestroy {
     if (found) {
       const _found = JSON.parse(JSON.stringify(found)); // agar master tidak ikut berubah
       this.selected$.next(_found);
+    } else {
+      this.selected$.next({});
     }
   }
 
@@ -262,9 +262,9 @@ export class AddComponent implements OnInit, OnDestroy {
       this.categories = res;
       this.categories$.next(this.categories);
       // ada perubahan data, dan sudah ada yang terselect, harus di update
-      if (this.selected$.value.id) {
-        this.setJsTree({ id: this.selected$.value.id }, true);
-      }
+      // if (this.selected$.value.id) {
+      this.setJsTree({ id: this.selected$.value.id }, true);
+      // }
       // this.cdr.detectChanges();
     });
     const menuSubscr2 = this.menu.menuConfig$.subscribe(res => {
