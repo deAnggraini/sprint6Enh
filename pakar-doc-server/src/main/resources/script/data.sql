@@ -14,6 +14,16 @@ INSERT INTO public.t_article_template_structure
 (id, created_by, created_date, deleted, modify_by, modify_date, article_template_id, structure_id)
 VALUES(nextval('public.article_template_structure_seq'), 'system',now()::DATE, 'f','system',now()::DATE, 2, 234);
 
+INSERT INTO public.t_article_template_role
+(id, created_by, created_date, deleted, role_id, template_id)
+VALUES(nextval('public.article_template_role_seq'), 'system',now()::DATE, false, 'EDITOR', 2);
+INSERT INTO public.t_article_template_role
+(id, created_by, created_date, deleted, role_id, template_id)
+VALUES(nextval('public.article_template_role_seq'), 'system',now()::DATE, false, 'ADMIN', 1);
+INSERT INTO public.t_article_template_role
+(id, created_by, created_date, deleted, role_id, template_id)
+VALUES(nextval('public.article_template_role_seq'), 'system',now()::DATE, false, 'ADMIN', 2);
+
 ---- article Template Content ----
 INSERT INTO public.t_article_template_content
 (id, created_by, created_date, deleted, modify_by, modify_date, description, level, name, parent, sort, article_template_id)

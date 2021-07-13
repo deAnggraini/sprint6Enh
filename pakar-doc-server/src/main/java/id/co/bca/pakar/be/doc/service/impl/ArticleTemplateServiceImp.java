@@ -1,34 +1,32 @@
 package id.co.bca.pakar.be.doc.service.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nimbusds.jose.shaded.json.JSONArray;
-import id.co.bca.pakar.be.doc.api.BaseController;
 import id.co.bca.pakar.be.doc.dao.ArticleTemplateContentRepository;
 import id.co.bca.pakar.be.doc.dao.ArticleTemplateRepository;
 import id.co.bca.pakar.be.doc.dao.ArticleTemplateStructureRepository;
+import id.co.bca.pakar.be.doc.dao.ArticleTemplateThumbnailRepository;
 import id.co.bca.pakar.be.doc.dto.ArticleTemplateDto;
 import id.co.bca.pakar.be.doc.dto.ContentTemplateDto;
 import id.co.bca.pakar.be.doc.model.ArticleTemplateContent;
 import id.co.bca.pakar.be.doc.model.ArticleTemplateStructure;
+import id.co.bca.pakar.be.doc.model.ArticleTemplateThumbnail;
 import id.co.bca.pakar.be.doc.service.ArticleTemplateService;
-import id.co.bca.pakar.be.doc.util.JSONMapperAdapter;
-import id.co.bca.pakar.be.doc.util.RestEntity;
 import id.co.bca.pakar.be.doc.util.TreeContents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.*;
-import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class ArticleTemplateServiceImp implements ArticleTemplateService {
@@ -36,6 +34,9 @@ public class ArticleTemplateServiceImp implements ArticleTemplateService {
 
     @Value("${spring.security.oauth2.server.url}")
     private String uri;
+
+    @Value("${spring.article.param-tag:[]}")
+    private String paramtTag;
 
     @Autowired
     private RestTemplate restTemplate;
@@ -46,6 +47,8 @@ public class ArticleTemplateServiceImp implements ArticleTemplateService {
     private ArticleTemplateStructureRepository articleTemplateStructureRepository;
     @Autowired
     private ArticleTemplateContentRepository articleTemplateContentRepository;
+    @Autowired
+    private ArticleTemplateThumbnailRepository articleTemplateThumbnailRepository;
 
     @Override
     public List<ArticleTemplateDto> findTemplatesByStructureId(Long structureId) {
@@ -104,7 +107,7 @@ public class ArticleTemplateServiceImp implements ArticleTemplateService {
             logger.debug("roles from from username {} ---> {}", username, role);
 
             /*
-            get all template
+            get all article template base on structure id
              */
             List<ArticleTemplateStructure> templates = articleTemplateStructureRepository.findArticleTemplatesByStructureId(structureId);
             for(ArticleTemplateStructure template : templates) {
@@ -114,7 +117,10 @@ public class ArticleTemplateServiceImp implements ArticleTemplateService {
                 dto.setName(template.getArticleTemplate().getTemplateName());
                 dto.setDesc(template.getArticleTemplate().getDescription());
                 dto.setImage("");
-                dto.setThumb("");
+                ArticleTemplateThumbnail articleTemplateThumbnail = articleTemplateThumbnailRepository.findArticleTemplatesThumbnail(template.getId());
+                if(articleTemplateThumbnail != null) {
+                    dto.setThumb(articleTemplateThumbnail.getImages().getUri());
+                }
                 dto.setContent(contentTemplateDtos);
                 dtoTemplates.add(dto);
             }
@@ -126,17 +132,81 @@ public class ArticleTemplateServiceImp implements ArticleTemplateService {
 
     private List<ContentTemplateDto> mapToList(Iterable<ArticleTemplateContent> iterable) {
         List<ContentTemplateDto> listOfContents = new ArrayList<>();
+
         for (ArticleTemplateContent content : iterable) {
             ContentTemplateDto contentDto = new ContentTemplateDto();
             contentDto.setId(content.getId());
             contentDto.setLevel(content.getLevel());
             contentDto.setOrder(content.getSort());
-            contentDto.setParent(content.getParent());
             contentDto.setTitle(content.getName());
             contentDto.setDesc(content.getDescription());
+            contentDto.setParams(getParams(content.getName()));
+            contentDto.setParent(content.getParent());
             listOfContents.add(contentDto);
         }
         return listOfContents;
     }
 
+    private List<String> getParams(String text) {
+        logger.debug("split param tag {}", paramtTag);
+        String[] tags = paramtTag.split("\\|");
+        List<String> params = new ArrayList<>();
+        for(int i = 0; i < tags.length; i++) {
+            String tagEl = tags[i];
+            Character openTag = tagEl.charAt(0);
+            Character closeTag = tagEl.charAt(1);
+
+            boolean startExtract = false;
+            String param = "";
+            for(int j = 0 ; j < text.length(); j++) {
+                if(text.charAt(j) == closeTag) {
+                    startExtract = false;
+                    params.add(param.trim());
+                }
+
+                if(startExtract) {
+                    param = param + text.charAt(j);
+                }
+
+                if(text.charAt(j) == openTag) {
+                    startExtract = true;
+                }
+            }
+        }
+        return params;
+    }
+
+    public static void main(String[] args) {
+        String text = "Ketentuan [nama produk] dengan formulir [nama produk 2]";
+        String tagParam = "[]|{}";
+        String[] tags = tagParam.split("\\|");
+
+        List<String> params = new ArrayList<>();
+        for(int i = 0; i < tags.length; i++) {
+            String tagEl = tags[i];
+            Character openTag = tagEl.charAt(0);
+            Character closeTag = tagEl.charAt(1);
+            System.out.println("open tag "+openTag);
+            boolean startExtract = false;
+            String param = "";
+            for(int j = 0 ; j < text.length(); j++) {
+                if(text.charAt(j) == closeTag) {
+                    startExtract = false;
+                    params.add(param);
+                }
+
+                if(startExtract) {
+                    param = param + text.charAt(j);
+                }
+
+                if(text.charAt(j) == openTag) {
+                    startExtract = true;
+                }
+            }
+
+            String[] myArray = new String[params.size()];
+            params.toArray(myArray);
+            System.out.println("params "+myArray);
+        }
+    }
 }
