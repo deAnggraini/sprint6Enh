@@ -107,7 +107,9 @@ export class AddComponent implements OnInit, OnDestroy {
 
     // fd.append('sort', String(this.categories.length + 1));
     const listSort = this.categories.map(d => d.sort);
-    const maxSort = Math.max(...listSort);
+    const maxSort = Math.max(...listSort) | 0;
+
+    // console.log({ listSort, maxSort });
     fd.append('sort', (maxSort + 1).toString());
 
 

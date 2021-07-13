@@ -143,7 +143,7 @@ export class DetailComponent implements OnInit, OnDestroy {
 
     // let nextSort = String(this.section.menus.length + 1);
     const listSort = this.section.menus.map(d => d.sort);
-    const maxSort = Math.max(...listSort);
+    const maxSort = Math.max(...listSort) | 0;
     fd.append('sort', (maxSort + 1).toString());
     fd.append('parent', this.dataForm.value.parent);
     fd.append('location', this.dataForm.value.location);
