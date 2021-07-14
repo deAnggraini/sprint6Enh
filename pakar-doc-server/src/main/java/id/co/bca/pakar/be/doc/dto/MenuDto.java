@@ -34,6 +34,8 @@ public class MenuDto {
 	protected String location;
 	@JsonProperty("location_text")
 	protected String location_text;
+	@JsonProperty("hasArticle")
+	private Boolean hasArticle = Boolean.FALSE;
 
 	public Long getId() {
 		return id;
@@ -148,6 +150,14 @@ public class MenuDto {
 		this.location_text = location_text;
 	}
 
+	public Boolean getHasArticle() {
+		return hasArticle;
+	}
+
+	public void setHasArticle(Boolean hasArticle) {
+		this.hasArticle = hasArticle;
+	}
+
 	@Override
 	public String toString() {
 		return "MenuDto{" +
@@ -162,6 +172,10 @@ public class MenuDto {
 				", editStatus=" + editStatus +
 				", menuChilds=" + menuChilds +
 				", parent=" + parent +
+				", breadcumbMenuDtoList=" + breadcumbMenuDtoList +
+				", location='" + location + '\'' +
+				", location_text='" + location_text + '\'' +
+				", hasArticle=" + hasArticle +
 				'}';
 	}
 }

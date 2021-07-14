@@ -80,7 +80,7 @@ public class ArticleTemplateServiceImp implements ArticleTemplateService {
             /*
             get all article template base on structure id
              */
-            List<ArticleTemplateStructure> templates = articleTemplateStructureRepository.findArticleTemplatesByStructureId(structureId);
+            List<ArticleTemplateStructure> templates = articleTemplateRepository.findArticleTemplates(structureId, role);
             for(ArticleTemplateStructure template : templates) {
                 List<ArticleTemplateContent> contents = articleTemplateContentRepository.findByTemplateId(template.getArticleTemplate().getId());
                 List<ContentTemplateDto> contentTemplateDtos = new TreeContents().menuTree(mapToList(contents));

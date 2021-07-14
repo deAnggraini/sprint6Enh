@@ -438,6 +438,7 @@ public class StructureServiceImp implements StructureService {
                     structure.setParentStructure(structureDto.getParent());
                     structure.setLocation(structureDto.getLocation());
                     structure.setLocation_text(structureDto.getLocation_text());
+                    structure.setHasArticle(structureDto.getHasArticle());
                     Structure _structure = structureRepository.save(structure);
 
                     // populate data
@@ -449,6 +450,7 @@ public class StructureServiceImp implements StructureService {
                     _dto.setLocation(_structure.getLocation());
                     _dto.setLocation_text(_structure.getLocation_text());
                     _dto.setSort(_structure.getSort());
+                    _dto.setHasArticle(_structure.getHasArticle());
                     newStructureList.add(_dto);
                 } catch (DataNotFoundException e) {
                     logger.error("there is data not found in database, stop process update");
@@ -762,6 +764,7 @@ public class StructureServiceImp implements StructureService {
             menuDto.setMenuDescription(structure.getStructureDescription());
             menuDto.setLocation(structure.getLocation());
             menuDto.setLocation_text(structure.getLocation_text());
+            menuDto.setHasArticle(structure.getHasArticle());
             try {
                 StructureIcons sic = structureIconRepository.findByStructureId(structure.getId());
                 menuDto.setIconUri(sic != null ? sic.getIcons().getUri() : "");

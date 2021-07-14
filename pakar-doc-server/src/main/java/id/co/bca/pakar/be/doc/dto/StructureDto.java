@@ -37,6 +37,8 @@ public class StructureDto {
     protected String location;
     @JsonProperty("location_text")
     protected String location_text;
+    @JsonProperty("hasArticle")
+    private Boolean hasArticle = Boolean.FALSE;
 
     public Long getId() {
         return id;
@@ -118,6 +120,14 @@ public class StructureDto {
         this.location_text = location_text;
     }
 
+    public Boolean getHasArticle() {
+        return hasArticle;
+    }
+
+    public void setHasArticle(Boolean hasArticle) {
+        this.hasArticle = hasArticle;
+    }
+
     @Override
     public String toString() {
         return "StructureDto{" +
@@ -131,6 +141,7 @@ public class StructureDto {
                 ", edit=" + edit +
                 ", location='" + location + '\'' +
                 ", location_text='" + location_text + '\'' +
+                ", hasArticle=" + hasArticle +
                 '}';
     }
 }
