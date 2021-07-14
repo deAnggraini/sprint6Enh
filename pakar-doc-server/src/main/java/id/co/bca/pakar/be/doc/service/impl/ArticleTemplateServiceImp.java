@@ -1,16 +1,10 @@
 package id.co.bca.pakar.be.doc.service.impl;
 
 import id.co.bca.pakar.be.doc.client.ApiClient;
-import id.co.bca.pakar.be.doc.dao.ArticleTemplateContentRepository;
-import id.co.bca.pakar.be.doc.dao.ArticleTemplateRepository;
-import id.co.bca.pakar.be.doc.dao.ArticleTemplateStructureRepository;
-import id.co.bca.pakar.be.doc.dao.ArticleTemplateThumbnailRepository;
+import id.co.bca.pakar.be.doc.dao.*;
 import id.co.bca.pakar.be.doc.dto.ArticleTemplateDto;
 import id.co.bca.pakar.be.doc.dto.ContentTemplateDto;
-import id.co.bca.pakar.be.doc.model.ArticleTemplate;
-import id.co.bca.pakar.be.doc.model.ArticleTemplateContent;
-import id.co.bca.pakar.be.doc.model.ArticleTemplateStructure;
-import id.co.bca.pakar.be.doc.model.ArticleTemplateThumbnail;
+import id.co.bca.pakar.be.doc.model.*;
 import id.co.bca.pakar.be.doc.service.ArticleTemplateService;
 import id.co.bca.pakar.be.doc.util.TreeContents;
 import org.slf4j.Logger;
@@ -39,6 +33,8 @@ public class ArticleTemplateServiceImp implements ArticleTemplateService {
     @Autowired
     private ArticleTemplateThumbnailRepository articleTemplateThumbnailRepository;
     @Autowired
+    private ArticleTemplateImageRepository articleTemplateImageRepository;
+    @Autowired
     private ApiClient apiClient;
 
     @Override
@@ -53,7 +49,10 @@ public class ArticleTemplateServiceImp implements ArticleTemplateService {
             dto.setId(template.getId());
             dto.setName(template.getArticleTemplate().getTemplateName());
             dto.setDesc(template.getArticleTemplate().getDescription());
-            dto.setImage("");
+            ArticleTemplateImage articleTemplateImage = articleTemplateImageRepository.findArticleTemplatesImage(template.getId());
+            if(articleTemplateImage != null) {
+                dto.setImage(articleTemplateImage.getImages().getUri());
+            }
             ArticleTemplateThumbnail articleTemplateThumbnail = articleTemplateThumbnailRepository.findArticleTemplatesThumbnail(template.getId());
             if(articleTemplateThumbnail != null) {
                 dto.setThumb(articleTemplateThumbnail.getImages().getUri());
