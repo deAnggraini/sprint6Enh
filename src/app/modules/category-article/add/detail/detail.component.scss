@@ -4,6 +4,14 @@
   }
 }
 
+:host ::ng-deep .hasMoved {
+
+  &.node-buttons,
+  .node-buttons {
+    display: none !important;
+  }
+}
+
 :host ::ng-deep #struktur-tree {
   .tree-item {
     display: inline-flex !important;

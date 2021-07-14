@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnDestroy, ChangeDetectorRef, Output, EventEmitter, ViewChild, TemplateRef } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { ConfirmService } from 'src/app/utils/_services/confirm.service';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { StrukturDTO } from 'src/app/modules/_model/struktur.dto';
@@ -43,6 +43,8 @@ export class DetailComponent implements OnInit, OnDestroy {
 
   @ViewChild('formAddChild') formModal: TemplateRef<any>;
   @ViewChild('formChangeParent') formChangeParentModal: TemplateRef<any>;
+
+  subscriptions: Subscription[] = [];
 
   locations: any[] = [];
   dataForm: FormGroup;
@@ -226,6 +228,7 @@ export class DetailComponent implements OnInit, OnDestroy {
   cancel() {
     this.moved = false;
     this.logs = [];
+    this.refreshNodeButton();
     this.menu.refreshStruktur();
   }
 
@@ -314,6 +317,7 @@ export class DetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.subscriptions.forEach(sb => sb.unsubscribe());
   }
 
   ngOnInit(): void {
@@ -321,21 +325,24 @@ export class DetailComponent implements OnInit, OnDestroy {
     this.initForm();
     this.datasource = [];
     this.initJsTree();
-    this.selected.subscribe(res => {
+    this.subscriptions.push(this.selected.subscribe(res => {
+      this.moved = false;
+      this.logs = [];
       this.section = res;
       this.defaultValue.parent = res.id;
       this.defaultValue.level = res.level + 1;
 
       this.refreshJsTree();
+      this.refreshNodeButton();
       // this.cdr.detectChanges();
-    });
-    this.treeItem$.subscribe(res => {
+    }));
+    this.subscriptions.push(this.treeItem$.subscribe(res => {
       this.datasource = [];
-    });
-    this.locationStruktur.subscribe(resp => {
+    }));
+    this.subscriptions.push(this.locationStruktur.subscribe(resp => {
       this.locations = [];
       this.createCategorySingleDimention(resp, []);
-    })
+    }));
   }
 
   private findLocation(data) {
@@ -426,9 +433,9 @@ export class DetailComponent implements OnInit, OnDestroy {
 
   private createButtonIcon(data: any) {
     return `<div class="node-buttons mr-1">
-      ${data.level != 4 ? '<div class="btn btn-sm btn-clean btn-blue btn-my add-child" data-id="${data.id}"><i class="add-child fas fa-plus-circle"></i></div>' : ''}
-      <div class="btn btn-sm btn-clean btn-blue btn-my edit-child" data-id="${data.id}"><i class="edit-child fas fa-pen"></i></div>
-      <div class="btn btn-sm btn-clean btn-blue btn-my delete-child" data-id="${data.id}"><i class="delete-child far fa-trash-alt"></i></div>
+      ${data.level != 4 ? `<div class="btn btn-sm btn-clean btn-blue btn-my add-child" [ngClass]="{'disabled' : moved}"  data-id="${data.id}"><i class="add-child fas fa-plus-circle"></i></div>` : ''}
+      <div class="btn btn-sm btn-clean btn-blue btn-my edit-child" [ngClass]="{'disabled' : moved}"  data-id="${data.id}"><i class="edit-child fas fa-pen"></i></div>
+      <div class="btn btn-sm btn-clean btn-blue btn-my delete-child" [ngClass]="{'disabled' : moved}"  data-id="${data.id}"><i class="delete-child far fa-trash-alt"></i></div>
     </div>`;
   }
 
@@ -443,10 +450,30 @@ export class DetailComponent implements OnInit, OnDestroy {
     return this.locations.find(d => d.id == id)
   }
 
+  private refreshNodeButton() {
+    // disabled add edit delete
+    const treeId = this.tree_id.substr(1);
+    document.getElementById(treeId).classList.remove('hasMoved');
+    const x = document.getElementsByClassName('node-buttons');
+
+    if (this.moved) {
+      document.getElementById(treeId).classList.add('hasMoved');
+      for (let i = 0; i < x.length; i++) {
+        x[i].classList.add('hasMoved');
+      }
+    } else {
+      for (let i = 0; i < x.length; i++) {
+        x[i].classList.remove('hasMoved');
+      }
+    }
+  }
+
   private moving(data) {
     this.moved = true;
     const new_children = this.createJsonData(data.new_instance.get_json(), this.section.id);
     this.logs.push(new_children);
+    this.refreshNodeButton();
+
     this.cdr.detectChanges();
   }
 
@@ -505,20 +532,22 @@ export class DetailComponent implements OnInit, OnDestroy {
 
         const addChild = $(target).hasClass('add-child');
         if (addChild) {
+          e.stopPropagation();
+          if ($that.moved) return alert('Silahkan Melakukan Simpan atau Batal terlebih dahulu');
           const node = $that.findNode(parseInt(selected[0]));
           const myLocation = $that.findLocation(node);
           const defaultValue = Object.assign({}, $that.defaultValue, { level: node.level + 1, parent: node.id, location: myLocation._value });
-          console.log({ defaultValue });
           $that.setTxtLevelName(node.level + 1);
           $that.dataForm.reset(defaultValue);
           $that.isEdit = false;
           $that.imageFile = null;
           $that.open(false);
-          e.stopPropagation();
         }
 
         const editChild = $(target).hasClass('edit-child');
         if (editChild) {
+          e.stopPropagation();
+          if ($that.moved) return alert('Silahkan Melakukan Simpan atau Batal terlebih dahulu');
           const node = $that.findNode(parseInt(selected[0]));
           if (node) {
             $that.setTxtLevelName(node.level);
@@ -526,11 +555,12 @@ export class DetailComponent implements OnInit, OnDestroy {
           } else {
             console.error('node not found');
           }
-          e.stopPropagation();
         }
 
         const deleteChild = $(target).hasClass('delete-child');
         if (deleteChild) {
+          e.stopPropagation();
+          if ($that.moved) return alert('Silahkan Melakukan Simpan atau Batal terlebih dahulu');
           const node = $that.findNode(parseInt(selected[0]));
           if (node) {
             $that.setTxtLevelName(node.level);
@@ -538,10 +568,16 @@ export class DetailComponent implements OnInit, OnDestroy {
           } else {
             console.error('node not found');
           }
-          e.stopPropagation();
         }
       }
     });
+    // $(this.tree_id).on("hover_node.jstree", function (e, data) {
+    //   const $target = $(e.target);
+    //   $target.removeClass('hasMoved');
+    //   if ($that.moved) {
+    //     $target.addClass('hasMoved');
+    //   }
+    // })
   }
 
 }
