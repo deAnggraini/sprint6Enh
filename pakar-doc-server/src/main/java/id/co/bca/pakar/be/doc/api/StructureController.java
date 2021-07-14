@@ -3,7 +3,10 @@ package id.co.bca.pakar.be.doc.api;
 import id.co.bca.pakar.be.doc.api.validator.MultiStructureValidator;
 import id.co.bca.pakar.be.doc.api.validator.StructureValidator;
 import id.co.bca.pakar.be.doc.common.Constant;
-import id.co.bca.pakar.be.doc.dto.*;
+import id.co.bca.pakar.be.doc.dto.DeleteStructureDto;
+import id.co.bca.pakar.be.doc.dto.MenuDto;
+import id.co.bca.pakar.be.doc.dto.StructureResponseDto;
+import id.co.bca.pakar.be.doc.dto.StructureWithFileDto;
 import id.co.bca.pakar.be.doc.exception.DataNotFoundException;
 import id.co.bca.pakar.be.doc.exception.InvalidLevelException;
 import id.co.bca.pakar.be.doc.exception.InvalidSortException;
@@ -157,7 +160,7 @@ public class StructureController extends BaseController {
 	public ResponseEntity<RestResponse<List<MenuDto>>> getCategories(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username) {
 		logger.info("get all structure/category");
 		try {
-			List<MenuDto> menus = structureService.getCategories(username);
+			List<MenuDto> menus = structureService.getCategories(username, getTokenFromHeader(authorization));
 			return createResponse(menus,Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
 		} catch (Exception e) {
 			logger.error("exception", e);

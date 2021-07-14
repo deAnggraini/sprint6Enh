@@ -1,6 +1,6 @@
 package id.co.bca.pakar.be.doc.service.impl;
 
-import id.co.bca.pakar.be.doc.common.Constant;
+import id.co.bca.pakar.be.doc.client.ApiClient;
 import id.co.bca.pakar.be.doc.dao.ArticleTemplateContentRepository;
 import id.co.bca.pakar.be.doc.dao.ArticleTemplateRepository;
 import id.co.bca.pakar.be.doc.dao.ArticleTemplateStructureRepository;
@@ -16,31 +16,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class ArticleTemplateServiceImp implements ArticleTemplateService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Value("${spring.security.oauth2.server.url}")
-    private String uri;
-
     @Value("${spring.article.param-tag:[]}")
     private String paramtTag;
-
-    @Autowired
-    private RestTemplate restTemplate;
 
     @Autowired
     private ArticleTemplateRepository articleTemplateRepository;
@@ -50,6 +37,8 @@ public class ArticleTemplateServiceImp implements ArticleTemplateService {
     private ArticleTemplateContentRepository articleTemplateContentRepository;
     @Autowired
     private ArticleTemplateThumbnailRepository articleTemplateThumbnailRepository;
+    @Autowired
+    private ApiClient apiClient;
 
     @Override
     public List<ArticleTemplateDto> findTemplatesByStructureId(Long structureId) {
@@ -85,28 +74,7 @@ public class ArticleTemplateServiceImp implements ArticleTemplateService {
     public List<ArticleTemplateDto> findTemplatesByStructureId(String tokenValue, Long structureId, String username) {
         List<ArticleTemplateDto> dtoTemplates = new ArrayList<>();
         try {
-            String role = null;
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-            headers.add(Constant.Headers.AUTHORIZATION, Constant.Headers.BEARER + tokenValue);
-            headers.add(Constant.Headers.X_USERNAME, username);
-            HttpEntity<String> request = new HttpEntity<String>(headers);
-            String url_api = uri + "/api/auth/getRoles";
-            logger.debug("get roles from api {}", url_api);
-            Map map = restTemplate.exchange(url_api, HttpMethod.POST, request, Map.class).getBody();
-            logger.debug("response body {}", map);
-            if(map.containsKey("status")) {
-                Map apiStatus = (Map)map.get("status");
-                String code = (String)apiStatus.get("code");
-                if(!code.equals("00")) {
-                    throw new RestClientException("");
-                }
-                logger.debug("get role from response data {}",map.get("data"));
-                List jsonRoles =  (List)map.get("data");
-                logger.debug("get role from response data {}",jsonRoles);
-                role = (String)jsonRoles.get(0);
-            }
+            String role = apiClient.getRoles(username, tokenValue);
             logger.debug("roles from from username {} ---> {}", username, role);
 
             /*

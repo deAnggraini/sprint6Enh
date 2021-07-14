@@ -11,5 +11,5 @@ public interface StructureService {
 	StructureResponseDto update(String username, StructureWithFileDto dto) throws Exception;
 	DeleteStructureDto delete(String username, DeleteStructureDto deleteStructureDto) throws Exception;
 	List<StructureResponseDto> saveBatchStructures(String username, List<StructureWithFileDto> dtoList) throws Exception;
-	List<MenuDto> getCategories(String username) throws Exception;
+	List<MenuDto> getCategories(String username, String tokenValue) throws Exception;
 }

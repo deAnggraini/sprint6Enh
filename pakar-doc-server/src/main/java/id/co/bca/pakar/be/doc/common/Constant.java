@@ -50,6 +50,13 @@ public class Constant {
 	public static class Headers {
 		public static final String AUTHORIZATION = "Authorization";
 		public static final String X_USERNAME = "X-USERNAME";
-		public static final String BEARER = "Bearer";
+		public static final String BEARER = "Bearer ";
+	}
+
+	public static final class Roles {
+		public static final String ROLE_ADMIN = "ADMIN";
+		public static final String ROLE_READER = "READER";
+		public static final String ROLE_EDITOR = "EDITOR";
+		public static final String ROLE_PUBLISHER = "PUBLISHER";
 	}
 }

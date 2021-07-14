@@ -1,5 +1,7 @@
 package id.co.bca.pakar.be.doc.service.impl;
 
+import id.co.bca.pakar.be.doc.client.ApiClient;
+import id.co.bca.pakar.be.doc.common.Constant;
 import id.co.bca.pakar.be.doc.dao.*;
 import id.co.bca.pakar.be.doc.dto.*;
 import id.co.bca.pakar.be.doc.exception.DataNotActiveException;
@@ -14,8 +16,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
@@ -35,6 +43,8 @@ public class StructureServiceImp implements StructureService {
     private String pathCategory;
     @Value("${upload.path.base}")
     private String basePath;
+    @Autowired
+    private ApiClient apiClient;
 
     @Autowired
     private StructureRepository structureRepository;
@@ -158,17 +168,17 @@ public class StructureServiceImp implements StructureService {
             StructureResponseDto _dto = new StructureResponseDto();
 
             // validate
-            if(dto.getParent().intValue() == 0) {
-                if(dto.getLevel().intValue() > 1) {
+            if (dto.getParent().intValue() == 0) {
+                if (dto.getLevel().intValue() > 1) {
                     logger.info("level from request invalid, cause parent value 0 and level value must be setted to 1}");
-                    throw new InvalidLevelException("invalid new level " + dto.getLevel() + "with parent value "+dto.getParent());
+                    throw new InvalidLevelException("invalid new level " + dto.getLevel() + "with parent value " + dto.getParent());
                 }
             }
 
             /*
 			get existing structure from db with param structure id
 			 */
-            if(dto.getParent() > 0) {
+            if (dto.getParent() > 0) {
                 Optional<Structure> parentOp = structureRepository.findById(dto.getParent());
                 logger.debug("structure result from db {}", parentOp);
                 if (parentOp.isEmpty()) {
@@ -179,7 +189,7 @@ public class StructureServiceImp implements StructureService {
                 }
 
                 Structure _parentOp = parentOp.get();
-                if(_parentOp.getDeleted().booleanValue()) {
+                if (_parentOp.getDeleted().booleanValue()) {
                     logger.info("not active structure with id {}", dto.getParent());
                     throw new DataNotActiveException("data with id {} not active" + dto.getParent());
                 }
@@ -206,7 +216,7 @@ public class StructureServiceImp implements StructureService {
             _dto.setName(dto.getName());
             _dto.setDesc(dto.getDesc());
             Images _images = null;
-            if(dto.getImage() != null) {
+            if (dto.getImage() != null) {
                 if (!dto.getImage().isEmpty()) {
                     String location = basePath + pathCategory;
                     logger.debug("folder location {}", location);
@@ -233,7 +243,7 @@ public class StructureServiceImp implements StructureService {
             }
 
             Icons _icon = null;
-            if(dto.getIcon() != null) {
+            if (dto.getIcon() != null) {
                 if (!dto.getIcon().isEmpty()) {
                     String location = basePath + pathCategory;
                     logger.debug("folder location {}", location);
@@ -272,7 +282,7 @@ public class StructureServiceImp implements StructureService {
             Structure _structure = structureRepository.save(structure);
 
             // set uri value of struckture
-            _structure.setUri("/struktur/list/"+_structure.getId());
+            _structure.setUri("/struktur/list/" + _structure.getId());
             _structure = structureRepository.save(_structure);
 
             if (_images != null) {
@@ -340,7 +350,7 @@ public class StructureServiceImp implements StructureService {
         } catch (InvalidSortException e) {
             logger.error("invalid sort exception", e);
             throw new InvalidSortException("invalid sort exception", e);
-        }catch (Exception e) {
+        } catch (Exception e) {
             logger.error("exception", e);
             throw new Exception("exception", e);
         }
@@ -382,9 +392,9 @@ public class StructureServiceImp implements StructureService {
                     Long currentLevel = structureDto.getLevel();
                     Long currentPid = structureDto.getParent();
                     // validate structure exist in database base on current pid if current pid != 0
-                    if(currentPid.intValue() > 0) {
+                    if (currentPid.intValue() > 0) {
                         boolean isExist = structureRepository.existsById(currentPid);
-                        if(!isExist) {
+                        if (!isExist) {
                             logger.info("no structure found in database, process stopped");
                             throw new DataNotFoundException("no structure found in database");
                         }
@@ -407,7 +417,7 @@ public class StructureServiceImp implements StructureService {
                         logger.info("structure compared to {}", _structureDto.toString());
                         if (_structureDto.getId().intValue() == currentPid.intValue()) {
                             Long parentLevel = _structureDto.getLevel();
-                            if(currentLevel.intValue() <= parentLevel.intValue()) {
+                            if (currentLevel.intValue() <= parentLevel.intValue()) {
                                 logger.info("child level has value smaller than parent level, process stopped");
                                 throw new InvalidLevelException("child level has value smaller than parent level");
                             }
@@ -513,7 +523,7 @@ public class StructureServiceImp implements StructureService {
             _dto.setName(dto.getName());
             _dto.setDesc(dto.getDesc());
             Images _images = null;
-            if(dto.getImage() != null) {
+            if (dto.getImage() != null) {
                 if (!dto.getImage().isEmpty()) {
                     String location = basePath + pathCategory;
                     logger.debug("folder location {}", location);
@@ -540,7 +550,7 @@ public class StructureServiceImp implements StructureService {
             }
 
             Icons _icon = null;
-            if(dto.getIcon() != null) {
+            if (dto.getIcon() != null) {
                 if (!dto.getIcon().isEmpty()) {
                     String location = basePath + pathCategory;
                     logger.debug("folder location {}", location);
@@ -602,7 +612,7 @@ public class StructureServiceImp implements StructureService {
 
             if (_icon != null) {
                 StructureIcons sic = structureIconRepository.findByStructureId(_structure.getId());
-                if(sic != null) {
+                if (sic != null) {
                     logger.info("data found from database, update structure icon mapper");
                     sic.setModifyBy(username);
                     sic.setModifyDate(new Date());
@@ -694,7 +704,7 @@ public class StructureServiceImp implements StructureService {
                 if (!movedEntity.isEmpty()) {
                     logger.info("move structure id {} to parent structure {}", changeTo.getStructureId(), changeTo.getChangeTo());
                     Structure _movedEntity = movedEntity.get();
-                    _movedEntity.setSort(maxSort+1);
+                    _movedEntity.setSort(maxSort + 1);
                     _movedEntity.setModifyBy(username);
                     _movedEntity.setModifyDate(new Date());
                     _movedEntity.setParentStructure(changeTo.getChangeTo());
@@ -714,9 +724,18 @@ public class StructureServiceImp implements StructureService {
 
     @Override
     @Transactional
-    public List<MenuDto> getCategories(String username) throws Exception {
+    public List<MenuDto> getCategories(String username, String tokenValue) throws Exception {
         try {
-            Iterable<Structure> findAllIterable = structureRepository.findAll();
+            logger.info("get categories process");
+            // get roles of user
+            String role = apiClient.getRoles(username, tokenValue);
+            logger.debug("roles from from username {} ---> {}", username, role);
+            Iterable<Structure> findAllIterable = null;
+            if (role.equals(Constant.Roles.ROLE_READER)) {
+                findAllIterable = structureRepository.findAllForReader();
+            } else {
+                findAllIterable = structureRepository.findAll();
+            }
             List<MenuDto> treeMenu = new TreeMenu().menuTree(mapToList(findAllIterable));
             return treeMenu;
         } catch (Exception e) {
@@ -727,6 +746,7 @@ public class StructureServiceImp implements StructureService {
 
     /**
      * map of structure to menu dto
+     *
      * @param iterable
      * @return
      */
