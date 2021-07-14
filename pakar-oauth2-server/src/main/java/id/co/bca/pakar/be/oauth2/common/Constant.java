@@ -42,4 +42,11 @@ public class Constant {
 			this.action = action;
 		}
 	}
+
+	public static final class Roles {
+		public static final String ROLE_ADMIN = "ADMIN";
+		public static final String ROLE_READER = "READER";
+		public static final String ROLE_EDITOR = "EDITOR";
+		public static final String ROLE_PUBLISHER = "PUBLISHER";
+	}
 }
