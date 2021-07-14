@@ -1,42 +1,71 @@
 server:
-  port: ${port:12083}
-#security:
-#  oauth2:
-#    resource:
-#      userInfoUri: http://localhost:8083/validateUser
+  port: ${port:8082}
 spring:
-  security:
-    oauth2:
-      resourceserver:
-        jwt:  
-          issuer-uri: http://localhost:8083/validateUser
-        token-info-uri: http://localhost:8083/oauth/check_token 
-      rest:
-        timeout:
-          read: 60000
-          connection: 60000
-      clientId: javainuse-client
-      clientSecret: javainuse-secret
-#      authorize-grant-type: password,refresh_token
-#      accessTokenValiditySeconds: 43200
-#      refreshTokenValiditySeconds: 2592000
-    jwt:
-      signingkey: pakar123
-  dataSource: 
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://192.168.181.95:5432/postgres
-    username: postgres
-    password: password
-##    hikari:
-##      connectionTimeout: 20000
-##      maximumPoolSize: 5   
-#    
-#
-## Hibernate ddl auto (create, create-drop, update)
+  rest:
+    timeout:
+      read: 60000
+      connection: 60000
+  profiles:
+    active: "dev-local"
+  main:
+    banner-mode: "off"
   jpa:
     hibernate:
       ddl-auto: update
-      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy  
     generate-ddl: true
     show-sql: true
-    database-platform: org.hibernate.dialect.PostgreSQL10Dialect  
+    database-platform: org.hibernate.dialect.PostgreSQL10Dialect
+    properties:
+      hibernate:
+        dialect:org.hibernate.dialect.PostgreSQL10Dialect
+---
+spring:
+  profiles: dev-local
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://pakar-oauth-server:12081/oauth/token_key # JSON Web Key URI to use to verify the JWT token.
+          issuer-uri: http://pakar-oauth-server:12081/api/auth/me
+        token-info-uri: http://pakar-oauth-server:12081/oauth/check_token
+      server:
+        url: http://pakar-oauth-server:12081
+      clientId: 8C21EBEEB1AA3FBFE05400144FFBD319
+      clientSecret: da82edc6dcc1af30
+    jwt:
+      signingkey: pakar123
+  dataSource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://host.docker.internal:5432/postgres
+    username: postgres
+    password: password
+#    url: jdbc:postgresql://36.89.25.220:5432/pakardb3
+#    username: pakar3
+#    password: pakar123
+    hikari:
+      connectionTimeout: 20000
+      maximumPoolSize: 5
+---
+spring:
+  profiles: dev-ogya
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://192.168.181.70:12081/oauth/token_key # JSON Web Key URI to use to verify the JWT token.
+          issuer-uri: http://192.168.181.70:12081/api/auth/me
+        token-info-uri: http://192.168.181.70:12081/oauth/check_token
+      server:
+        url: http://192.168.181.70:12081
+      clientId: 8C21EBEEB1AA3FBFE05400144FFBD319
+      clientSecret: da82edc6dcc1af30
+    jwt:
+      signingkey: pakar123
+  dataSource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://192.168.181.95:5432/pakardb3
+    username: pakar3
+    password: pakar123
+    hikari:
+      connectionTimeout: 20000
+      maximumPoolSize: 5
