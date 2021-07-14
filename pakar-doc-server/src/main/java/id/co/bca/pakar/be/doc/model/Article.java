@@ -25,13 +25,13 @@ public class Article extends EntityBase {
 	@Column(name ="article_template_id")
 	private Long articleTemplate;
 
-	@Column(name = "title")
+	@Column(name = "title", unique = true, nullable = false)
 	private String judulArticle;
 
 	@Column(name = "article_used_by")
 	private String articleUsedBy;
 
-	@Column(name = "short_desc", columnDefinition="TEXT", length = 1000)
+	@Column(name = "short_desc", columnDefinition="TEXT", length = 1000, nullable = false)
 	private String shortDescription;
 
 	public Long getId() {
@@ -72,5 +72,13 @@ public class Article extends EntityBase {
 
 	public void setArticleUsedBy(String articleUsedBy) {
 		this.articleUsedBy = articleUsedBy;
+	}
+
+	public String getShortDescription() {
+		return shortDescription;
+	}
+
+	public void setShortDescription(String shortDescription) {
+		this.shortDescription = shortDescription;
 	}
 }

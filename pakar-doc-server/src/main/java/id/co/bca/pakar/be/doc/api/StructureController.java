@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -47,7 +48,11 @@ public class StructureController extends BaseController {
 			structureValidator.validate(structure, bindingResult);
 			if (bindingResult.hasErrors()) {
 				logger.info("binding result "+bindingResult.getAllErrors());
-				return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.REQUEST_PARAM_INVALID.getAction()[0], Constant.ApiResponseCode.REQUEST_PARAM_INVALID.getAction()[1]);
+				String errMessage = "";
+				for (FieldError error : bindingResult.getFieldErrors()) {
+					errMessage = error.getDefaultMessage();
+				}
+				return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.REQUEST_PARAM_INVALID.getAction()[0], errMessage);
 			}
 			logger.info("name structure >> {}", structure.getName());
 			StructureResponseDto responseDto = structureService.add(username, structure);

@@ -684,14 +684,17 @@ public class StructureServiceImp implements StructureService {
             _deletedEntity.setModifyDate(new Date());
             _deletedEntity.setModifyBy(username);
             _deletedEntity.setDeleted(Boolean.TRUE);
-            structureRepository.delete(_deletedEntity);
+            structureRepository.save(_deletedEntity);
 
             // move child structures, to other structures
+            logger.info("moved to new parent");
             for (ChangeToStructureDto changeTo : deleteStructureDto.getChangeTo()) {
+                Long maxSort = structureRepository.maxSort(changeTo.getChangeTo());
                 Optional<Structure> movedEntity = structureRepository.findById(changeTo.getStructureId());
                 if (!movedEntity.isEmpty()) {
                     logger.info("move structure id {} to parent structure {}", changeTo.getStructureId(), changeTo.getChangeTo());
                     Structure _movedEntity = movedEntity.get();
+                    _movedEntity.setSort(maxSort+1);
                     _movedEntity.setModifyBy(username);
                     _movedEntity.setModifyDate(new Date());
                     _movedEntity.setParentStructure(changeTo.getChangeTo());

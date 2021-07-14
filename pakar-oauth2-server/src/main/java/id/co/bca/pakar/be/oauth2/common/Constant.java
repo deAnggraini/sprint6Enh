@@ -18,7 +18,7 @@ public class Constant {
 		REFRESH_TOKEN_FAILED(new String[] { "01", "Fail to Generate new access token" }),
 		EXIST_USER_PROFILE(new String[] { "00", "User Profile Exist" }),
 		USER_PROFILE_NOT_FOUND(new String[] { "01", "User Profile Not Found" }),
-		OK(new String[] { "00", "Response OK" }),
+		OK(new String[] { "00", "Success" }),
 		GENERAL_ERROR(new String[] { "01", "Undefined Error" }),
 		ACCESS_TOKEN_EXPIRED(new String[] {"100", "Access Token Expired"}),
 		INVALID_TOKEN(new String[] {"101", "Invalid Token"}),

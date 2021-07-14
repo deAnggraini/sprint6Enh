@@ -2,6 +2,7 @@ package id.co.bca.pakar.be.doc.api;
 
 import id.co.bca.pakar.be.doc.common.Constant;
 import id.co.bca.pakar.be.doc.dto.*;
+import id.co.bca.pakar.be.doc.service.ArticleService;
 import id.co.bca.pakar.be.doc.service.ArticleTemplateService;
 import id.co.bca.pakar.be.doc.service.ThemeService;
 import id.co.bca.pakar.be.doc.service.UploadService;
@@ -9,12 +10,13 @@ import id.co.bca.pakar.be.doc.util.JSONMapperAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -32,6 +34,9 @@ public class ArticleController extends BaseController {
 
 	@Autowired
 	private ArticleTemplateService articleTemplateService;
+
+	@Autowired
+	private ArticleService articleService;
 
 	@GetMapping("/api/v1/doc/theme")
 	public ResponseEntity<RestResponse<ThemeDto>> themeLogin() {
@@ -109,14 +114,6 @@ public class ArticleController extends BaseController {
 		}
 	}*/
 
-
-
-	// pindah ke service menu
-//	@GetMapping("/api/doc/categori-article")
-//	public String categoriArticle(@RequestBody String message) {
-//		return String.format("Message was created. Content: %s", message);
-//	}
-
 	@PostMapping("/api/doc/recomendation")
 	public String recomendation(@RequestBody String message) {
 		return String.format("Message was created. Content: %s", message);
@@ -191,15 +188,8 @@ public class ArticleController extends BaseController {
 	public ResponseEntity<RestResponse<List<ArticleTemplateDto>>> articleTemplates(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @RequestBody RequestTemplateDto requestTemplateDto) {
 		try {
 			logger.info("received token bearer --- " + authorization);
-			String tokenValue = "";
-			if (authorization != null && authorization.contains("Bearer")) {
-				tokenValue = authorization.replace("Bearer", "").trim();
-
-				logger.info("token value request header --- "+tokenValue);
-				logger.info("username request header --- "+username);
-			}
 			logger.info("get article templates by structure id {}", requestTemplateDto.getStructureId());
-			List<ArticleTemplateDto> templates = articleTemplateService.findTemplatesByStructureId(tokenValue, requestTemplateDto.getStructureId(), username);
+			List<ArticleTemplateDto> templates = articleTemplateService.findTemplatesByStructureId(getTokenFromHeader(authorization), requestTemplateDto.getStructureId(), username);
 			return createResponse(templates, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
 		} catch (Exception e) {
 			logger.error("exception", e);
@@ -212,35 +202,55 @@ public class ArticleController extends BaseController {
 	 */
 	@PostMapping(value = "/api/doc/checkUnique", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
-	public void cheqkUnique(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username) {
-		return;
+	public ResponseEntity<RestResponse<Boolean>> checkUnique(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @Valid @RequestBody ArticleTitleDto articleTitleDto) {
+		try {
+			logger.info("verify article title {} exist in database ", articleTitleDto.getJudulArticle());
+			Boolean exist = articleService.existArticle(articleTitleDto.getJudulArticle());
+			return exist.booleanValue() ? createResponse(exist, Constant.ApiResponseCode.ARTICLE_EXIST_IN_DATABASE.getAction()[0], Constant.ApiResponseCode.ARTICLE_EXIST_IN_DATABASE.getAction()[1]) :
+					createResponse(exist, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
+		} catch (Exception e) {
+			logger.error("",e);
+			return createResponse(Boolean.FALSE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
+		}
 	}
 
 	/**
-	 * endpoint to generate article
+	 *
 	 * @param authorization
 	 * @param username
-	 * @param requestTemplateDto
+	 * @param articleDto
 	 * @return
 	 */
 	@PostMapping(value = "/api/doc/generateArticle", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<RestResponse<List<ArticleTemplateDto>>> generateArticle(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @RequestBody RequestTemplateDto requestTemplateDto) {
+	public ResponseEntity<RestResponse<Long>> generateArticle(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @Valid @RequestBody BaseArticleDto articleDto) {
 		try {
+			logger.info("generate article process");
 			logger.info("received token bearer --- {}", authorization);
-			String tokenValue = "";
-			if (authorization != null && authorization.contains("Bearer")) {
-				tokenValue = authorization.replace("Bearer", "").trim();
-
-				logger.info("token value request header --- {}",tokenValue);
-				logger.info("username request header --- {}",username);
-			}
-			logger.info("get article templates by structure id {}", requestTemplateDto.getStructureId());
-			List<ArticleTemplateDto> templates = articleTemplateService.findTemplatesByStructureId(tokenValue, requestTemplateDto.getStructureId(), username);
-			return createResponse(templates, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
+			articleDto.setUsername(username);
+			articleDto.setToken(getTokenFromHeader(authorization));
+			Long articleId = articleService.generateArticle(articleDto);
+			return articleId.longValue() > 0 ? createResponse(articleId, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]) :
+					createResponse(articleId, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
 		} catch (Exception e) {
 			logger.error("exception", e);
-			return createResponse(new ArrayList<ArticleTemplateDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
+			return createResponse(0L, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
+		}
+	}
+
+	@PostMapping(value = "/api/doc/saveArticle", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE }, produces = {
+			MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<RestResponse<ArticleDto>> saveArticle(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @ModelAttribute ArticleDto articleDto, BindingResult bindingResult) {
+		try {
+			logger.info("save article process");
+			logger.info("received token bearer --- {}", authorization);
+			articleDto.setUsername(username);
+			articleDto.setToken(getTokenFromHeader(authorization));
+			articleDto = articleService.saveArticle(articleDto);
+			return createResponse(articleDto, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
+		} catch (Exception e) {
+			logger.error("exception", e);
+			return createResponse(new ArticleDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
 		}
 	}
 }
