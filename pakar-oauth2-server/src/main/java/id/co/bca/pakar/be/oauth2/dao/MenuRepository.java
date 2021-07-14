@@ -30,17 +30,8 @@ public interface MenuRepository extends CrudRepository<Menu, String> {
 
 
     @Query(
-            value = "SELECT * FROM r_structure m where m.id=:id AND m.deleted IS FALSE ",
+            value = "SELECT * from r_structure where has_article is true and deleted is false ",
             nativeQuery = true)
-    List<Structure> getAllStructureById(@Param("id") Long id);
+    List<Structure> getAllStructure();
 
-    @Query(
-            value ="SELECT * FROM r_menu m WHERE m.nav = 'top' AND m.deleted IS FALSE",
-            nativeQuery = true)
-    List<Menu> getAllTopMenu();
-
-    @Query(
-            value ="SELECT * FROM r_menu m WHERE m.nav = 'bottom' AND m.deleted IS FALSE",
-            nativeQuery = true)
-    List<Menu> getAllBottomMenu();
 }

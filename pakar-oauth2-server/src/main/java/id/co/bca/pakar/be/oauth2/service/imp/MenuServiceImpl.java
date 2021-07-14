@@ -1,5 +1,6 @@
 package id.co.bca.pakar.be.oauth2.service.imp;
 
+import id.co.bca.pakar.be.oauth2.common.Constant;
 import id.co.bca.pakar.be.oauth2.dao.*;
 import id.co.bca.pakar.be.oauth2.dto.MenuDto;
 import id.co.bca.pakar.be.oauth2.model.*;
@@ -33,6 +34,9 @@ public class MenuServiceImpl implements MenuService {
     private StructureImageRepository structureImageRepository;
     @Autowired
     private StructureIconRepository structureIconRepository;
+    @Autowired
+    private RoleRepository roleRepository;
+
 
     @Override
     @Transactional
@@ -44,16 +48,26 @@ public class MenuServiceImpl implements MenuService {
             List<MenuDto> topTreeMenu = new TreeMenu().menuTree(mapToList(topMenus));
             allMenus.addAll(topTreeMenu);
 
-            logger.info("get all menu");
-            Iterable<Structure> menus = structureRepository.findAll();
-            List<MenuDto> treeMenu = new TreeMenu().menuTree(mapToListIterable(menus));
-            allMenus.addAll(treeMenu);
-
             logger.info("get all bottom menu");
             List<Menu> bottomMenus = menuRepository.getAllBottomMenuById(username);
             List<MenuDto> bottomTreeMenu = new TreeMenu().menuTree(mapToList(bottomMenus));
             allMenus.addAll(bottomTreeMenu);
-            
+
+            logger.info("get all menu");
+            List<UserRole> uRoles = roleRepository.findUserRolesByUsername(username);
+            List<String> roles = new ArrayList<>();
+            for(UserRole ur : uRoles) {
+                if(ur.getRole().getId() == Constant.Roles.ROLE_READER){
+                    Iterable<Structure> menus = structureRepository.findAllForReader();
+                    List<MenuDto> treeMenu = new TreeMenu().menuTree(mapToListIterable(menus));
+                    allMenus.addAll(treeMenu);
+                } else {
+                    Iterable<Structure> menus = structureRepository.findAll();
+                    List<MenuDto> treeMenu = new TreeMenu().menuTree(mapToListIterable(menus));
+                    allMenus.addAll(treeMenu);
+                }
+            }
+
             return allMenus;
         } catch (Exception e) {
             logger.error("exception", e);
