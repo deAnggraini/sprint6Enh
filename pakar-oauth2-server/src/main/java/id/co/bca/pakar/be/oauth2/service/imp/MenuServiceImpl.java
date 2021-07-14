@@ -37,7 +37,6 @@ public class MenuServiceImpl implements MenuService {
     @Autowired
     private RoleRepository roleRepository;
 
-
     @Override
     @Transactional
     public List<MenuDto> getMenus(String token, String username) throws Exception {
@@ -48,16 +47,10 @@ public class MenuServiceImpl implements MenuService {
             List<MenuDto> topTreeMenu = new TreeMenu().menuTree(mapToList(topMenus));
             allMenus.addAll(topTreeMenu);
 
-            logger.info("get all bottom menu");
-            List<Menu> bottomMenus = menuRepository.getAllBottomMenuById(username);
-            List<MenuDto> bottomTreeMenu = new TreeMenu().menuTree(mapToList(bottomMenus));
-            allMenus.addAll(bottomTreeMenu);
-
-            logger.info("get all menu");
+            logger.info("get all structure menu");
             List<UserRole> uRoles = roleRepository.findUserRolesByUsername(username);
-            List<String> roles = new ArrayList<>();
             for(UserRole ur : uRoles) {
-                if(ur.getRole().getId() == Constant.Roles.ROLE_READER){
+                if(ur.getRole().getId().equals(Constant.Roles.ROLE_READER)){
                     Iterable<Structure> menus = structureRepository.findAllForReader();
                     List<MenuDto> treeMenu = new TreeMenu().menuTree(mapToListIterable(menus));
                     allMenus.addAll(treeMenu);
@@ -67,6 +60,11 @@ public class MenuServiceImpl implements MenuService {
                     allMenus.addAll(treeMenu);
                 }
             }
+
+            logger.info("get all bottom menu");
+            List<Menu> bottomMenus = menuRepository.getAllBottomMenuById(username);
+            List<MenuDto> bottomTreeMenu = new TreeMenu().menuTree(mapToList(bottomMenus));
+            allMenus.addAll(bottomTreeMenu);
 
             return allMenus;
         } catch (Exception e) {

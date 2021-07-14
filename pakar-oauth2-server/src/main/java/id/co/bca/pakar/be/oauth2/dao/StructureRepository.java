@@ -25,12 +25,18 @@ public interface StructureRepository extends CrudRepository<Structure, Long> {
             nativeQuery = true)
     List<Structure> findAll();
 
-
-    @Query(value="SELECT m.* FROM (SELECT m.* FROM (SELECT m.* FROM r_structure m LEFT JOIN r_structure m2 " +
-            "ON m2.parent = m.id WHERE m.deleted is false and m.has_article is true ORDER BY m.id ASC) m " +
-            "WHERE m.parent IN ( SELECT m.id FROM r_structure m LEFT JOIN r_structure m2 ON m2.parent = m.id" +
-            "WHERE m.deleted is false and m.has_article is true ORDER BY m.id ASC) UNION SELECT m.* FROM r_structure m " +
-            "WHERE m.deleted is false and m.parent = 0 and has_article is true) m ORDER BY m.id ASC",
+    @Query(value="SELECT m.* FROM ( " +
+            "SELECT m.* FROM (SELECT m.* FROM r_structure m " +
+            "LEFT JOIN r_structure m2 ON m2.parent = m.id " +
+            "WHERE m.deleted is false " +
+            "ORDER BY m.id ASC) m " +
+            "WHERE m.parent IN ( " +
+            "SELECT m.id FROM r_structure m " +
+            "LEFT JOIN r_structure m2 ON m2.parent = m.id " +
+            "WHERE m.deleted is false ORDER BY m.id ASC) " +
+            "UNION " +
+            "SELECT m.* FROM r_structure m WHERE m.deleted is false and m.parent = 0 " +
+            ") m where m.has_article is true ORDER BY m.id ASC ",
             nativeQuery = true)
     List<Structure> findAllForReader();
 }
