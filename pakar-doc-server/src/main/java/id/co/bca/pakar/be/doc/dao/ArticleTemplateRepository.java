@@ -19,7 +19,5 @@ public interface ArticleTemplateRepository extends CrudRepository<ArticleTemplat
             "WHERE tats.structure_id = :structureId " +
             "and tat.deleted is FALSE",
             nativeQuery = true)
-    List<ArticleTemplateStructure> findArticleTemplates(@Param("structureId") Long structureId, @Param("role") String role);
-
-
+    List<ArticleTemplate> findArticleTemplates(@Param("structureId") Long structureId, @Param("role") String role);
 }

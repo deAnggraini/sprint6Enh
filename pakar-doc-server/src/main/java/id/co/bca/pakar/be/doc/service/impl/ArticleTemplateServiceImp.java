@@ -7,6 +7,7 @@ import id.co.bca.pakar.be.doc.dao.ArticleTemplateStructureRepository;
 import id.co.bca.pakar.be.doc.dao.ArticleTemplateThumbnailRepository;
 import id.co.bca.pakar.be.doc.dto.ArticleTemplateDto;
 import id.co.bca.pakar.be.doc.dto.ContentTemplateDto;
+import id.co.bca.pakar.be.doc.model.ArticleTemplate;
 import id.co.bca.pakar.be.doc.model.ArticleTemplateContent;
 import id.co.bca.pakar.be.doc.model.ArticleTemplateStructure;
 import id.co.bca.pakar.be.doc.model.ArticleTemplateThumbnail;
@@ -80,14 +81,14 @@ public class ArticleTemplateServiceImp implements ArticleTemplateService {
             /*
             get all article template base on structure id
              */
-            List<ArticleTemplateStructure> templates = articleTemplateRepository.findArticleTemplates(structureId, role);
-            for(ArticleTemplateStructure template : templates) {
-                List<ArticleTemplateContent> contents = articleTemplateContentRepository.findByTemplateId(template.getArticleTemplate().getId());
+            List<ArticleTemplate> templates = articleTemplateRepository.findArticleTemplates(structureId, role);
+            for(ArticleTemplate template : templates) {
+                List<ArticleTemplateContent> contents = articleTemplateContentRepository.findByTemplateId(template.getId());
                 List<ContentTemplateDto> contentTemplateDtos = new TreeContents().menuTree(mapToList(contents));
                 ArticleTemplateDto dto = new ArticleTemplateDto();
                 dto.setId(template.getId());
-                dto.setName(template.getArticleTemplate().getTemplateName());
-                dto.setDesc(template.getArticleTemplate().getDescription());
+                dto.setName(template.getTemplateName());
+                dto.setDesc(template.getDescription());
                 dto.setImage("");
                 ArticleTemplateThumbnail articleTemplateThumbnail = articleTemplateThumbnailRepository.findArticleTemplatesThumbnail(template.getId());
                 if(articleTemplateThumbnail != null) {
