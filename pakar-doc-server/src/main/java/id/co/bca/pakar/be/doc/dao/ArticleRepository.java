@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ArticleRepository extends CrudRepository<Article, Long> {
-    @Query("SELECT CASE WHEN COUNT(m) > 0 THEN TRUE ELSE FALSE END FROM Article m WHERE m.judulArticle=:title AND m.deleted IS FALSE")
+    @Query("SELECT CASE WHEN COUNT(m) > 0 THEN TRUE ELSE FALSE END FROM Article m WHERE LOWER(m.judulArticle)=LOWER(:title) AND m.deleted IS FALSE")
     Boolean existByArticleTitle(@Param("title") String title);
 }
