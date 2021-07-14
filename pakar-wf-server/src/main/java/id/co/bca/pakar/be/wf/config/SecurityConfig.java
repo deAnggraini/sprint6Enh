@@ -17,9 +17,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	        .formLogin().disable()  
 	        .csrf().disable()  
 	        .authorizeRequests(authorize -> authorize  
-//	            .mvcMatchers(HttpMethod.GET, "/messages/**").hasAuthority("SCOPE_read")  
-//	            .mvcMatchers(HttpMethod.POST, "/messages/**").hasAuthority("SCOPE_write")  
-	            .anyRequest().authenticated()  
+	            .anyRequest().authenticated()
 	        )  
 	        .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)  
 	        .sessionManagement(sessionManagement ->  
