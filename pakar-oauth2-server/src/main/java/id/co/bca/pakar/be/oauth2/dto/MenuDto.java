@@ -28,6 +28,8 @@ public class MenuDto {
 	private List<MenuDto> menuChilds = new ArrayList<MenuDto>();
 	@JsonProperty("parent")
 	private Long parent = 0L;
+	@JsonProperty("hasArticle")
+	private Boolean hasArticle = Boolean.FALSE;
 
 	public Long getId() {
 		return id;
@@ -118,6 +120,14 @@ public class MenuDto {
 		this.parent = parent;
 	}
 
+	public Boolean getHasArticle() {
+		return hasArticle;
+	}
+
+	public void setHasArticle(Boolean hasArticle) {
+		this.hasArticle = hasArticle;
+	}
+
 	@Override
 	public String toString() {
 		return "MenuDto{" +
@@ -125,12 +135,14 @@ public class MenuDto {
 				", menuName='" + menuName + '\'' +
 				", menuDescription='" + menuDescription + '\'' +
 				", iconUri='" + iconUri + '\'' +
+				", imageUri='" + imageUri + '\'' +
 				", uri='" + uri + '\'' +
 				", level=" + level +
 				", order=" + order +
 				", editStatus=" + editStatus +
 				", menuChilds=" + menuChilds +
 				", parent=" + parent +
+				", hasArticle=" + hasArticle +
 				'}';
 	}
 }

@@ -10,12 +10,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class CredentialDto {
 	@NotNull
 	@NotEmpty(message = "username is required")
-	@Size(min = 8, max = 8)
+	@Pattern(regexp = "[A-Za-z0-9]+$")
 	@JsonProperty("username")
 	private String username;
 	@NotNull
 	@NotEmpty(message = "password is required")
-	@Size(min = 6)
 	@Pattern(regexp = "[A-Za-z0-9]+$")
 	@JsonProperty("password")
 	private String password;

@@ -114,6 +114,7 @@ public class MenuServiceImpl implements MenuService {
             menuDto.setParent(structure.getParentStructure());
             menuDto.setUri(structure.getUri());
             menuDto.setEditStatus(structure.getEdit());
+            menuDto.setHasArticle(structure.getHasArticle());
             try {
                 StructureIcons sic = structureIconRepository.findByStructureId(structure.getId());
                 menuDto.setIconUri(sic != null ? sic.getIcons().getUri() : "");
