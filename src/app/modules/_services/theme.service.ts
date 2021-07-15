@@ -21,11 +21,14 @@ export class ThemeService {
 
   initialize(): Observable<any> {
     this.populate();
-    return of(DefaultThemeConfig as ThemeConfig)
-      .pipe(map((themeConfig) => {
-        this.currentTheme.next(themeConfig);
-        return themeConfig;
-      }))
+    return this.apiService.get(`${this._base_url}/theme`).pipe(map((theme: ThemeConfig) => {
+      if (theme) {
+        this.theme = theme;
+        this.currentTheme.next(this.theme);
+        this.homepageComponent$.next(this.theme.homepage.component);
+      }
+      return theme;
+    }));
   }
 
   private populate() {

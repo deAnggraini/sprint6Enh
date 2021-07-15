@@ -75,8 +75,8 @@ function themeInitializer(themingService: ThemeService) {
     {
       provide: APP_INITIALIZER,
       useFactory: themeInitializer,
+      multi: true,
       deps: [ThemeService],
-      multi: true
     },
     {
       provide: HIGHLIGHT_OPTIONS,
