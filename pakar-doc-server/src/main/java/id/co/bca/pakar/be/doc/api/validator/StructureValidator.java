@@ -28,53 +28,53 @@ public class StructureValidator implements Validator {
         StructureWithFileDto dto = (StructureWithFileDto)target;
 
         if(dto.getName().isEmpty()) {
-            errors.rejectValue("name", "name is required");
+            errors.reject("name", "name is required");
             return;
         }
         if(dto.getName().length() > 50) {
-            errors.rejectValue("name", "maximum length 50 characters");
+            errors.reject("name", "maximum length 50 characters");
             return;
         }
 //        Pattern pattern = Pattern.compile("^[a-zA-Z\\s]{1,50}");
 //        Matcher matcher = pattern.matcher(dto.getName());
 //        if(!matcher.matches()) {
-//            errors.rejectValue("name", "name must contain alpha and space only");
+//            errors.reject("name", "name must contain alpha and space only");
 //            return;
 //        }
 
         if(dto.getDesc().isEmpty()) {
-            errors.rejectValue("desc", "description is required");
+            errors.reject("desc", "description is required");
             return;
         }
 
         if(dto.getDesc().length() > 200) {
-            errors.rejectValue("desc", "maximum length description 200 characters");
+            errors.reject("desc", "maximum length description 200 characters");
             return;
         }
 //        if(!dto.getDesc().matches("^[a-zA-Z\\s]{1,200}")) {
-//            errors.rejectValue("desc", "description must contain alpha and space only");
+//            errors.reject("desc", "description must contain alpha and space only");
 //            return;
 //        }
 
         if(dto.getSort().longValue() < 1) {
-            errors.rejectValue("sort", "minimum sort value is 1");
+            errors.reject("sort", "minimum sort value is 1");
             return;
         }
 
         if(dto.getLevel() < 1 || dto.getLevel() > 4) {
-            errors.rejectValue("level", "minimum level value 1 or maximum value 4");
+            errors.reject("level", "minimum level value 1 or maximum value 4");
             return;
         }
 
         if(dto.getLevel() > 1) {
             if(dto.getParent().longValue() == 0) {
-                errors.rejectValue("parent", "invalid parent value cause level > 1");
+                errors.reject("parent", "invalid parent value cause level > 1");
                 return;
             }
         }
 
         if(dto.getParent() < 0) {
-            errors.rejectValue("parent", "minimum parent value is 0");
+            errors.reject("parent", "minimum parent value is 0");
             return;
         }
 
@@ -91,12 +91,12 @@ public class StructureValidator implements Validator {
                 }
 
                 if (!validFileType) {
-                    errors.rejectValue("icon", "invalid icon file type");
+                    errors.reject("icon", "invalid icon file type");
                     return;
                 }
 
                 if (dto.getIcon().getSize() > Long.parseLong(maxFileSize)) {
-                    errors.rejectValue("icon", "exceeded file size");
+                    errors.reject("icon", "exceeded file size");
                     return;
                 }
             }
@@ -115,12 +115,12 @@ public class StructureValidator implements Validator {
                 }
 
                 if (!validFileType) {
-                    errors.rejectValue("image", "invalid image file type");
+                    errors.reject("image", "invalid image file type");
                     return;
                 }
 
                 if (dto.getImage().getSize() > Long.parseLong(maxFileSize)) {
-                    errors.rejectValue("image", "exceeded file size");
+                    errors.reject("image", "exceeded file size");
                     return;
                 }
             }
@@ -129,22 +129,22 @@ public class StructureValidator implements Validator {
         // validate location, location_text if level > 1
         if(dto.getLevel().intValue() > 1) {
             if (dto.getLocation() == null) {
-                errors.rejectValue("location", "location field is required");
+                errors.reject("location", "location field is required");
                 return;
             }
 
             if (dto.getLocation().isEmpty()) {
-                errors.rejectValue("location", "location field is required");
+                errors.reject("location", "location field is required");
                 return;
             }
 
             if (dto.getLocation_text() == null) {
-                errors.rejectValue("location_text", "location_text field is required");
+                errors.reject("location_text", "location_text field is required");
                 return;
             }
 
             if (dto.getLocation_text().isEmpty()) {
-                errors.rejectValue("location_text", "location_text field is required");
+                errors.reject("location_text", "location_text field is required");
                 return;
             }
         }
