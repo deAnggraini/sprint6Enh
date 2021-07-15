@@ -527,8 +527,14 @@ export class DetailComponent implements OnInit, OnDestroy {
       },
       "types": {
         "default": {
-          "icon": "ki ki-arrow-next icon-sm pakar-color-dark"
+          "icon": "ki ki-arrow-next icon-xs pakar-color-dark"
         },
+        'f-open': {
+          'icon': 'ki ki-arrow-down icon-xs pakar-color-dark'
+        },
+        'f-closed': {
+          'icon': 'ki ki-arrow-next icon-xs pakar-color-dark'
+        }
       },
       "state": {
         "key": "demo1"
@@ -536,6 +542,12 @@ export class DetailComponent implements OnInit, OnDestroy {
       "plugins": ['dnd', 'state', 'themes', "types"]
     }).on('move_node.jstree', function (e, data) {
       $that.moving(data);
+    });
+    $(this.tree_id).on('open_node.jstree', function (event, data) {
+      data.instance.set_type(data.node, 'f-open');
+    });
+    $(this.tree_id).on('close_node.jstree', function (event, data) {
+      data.instance.set_type(data.node, 'f-closed');
     });
     $(this.tree_id).on("create_node.jstree", function (e, data) {
       $("li#" + data.node.id).find("a").append('test');
