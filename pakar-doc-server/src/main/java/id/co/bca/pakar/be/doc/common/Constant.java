@@ -22,7 +22,7 @@ public class Constant {
 		MAX_UPLOAD_EXCEEDED(new String[] { "01", "Exceeded file size" }),
 		DATA_NOT_FOUND(new String[] { "01", "Not found data" }),
 		INVALID_STRUCTURE_LEVEL(new String[] { "01", "Level Structure Invalid" }),
-		INVALID_SORT_STRUCTURE(new String[] { "01", "Sort value exist in same parent  id" }),
+		INVALID_SORT_STRUCTURE(new String[] { "01", "Sort value exist in same parent id" }),
 		ACCESS_TOKEN_EXPIRED(new String[] {"100", "Access Token Expired"}),
 		INVALID_TOKEN(new String[] {"101", "Invalid Token"}),
 		INVALID_ACCESS_TOKEN(new String[] {"102", "Invalid Access Token"}),

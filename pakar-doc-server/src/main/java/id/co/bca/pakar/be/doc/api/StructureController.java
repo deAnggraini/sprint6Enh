@@ -14,19 +14,16 @@ import id.co.bca.pakar.be.doc.service.StructureService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 @RestController
 public class StructureController extends BaseController {
@@ -56,13 +53,6 @@ public class StructureController extends BaseController {
             structureValidator.validate(structure, bindingResult);
             if (bindingResult.hasErrors()) {
                 logger.info("binding result " + bindingResult.getAllErrors());
-//                List<String> errors = bindingResult
-//                        .getFieldErrors()
-//                        .stream()
-//                        .map(x -> x.getDefaultMessage())
-//                        .collect(Collectors.toList());
-//                return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], errors.get(0));
-
                 String errorMessage = "";
                 for (Object object : bindingResult.getAllErrors()) {
                     if(object instanceof FieldError) {
@@ -74,19 +64,19 @@ public class StructureController extends BaseController {
             }
             logger.info("name structure >> {}", structure.getName());
             StructureResponseDto responseDto = structureService.add(username, structure);
-            return createResponse(responseDto, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
+            return createResponse(responseDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("el")));
         } catch (DataNotFoundException e) {
             logger.error("exception", e);
-            return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.DATA_NOT_FOUND.getAction()[0], Constant.ApiResponseCode.DATA_NOT_FOUND.getAction()[1]);
+            return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, new Locale("el")));
         } catch (InvalidLevelException e) {
             logger.error("exception", e);
-            return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.INVALID_STRUCTURE_LEVEL.getAction()[0], Constant.ApiResponseCode.INVALID_STRUCTURE_LEVEL.getAction()[1]);
+            return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("level.structure.invalid", null, new Locale("el")));
         } catch (InvalidSortException e) {
             logger.error("exception", e);
-            return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.INVALID_SORT_STRUCTURE.getAction()[0], Constant.ApiResponseCode.INVALID_SORT_STRUCTURE.getAction()[1]);
+            return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("sort.same.parent", null, new Locale("el")));
         } catch (Exception e) {
             logger.error("exception", e);
-            return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
+            return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("el")));
         }
     }
 
