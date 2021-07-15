@@ -515,6 +515,10 @@ export class DetailComponent implements OnInit, OnDestroy {
 
   private initJsTree() {
     const $that = this;
+    $(this.tree_id).on("create_node.jstree", function (e, data) {
+      console.log('on create', { e, data });
+      $("li#" + data.node.id).find("a").append('test');
+    });
     $(this.tree_id).jstree({
       "core": {
         "multiple": false,
@@ -526,6 +530,9 @@ export class DetailComponent implements OnInit, OnDestroy {
         "data": this.datasource
       },
       "types": {
+        'selectable': {
+          'icon': 'http://elpidio.tools4software.com/images/icon-ok-small.png'
+        },
         "default": {
           "icon": "ki ki-arrow-next icon-xs pakar-color-dark"
         },
@@ -539,7 +546,7 @@ export class DetailComponent implements OnInit, OnDestroy {
       "state": {
         "key": "demo1"
       },
-      "plugins": ['dnd', 'state', 'themes', "types"]
+      "plugins": ['dnd', 'state', "types"]
     }).on('move_node.jstree', function (e, data) {
       $that.moving(data);
     });
@@ -549,10 +556,8 @@ export class DetailComponent implements OnInit, OnDestroy {
     $(this.tree_id).on('close_node.jstree', function (event, data) {
       data.instance.set_type(data.node, 'f-closed');
     });
-    $(this.tree_id).on("create_node.jstree", function (e, data) {
-      $("li#" + data.node.id).find("a").append('test');
-    });
     $(this.tree_id).on("changed.jstree", function (e, data) {
+      // console.log({ e, data });
       const { selected, action, node, event } = data;
       if (action == "select_node" && event) {
         const { target } = event;

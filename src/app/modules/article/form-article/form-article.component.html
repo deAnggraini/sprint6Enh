@@ -36,15 +36,16 @@
                             <div>
                                 <span>{{content.title}}</span>
                                 <span [inlineSVG]="'./assets/media/svg/bca/icon/info.svg'" cacheSVG="true"
-                                    class="svg-icon svg-icon-sm"></span>
+                                    class="svg-icon svg-icon-sm" placement="right"
+                                    ngbTooltip="Berisi aturan/kaidah/ketetapan/syarat/kriteria atas produk/aplikasi yang harus dipahami pembaca sebelum melakukan prosedur atas produk/aplikasi tersebut; dapat dituangkan dalam bentuk kalimat ataupun tabel."></span>
                             </div>
                         </mat-expansion-panel-header>
-                        <div>
+                        <div cdkDropListGroup>
                             <input type="text" class="txt-desc-lvl1"
                                 placeholder="Masukkan kalimat pengantar terkait {{content.title}} disini.">
                             <div class="input-accordion-separator"></div>
                             <ng-container *ngIf="content.children.length" [ngTemplateOutlet]="accordionChild"
-                                [ngTemplateOutletContext]="{ children: content.children}">
+                                [ngTemplateOutletContext]="{ children: content.children, level:2}">
                             </ng-container>
                         </div>
                     </mat-expansion-panel>
@@ -98,11 +99,11 @@
     </div>
 </ng-template>
 
-<ng-template #accordionChild let-children="children">
-    <mat-accordion cdkDropList (cdkDropListDropped)="drop($event)" [togglePosition]="'before'" hideToggle="false"
-        multi="true">
+<ng-template #accordionChild let-children="children" let-level="level">
+    <mat-accordion cdkDropList (cdkDropListDropped)="drop($event)" [cdkDropListData]="children"
+        [togglePosition]="'before'" hideToggle="false" multi="true">
         <mat-expansion-panel [@.disabled]="true" *ngFor="let content of children; let i = index" cdkDrag
-            [cdkDragData]="content" class="acc-level acc-level-2">
+            [cdkDragData]="content" class="acc-level acc-level-{{level}}">
             <div class="drag-placeholder" *cdkDragPlaceholder></div>
             <mat-expansion-panel-header>
                 <mat-panel-title>{{content.title}}</mat-panel-title>
@@ -122,7 +123,7 @@
                     <button type="button" class="btn btn-sm btn-blue rounded-lg px-5">Simpan</button>
                 </div>
                 <ng-container *ngIf="content.children.length" [ngTemplateOutlet]="accordionChild"
-                    [ngTemplateOutletContext]="{ children: content.children}">
+                    [ngTemplateOutletContext]="{ children: content.children, level : level+1}">
                 </ng-container>
             </div>
         </mat-expansion-panel>

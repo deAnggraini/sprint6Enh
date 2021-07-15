@@ -29,6 +29,14 @@ function appInitializer(authService: AuthService) {
   };
 }
 
+function themeInitializer(themingService: ThemeService) {
+  return () => {
+    return new Promise((resolve) => {
+      themingService.initialize().subscribe().add(resolve);
+    });
+  };
+}
+
 
 @NgModule({
   declarations: [
@@ -66,8 +74,7 @@ function appInitializer(authService: AuthService) {
     },
     {
       provide: APP_INITIALIZER,
-      useFactory: (themingService: ThemeService) =>
-        () => themingService.initialize(),
+      useFactory: themeInitializer,
       deps: [ThemeService],
       multi: true
     },

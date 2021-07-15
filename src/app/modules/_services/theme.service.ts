@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { ApiService } from 'src/app/utils/_services/api-service.service';
 import { DefaultThemeConfig, ThemeConfig } from '../../_metronic/configs/theme.config';
-import { of, Subject, BehaviorSubject } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { of, Subject, BehaviorSubject, Observable } from 'rxjs';
+import { tap, map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -19,11 +19,13 @@ export class ThemeService {
     // this.populate();
   }
 
-  initialize(): Promise<any> {
-    this.populate(); // catch data from server then implement
+  initialize(): Observable<any> {
+    this.populate();
     return of(DefaultThemeConfig as ThemeConfig)
-      .pipe(tap((themeConfig) => this.currentTheme.next(themeConfig)))
-      .toPromise(); // default setting
+      .pipe(map((themeConfig) => {
+        this.currentTheme.next(themeConfig);
+        return themeConfig;
+      }))
   }
 
   private populate() {
