@@ -19,10 +19,10 @@ INSERT INTO public.t_article_template_role
 VALUES(nextval('public.article_template_role_seq'), 'system',now()::DATE, false, 'EDITOR', 2);
 INSERT INTO public.t_article_template_role
 (id, created_by, created_date, deleted, role_id, template_id)
-VALUES(nextval('public.article_template_role_seq'), 'system',now()::DATE, false, 'ADMIN', 1);
+VALUES(nextval('public.article_template_role_seq'), 'system',now()::DATE, false, 'SUPERADMIN', 1);
 INSERT INTO public.t_article_template_role
 (id, created_by, created_date, deleted, role_id, template_id)
-VALUES(nextval('public.article_template_role_seq'), 'system',now()::DATE, false, 'ADMIN', 2);
+VALUES(nextval('public.article_template_role_seq'), 'system',now()::DATE, false, 'SUPERADMIN', 2);
 
 ---- article Template Content ----
 INSERT INTO public.t_article_template_content
