@@ -6,13 +6,13 @@ INSERT INTO public.t_article_template
 (id, created_by, created_date, deleted, modify_by, modify_date, description, template_name, structure_id)
 VALUES(2, 'system',now()::DATE, 'f','system',now()::DATE, 'Pilih template ini jika template yang direkomendasikan kurang sesuai dengan atribut page yang akan Kamu buat.', 'Basic');
 
----- article Template ---
---INSERT INTO public.t_article_template_structure
---(id, created_by, created_date, deleted, modify_by, modify_date, description, template_name, structure_id)
---VALUES(nextval('public.article_template_structure_seq'), 'system',now()::DATE, 'f','system',now()::DATE, 'Pilih template ini jika template yang direkomendasikan kurang sesuai dengan atribut page yang akan Kamu buat.', 'Empty', null);
+---- t_article_template_structure ---
 INSERT INTO public.t_article_template_structure
 (id, created_by, created_date, deleted, modify_by, modify_date, article_template_id, structure_id)
-VALUES(nextval('public.article_template_structure_seq'), 'system',now()::DATE, 'f','system',now()::DATE, 2, 234);
+VALUES(nextval('public.article_template_structure_seq'), 'system',now()::DATE, 'f','system',now()::DATE, 2, 2);
+INSERT INTO public.t_article_template_structure
+(id, created_by, created_date, deleted, modify_by, modify_date, article_template_id, structure_id)
+VALUES(nextval('public.article_template_structure_seq'), 'system',now()::DATE, 'f','system',now()::DATE, 1, 2);
 
 INSERT INTO public.t_article_template_role
 (id, created_by, created_date, deleted, role_id, template_id)
@@ -73,3 +73,13 @@ VALUES(1, 'system', now()::DATE, 'f','system', now()::DATE, 1, 'Nasabah', 'Tahap
 INSERT INTO public.t_article
 (id, created_by, created_date, deleted, modify_by, modify_date, article_template_id, article_used_by, title, short_desc, structure_id)
 VALUES(2, 'system', now()::DATE, 'f','system', now()::DATE, 2, 'Nasabah', 'Tahapan', null, 100);
+
+
+--- t_article_template_image ---
+INSERT INTO public.t_article_template_image
+(id , created_by, created_date, deleted, modify_by, modify_date, article_template_id, image_id)
+VALUES(nextval('article_template_image_seq'), 'system',now()::DATE, 'f','system',now()::DATE, 1, 50);
+INSERT INTO public.t_article_template_image
+(id, created_by, created_date, deleted, modify_by, modify_date, article_template_id, image_id)
+VALUES(nextval('article_template_image_seq'), 'system',now()::DATE, 'f','system',now()::DATE, 2, 52);
+
