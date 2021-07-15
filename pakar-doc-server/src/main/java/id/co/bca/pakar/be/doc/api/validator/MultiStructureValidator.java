@@ -33,42 +33,42 @@ public class MultiStructureValidator implements Validator {
             int index = 0;
             for (StructureWithFileDto structure : multiDto) {
                 if (structure.getName().isEmpty()) {
-                    errors.reject("name", "name is required");
+                    errors.rejectValue("name", "name.required","name is required");
                     return;
                 }
                 if (structure.getName().length() > 50) {
-                    errors.reject("name", "maximum length 50 characters");
+                    errors.rejectValue("name", "name.maximum.length","maximum length 50 characters");
                     return;
                 }
 
                 if (structure.getDesc().isEmpty()) {
-                    errors.reject("desc", "description is required");
+                    errors.rejectValue("desc", "description.required","description is required");
                     return;
                 }
 
                 if (structure.getDesc().length() > 200) {
-                    errors.reject("desc", "maximum length description 200 characters");
+                    errors.rejectValue("desc", "description.maximum.length","maximum length description 200 characters");
                     return;
                 }
 
                 if (structure.getSort().longValue() < 1) {
-                    errors.reject("sort", "minimum sort value is 1");
+                    errors.rejectValue("sort", "sort.minimum","minimum sort value is 1");
                     return;
                 }
 
                 if (structure.getLevel() < 1) {
-                    errors.reject("level", "minimum level value 1");
+                    errors.rejectValue("level", "level.minimum.invalid","minimum level value 1");
                     return;
                 }
 
                 if (structure.getLevel() > 4) {
                     logger.info("level value exceeded");
-                    errors.reject("level", "maximum value 4");
+                    errors.rejectValue("level", "level.maximum.invalid","maximum value 4");
                     return;
                 }
 
                 if (structure.getParent() < 0) {
-                    errors.reject("parent", "minimum parent value is 0");
+                    errors.rejectValue("parent", "parent.parent.invalid","minimum parent value is 0");
                     return;
                 }
 
@@ -84,12 +84,12 @@ public class MultiStructureValidator implements Validator {
                         }
 
                         if (!validFileType) {
-                            errors.reject("icon", "invalid icon file type");
+                            errors.rejectValue("icon", "icon.file.type.invalid","invalid icon file type");
                             return;
                         }
 
                         if (structure.getIcon().getSize() > Long.parseLong(maxFileSize)) {
-                            errors.reject("icon", "exceeded file size");
+                            errors.rejectValue("icon", "icon.file.size.exceeded","exceeded file size");
                             return;
                         }
                     }
@@ -107,12 +107,12 @@ public class MultiStructureValidator implements Validator {
                         }
 
                         if (!validFileType) {
-                            errors.reject("image", "invalid image file type");
+                            errors.rejectValue("image", "icon.file.type.invalid","invalid image file type");
                             return;
                         }
 
                         if (structure.getImage().getSize() > Long.parseLong(maxFileSize)) {
-                            errors.reject("image", "exceeded file size");
+                            errors.rejectValue("image", "image.file.size.exceeded","exceeded file size");
                             return;
                         }
                     }
@@ -120,22 +120,22 @@ public class MultiStructureValidator implements Validator {
                 // validate location, location_text if level > 1
                 if (structure.getLevel().intValue() > 1) {
                     if (structure.getLocation() == null) {
-                        errors.reject("location", "location field is required");
+                        errors.rejectValue("location", "location.required","location field is required");
                         return;
                     }
 
                     if (structure.getLocation().isEmpty()) {
-                        errors.reject("location", "location field is required");
+                        errors.rejectValue("location", "location.required","location field is required");
                         return;
                     }
 
                     if (structure.getLocation_text() == null) {
-                        errors.reject("location_text", "location_text field is required");
+                        errors.rejectValue("location_text", "location_text.required","location_text field is required");
                         return;
                     }
 
                     if (structure.getLocation_text().isEmpty()) {
-                        errors.reject("location_text", "location_text field is required");
+                        errors.rejectValue("location_text", "location_text.required","location_text field is required");
                         return;
                     }
                 }
