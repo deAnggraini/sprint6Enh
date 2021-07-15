@@ -24,13 +24,13 @@ public class ArticleTemplateContent extends EntityBase {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "sort")
+    @Column(name = "sort", columnDefinition = "integer DEFAULT 1")
     private Long sort;
 
-    @Column(name = "level")
+    @Column(name = "level", columnDefinition = "integer DEFAULT 1")
     private Long level;
 
-    @Column(name = "parent")
+    @Column(name = "parent", columnDefinition = "integer DEFAULT 0")
     private Long parent;
 
     public Long getId() {
