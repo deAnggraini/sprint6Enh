@@ -189,7 +189,7 @@ public class ArticleController extends BaseController {
 		try {
 			logger.info("received token bearer --- " + authorization);
 			logger.info("get article templates by structure id {}", requestTemplateDto.getStructureId());
-			List<ArticleTemplateDto> templates = articleTemplateService.findTemplatesByStructureId(getTokenFromHeader(authorization), requestTemplateDto.getStructureId(), username);
+			List<ArticleTemplateDto> templates = articleTemplateService.findTemplates(getTokenFromHeader(authorization), username);
 			return createResponse(templates, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
 		} catch (Exception e) {
 			logger.error("exception", e);

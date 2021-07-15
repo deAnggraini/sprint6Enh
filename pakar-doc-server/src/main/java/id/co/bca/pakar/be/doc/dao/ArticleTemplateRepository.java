@@ -19,6 +19,7 @@ public interface ArticleTemplateRepository extends CrudRepository<ArticleTemplat
             "and tat.deleted is FALSE",
             nativeQuery = true)
     List<ArticleTemplate> findArticleTemplates(@Param("structureId") Long structureId, @Param("role") String role);
+
     @Query(value = "SELECT tat.* FROM ( " +
             "SELECT tat.* FROM t_article_template tat " +
             "LEFT JOIN t_article_template_role tatr ON tatr.template_id = tat.id " +
@@ -30,4 +31,11 @@ public interface ArticleTemplateRepository extends CrudRepository<ArticleTemplat
             "SELECT tat.* FROM t_article_template tat WHERE tat.template_name='EMPTY' ",
             nativeQuery = true)
     List<ArticleTemplate> findArticleTemplatesAdminRoles(@Param("structureId") Long structureId, @Param("role") String role);
+
+    @Query(value = "SELECT tat.* FROM t_article_template tat " +
+            "            LEFT JOIN t_article_template_role tatr ON tatr.template_id = tat.id " +
+            "            WHERE tatr.role_id = :role " +
+            "            AND tat.deleted IS FALSE",
+            nativeQuery = true)
+    List<ArticleTemplate> findArticleTemplates(@Param("role") String role);
 }

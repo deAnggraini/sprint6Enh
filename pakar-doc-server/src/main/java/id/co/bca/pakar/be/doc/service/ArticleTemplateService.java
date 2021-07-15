@@ -7,4 +7,5 @@ import java.util.List;
 public interface ArticleTemplateService {
     List<ArticleTemplateDto> findTemplatesByStructureId(Long structureId);
     List<ArticleTemplateDto> findTemplatesByStructureId(String tokenValue, Long structureId, String username);
+    List<ArticleTemplateDto> findTemplates(String tokenValue, String username);
 }

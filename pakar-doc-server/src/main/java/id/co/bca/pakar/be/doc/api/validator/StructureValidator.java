@@ -62,19 +62,19 @@ public class StructureValidator implements Validator {
         }
 
         if(dto.getLevel() < 1 || dto.getLevel() > 4) {
-            errors.rejectValue("level", "minimum level value 1 or maximum value 4");
+            errors.rejectValue("level", "level.minimum.maximum.invalid","minimum level value 1 or maximum value 4");
             return;
         }
 
         if(dto.getLevel() > 1) {
             if(dto.getParent().longValue() == 0) {
-                errors.rejectValue("parent", "invalid parent value cause level > 1");
+                errors.rejectValue("parent", "level.parent.invalid","invalid parent value cause level > 1");
                 return;
             }
         }
 
         if(dto.getParent() < 0) {
-            errors.rejectValue("parent", "minimum parent value is 0");
+            errors.rejectValue("parent", "minimum.parent.invalid","minimum parent value is 0");
             return;
         }
 
@@ -91,12 +91,12 @@ public class StructureValidator implements Validator {
                 }
 
                 if (!validFileType) {
-                    errors.rejectValue("icon", "invalid icon file type");
+                    errors.rejectValue("icon", "icon.file.type.invalid","invalid icon file type");
                     return;
                 }
 
                 if (dto.getIcon().getSize() > Long.parseLong(maxFileSize)) {
-                    errors.rejectValue("icon", "exceeded file size");
+                    errors.rejectValue("icon", "icon.file.size.exceeded","exceeded file size");
                     return;
                 }
             }
@@ -115,12 +115,12 @@ public class StructureValidator implements Validator {
                 }
 
                 if (!validFileType) {
-                    errors.rejectValue("image", "invalid image file type");
+                    errors.rejectValue("image", "icon.file.type.invalid","invalid image file type");
                     return;
                 }
 
                 if (dto.getImage().getSize() > Long.parseLong(maxFileSize)) {
-                    errors.rejectValue("image", "exceeded file size");
+                    errors.rejectValue("image", "image.file.size.exceeded","exceeded file size");
                     return;
                 }
             }
@@ -129,22 +129,22 @@ public class StructureValidator implements Validator {
         // validate location, location_text if level > 1
         if(dto.getLevel().intValue() > 1) {
             if (dto.getLocation() == null) {
-                errors.rejectValue("location", "location field is required");
+                errors.rejectValue("location", "location.required","location field is required");
                 return;
             }
 
             if (dto.getLocation().isEmpty()) {
-                errors.rejectValue("location", "location field is required");
+                errors.rejectValue("location", "location.required","location field is required");
                 return;
             }
 
             if (dto.getLocation_text() == null) {
-                errors.rejectValue("location_text", "location_text field is required");
+                errors.rejectValue("location_text", "location_text.required","location_text field is required");
                 return;
             }
 
             if (dto.getLocation_text().isEmpty()) {
-                errors.rejectValue("location_text", "location_text field is required");
+                errors.rejectValue("location_text", "location_text.required","location_text field is required");
                 return;
             }
         }

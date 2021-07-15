@@ -105,6 +105,41 @@ public class ArticleTemplateServiceImp implements ArticleTemplateService {
         return dtoTemplates;
     }
 
+    public List<ArticleTemplateDto> findTemplates(String tokenValue, String username) {
+        List<ArticleTemplateDto> dtoTemplates = new ArrayList<>();
+        try {
+            String role = apiClient.getRoles(username, tokenValue);
+            logger.debug("roles from from username {} ---> {}", username, role);
+
+            /*
+            get all article template base on structure id
+             */
+            logger.info("get article template by role");
+            List<ArticleTemplate> templates = articleTemplateRepository.findArticleTemplates(role);
+            for(ArticleTemplate template : templates) {
+                List<ArticleTemplateContent> contents = articleTemplateContentRepository.findByTemplateId(template.getId());
+                List<ContentTemplateDto> contentTemplateDtos = new TreeContents().menuTree(mapToList(contents));
+                ArticleTemplateDto dto = new ArticleTemplateDto();
+                dto.setId(template.getId());
+                dto.setName(template.getTemplateName());
+                dto.setDesc(template.getDescription());
+                ArticleTemplateImage articleTemplateImage = articleTemplateImageRepository.findArticleTemplatesImage(template.getId());
+                if(articleTemplateImage != null) {
+                    dto.setImage(articleTemplateImage.getImages().getUri());
+                }
+                ArticleTemplateThumbnail articleTemplateThumbnail = articleTemplateThumbnailRepository.findArticleTemplatesThumbnail(template.getId());
+                if(articleTemplateThumbnail != null) {
+                    dto.setThumb(articleTemplateThumbnail.getImages().getUri());
+                }
+                dto.setContent(contentTemplateDtos);
+                dtoTemplates.add(dto);
+            }
+        } catch (RestClientException e) {
+            logger.error("exception ", e);
+        }
+        return dtoTemplates;
+    }
+
     private List<ContentTemplateDto> mapToList(Iterable<ArticleTemplateContent> iterable) {
         List<ContentTemplateDto> listOfContents = new ArrayList<>();
 

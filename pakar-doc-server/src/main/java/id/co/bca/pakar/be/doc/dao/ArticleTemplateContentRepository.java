@@ -13,6 +13,7 @@ public interface ArticleTemplateContentRepository extends CrudRepository<Article
     @Query("SELECT m FROM ArticleTemplateContent m " +
             "WHERE m.articleTemplate.id=:templateId " +
             "AND m.deleted IS FALSE " +
-            "AND m.articleTemplate.deleted IS FALSE")
+            "AND m.articleTemplate.deleted IS FALSE " +
+            "ORDER BY m.name DESC ")
     List<ArticleTemplateContent> findByTemplateId(@Param("templateId") Long templateId);
 }
