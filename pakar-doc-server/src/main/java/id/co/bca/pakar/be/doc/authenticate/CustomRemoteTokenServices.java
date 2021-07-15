@@ -109,7 +109,7 @@ public class CustomRemoteTokenServices implements ResourceServerTokenServices {
             String code = (String)apiStatus.get("code");
             String message = (String)apiStatus.get("message");
             if(!code.equals("00")) {
-                throw new InvalidTokenException(accessToken);
+                throw new InvalidTokenException(message);
             }
         }
 
