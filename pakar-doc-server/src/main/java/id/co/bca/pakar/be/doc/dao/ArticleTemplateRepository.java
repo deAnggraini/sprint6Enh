@@ -35,7 +35,9 @@ public interface ArticleTemplateRepository extends CrudRepository<ArticleTemplat
     @Query(value = "SELECT tat.* FROM t_article_template tat " +
             "            LEFT JOIN t_article_template_role tatr ON tatr.template_id = tat.id " +
             "            WHERE tatr.role_id = :role " +
-            "            AND tat.deleted IS FALSE",
+            "            AND tat.deleted IS FALSE " +
+            "            ORDER BY tat.template_name " +
+            "            DESC",
             nativeQuery = true)
     List<ArticleTemplate> findArticleTemplates(@Param("role") String role);
 }
