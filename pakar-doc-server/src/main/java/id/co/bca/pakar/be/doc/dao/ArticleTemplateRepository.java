@@ -1,7 +1,6 @@
 package id.co.bca.pakar.be.doc.dao;
 
 import id.co.bca.pakar.be.doc.model.ArticleTemplate;
-import id.co.bca.pakar.be.doc.model.ArticleTemplateStructure;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
