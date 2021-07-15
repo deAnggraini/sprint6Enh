@@ -88,7 +88,10 @@ public class ArticleTemplateServiceImp implements ArticleTemplateService {
                 dto.setId(template.getId());
                 dto.setName(template.getTemplateName());
                 dto.setDesc(template.getDescription());
-                dto.setImage("");
+                ArticleTemplateImage articleTemplateImage = articleTemplateImageRepository.findArticleTemplatesImage(template.getId());
+                if(articleTemplateImage != null) {
+                    dto.setImage(articleTemplateImage.getImages().getUri());
+                }
                 ArticleTemplateThumbnail articleTemplateThumbnail = articleTemplateThumbnailRepository.findArticleTemplatesThumbnail(template.getId());
                 if(articleTemplateThumbnail != null) {
                     dto.setThumb(articleTemplateThumbnail.getImages().getUri());

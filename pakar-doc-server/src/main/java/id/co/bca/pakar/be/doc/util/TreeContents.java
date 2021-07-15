@@ -9,7 +9,7 @@ import java.util.List;
 
 public class TreeContents {
     public List<ContentTemplateDto> menuTree(List<ContentTemplateDto> arrMenu) {
-        //Query all menus
+        //Query all contents
         List<ContentTemplateDto> menus = arrMenu;
         //The returned ContentTemplateDto tree
         List<ContentTemplateDto> rootMenus = new ArrayList<>();
