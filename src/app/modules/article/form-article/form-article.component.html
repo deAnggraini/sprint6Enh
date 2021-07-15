@@ -27,90 +27,31 @@
             <label>Video Artikel *</label>
             <input type="url" class="form-control">
         </div>
-        <!-- <div class="form-group">
-            <label>Content Artikel Material *</label>
-            <div class="border border-light rounded-sm p-3">
-
-                <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl" class="cdk-tree-line">
-                    <cdk-nested-tree-node *cdkTreeNodeDef="let node">
-                        <li>
-                            <div class="mat-tree-node"> iki endi {{node.item}}</div>
-                        </li>
-                    </cdk-nested-tree-node>
-                    <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChildren">
-                        <li class="example-tree-container">
-                            <div class="mat-tree-node">
-                                <button mat-icon-button matTreeNodeToggle [matTreeNodeToggleRecursive]="recursive"
-                                    [attr.aria-label]="'toggle ' + node.filename">
-                                    <mat-icon>
-                                        {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
-                                    </mat-icon>
-                                </button>
-                                {{node.item}}
-                            </div>
-                            <ul class="example-tree-nested-node">
-                                <div *ngIf="treeControl.isExpanded(node)">
-                                    <ng-container matTreeNodeOutlet></ng-container>
-                                </div>
-                            </ul>
-                        </li>
-                    </mat-nested-tree-node>
-                </cdk-tree>
-
-            </div>
-        </div> -->
         <div class="form-group">
-            <label>Content Artikel Material *</label>
+            <label>Content Artikel *</label>
             <div class="border border-light rounded-sm p-3">
-                <!-- cdkDropList #unassignedList="cdkDropList" [cdkDropListData]="unassignedTasks" [cdkDropListConnectedTo]="[assignedList]" (cdkDropListDropped)="drop($event)" -->
                 <mat-accordion [togglePosition]="'before'" multi="true">
                     <mat-expansion-panel *ngFor="let content of formData.contents;" class="acc-level acc-level-1">
                         <mat-expansion-panel-header [@.disabled]="true">
-                            <!-- <mat-panel-title> -->
                             <div>
-                                {{content.title}}
+                                <span>{{content.title}}</span>
+                                <span [inlineSVG]="'./assets/media/svg/bca/icon/info.svg'" cacheSVG="true"
+                                    class="svg-icon svg-icon-sm"></span>
                             </div>
-                            <!-- </mat-panel-title> -->
                         </mat-expansion-panel-header>
                         <div>
                             <input type="text" class="txt-desc-lvl1"
                                 placeholder="Masukkan kalimat pengantar terkait {{content.title}} disini.">
                             <div class="input-accordion-separator"></div>
-                            <mat-accordion cdkDropList (cdkDropListDropped)="drop($event)" [togglePosition]="'before'"
-                                hideToggle="false" multi="true">
-                                <mat-expansion-panel [@.disabled]="true"
-                                    *ngFor="let content of content.children; let i = index" cdkDrag
-                                    [cdkDragData]="content" class="acc-level acc-level-2">
-                                    <mat-expansion-panel-header>
-                                        <mat-panel-title>{{content.title}}</mat-panel-title>
-                                    </mat-expansion-panel-header>
-                                    <div class="content p-3">
-                                        <div class="form-group">
-                                            <label>Judul Topik *</label>
-                                            <input type="text" class="form-control">
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Isi Topik *</label>
-                                            <ckeditor [editor]="editor" [config]="config" tagName="textarea">
-                                            </ckeditor>
-                                        </div>
-                                        <div class="text-right">
-                                            <button type="button"
-                                                class="btn btn-outline-light btn-sm rounded-lg px-5">Batal</button>
-                                            <button type="button"
-                                                class="btn btn-sm btn-blue rounded-lg px-5">Simpan</button>
-                                        </div>
-                                    </div>
-                                </mat-expansion-panel>
-                            </mat-accordion>
-
+                            <ng-container *ngIf="content.children.length" [ngTemplateOutlet]="accordionChild"
+                                [ngTemplateOutletContext]="{ children: content.children}">
+                            </ng-container>
                         </div>
                     </mat-expansion-panel>
                 </mat-accordion>
             </div>
         </div>
-
-        <div class="form-group">
+        <!-- <div class="form-group">
             <label>Content Artikel *</label>
             <div class="border border-light rounded-sm p-3">
 
@@ -142,14 +83,7 @@
                 </ngb-accordion>
 
             </div>
-        </div>
-
-        <ul cdkDropList>
-            <li cdkDrag>satu</li>
-            <li cdkDrag>dua</li>
-            <li cdkDrag>tiga</li>
-            <li cdkDrag>empat</li>
-        </ul>
+        </div> -->
     </form>
 </div>
 
@@ -165,43 +99,32 @@
 </ng-template>
 
 <ng-template #accordionChild let-children="children">
-    <div class="border-top-1 border-light" cdkDropList (cdkDropListDropped)="drop($event)">
-        <ngb-accordion class="accordion-bordered as-tree-child" [destroyOnHide]="false" (hidden)="onHidden($event)"
-            (shown)="onShow($event)">
-            <ngb-panel *ngFor="let content of children; let i = index">
-                <ng-template ngbPanelHeader>
-                    <div class="card-title d-flex align-items-center justify-content-between" cdkDrag
-                        [cdkDragData]="content">
-                        <div>
-                            <button ngbPanelToggle class="btn btn-link btn-xs"><i
-                                    class="flaticon2-down icon-xs "></i></button>
-                            <span>{{i+1}}. {{content.title}} </span> <span>info</span>
-                            <button type="button" cdkDragHandle>DRAG</button>
-                        </div>
-                        <ng-container [ngTemplateOutlet]="rightIcon"></ng-container>
-                    </div>
-                </ng-template>
-                <ng-template ngbPanelContent>
-                    <div class="content p-3">
-                        <div class="form-group">
-                            <label>Judul Topik *</label>
-                            <input type="text" class="form-control" [(ngModel)]="content.title">
-                        </div>
-                        <div class="form-group">
-                            <label>Isi Topik *</label>
-                            <ckeditor [editor]="editor" [config]="config" tagName="textarea" [(ngModel)]="content.desc">
-                            </ckeditor>
-                        </div>
-                        <div class="text-right">
-                            <button type="button" class="btn btn-outline-light btn-sm rounded-lg px-5">Batal</button>
-                            <button type="button" class="btn btn-sm btn-blue rounded-lg px-5">Simpan</button>
-                        </div>
-                        <ng-container *ngIf="content.children.length" [ngTemplateOutlet]="accordionChild"
-                            [ngTemplateOutletContext]="{ children: content.children}">
-                        </ng-container>
-                    </div>
-                </ng-template>
-            </ngb-panel>
-        </ngb-accordion>
-    </div>
+    <mat-accordion cdkDropList (cdkDropListDropped)="drop($event)" [togglePosition]="'before'" hideToggle="false"
+        multi="true">
+        <mat-expansion-panel [@.disabled]="true" *ngFor="let content of children; let i = index" cdkDrag
+            [cdkDragData]="content" class="acc-level acc-level-2">
+            <div class="drag-placeholder" *cdkDragPlaceholder></div>
+            <mat-expansion-panel-header>
+                <mat-panel-title>{{content.title}}</mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="content p-3">
+                <div class="form-group">
+                    <label>Judul Topik *</label>
+                    <input type="text" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Isi Topik *</label>
+                    <ckeditor [editor]="editor" [config]="config" tagName="textarea">
+                    </ckeditor>
+                </div>
+                <div class="text-right">
+                    <button type="button" class="btn btn-outline-light btn-sm rounded-lg px-5">Batal</button>
+                    <button type="button" class="btn btn-sm btn-blue rounded-lg px-5">Simpan</button>
+                </div>
+                <ng-container *ngIf="content.children.length" [ngTemplateOutlet]="accordionChild"
+                    [ngTemplateOutletContext]="{ children: content.children}">
+                </ng-container>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
 </ng-template>

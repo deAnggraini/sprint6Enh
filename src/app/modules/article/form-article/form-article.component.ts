@@ -4,12 +4,10 @@ import { NgbAccordionConfig, NgbPanelChangeEvent, NgbAccordion } from '@ng-boots
 import { ArticleService } from '../../_services/article.service';
 import { Router } from '@angular/router';
 import { ChangeEvent, CKEditorComponent } from '@ckeditor/ckeditor5-angular';
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
-import { FlatTreeControl } from '@angular/cdk/tree';
-import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
-import {ArrayDataSource} from '@angular/cdk/collections';
-import {NestedTreeControl} from '@angular/cdk/tree';
+// import { ArrayDataSource } from '@angular/cdk/collections';
+// import { NestedTreeControl } from '@angular/cdk/tree';
 
 const sample = {
   id: 0,
@@ -30,7 +28,26 @@ const sample = {
           id: 0,
           title: 'Rekening Tahapan',
           desc: '',
-          children: [],
+          children: [
+            {
+              id: 0,
+              title: 'Satu',
+              desc: '',
+              children: [],
+            },
+            {
+              id: 0,
+              title: 'Dua',
+              desc: '',
+              children: [],
+            },
+            {
+              id: 0,
+              title: 'Tiga',
+              desc: '',
+              children: [],
+            },
+          ],
         },
         {
           id: 0,
@@ -206,18 +223,17 @@ export class FormArticleComponent implements OnInit, AfterViewInit {
 
   formData = JSON.parse(JSON.stringify(sample));
 
-
   // tree vew
-  private _transformer = (node: FoodNode, level: number) => {
-    return {
-      expandable: !!node.children && node.children.length > 0,
-      name: node.name,
-      level: level,
-    };
-  }
-  treeControl = new NestedTreeControl<FoodNode> (node => node.children);
-  dataSource = new ArrayDataSource(TREE_DATA);
-  hasChild = (_: number, node: FoodNode) => !!node.children && node.children.length > 0;
+  // private _transformer = (node: FoodNode, level: number) => {
+  //   return {
+  //     expandable: !!node.children && node.children.length > 0,
+  //     name: node.name,
+  //     level: level,
+  //   };
+  // }
+  // treeControl = new NestedTreeControl<FoodNode>(node => node.children);
+  // dataSource = new ArrayDataSource(TREE_DATA);
+  // hasChild = (_: number, node: FoodNode) => !!node.children && node.children.length > 0;
 
   constructor(private accordionConfig: NgbAccordionConfig,
     private article: ArticleService,
@@ -228,7 +244,15 @@ export class FormArticleComponent implements OnInit, AfterViewInit {
 
   drop(event: CdkDragDrop<any[]>) {
     console.log({ event });
-    // moveItemInArray(this.movies, event.previousIndex, event.currentIndex);
+    // moveItemInArray(this.formData, event.previousIndex, event.currentIndex);
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      transferArrayItem(event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex);
+    }
   }
 
   onHidden(panelId) {
@@ -270,12 +294,11 @@ export class FormArticleComponent implements OnInit, AfterViewInit {
     console.log(this.editor.editor);
   }
 
-
   // CKEDITOR5 function
   public onReady(editor) {
-    console.log(this.editor.builtinPlugins.map(plugin => plugin.pluginName));
-    console.log({ editor });
-    console.log(Array.from(editor.ui.componentFactory.names()));
+    // console.log(this.editor.builtinPlugins.map(plugin => plugin.pluginName));
+    // console.log({ editor });
+    // console.log(Array.from(editor.ui.componentFactory.names()));
     // editor.ui.getEditableElement().parentElement.insertBefore(
     //     editor.ui.view.toolbar.element,
     //     editor.ui.getEditableElement()

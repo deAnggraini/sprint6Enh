@@ -17,28 +17,28 @@
   }
 }
 
-:host ::ng-deep .accordion {
-  .btn i.flaticon2-down {
-    color: #0F5EA9 !important;
-  }
+// :host ::ng-deep .accordion {
+//   .btn i.flaticon2-down {
+//     color: #0F5EA9 !important;
+//   }
 
-  .btn.collapsed i.flaticon2-down {
-    transition: inherit;
-    transform: rotate(-90deg);
-    height: 7px;
-    width: 7px;
-  }
+//   .btn.collapsed i.flaticon2-down {
+//     transition: inherit;
+//     transform: rotate(-90deg);
+//     height: 7px;
+//     width: 7px;
+//   }
 
-  .line-tree {
-    width: 30px;
-  }
+//   .line-tree {
+//     width: 30px;
+//   }
 
-  .txt-desc-lvl1 {
-    width: 100%;
-    border: none;
-    padding: 1rem;
-  }
-}
+//   .txt-desc-lvl1 {
+//     width: 100%;
+//     border: none;
+//     padding: 1rem;
+//   }
+// }
 
 :host ::ng-deep .mat-accordion .mat-expansion-panel.acc-level {
   margin-bottom: 16px;
@@ -162,93 +162,100 @@
       }
     }
   }
-}
 
-:host ::ng-deep .cdk-tree {
-  .example-tree-invisible {
-    display: none;
-  }
-
-  .example-tree ul,
-  .example-tree li {
-    margin-top: 0;
-    margin-bottom: 0;
-    list-style-type: none;
-  }
-
-  .example-tree-node {
-    display: block;
-  }
-
-  .example-tree-node .example-tree-node {
-    padding-left: 40px;
+  .drag-placeholder {
+    background: #ccc;
+    border: dotted 3px #999;
+    min-height: 60px;
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
   }
 }
 
-:host ::ng-deep .cdk-tree.cdk-tree-line {
-  .example-tree-progress-bar {
-    margin-left: 30px;
-  }
+// :host ::ng-deep .cdk-tree {
+//   .example-tree-invisible {
+//     display: none;
+//   }
 
-  .example-tree-nested-node {
-    padding-left: 30px;
-  }
+//   .example-tree ul,
+//   .example-tree li {
+//     margin-top: 0;
+//     margin-bottom: 0;
+//     list-style-type: none;
+//   }
 
-  mat-tree {
-    margin-left: 40px;
-  }
+//   .example-tree-node {
+//     display: block;
+//   }
 
-  .mat-tree-node {
-    padding: 0;
-    background-color: white;
-  }
+//   .example-tree-node .example-tree-node {
+//     padding-left: 40px;
+//   }
+// }
 
-  .mat-nested-tree-node {
-    top: -24px;
-  }
+// :host ::ng-deep .cdk-tree.cdk-tree-line {
+//   .example-tree-progress-bar {
+//     margin-left: 30px;
+//   }
 
-  ul,
-  li {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
+//   .example-tree-nested-node {
+//     padding-left: 30px;
+//   }
 
-  li.example-tree-container {
-    border-bottom: 0;
-  }
+//   mat-tree {
+//     margin-left: 40px;
+//   }
 
-  ul {
-    padding-left: 40px;
-  }
+//   .mat-tree-node {
+//     padding: 0;
+//     background-color: white;
+//   }
 
-  li {
-    padding-left: 40px;
-    border: 1px dotted grey;
-    border-width: 0 0 1px 1px;
-    position: relative;
-    top: -24px;
-  }
+//   .mat-nested-tree-node {
+//     top: -24px;
+//   }
 
-  li.mat-tree-node,
-  li div {
-    margin: 0;
-    position: relative;
-    top: 24px;
-  }
+//   ul,
+//   li {
+//     list-style: none;
+//     margin: 0;
+//     padding: 0;
+//   }
 
-  li ul {
-    border-top: 1px dotted grey;
-    margin-left: -40px;
-    padding-left: 60px;
-  }
+//   li.example-tree-container {
+//     border-bottom: 0;
+//   }
 
-  .mat-nested-tree-node:last-child ul {
-    border-left: 1px solid white;
-    margin-left: -41px;
-  }
+//   ul {
+//     padding-left: 40px;
+//   }
 
-  .mat-icon-button {
-    z-index: 100;
-  }
-}
+//   li {
+//     padding-left: 40px;
+//     border: 1px dotted grey;
+//     border-width: 0 0 1px 1px;
+//     position: relative;
+//     top: -24px;
+//   }
+
+//   li.mat-tree-node,
+//   li div {
+//     margin: 0;
+//     position: relative;
+//     top: 24px;
+//   }
+
+//   li ul {
+//     border-top: 1px dotted grey;
+//     margin-left: -40px;
+//     padding-left: 60px;
+//   }
+
+//   .mat-nested-tree-node:last-child ul {
+//     border-left: 1px solid white;
+//     margin-left: -41px;
+//   }
+
+//   .mat-icon-button {
+//     z-index: 100;
+//   }
+// }

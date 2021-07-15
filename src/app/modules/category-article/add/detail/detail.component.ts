@@ -124,6 +124,7 @@ export class DetailComponent implements OnInit, OnDestroy {
 
   private convertToFormData(): FormData {
     const fd: FormData = new FormData();
+    const { id } = this.dataForm.value;
     fd.append('id', this.dataForm.value.id.toString());
     fd.append('name', this.dataForm.value.name);
     fd.append('desc', this.dataForm.value.desc);
@@ -144,14 +145,18 @@ export class DetailComponent implements OnInit, OnDestroy {
     fd.append('level', this.dataForm.value.level.toString());
 
     // let nextSort = String(this.section.menus.length + 1);
-    const nodeParent = this.locations.find(d => d.id == this.dataForm.value.parent);
-    if (!(nodeParent.menus && nodeParent.menus.length)) {
-      nodeParent.menus = [];
+    if (parseInt(id) > 0) {
+      fd.append('sort', this.dataForm.value.sort.toString());
+    } else {
+      const nodeParent = this.locations.find(d => d.id == this.dataForm.value.parent);
+      if (!(nodeParent.menus && nodeParent.menus.length)) {
+        nodeParent.menus = [];
+      }
+      const listSort = nodeParent.menus.map(d => d.sort);
+      const maxSort = Math.max(...listSort) | 0;
+      fd.append('sort', (maxSort + 1).toString());
     }
-    const listSort = nodeParent.menus.map(d => d.sort);
-    const maxSort = Math.max(...listSort) | 0;
 
-    fd.append('sort', (maxSort + 1).toString());
     fd.append('parent', this.dataForm.value.parent);
     fd.append('location', this.dataForm.value.location);
     fd.append('location_text', this.locations.find(d => d._value == this.dataForm.value.location)._text);
@@ -183,6 +188,7 @@ export class DetailComponent implements OnInit, OnDestroy {
     }
   }
 
+  // convert tree view menjadi DTO
   private convertTreeToArray(dataList: any[]) {
     let result = [];
     if (dataList && dataList.length) {
@@ -200,7 +206,13 @@ export class DetailComponent implements OnInit, OnDestroy {
         delete _clone.image;
 
         result.push(_clone);
-        result = result.concat(this.convertTreeToArray(d.menus));
+        const children = this.convertTreeToArray(d.menus);
+        if (children.length) {
+
+        }
+        const hasArticle = children.find(d => d.hasArticle == true);
+        d.hasArticle = hasArticle ? true : false;
+        result = result.concat(children);
       })
     }
     return result;
@@ -300,7 +312,10 @@ export class DetailComponent implements OnInit, OnDestroy {
       if (d.changeTo < 1) {
         d.error = true;
         result = true;
-      } else d.error = false;
+      } else {
+
+        d.error = false;
+      }
     })
     return result;
   }

@@ -93,11 +93,13 @@
     </div>
     <div class="modal-body pt-0">
         <form class="form" [formGroup]="dataForm" novalidate="novalidate" (ngSubmit)="save()">
-            <div>Sebelum Kamu dapat menghapus {{txtLevelName}} <b>"{{selectedDelete.title}}"</b>, Kamu harus memindahkan terlebih dahulu
+            <div>Sebelum Kamu dapat menghapus {{txtLevelName}} <b>"{{selectedDelete.title}}"</b>, Kamu harus memindahkan
+                terlebih dahulu
                 {{txtLevelChildName}} yang terdapat pada {{txtLevelName}} tersebut.</div>
             <div class="form-group row" *ngFor="let change of listToChangeParent">
                 <label class="col-4 col-form-label">{{change.title}}</label>
-                <select class="form-control col-7" required [ngClass]="{ 'is-invalid': change.error}" #mySelect (change)="changeComboboxParent(mySelect.value, change.id)">
+                <select class="form-control col-7" required [ngClass]="{ 'is-invalid': change.error}" #mySelect
+                    (change)="changeComboboxParent(mySelect.value, change.id)">
                     <option value="0">-- Pilih Salah Satu --</option>
                     <option *ngFor="let bro of listBrothers" [value]="bro.id">{{bro.title}}</option>
                 </select>
