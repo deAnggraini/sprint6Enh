@@ -115,7 +115,7 @@ public class StructureValidator implements Validator {
                 }
 
                 if (!validFileType) {
-                    errors.rejectValue("image", "icon.file.type.invalid","invalid image file type");
+                    errors.rejectValue("image", "image.file.type.invalid","invalid image file type");
                     return;
                 }
 

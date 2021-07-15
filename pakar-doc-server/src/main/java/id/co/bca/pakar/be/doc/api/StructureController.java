@@ -14,14 +14,18 @@ import id.co.bca.pakar.be.doc.service.StructureService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @RestController
@@ -52,12 +56,21 @@ public class StructureController extends BaseController {
             structureValidator.validate(structure, bindingResult);
             if (bindingResult.hasErrors()) {
                 logger.info("binding result " + bindingResult.getAllErrors());
-                List<String> errors = bindingResult
-                        .getFieldErrors()
-                        .stream()
-                        .map(x -> x.getDefaultMessage())
-                        .collect(Collectors.toList());
-                return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], errors.get(0));
+//                List<String> errors = bindingResult
+//                        .getFieldErrors()
+//                        .stream()
+//                        .map(x -> x.getDefaultMessage())
+//                        .collect(Collectors.toList());
+//                return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], errors.get(0));
+
+                String errorMessage = "";
+                for (Object object : bindingResult.getAllErrors()) {
+                    if(object instanceof FieldError) {
+                        FieldError fieldError = (FieldError) object;
+                        errorMessage = messageSource.getMessage(fieldError.getCode(),null, new Locale("el"));
+                    }
+                }
+                return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], errorMessage);
             }
             logger.info("name structure >> {}", structure.getName());
             StructureResponseDto responseDto = structureService.add(username, structure);
@@ -89,13 +102,14 @@ public class StructureController extends BaseController {
             structureValidator.validate(structure, bindingResult);
             if (bindingResult.hasErrors()) {
                 logger.info("binding result " + bindingResult.getAllErrors());
-//				return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.REQUEST_PARAM_INVALID.getAction()[0], Constant.ApiResponseCode.REQUEST_PARAM_INVALID.getAction()[1]);
-                List<String> errors = bindingResult
-                        .getFieldErrors()
-                        .stream()
-                        .map(x -> x.getDefaultMessage())
-                        .collect(Collectors.toList());
-                return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], errors.get(0));
+                String errorMessage = "";
+                for (Object object : bindingResult.getAllErrors()) {
+                    if(object instanceof FieldError) {
+                        FieldError fieldError = (FieldError) object;
+                        errorMessage = messageSource.getMessage(fieldError.getCode(),null, new Locale("el"));
+                    }
+                }
+                return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], errorMessage);
             }
             StructureResponseDto response = structureService.update(username, structure);
             return createResponse(response, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
@@ -148,12 +162,14 @@ public class StructureController extends BaseController {
             if (bindingResult.hasErrors()) {
                 logger.info("binding result " + bindingResult.getAllErrors());
 //				return createResponse(new ArrayList<StructureResponseDto>(), Constant.ApiResponseCode.REQUEST_PARAM_INVALID.getAction()[0], Constant.ApiResponseCode.REQUEST_PARAM_INVALID.getAction()[1]);
-                List<String> errors = bindingResult
-                        .getFieldErrors()
-                        .stream()
-                        .map(x -> x.getDefaultMessage())
-                        .collect(Collectors.toList());
-                return createResponse(new ArrayList<StructureResponseDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], errors.get(0));
+                String errorMessage = "";
+                for (Object object : bindingResult.getAllErrors()) {
+                    if(object instanceof FieldError) {
+                        FieldError fieldError = (FieldError) object;
+                        errorMessage = messageSource.getMessage(fieldError.getCode(),null, new Locale("el"));
+                    }
+                }
+                return createResponse(new ArrayList<StructureResponseDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], errorMessage);
             }
             List<StructureResponseDto> response = structureService.saveBatchStructures(username, structures);
             return createResponse(response, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);

@@ -2,6 +2,8 @@ package id.co.bca.pakar.be.doc.api;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -11,6 +13,9 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 
 public abstract class BaseController {
+	@Autowired
+	protected MessageSource messageSource;
+
 	protected class RestResponse<T> {
 		@JsonProperty("data")
 		private T data;
