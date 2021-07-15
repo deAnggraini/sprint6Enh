@@ -11,6 +11,7 @@ const categories = [
         uri: '/struktur/list/100',
         edit: true,
         listParent: [],
+        hasArticle: true,
         menus: [
             {
                 id: 110,
@@ -23,6 +24,7 @@ const categories = [
                 image: '/articles/deposito.jpeg',
                 desc: 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.',
                 uri: '/struktur/list/110',
+                hasArticle: true,
             },
             {
                 id: 120,
@@ -58,6 +60,7 @@ const categories = [
                 image: '/articles/duitt.jpeg',
                 desc: 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.',
                 uri: '/struktur/list/120',
+                hasArticle: true,
             },
             {
                 id: 130,
@@ -70,6 +73,7 @@ const categories = [
                 image: '/articles/giro.jpeg',
                 desc: 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.',
                 uri: '/struktur/list/130',
+                hasArticle: true,
             },
             {
                 id: 140,
@@ -88,6 +92,7 @@ const categories = [
                         image: '/articles/simpanan-pelajar.jpeg',
                         listParent: [{ id: 100, title: 'Produk Untuk Nasabah' }, { id: 120, title: 'Produk Investasi & Asuransi' }, { id: 140, title: 'Produk Kerja sama' }],
                         uri: '/struktur/list/141',
+                        hasArticle: true,
                     },
                     {
                         id: 142,
@@ -98,6 +103,7 @@ const categories = [
                         menus: [],
                         image: '/articles/tahapan.jpeg',
                         uri: '/struktur/list/142',
+                        hasArticle: true,
                         listParent: [{ id: 100, title: 'Produk Untuk Nasabah' }, { id: 120, title: 'Produk Investasi & Asuransi' }, { id: 140, title: 'Produk Kerja sama' }],
                     },
                     {
@@ -109,6 +115,7 @@ const categories = [
                         menus: [],
                         image: '/articles/deposito.jpeg',
                         uri: '/struktur/list/143',
+                        hasArticle: true,
                         listParent: [{ id: 100, title: 'Produk Untuk Nasabah' }, { id: 120, title: 'Produk Investasi & Asuransi' }, { id: 140, title: 'Produk Kerja sama' }],
                     },
                     {
@@ -120,6 +127,7 @@ const categories = [
                         menus: [],
                         image: '/articles/tapres.jpeg',
                         uri: '/struktur/list/144',
+                        hasArticle: true,
                         listParent: [{ id: 100, title: 'Produk Untuk Nasabah' }, { id: 120, title: 'Produk Investasi & Asuransi' }, { id: 140, title: 'Produk Kerja sama' }],
                     },
                     {
@@ -138,6 +146,7 @@ const categories = [
                 image: '/articles/kredit-lokal-sme.jpeg',
                 desc: 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.',
                 uri: '/struktur/list/140',
+                hasArticle: true,
             },
             {
                 id: 150,
@@ -155,6 +164,7 @@ const categories = [
                         menus: [],
                         image: '/articles/time-loan.jpeg',
                         uri: '/struktur/list/150',
+                        hasArticle: true,
                         listParent: [{ id: 100, title: 'Produk Untuk Nasabah' }, { id: 120, title: 'Produk Investasi & Asuransi' }, { id: 150, title: 'Produk Layanan Perbankan' }],
                     },
                     {
@@ -166,6 +176,7 @@ const categories = [
                         menus: [],
                         image: '/articles/tapres.jpeg',
                         uri: '/struktur/list/152',
+                        hasArticle: true,
                         listParent: [{ id: 100, title: 'Produk Untuk Nasabah' }, { id: 120, title: 'Produk Investasi & Asuransi' }, { id: 150, title: 'Produk Layanan Perbankan' }],
                     },
                     {
@@ -177,6 +188,7 @@ const categories = [
                         menus: [],
                         image: '/articles/duitt.jpeg',
                         uri: '/struktur/list/153',
+                        hasArticle: true,
                         listParent: [{ id: 100, title: 'Produk Untuk Nasabah' }, { id: 120, title: 'Produk Investasi & Asuransi' }, { id: 150, title: 'Produk Layanan Perbankan' }],
                     },
                 ],
@@ -184,6 +196,7 @@ const categories = [
                 image: '/articles/simpanan-pelajar.jpeg',
                 desc: 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.',
                 uri: '/struktur/list/150',
+                hasArticle: true,
             },
             {
                 id: 160,
@@ -196,6 +209,7 @@ const categories = [
                 image: '/articles/tahapan.jpeg',
                 desc: 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.',
                 uri: '/struktur/list/160',
+                hasArticle: true,
             },
             {
                 id: 170,
@@ -208,6 +222,7 @@ const categories = [
                 image: '/articles/tapres.jpeg',
                 desc: 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.',
                 uri: '/struktur/list/170',
+                hasArticle: true,
             },
             {
                 id: 180,
@@ -254,6 +269,7 @@ const categories = [
                 image: '/articles/tahapan-xpresi.jpeg',
                 listParent: [{ id: 100, title: 'Produk Untuk Nasabah' }],
                 uri: '/struktur/list/180',
+                hasArticle: true,
             },
         ],
     },
@@ -264,6 +280,7 @@ const categories = [
         desc: 'Produk BCA yang digunakan langsung oleh nasabah seperti tabungan e-banking dll.',
         sort: 1,
         parent: 0,
+        hasArticle: true,
         menus: [
             {
                 id: 210,
@@ -274,7 +291,8 @@ const categories = [
                 parent: 200,
                 listParent: [{ id: 200, title: 'Aktivitas Cabang' }],
                 uri: '/struktur/list/210',
-                image: 'articles/duitt.jpeg'
+                image: 'articles/duitt.jpeg',
+                hasArticle: true,
             },
             {
                 id: 220,
@@ -285,7 +303,8 @@ const categories = [
                 parent: 200,
                 listParent: [{ id: 200, title: 'Aktivitas Cabang' }],
                 uri: '/struktur/list/220',
-                image: 'articles/duitt.jpeg'
+                image: 'articles/duitt.jpeg',
+                hasArticle: true,
             },
             {
                 id: 230,
@@ -297,6 +316,7 @@ const categories = [
                 listParent: [{ id: 200, title: 'Aktivitas Cabang' }],
                 image: 'articles/duitt.jpeg',
                 uri: '/struktur/list/230',
+                hasArticle: true,
                 menus: [
                     {
                         id: 231,
@@ -305,6 +325,7 @@ const categories = [
                         desc: 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore.',
                         sort: 1,
                         parent: 230,
+                        hasArticle: true,
                         menus: [
                             {
                                 id: 239,
@@ -316,6 +337,7 @@ const categories = [
                                 listParent: [{ id: 200, title: 'Aktivitas Cabang' }, { id: 230, title: 'Pelaku cabang' }, { id: 231, title: 'CS' }],
                                 image: 'articles/duitt.jpeg',
                                 uri: '/struktur/list/239',
+                                hasArticle: false,
                             },
                             {
                                 id: 238,
@@ -327,11 +349,13 @@ const categories = [
                                 listParent: [{ id: 200, title: 'Aktivitas Cabang' }, { id: 230, title: 'Pelaku cabang' }, { id: 231, title: 'CS' }],
                                 image: 'articles/duitt.jpeg',
                                 uri: '/struktur/list/238',
+                                hasArticle: true,
                             },
                         ],
                         listParent: [{ id: 200, title: 'Aktivitas Cabang' }, { id: 230, title: 'Pelaku cabang' }],
                         image: 'articles/duitt.jpeg',
                         uri: '/struktur/list/231',
+                        hasArticle: true,
                     },
                     {
                         id: 232,
@@ -343,6 +367,7 @@ const categories = [
                         listParent: [{ id: 200, title: 'Aktivitas Cabang' }, { id: 230, title: 'Pelaku cabang' }],
                         image: 'articles/duitt.jpeg',
                         uri: '/struktur/list/232',
+                        hasArticle: true,
                     },
                     {
                         id: 233,
@@ -354,6 +379,7 @@ const categories = [
                         listParent: [{ id: 200, title: 'Aktivitas Cabang' }, { id: 230, title: 'Pelaku cabang' }],
                         image: 'articles/duitt.jpeg',
                         uri: '/struktur/list/233',
+                        hasArticle: false,
                     },
                     {
                         id: 234,
@@ -365,6 +391,7 @@ const categories = [
                         listParent: [{ id: 200, title: 'Aktivitas Cabang' }, { id: 230, title: 'Pelaku cabang' }],
                         image: 'articles/duitt.jpeg',
                         uri: '/struktur/list/234',
+                        hasArticle: false,
                     },
                     {
                         id: 235,
@@ -376,6 +403,7 @@ const categories = [
                         listParent: [{ id: 200, title: 'Aktivitas Cabang' }, { id: 230, title: 'Pelaku cabang' }],
                         image: 'articles/duitt.jpeg',
                         uri: '/struktur/list/235',
+                        hasArticle: false,
                     },
                 ]
             },
