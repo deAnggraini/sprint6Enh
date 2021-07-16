@@ -59,7 +59,7 @@ export class AddComponent implements OnInit, OnDestroy {
   }
 
   checkUniq(value) {
-    const checkUniqSubrcr = this.article.checkUniq(value)
+    const checkUniqSubrcr = this.article.checkUniq(value.trim())
       .pipe(
         catchError((err) => {
           // this.dataForm.controls['title'].setAsyncValidators() //.updateValueAndValidity();
