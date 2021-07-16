@@ -13,14 +13,17 @@
         <div class="dropdown-menu p-0 m-0 dropdown-menu-right dropdown-menu-anim-up" ngbDropdownMenu>
           <ul class="navi navi-hover">
             <li class="navi-item">
-              <a routerLink="/article/add" class="navi-link cursor-pointer" (click)="dropDown.close()"><span class="navi-text font-weight-bolder">Artikel</span></a>
+              <a routerLink="/article/add" class="navi-link cursor-pointer" (click)="dropDown.close()"><span
+                  class="navi-text font-weight-bolder">Artikel</span></a>
             </li>
             <li class="navi-item">
-              <a routerLink="/article/add" class="navi-link cursor-pointer" (click)="dropDown.close()"><span class="navi-text font-weight-bolder">Virtual
+              <a routerLink="/article/add" class="navi-link cursor-pointer" (click)="dropDown.close()"><span
+                  class="navi-text font-weight-bolder">Virtual
                   Page</span></a>
             </li>
             <li class="navi-item">
-              <a routerLink="/article/add" class="navi-link cursor-pointer" (click)="dropDown.close()"><span class="navi-text font-weight-bolder">Formulir</span></a>
+              <a routerLink="/article/add" class="navi-link cursor-pointer" (click)="dropDown.close()"><span
+                  class="navi-text font-weight-bolder">Formulir</span></a>
             </li>
           </ul>
         </div>
@@ -77,8 +80,7 @@
   <ng-container *ngIf="extrasNotificationsLayout === 'offcanvas'">
     <!--begin::Notifications-->
     <div class="topbar-item">
-      <div class="btn btn-icon btn-icon-mobile btn-clean btn-sm mr-1"
-        id="kt_quick_notifications_toggle">
+      <div class="btn btn-icon btn-icon-mobile btn-clean btn-sm mr-1" id="kt_quick_notifications_toggle">
         <!-- <span [inlineSVG]="'./assets/media/svg/icons/General/Notifications1.svg'" cacheSVG="true" class="svg-icon svg-icon-xl"></span> -->
         <span [inlineSVG]="'./assets/media/svg/bca/top-bar/notifications2.svg'" cacheSVG="true"
           class="svg-icon svg-icon-xl"></span>
@@ -215,7 +217,7 @@
     </div>
   </ng-container>
   <ng-container *ngIf="extrasCartLayout === 'dropdown'">
-    <div class="dropdown" ngbDropdown placement="bottom-right">
+    <div class="dropdown" ngbDropdown placement="bottom-right" #adminDropDown="ngbDropdown">
       <!-- data-offset="10px,0px" -->
       <div class="topbar-item" data-toggle="dropdown" ngbDropdownToggle>
         <div class="btn btn-icon btn-clean btn-dropdown btn-sm mr-1">
@@ -232,14 +234,13 @@
       <div class="dropdown-menu p-0 m-0 dropdown-menu-left dropdown-menu-anim-up dropdown-menu-sm" ngbDropdownMenu>
         <ul class="navi navi-hover">
           <li class="navi-item">
-            <a routerLink="" class="navi-link cursor-pointer disabled"><span class="navi-text">Dashboard</span></a>
+            <a class="navi-link cursor-pointer disabled"><span class="navi-text">Dashboard</span></a>
           </li>
           <li class="navi-item">
-            <a routerLink="" class="navi-link cursor-pointer disabled"><span class="navi-text">Role</span></a>
+            <a class="navi-link cursor-pointer disabled"><span class="navi-text">Role</span></a>
           </li>
           <li class="navi-item">
-            <a routerLink="/article/add" class="navi-link cursor-pointer disabled"><span
-                class="navi-text">Penilaian</span></a>
+            <a class="navi-link cursor-pointer disabled"><span class="navi-text">Penilaian</span></a>
           </li>
           <li class="navi-item dropdown" ngbDropdown placement="left-bottom">
             <a class="navi-link cursor-pointer dropdown" ngbDropdownToggle style="width: 100%;">
@@ -249,16 +250,15 @@
                 ngbDropdownMenu>
                 <ul class="navi navi-hover">
                   <li class="navi-item disabled">
-                    <a routerLink="/article/add" class="navi-link cursor-pointer disabled"><span
-                        class="navi-text">Homepage</span></a>
+                    <a class="navi-link cursor-pointer disabled"><span class="navi-text">Homepage</span></a>
                   </li>
                   <li class="navi-item">
-                    <a routerLink="/struktur/add" class="navi-link cursor-pointer"><span class="navi-text">Struktur
-                        Menu</span></a>
+                    <a routerLink="/struktur/add" (click)="adminDropDown.close()" class="navi-link cursor-pointer">
+                      <span class="navi-text">Struktur Menu</span>
+                    </a>
                   </li>
                   <li class="navi-item">
-                    <a routerLink="/article/add" class="navi-link cursor-pointer disabled"><span
-                        class="navi-text">Rekomendasi
+                    <a class="navi-link cursor-pointer disabled"><span class="navi-text">Rekomendasi
                         Template</span></a>
                   </li>
                 </ul>
