@@ -83,8 +83,9 @@ export class AddComponent implements OnInit, OnDestroy {
 
   save() {
     if (this.dataForm.valid && !this.hasError) {
-      this.article.formParam = this.dataForm.value;
-      this.router.navigate(['/article/form']);
+      alert('Form Tambah Artikel Sukses');
+      // this.article.formParam = this.dataForm.value;
+      // this.router.navigate(['/article/form']);
     } else {
       this.dataForm.markAllAsTouched();
     }
