@@ -86,6 +86,7 @@ export class AddComponent implements OnInit, OnDestroy {
 
   private convertToFormData(): FormData {
     const fd: FormData = new FormData();
+    const { id } = this.dataForm.value;
 
     // best practice
     fd.append('id', this.dataForm.value.id.toString());
@@ -106,10 +107,14 @@ export class AddComponent implements OnInit, OnDestroy {
     fd.append('level', this.dataForm.value.level.toString());
 
     // fd.append('sort', String(this.categories.length + 1));
-    const listSort = this.categories.map(d => d.sort);
-    const maxSort = Math.max(...listSort) | 0;
 
-    fd.append('sort', (maxSort + 1).toString());
+    if (parseInt(id) > 0) {
+      fd.append('sort', this.dataForm.value.sort.toString());
+    } else {
+      const listSort = this.categories.map(d => d.sort);
+      const maxSort = Math.max(...listSort) | 0;
+      fd.append('sort', (maxSort + 1).toString());
+    }
 
     fd.append('parent', "0");
     fd.append('location', "");
