@@ -7,6 +7,7 @@ const _ = require('lodash');
 const path = require('path');
 const categories = require('../database/category-article');
 const { templates } = require('../database/article-template');
+const { sk_reference } = require('../database/sk-reference');
 
 router.get('/theme', function (req, res) {
     res.send({ error: false, msg: '', data: theme });
@@ -357,8 +358,12 @@ router.post('/checkUnique', (req, res) => {
     if (title == 'test') {
         res.send({ status: { code: '09', message: "title sudah ada" } });
     } else {
-        res.send({ error: false, msg: "", data: {} });
+        res.send({ error: false, msg: "", data: false });
     }
 });
+
+router.post('/skReference', (req, res) => {
+    res.send({ error: false, msg: "", data: sk_reference });
+})
 
 module.exports = router;
