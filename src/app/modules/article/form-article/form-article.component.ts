@@ -1,10 +1,13 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
 import * as CustomEditor from './../../../ckeditor/build/ckeditor';
 import { NgbAccordionConfig, NgbPanelChangeEvent, NgbAccordion } from '@ng-bootstrap/ng-bootstrap';
 import { ArticleService } from '../../_services/article.service';
 import { Router } from '@angular/router';
 import { ChangeEvent, CKEditorComponent } from '@ckeditor/ckeditor5-angular';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { Option } from 'src/app/utils/_model/option';
+import { SkReferenceService } from '../../_services/sk-reference.service';
 
 // import { ArrayDataSource } from '@angular/cdk/collections';
 // import { NestedTreeControl } from '@angular/cdk/tree';
@@ -212,47 +215,8 @@ const sample = {
       ],
     }
   ],
-  references: [{ id: 1, title: 'Perilhal Ketentuan Tahapan', no: '025/SKSE/TL/2020' }, {}, {}],
+  references: [],
   related: [{}, {}, {}]
-}
-
-const TREE_DATA: FoodNode[] = [
-  {
-    name: 'Fruit',
-    children: [
-      { name: 'Apple' },
-      { name: 'Banana' },
-      { name: 'Fruit loops' },
-    ]
-  }, {
-    name: 'Vegetables',
-    children: [
-      {
-        name: 'Green',
-        children: [
-          { name: 'Broccoli' },
-          { name: 'Brussel sprouts' },
-        ]
-      }, {
-        name: 'Orange',
-        children: [
-          { name: 'Pumpkins' },
-          { name: 'Carrots' },
-        ]
-      },
-    ]
-  },
-];
-
-interface ExampleFlatNode {
-  expandable: boolean;
-  name: string;
-  level: number;
-}
-
-interface FoodNode {
-  name: string;
-  children?: FoodNode[];
 }
 
 @Component({
@@ -264,10 +228,12 @@ interface FoodNode {
  * TODO : convert template ke article == backend
  * UI : kirim form 4 field saja
  */
-export class FormArticleComponent implements OnInit, AfterViewInit {
+export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('accDesc') accordion: NgbAccordion;
   @ViewChild('editorDesc') editorComponent: CKEditorComponent;
+
+  subscriptions: Subscription[] = [];
 
   editor = CustomEditor;
   config = {
@@ -344,6 +310,8 @@ export class FormArticleComponent implements OnInit, AfterViewInit {
   };
 
   formData = JSON.parse(JSON.stringify(sample));
+  finishRender: boolean = false;
+  skReferences: BehaviorSubject<Option[]> = new BehaviorSubject([]);
 
   // tree vew
   // private _transformer = (node: FoodNode, level: number) => {
@@ -357,11 +325,10 @@ export class FormArticleComponent implements OnInit, AfterViewInit {
   // dataSource = new ArrayDataSource(TREE_DATA);
   // hasChild = (_: number, node: FoodNode) => !!node.children && node.children.length > 0;
 
-  constructor(private accordionConfig: NgbAccordionConfig,
+  constructor(
     private article: ArticleService,
+    private skService: SkReferenceService,
     private router: Router) {
-    this.accordionConfig.closeOthers = false;
-    // this.accordionConfig.type = 'info';
   }
 
   drop(event: CdkDragDrop<any[]>) {
@@ -394,46 +361,52 @@ export class FormArticleComponent implements OnInit, AfterViewInit {
     }
   }
 
-  beforeChange($event: NgbPanelChangeEvent, accordion: NgbAccordion) {
-    // console.log({ accordion });
-    // const { panelId, nextState } = $event;
-    // const header = document.getElementById(panelId + "-header");
-    // if (header) {
-    //   if (nextState === true) {
-    //     header.classList.add('panel-open');
-    //   } else {
-    //     header.classList.remove('panel-open');
-    //   }
-    // }
-  };
-
   ngOnInit(): void {
     if (this.article.formParam == null) {
       // this.router.navigate(['article/add']);
     }
-    console.log(this.formData);
+    console.log('ngOnInit', this.formData);
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(sb => sb.unsubscribe());
   }
 
   ngAfterViewInit(): void {
-    console.log(this.editor);
-    console.log(this.editor.editor);
+    console.log('ngAfterViewInit');
+    this.finishRender = true;
+  }
+
+  private convertSkToOption(dataList: any[]): Option[] {
+    const result = [];
+    if (dataList && dataList.length) {
+      dataList.forEach(d => {
+        const { id, title, no } = d;
+        result.push({ id, value: no, text: `${no} - ${title}` })
+      })
+    }
+    return result;
+  }
+
+  // SK SE Event
+  getDataSkSeReference(keyword) {
+    this.subscriptions.push(
+      this.skService.search(keyword).subscribe(resp => {
+        if (resp) {
+          this.skReferences.next(this.convertSkToOption(resp));
+        }
+      })
+    );
   }
 
   // CKEDITOR5 function
   public onReady(editor) {
-    // console.log(this.editor.builtinPlugins.map(plugin => plugin.pluginName));
-    // console.log({ editor });
-    // console.log(Array.from(editor.ui.componentFactory.names()));
-    // editor.ui.getEditableElement().parentElement.insertBefore(
-    //     editor.ui.view.toolbar.element,
-    //     editor.ui.getEditableElement()
-    // );
+    this.finishRender = true;
+    console.log('ckeditor onReady');
   }
 
   public onChange({ editor }: ChangeEvent) {
-    console.log({ editor });
-    const data = editor.getData();
-    console.log(data);
+    console.log('onChange', { editor });
   }
 
 }

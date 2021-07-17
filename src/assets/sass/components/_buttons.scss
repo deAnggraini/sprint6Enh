@@ -28,7 +28,7 @@
     cursor: text;
   }
 
-  &:not(.btn-text) {
+  &:not(.btn-text), &:not(.disabled) {
     cursor: pointer;
   }
 

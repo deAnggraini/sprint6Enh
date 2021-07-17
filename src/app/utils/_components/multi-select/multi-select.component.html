@@ -1,0 +1,30 @@
+<div #multiSelect class="multi-select-search d-flex align-self-center flex-wrap" [ngClass]="{hasError : hasError}">
+    <div class="selected-item d-flex justify-content-between flex-nowrap" *ngFor="let item of value; let i = index">
+        <div class="_title">{{item.text}}</div>
+        <a href="#" (click)="cancel(item)" class="_close">
+            <span class="ki ki-close icon-xs text-dark"></span>
+        </a>
+    </div>
+    <div class="d-flex flex-grow-1">
+        <!-- (ngModelChange)="onChangeKeyword($event)" -->
+        <input type="text" class="input-multi-select" [placeholder]="placeholder || ''" required autocomplete="off"
+            [(ngModel)]="search" maxlength="50" [ngbTypeahead]="onChangeKeyword" (click)="onFocusSearch($event)">
+    </div>
+</div>
+<div ngbDropdown #multiSelectDropDown="ngbDropdown" class="multi-select-drop-down" style="width: 100%;" display="static"
+    (openChange)="ngbDropDownOpenChange($event)">
+    <button style="display: none;" ngbDropdownAnchor (focus)="multiSelectDropDown.open()"></button>
+    <div ngbDropdownMenu style="width: 100%;">
+        <div class="content-dropdown scroll scroll-pull" data-scroll="true" data-wheel-propagation="true">
+            <ul>
+                <li class="li-item" *ngFor="let item of dataList.value">
+                    <label class="d-flex flex-row align-items-center">
+                        <input type="checkbox" [checked]="setChecked(item)" [value]="item.id" class=""
+                            (change)="onChangeCheck($event, item)">
+                        <div class="fs14 fb4" [innerHTML]="innetHtml(item.text)">&nbsp;</div>
+                    </label>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

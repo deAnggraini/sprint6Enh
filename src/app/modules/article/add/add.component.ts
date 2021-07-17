@@ -131,7 +131,7 @@ export class AddComponent implements OnInit, OnDestroy {
       title: [this.defaultValue.title, Validators.compose([Validators.required, Validators.maxLength(50), alphaNumericValidator])],
       location: [this.defaultValue.location, Validators.compose([Validators.required])],
       usedBy: [{ value: this.defaultValue.usedBy, disabled: true }, Validators.compose([Validators.required])],
-      template: [this.defaultValue.template, Validators.compose([Validators.required])],
+      template: [this.defaultValue.template, Validators.compose([Validators.required])]
     });
     const locationSubrc = this.dataForm.get('location').valueChanges.subscribe(d => {
       if (d) {

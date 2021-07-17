@@ -1,0 +1,139 @@
+import { Component, OnInit, Input, Output, EventEmitter, forwardRef, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Option } from '../../_model/option';
+import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
+import { Observable, Subject, of, BehaviorSubject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, tap, switchMap } from 'rxjs/operators';
+
+const sample = [{
+  id: '1', value: 'text', text: '025/SKSE/TL/2020 - Perilhal Ketentuan Tahapan'
+}];
+
+@Component({
+  selector: 'pakar-multi-select',
+  templateUrl: './multi-select.component.html',
+  styleUrls: ['./multi-select.component.scss'],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => MultiSelectComponent),
+      multi: true
+    }
+  ]
+})
+export class MultiSelectComponent implements OnInit, ControlValueAccessor, OnDestroy {
+
+  @Input() placeholder: string;
+  @Input() hasError: boolean;
+  @Input() dataList: BehaviorSubject<Option[]>;
+  @Output() onChange = new EventEmitter<any>();
+  @Output() getData = new EventEmitter<any>();
+
+  // ControlValueAccessor propogate
+  _onTouched: (_) => {};
+  _onChange: (_) => {};
+
+  @ViewChild('multiSelectDropDown') dropDown: NgbDropdown;
+  @ViewChild('multiSelect') comboBox: ElementRef<HTMLDivElement>;
+
+  subscriptions: Subscription[] = [];
+  value: Option[];
+  disabled: boolean = false;
+  searching: boolean = false;
+
+  search: string;
+  onChangeKeyword = (text$: Observable<string>) =>
+    text$.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      tap((keyword) => {
+        this.searching = true;
+        this.search = keyword;
+      }),
+      switchMap(term => {
+        this.getData.emit(term);
+        return of([]);
+      }
+      ),
+    )
+
+  constructor() { }
+
+  cancel(item) {
+    this.value = this.value.filter(d => d.id != item.id);
+    this._onChange(this.value);
+    return false;
+  }
+
+  add(item) {
+    this.value.push(item);
+    this._onChange(this.value);
+    return false;
+  }
+
+  innetHtml(text) {
+    const keyword = this.search;
+    const regEx = new RegExp(this.search, "ig");
+    const replace = `<span class="fount-text">${keyword}</span>`;
+    return text.replace(regEx, replace);
+  }
+
+  setChecked(item: Option): boolean {
+    return this.value.find(d => d.id == item.id) ? true : false;
+  }
+
+  onChangeCheck(e, item) {
+    const isChecked: boolean = e.target.checked;
+    // const { id, text, value } = item;
+    if (isChecked) {
+      this.add(item);
+    } else {
+      this.cancel(item);
+    }
+  }
+
+  onFocusSearch(value) {
+    if (this.search) this.dropDown.open();
+  }
+
+  ngbDropDownOpenChange(open: boolean) {
+    const div = this.comboBox.nativeElement;
+    if (div) {
+      if (open) {
+        div.classList.add('focus');
+      } else {
+        div.classList.remove('focus');
+      }
+    }
+  }
+
+  ngOnInit(): void {
+    if (!this.placeholder) this.placeholder = 'search type here';
+    if (!this.dataList) this.dataList = new BehaviorSubject([]);
+    this.subscriptions.push(
+      this.dataList.subscribe(resp => {
+        this.searching = false;
+        if (this.dropDown) this.dropDown.open();
+      })
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(sb => sb.unsubscribe());
+  }
+
+  // ControlValueAccessor interface
+  writeValue(obj: any[]): void {
+    this.value = obj;
+  }
+  registerOnChange(fn: any): void {
+    this._onChange = fn;
+  }
+  registerOnTouched(fn: any): void {
+    this._onTouched = fn;
+  }
+  setDisabledState?(isDisabled: boolean): void {
+    this.disabled = isDisabled;
+  }
+
+}

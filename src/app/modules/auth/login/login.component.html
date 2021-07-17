@@ -57,8 +57,8 @@
       </div>
 
       <div class="input-icon input-icon-right form-control-iconless">
-        <input class="form-control h-42px py-7 px-6 rounded-lg" type={{typePass}} name="u_pass" autocomplete="new-password"
-          formControlName="password" placeholder="Masukkan password domain Kamu"
+        <input class="form-control h-42px py-7 px-6 rounded-lg" type={{typePass}} name="u_pass"
+          autocomplete="new-password" formControlName="password" placeholder="Masukkan password domain Kamu"
           [ngClass]="{ 'is-invalid': hasError}" />
         <span (click)="showPassword()">
           <i class="far fa-eye icon-md" *ngIf="!revealPass"></i>
@@ -91,7 +91,7 @@
     <div class="pb-lg-0 pb-5">
       <button type="submit" id="kt_login_signin_submit"
         class="btn btn-block btn-pill font-weight-bolder font-size-h6 h-48px px-8 py-4 my-3 mr-3"
-        [disabled]="loginForm.invalid">
+        [ngClass]="{disabled: loginForm.invalid}" [disabled]="loginForm.invalid">
         Sign In
       </button>
 

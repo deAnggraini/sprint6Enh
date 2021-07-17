@@ -1,7 +1,10 @@
 <div class="top-bar">
     Batal - Komentar - Preview - Simpan - Simpan & Kirim
 </div>
-<div class="pakar-container mx-15 p-8" style="padding-top:calc(2rem + 50px) !important">
+<div *ngIf="!finishRender" class="pakar-container mx-15 p-8" style="padding-top:calc(2rem + 50px) !important">
+    TUNGGU CKEDITOR SELESAI
+</div>
+<div *ngIf="finishRender" class="pakar-container mx-15 p-8" style="padding-top:calc(2rem + 50px) !important">
     <span class="pakar-text-header">Tambah Artikel</span>
     <form>
         <div class="form-group">
@@ -52,39 +55,28 @@
                 </mat-accordion>
             </div>
         </div>
-        <!-- <div class="form-group">
-            <label>Content Artikel *</label>
-            <div class="border border-light rounded-sm p-3">
 
-                <ngb-accordion class="accordion-bordered" [destroyOnHide]="false" (hidden)="onHidden($event)"
-                    (shown)="onShow($event)" cdkDropListGroup>
-                    <ngb-panel *ngFor="let content of formData.contents">
-                        <ng-template ngbPanelHeader>
-                            <div class="card-title d-flex align-items-center justify-content-between">
-                                <div>
-                                    <button ngbPanelToggle class="btn btn-link btn-xs"><i
-                                            class="flaticon2-down icon-xs "></i></button>
-                                    <span>{{content.title}} </span>
-                                    <span [inlineSVG]="'./assets/media/svg/bca/icon/info.svg'" cacheSVG="true"
-                                        class="svg-icon svg-icon-sm"></span>
-                                </div>
-                                <ng-container [ngTemplateOutlet]="rightIcon"></ng-container>
-                            </div>
-                        </ng-template>
-                        <ng-template ngbPanelContent>
-                            <div class="content">
-                                <input type="text" class="txt-desc-lvl1"
-                                    placeholder="Masukkan kalimat pengantar terkait {{content.title}} disini.">
-                                <ng-container *ngIf="content.children.length" [ngTemplateOutlet]="accordionChild"
-                                    [ngTemplateOutletContext]="{ children: content.children}">
-                                </ng-container>
-                            </div>
-                        </ng-template>
-                    </ngb-panel>
-                </ngb-accordion>
-
-            </div>
-        </div> -->
+        <div class="form-group">
+            <label>SK/SE Referensi <span class="text-danger">*</span></label>
+            <pakar-multi-select [(ngModel)]="formData.references" [ngModelOptions]="{standalone: true}"
+                placeholder="Masukkan Nomor Referensi atau Judul SKSE dari Artikel ini" [dataList]="skReferences"
+                (getData)="getDataSkSeReference($event)">
+            </pakar-multi-select>
+        </div>
+        <div class="form-group">
+            <label>Artikel Terkait <span class="text-danger">*</span></label>
+            <pakar-multi-select [(ngModel)]="formData.references" [ngModelOptions]="{standalone: true}"
+                placeholder="Masukkan Nomor Referensi atau Judul SKSE dari Artikel ini"
+                (getData)="getDataSkSeReference($event)">
+            </pakar-multi-select>
+        </div>
+        <div class="form-group">
+            Suggestion :
+            <pakar-multi-select [(ngModel)]="formData.references" [ngModelOptions]="{standalone: true}"
+                placeholder="Masukkan Nomor Referensi atau Judul SKSE dari Artikel ini"
+                (getData)="getDataSkSeReference($event)">
+            </pakar-multi-select>
+        </div>
     </form>
 </div>
 
@@ -107,6 +99,7 @@
             <div class="drag-placeholder" *cdkDragPlaceholder></div>
             <mat-expansion-panel-header>
                 <mat-panel-title>{{content.title}}</mat-panel-title>
+                <ng-container [ngTemplateOutlet]="rightIcon"></ng-container>
             </mat-expansion-panel-header>
             <div class="content p-3">
                 <div class="form-group">
@@ -115,8 +108,7 @@
                 </div>
                 <div class="form-group">
                     <label>Isi Topik *</label>
-                    <ckeditor [editor]="editor" [config]="config" tagName="textarea">
-                    </ckeditor>
+                    <ckeditor [editor]="editor" [config]="config" tagName="textarea"></ckeditor>
                 </div>
                 <div class="text-right">
                     <button type="button" class="btn btn-outline-light btn-sm rounded-lg px-5">Batal</button>

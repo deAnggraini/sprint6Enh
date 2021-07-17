@@ -60,7 +60,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.defaultAuth.username,
         Validators.compose([
           Validators.required,
-          Validators.pattern("^[a-zA-Z0-9]{1,8}$")
+          // Validators.pattern("^[a-zA-Z0-9]$")
         ]),
       ],
       password: [
@@ -69,7 +69,7 @@ export class LoginComponent implements OnInit, OnDestroy {
           Validators.required,
           // Validators.minLength(6),
           // Validators.maxLength(100),
-          Validators.pattern("^[a-zA-Z0-9]{6,}$"),
+          // Validators.pattern("^[a-zA-Z0-9]$"),
         ]),
       ],
       remember: [this.defaultAuth.remember]

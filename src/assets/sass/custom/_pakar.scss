@@ -9,7 +9,8 @@ $bca-color-dark: #0F5EA9;
   color: $bca-color !important;
 }
 
-.font-size-14 {
+.font-size-14,
+.fs14 {
   font-size: 14px !important;
 }
 
@@ -37,7 +38,13 @@ $bca-color-dark: #0F5EA9;
   font-size: 1.75rem !important;
 }
 
-.font-bold-600 {
+.font-bold-400,
+.fb4 {
+  font-weight: 400;
+}
+
+.font-bold-600,
+.fb6 {
   font-weight: 600;
 }
 
@@ -190,6 +197,10 @@ $bca-color-dark: #0F5EA9;
   }
 }
 
+.fount-text {
+  @extend .fb6;
+  @extend .fs14;
+}
 
 // Custom Components
 pakar-input-drop-down.ng-touched.ng-invalid {

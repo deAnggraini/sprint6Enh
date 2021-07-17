@@ -4,7 +4,9 @@
 
 
 // Theme Colors
-@each $name, $color in $theme-text-colors {
+@each $name,
+$color in $theme-text-colors {
+
   // Base color
   .text-#{$name} {
     color: $color !important;
@@ -190,6 +192,8 @@ a {
 
 // text dark as alink
 a.text-dark:hover,
-a.text-dark:focus {
+a span.text-dark:hover,
+a.text-dark:focus,
+a span.text-dark:focus {
   color: #0078D4 !important;
 }

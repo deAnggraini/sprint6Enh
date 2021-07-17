@@ -21,7 +21,6 @@ export class AsyncUniqValidator implements AsyncValidator {
 
     validate(control: AbstractControl): Promise<ValidationErrors> | Observable<ValidationErrors> {
         const { value } = control;
-        console.log({ value });
         return this.api.pipe(
             debounceTime(500),
             map((data: any) => {

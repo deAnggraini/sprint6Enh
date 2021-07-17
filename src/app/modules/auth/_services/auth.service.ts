@@ -54,15 +54,12 @@ export class AuthService implements OnDestroy {
     const params = { refreshToken: auth.refreshToken };
     this.apiService.post(`${this.oauth_url}/refreshToken`, params).subscribe(
       resp => {
-        console.log({ resp });
         if (resp) {
           const { authToken, refreshToken, expiresIn, expires_in } = resp;
-          console.log({ authToken, refreshToken, expiresIn, expires_in });
           auth.authToken = authToken;
           auth.refreshToken = refreshToken;
           auth.expiresIn = parseInt(expiresIn ? expiresIn : expires_in); // expiresIn : expires_in
           auth.autoLogout = moment().add(auth.expiresIn, 's').toDate();
-          console.log({ auth });
           this.setAuthFromLocalStorage(auth);
           this.setWorker(auth, auth.expiresIn * 1000);
         }
@@ -72,13 +69,13 @@ export class AuthService implements OnDestroy {
 
   setWorker(auth: AuthModel, duration: number) {
     if (this.logoutWorker === null) {
-      console.log('set worker ', duration, duration / 1000, 'seconds');
+      console.debug('set worker ', duration, duration / 1000, 'seconds');
       this.logoutWorker = setTimeout(() => {
         if (auth.remember == true) {
-          console.log('doing auto refresh token');
+          console.debug('doing auto refresh token');
           this.refreshToken(auth);
         } else {
-          console.log('doing auto logout');
+          console.debug('doing auto logout');
           this.logout(true);
         }
       }, duration);
@@ -117,7 +114,6 @@ export class AuthService implements OnDestroy {
     // };
     this.apiService.post(`${this.oauth_url}/logout`, {}, this.apiService.getHeaders(true), false).subscribe(
       resp => {
-        console.log('resp');
         // if (resp) {
         localStorage.removeItem(this.authLocalStorageToken);
         // this.router.navigate(['/auth/login'], {

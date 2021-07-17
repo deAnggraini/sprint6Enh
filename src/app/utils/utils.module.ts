@@ -15,6 +15,7 @@ import { SanitizeHtmlPipe } from './pipe/sanitize-html.pipe';
 import { ComboBoxComponent } from './_components/combo-box/combo-box.component';
 import { InputDropDownComponent } from './_components/input-drop-down/input-drop-down.component';
 import { InputWithLengthComponent } from './_components/input-with-length/input-with-length.component';
+import { MultiSelectComponent } from './_components/multi-select/multi-select.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { InputWithLengthComponent } from './_components/input-with-length/input-
     ComboBoxComponent,
     InputDropDownComponent,
     InputWithLengthComponent,
+    MultiSelectComponent,
   ],
   imports: [
     CommonModule,
@@ -47,7 +49,8 @@ import { InputWithLengthComponent } from './_components/input-with-length/input-
     PakarSearchComponent,
     ComboBoxComponent,
     InputDropDownComponent,
-    InputWithLengthComponent
+    InputWithLengthComponent,
+    MultiSelectComponent
   ]
 })
 export class UtilsModule {

@@ -109,7 +109,6 @@ export class ListComponent implements OnInit {
   }
 
   create() {
-    console.log('goto add component');
   }
 
   refreshCountries() {
