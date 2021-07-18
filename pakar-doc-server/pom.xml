@@ -120,9 +120,6 @@
 				<excludes>
 					<exclude>application.yml</exclude>
 					<exclude>log4j2.xml</exclude>
-					<!--
-					<exclude>log4j2-spring.xml</exclude>
-					-->
 					<exclude>script/*.*</exclude>
 				</excludes>
 			</resource>
