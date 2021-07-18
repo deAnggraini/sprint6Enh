@@ -33,7 +33,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 			// -- swagger ui
 			"/swagger-resources",
 			"/swagger-resources/**",
-			"/swagger-ui.html",
+			"/swagger-ui.html"
 			// other public endpoints of your API may be appended to this array
 	};
 

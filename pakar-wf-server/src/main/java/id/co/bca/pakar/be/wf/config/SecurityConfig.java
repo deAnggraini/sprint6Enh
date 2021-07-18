@@ -9,19 +9,18 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter {	
-	@Override  
-	  protected void configure(HttpSecurity http) throws Exception {  
-	    http  
-	        .httpBasic().disable()  
-	        .formLogin().disable()  
-	        .csrf().disable()  
-	        .authorizeRequests(authorize -> authorize  
-	            .anyRequest().authenticated()
-	        )  
-	        .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)  
-	        .sessionManagement(sessionManagement ->  
-	            sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))  
-	    ;  
-	  }  
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		http
+				.httpBasic().disable()
+				.formLogin().disable()
+				.csrf().disable()
+				.authorizeRequests(authorize -> authorize
+						.anyRequest().authenticated()
+				)
+				.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
+				.sessionManagement(sessionManagement ->
+						sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+	}
 }
