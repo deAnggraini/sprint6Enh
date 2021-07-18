@@ -109,7 +109,7 @@ public class CustomRemoteTokenServices implements ResourceServerTokenServices {
             String code = (String)apiStatus.get("code");
             String message = (String)apiStatus.get("message");
             if(!code.equals("00")) {
-                throw new InvalidTokenException(accessToken);
+                throw new InvalidTokenException(message);
             }
         }
 
@@ -153,6 +153,7 @@ public class CustomRemoteTokenServices implements ResourceServerTokenServices {
         if (headers.getContentType() == null) {
             headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         }
+        logger.debug("call service api {} with data {} and headers {}", new Object[]{path,  formData, headers});
         @SuppressWarnings("rawtypes")
         Map map = restTemplate.exchange(path, HttpMethod.POST,
                 new HttpEntity<MultiValueMap<String, String>>(formData, headers), Map.class).getBody();
