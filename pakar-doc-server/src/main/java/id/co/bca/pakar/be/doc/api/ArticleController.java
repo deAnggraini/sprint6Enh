@@ -20,6 +20,7 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 @CrossOrigin
 @RestController
@@ -190,10 +191,10 @@ public class ArticleController extends BaseController {
 			logger.info("received token bearer --- " + authorization);
 			logger.info("get article templates by structure id {}", requestTemplateDto.getStructureId());
 			List<ArticleTemplateDto> templates = articleTemplateService.findTemplates(getTokenFromHeader(authorization), username);
-			return createResponse(templates, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
+			return createResponse(templates, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
 		} catch (Exception e) {
 			logger.error("exception", e);
-			return createResponse(new ArrayList<ArticleTemplateDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
+			return createResponse(new ArrayList<ArticleTemplateDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
 		}
 	}
 
@@ -206,11 +207,11 @@ public class ArticleController extends BaseController {
 		try {
 			logger.info("verify article title {} exist in database ", articleTitleDto.getJudulArticle());
 			Boolean exist = articleService.existArticle(articleTitleDto.getJudulArticle());
-			return exist.booleanValue() ? createResponse(exist, Constant.ApiResponseCode.ARTICLE_EXIST_IN_DATABASE.getAction()[0], Constant.ApiResponseCode.ARTICLE_EXIST_IN_DATABASE.getAction()[1]) :
-					createResponse(exist, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
+			return exist.booleanValue() ? createResponse(exist, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("title.article.exist", null, new Locale("en", "US"))) :
+					createResponse(exist, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
 		} catch (Exception e) {
 			logger.error("",e);
-			return createResponse(Boolean.FALSE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
+			return createResponse(Boolean.FALSE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
 		}
 	}
 
@@ -230,11 +231,11 @@ public class ArticleController extends BaseController {
 			articleDto.setUsername(username);
 			articleDto.setToken(getTokenFromHeader(authorization));
 			Long articleId = articleService.generateArticle(articleDto);
-			return articleId.longValue() > 0 ? createResponse(articleId, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]) :
-					createResponse(articleId, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
+			return articleId.longValue() > 0 ? createResponse(articleId, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US"))) :
+					createResponse(articleId, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
 		} catch (Exception e) {
 			logger.error("exception", e);
-			return createResponse(0L, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
+			return createResponse(0L, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
 		}
 	}
 
