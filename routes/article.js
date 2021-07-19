@@ -24,19 +24,19 @@ router.get('/all', (req, res) => {
 router.post('/keyword', (req, res) => {
     res.send({ error: false, msg: "", data: lastKeyword });
 });
-router.post('/search', (req, res) => {
-    const { keyword, page } = req.body;
+router.post('/searchAll', (req, res) => {
+    const { keyword, page, limit } = req.body;
     console.log('search article', { keyword, page });
-    if (!keyword || keyword == 'kosong') {
-        res.send({
-            error: false, msg: "", data: {
-                result: {
-                    total: 0, length: 0, data: []
-                }
-            }
-        });
-        return;
-    }
+    // if (!keyword || keyword == 'kosong') {
+    //     res.send({
+    //         error: false, msg: "", data: {
+    //             result: {
+    //                 total: 0, length: 0, data: []
+    //             }
+    //         }
+    //     });
+    //     return;
+    // }
     const keys = _.uniq(articles.map(d => d.type));
     const grouping = _.groupBy(articles, 'type');
     const group = {};
@@ -365,5 +365,23 @@ router.post('/checkUnique', (req, res) => {
 router.post('/skReference', (req, res) => {
     res.send({ error: false, msg: "", data: sk_reference });
 })
+
+router.post('/searchArticle', (req, res) => {
+    const { keyword, page, limit } = req.body;
+    console.log('search article', { keyword, page });
+    // if (!keyword || keyword == 'kosong') {
+    //     res.send({
+    //         error: false, msg: "", data: {
+    //             result: {
+    //                 total: 0, length: 0, data: []
+    //             }
+    //         }
+    //     });
+    //     return;
+    // }
+    const _articles = articles.filter(d => d.type == 'article');
+    const data = _articles.slice(0, limit);
+    res.send({ error: false, msg: "", data });
+});
 
 module.exports = router;

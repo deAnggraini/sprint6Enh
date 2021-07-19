@@ -36,6 +36,7 @@ router.post('/getAccessToken', function (req, res) {
 
 });
 
+let failCount = 0;
 router.post('/login', (req, res) => {
     const { username, password, remember } = req.body;
     const found = users.find(d => d.username == username && d.password == password);
@@ -43,9 +44,16 @@ router.post('/login', (req, res) => {
     // const expiresIn = now.add(1, 'h');
     const expiresIn = EXPIRES_IN;
     if (found) {
+        failCount = 0;
         res.send({ error: false, msg: "", data: Object.assign({}, found, { password: null, expiresIn, remember }) });
     } else {
-        res.send({ error: true, msg: "Incorrect User ID or password" });
+        failCount++;
+        let remaining = 6 - failCount;
+        let alert = `You have ${remaining} remaining attempts to login`;
+        if (failCount > 5) {
+            alert = `User ‘<b>${username}</b>’ currently locked. Please try again in <b>xx minutes.</b>`;
+        }
+        res.send({ status: { code: '99', message: "Incorrect User ID or password", failCount, alert } });
     }
 });
 
@@ -60,7 +68,7 @@ router.post('/getUser', (req, res) => {
     if (found) {
         res.send({ error: false, msg: "", data: Object.assign({}, found, { password: null }) });
     } else {
-        res.send({ error: true, msg: "Username and token invalid" });
+        res.send({ status: { code: '99', message: "Username and token invalid" } });
     }
 })
 
