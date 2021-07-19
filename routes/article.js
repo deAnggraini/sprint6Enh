@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const categoryArticle = require('../database/category-article');
-const { search, articles, recommendation, news, popular, suggestion, lastKeyword } = require('../database/articles');
+const { sample_basic, articles, recommendation, news, popular, suggestion, lastKeyword } = require('../database/articles');
 const theme = require('../database/themes');
 const _ = require('lodash');
 const path = require('path');
@@ -382,6 +382,19 @@ router.post('/searchArticle', (req, res) => {
     const _articles = articles.filter(d => d.type == 'article');
     const data = _articles.slice(0, limit);
     res.send({ error: false, msg: "", data });
+});
+
+router.post('/generateArticle', (req, res) => {
+    const { body } = req;
+    console.log({ body });
+    res.send({ error: false, msg: "", data: sample_basic });
+});
+
+router.post('/getArticle', (req, res) => {
+    const { body } = req;
+    const { id } = body;
+    console.log({ body, sample_basic });
+    res.send({ error: false, msg: "", data: sample_basic });
 });
 
 module.exports = router;
