@@ -9,7 +9,7 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
 import { LogoutComponent } from './logout/logout.component';
 import { AuthComponent } from './auth.component';
 import {TranslationModule} from '../i18n/translation.module';
-import { UtilsModule } from 'src/app/utils/utils.module';
+import { InlineSVGModule } from 'ng-inline-svg';
 
 @NgModule({
   declarations: [
@@ -25,7 +25,8 @@ import { UtilsModule } from 'src/app/utils/utils.module';
     AuthRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    InlineSVGModule
   ]
 })
 export class AuthModule {}

@@ -7,6 +7,16 @@ body {
   background: $page-bg;
 }
 
+::-webkit-scrollbar {
+  width: 4px;
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #C8C6C4;
+  border-radius: 100px;
+}
+
 // Desktop Mode
 @include media-breakpoint-up(lg) {
 
@@ -68,10 +78,11 @@ body {
   }
 
   // Container
-  .container{
+  .container {
     max-width: none;
     padding: 0;
   }
+
   .container-fluid {
     max-width: none;
     padding: 0 get($page-padding, tablet-and-mobile);

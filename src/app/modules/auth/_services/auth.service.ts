@@ -90,7 +90,6 @@ export class AuthService implements OnDestroy {
       .pipe(
         catchError((err) => {
           throw err;
-          return of(err);
         }),
         map((auth: AuthModel) => {
           if (auth) {

@@ -4,6 +4,8 @@ export class CommonHttpResponse {
     status?: {
         code: string;
         message: string;
+        alert?: string;
+        failCount?: number;
     }
     data?: any;
     paging?: {

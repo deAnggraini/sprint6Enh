@@ -1,5 +1,26 @@
-:host {
+:host ::ng-deep {
   width: 100%;
+
+  .svg-icon {
+    margin-right: 12px;
+
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  .attempt-msg {
+    background-color: #FFF5D0 !important;
+    padding: 16px;
+    background: #FFF5D0;
+    box-shadow: 0px 0.6px 1.8px rgba(255, 255, 255, 0.1), 0px 3.2px 7.2px rgba(255, 255, 255, 0.13);
+    border-radius: 5px;
+  }
+
+  .log-attempt-msg {
+    background: rgba(255, 180, 180, 0.3) !important;
+  }
 
   .btn:disabled {
     background-image: none;
@@ -9,12 +30,10 @@
   }
 
   .btn {
-    background-image: linear-gradient(
-      #1995d1 5.59%,
-      #1485bb 27.39%,
-      #166ec1 52.13%,
-      #0f5ea9 76.06%
-    );
+    background-image: linear-gradient(#1995d1 5.59%,
+        #1485bb 27.39%,
+        #166ec1 52.13%,
+        #0f5ea9 76.06%);
     border-color: inherit;
     color: white;
   }

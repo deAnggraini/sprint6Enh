@@ -7,22 +7,27 @@
       <h3 class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg">
         Selamat Datang di PAKAR
       </h3>
-      <span>
-        Informasi ketentuan dan prosedur #caridiPAKAR
-      </span>
+      <span>Informasi ketentuan dan prosedur #caridiPAKAR</span>
     </div>
     <hr>
-
-    <!-- 
-    <ng-container *ngIf="!hasError">
-      <div class="mb-10 alert alert-custom alert-light-info alert-dismissible">
-        <div class="alert-text">
-          Silahkan login menggunakan <strong>User Portal BCA</strong> anda.
-        </div>
+    <!-- <div>{{hasAttempt}}</div> -->
+    <div class="form-group" *ngIf="hasAttempt >= 3">
+      <div class="bg-warning attempt-msg" [ngClass]="{'log-attempt-msg': hasAttempt >= 5}">
+        <ng-container *ngIf="hasAttempt < 5">
+          <span [inlineSVG]="'./assets/media/svg/bca/icon/warning.svg'" cacheSVG="true" class="svg-icon"></span>
+          <!-- <span>You have {{5 - (hasAttempt % 5)}} remaining attempts to login</span> -->
+          <span [innerHTML]="hasAttemptMessage"></span>
+        </ng-container>
+        <ng-container *ngIf="hasAttempt > 5">
+          <span [inlineSVG]="'./assets/media/svg/bca/icon/lock.svg'" cacheSVG="true" class="svg-icon"></span>
+          <!-- <span>User ‘<b>{{loginForm.value.username}}</b>’ currently locked. Please try again in <b>29
+              minutes.</b></span> -->
+          <span [innerHTML]="hasAttemptMessage"></span>
+        </ng-container>
       </div>
-    </ng-container> -->
+    </div>
 
-    <div class="form-group pt-4">
+    <div class="form-group">
       <label class="font-size-h6 font-weight-bolder text-dark">User ID</label>
       <div class="form-control-iconless">
         <input class="form-control h-42px py-7 px-6 rounded-lg" type="text" name="u_name" formControlName="username"

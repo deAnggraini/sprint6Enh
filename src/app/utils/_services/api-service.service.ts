@@ -49,10 +49,9 @@ export class ApiService {
   }, showError: boolean = true): Observable<any> {
     return this.http.post(url, body, options == null ? this.getHeaders() : options).pipe(
       concatMap((res: CommonHttpResponse) => {
-        if (res.error && res.error !== '00') throw Error(res.msg);
+        if (res.error && res.error !== '00') throw Error(JSON.stringify(res));
         if (res.status && res.status.code !== '00' && res.status.code !== 'OO') {
-          console.error('error', res.status);
-          throw Error(res.status.message);
+          throw Error(JSON.stringify(res.status));
         }
         const { data, paging } = res;
         if (paging) return of({ data, paging });
@@ -60,9 +59,11 @@ export class ApiService {
       }),
       catchError((err) => {
         console.error('ApiService', err);
-        if (showError) setTimeout(() => this.toast.showDanger(err.message), 0);
-        throw err.message;
-        return of(undefined);
+        if (showError) setTimeout(() => {
+          const error = JSON.parse(err.message);
+          this.toast.showDanger(err.message || err.msg);
+        }, 0);
+        throw err;
       }),
     );
   }
