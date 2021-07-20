@@ -80,7 +80,8 @@ $bca-color-dark: #0F5EA9;
   &.btn-blue {
     color: white;
     @extend .font-bold-600;
-    background-color: #0078D4;
+    background-color: $bca-color;
+    border-radius: 20px;
 
     &.btn-clean,
     &.btn-clean:hover {
@@ -89,7 +90,7 @@ $bca-color-dark: #0F5EA9;
 
     i,
     span {
-      color: #0078D4;
+      color: $bca-color;
     }
 
     &:disabled {
@@ -108,6 +109,18 @@ $bca-color-dark: #0F5EA9;
     }
   }
 
+  &.btn-blue-outline {
+    @extend .btn-blue;
+    background-color: white;
+    border-color: $bca-color;
+    color: $bca-color;
+
+    &:hover:not(:disabled) {
+      background-color: #f4f4f4;
+      border-color: $bca-color-dark;
+      color: $bca-color-dark;
+    }
+  }
 }
 
 .input-search {
@@ -173,12 +186,12 @@ $bca-color-dark: #0F5EA9;
   }
 
   a:hover {
-    color: #0078D4;
+    color: $bca-color;
 
     .fa,
     .far,
     .fas {
-      color: #0078D4;
+      color: $bca-color;
     }
   }
 }

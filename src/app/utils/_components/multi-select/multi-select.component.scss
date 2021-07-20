@@ -53,12 +53,14 @@ $border-color-active: #0F5EA9;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
   top: -2px;
-  padding: 8px;
+  padding: $margin;
+  padding-right: 15px;
 
   .content-dropdown {
     min-height: 50px;
     max-height: 186px;
     overflow: hidden;
+    overflow-y: auto;
   }
 
   ul {
@@ -78,4 +80,13 @@ $border-color-active: #0F5EA9;
     }
   }
 
+  ::-webkit-scrollbar {
+    width: 4px;
+    background-color: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: #C8C6C4;
+    border-radius: 100px;
+  }
 }

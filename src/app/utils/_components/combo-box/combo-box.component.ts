@@ -188,7 +188,11 @@ export class ComboBoxComponent implements OnInit, OnDestroy, ControlValueAccesso
   // ControlValueAccessor interface
   propogateChange: (_) => {}
   writeValue(value: any): void {
-    if (value) { this.selected = value; }
+    if (value) {
+      this.selected = value;
+    } else {
+      this.selected = { id: '0', value: '', text: '' };
+    }
     // this.cdr.detectChanges();
   }
   registerOnChange(fn: any): void {
