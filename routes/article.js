@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const categoryArticle = require('../database/category-article');
-const { sample_basic, articles, recommendation, news, popular, suggestion, lastKeyword } = require('../database/articles');
+const { sample_basic, sample_non_basic, articles, recommendation, news, popular, suggestion, lastKeyword } = require('../database/articles');
 const theme = require('../database/themes');
 const _ = require('lodash');
 const path = require('path');
@@ -394,7 +394,7 @@ router.post('/getArticle', (req, res) => {
     const { body } = req;
     const { id } = body;
     console.log({ body, sample_basic });
-    res.send({ error: false, msg: "", data: sample_basic });
+    res.send({ error: false, msg: "", data: sample_non_basic });
 });
 
 module.exports = router;

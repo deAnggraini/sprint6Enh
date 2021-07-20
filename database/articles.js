@@ -8,6 +8,7 @@ const sample_basic = {
     video: '',
     created_at: new Date(),
     created_by: '',
+    location: 2,
     contents: [
         {
             id: 1,
@@ -39,7 +40,7 @@ const sample_basic = {
     ],
     references: [], // {id, title, no},
     related: [],  // {id, title}
-    suggestions:[], // {id, title}
+    suggestions: [], // {id, title}
 };
 
 const sample_non_basic = {
@@ -74,7 +75,45 @@ const sample_non_basic = {
                             parent: 3,
                             level: 3,
                             sort: 1,
-                            children: [],
+                            children: [
+                                {
+                                    id: 181,
+                                    title: 'Satu titik satu',
+                                    desc: '',
+                                    parent: 18,
+                                    level: 4,
+                                    sort: 1,
+                                    children: [
+                                        {
+                                            id: 1811,
+                                            title: 'Terkahir minus satu',
+                                            desc: '',
+                                            parent: 181,
+                                            level: 5,
+                                            sort: 1,
+                                            children: [],
+                                        },
+                                        {
+                                            id: 1812,
+                                            title: 'Terkahir minus 2',
+                                            desc: '',
+                                            parent: 181,
+                                            level: 5,
+                                            sort: 2,
+                                            children: [],
+                                        },
+                                    ],
+                                },
+                                {
+                                    id: 182,
+                                    title: 'Satu titik dua',
+                                    desc: '',
+                                    parent: 18,
+                                    level: 4,
+                                    sort: 2,
+                                    children: [],
+                                }
+                            ],
                         },
                         {
                             id: 19,
@@ -196,63 +235,17 @@ const sample_non_basic = {
             parent: 0,
             level: 1,
             sort: 2,
-            children: [
-                {
-                    id: 13,
-                    title: 'Rekening Tahapan',
-                    desc: '',
-                    parent: 3,
-                    level: 2,
-                    sort: 1,
-                    children: [],
-                },
-                {
-                    id: 14,
-                    title: 'Pembukaan Rekening Tahapan',
-                    desc: '',
-                    parent: 3,
-                    level: 2,
-                    sort: 2,
-                    children: [],
-                },
-                {
-                    id: 15,
-                    title: 'Perubahan Data Rekening Tahapan',
-                    desc: '',
-                    parent: 3,
-                    level: 2,
-                    sort: 3,
-                    children: [],
-                },
-                {
-                    id: 16,
-                    title: 'Penutupan Tahapan',
-                    desc: '',
-                    parent: 3,
-                    level: 2,
-                    sort: 4,
-                    children: [],
-                },
-                {
-                    id: 17,
-                    title: 'Biaya Tahapan',
-                    desc: '',
-                    parent: 3,
-                    level: 2,
-                    sort: 5,
-                    children: [],
-                },
-            ],
+            children: [],
         }
     ],
     references: [],
     related: [],
-    suggestions:[],
+    suggestions: [],
 };
 
 const articles = [
-    sample_basic,
-    sample_non_basic,
+    // sample_basic,
+    // sample_non_basic,
     {
         id: 1,
         type: 'article',
@@ -272,7 +265,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        img: 'tahapan-berjangka.JPG',
+        image: 'tahapan-berjangka.JPG',
         attactments: [
             {
                 file: '',
@@ -309,7 +302,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        img: 'time-loan.jpeg',
+        image: 'time-loan.jpeg',
         attactments: [
             {
                 file: '',
@@ -346,7 +339,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        img: 'giro.jpeg',
+        image: 'giro.jpeg',
         attactments: [
             {
                 file: '',
@@ -383,7 +376,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        img: 'kredit-lokal-sme.jpeg',
+        image: 'kredit-lokal-sme.jpeg',
         attactments: [
             {
                 file: '',
@@ -420,7 +413,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        img: 'tahapan.jpeg',
+        image: 'tahapan.jpeg',
         attactments: [
             {
                 file: '',
@@ -454,7 +447,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        img: 'welma.png',
+        image: 'welma.png',
         attactments: [
             {
                 file: '',
@@ -489,7 +482,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        img: 'deposito.jpeg',
+        image: 'deposito.jpeg',
         attactments: [
             {
                 file: '',
@@ -523,7 +516,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        img: 'simpanan-pelajar.jpeg',
+        image: 'simpanan-pelajar.jpeg',
         attactments: [
             {
                 file: '',
@@ -559,7 +552,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        img: 'tahapan-xpresi.jpeg',
+        image: 'tahapan-xpresi.jpeg',
         attactments: [
             {
                 file: '',
@@ -595,7 +588,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        img: 'tabunganku.jpeg',
+        image: 'tabunganku.jpeg',
         attactments: [
             {
                 file: '',
@@ -630,7 +623,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        img: 'tapres.jpeg',
+        image: 'tapres.jpeg',
         attactments: [
             {
                 file: '',
@@ -665,7 +658,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        img: 'duitt.jpeg',
+        image: 'duitt.jpeg',
         attactments: [
             {
                 file: '',
@@ -700,7 +693,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        img: 'deposito.jpeg',
+        image: 'deposito.jpeg',
         attactments: [
             {
                 file: '',
@@ -735,7 +728,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        img: 'kredit-lokal-sme.jpeg',
+        image: 'kredit-lokal-sme.jpeg',
         attactments: [
             {
                 file: '',
@@ -770,7 +763,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        img: 'duitt.jpeg',
+        image: 'duitt.jpeg',
         attactments: [
             {
                 file: '',
