@@ -13,17 +13,28 @@
 
     .login-aside {
       max-width: 55%;
+      justify-content: center;
 
       img {
         margin-left: 20%;
+        position: static;
         height: 50px;
       }
 
+      @media (min-width: 1920px) {
+        img {
+          margin-left: 27%;
+          position: static;
+          height: 50px;
+        }
+      }
+
       .aside-img {
-        background-size: 600px, 409.79px;
+        background-size: 600px 409.79px;
       }
     }
   }
+  
 
   //tablet
   @media (max-width: 770px) {
