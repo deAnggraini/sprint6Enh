@@ -397,4 +397,17 @@ router.get('/getArticle', (req, res) => {
     res.send({ error: false, msg: "", data: sample_basic });
 });
 
+router.get('/getContentId', (req, res) => {
+    res.send({ error: false, msg: "", data: Math.ceil(Math.random(10) * 100 + 10) });
+});
+
+router.post('/saveContent', (req, res) => {
+    const { body } = req;
+    res.send({ error: false, msg: "", data: body });
+});
+
+router.post('/deleteContent', (req, res) => {
+    res.send({ error: false, msg: "", data: true });
+});
+
 module.exports = router;
