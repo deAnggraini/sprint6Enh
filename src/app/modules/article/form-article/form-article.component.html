@@ -1,21 +1,50 @@
-<div class="top-bar">
-    Batal - Komentar - Preview - Simpan - Simpan & Kirim
+<div class="top-bar d-flex flex-row justify-content-between">
+    <div class="d-flex flex-row align-items-center">
+        <a href="#" class="link text-dark d-flex flex-row">
+            <div [inlineSVG]="'./assets/media/svg/bca/icon/cancel.svg'" cacheSVG="true" class="svg-icon"></div>
+            <div>Batal</div>
+        </a>
+        <div class="separator"></div>
+        <a href="#" class="link text-dark d-flex flex-row">
+            <div [inlineSVG]="'./assets/media/svg/bca/icon/comment.svg'" cacheSVG="true" class="svg-icon"></div>
+            <div>Komentar</div>
+        </a>
+    </div>
+    <div class="d-flex flex-row align-items-center">
+        <a href="#" class="link text-dark d-flex flex-row">
+            <div [inlineSVG]="'./assets/media/svg/bca/icon/preview.svg'" cacheSVG="true" class="svg-icon"></div>
+            <div>Preview</div>
+        </a>
+        <div class="separator"></div>
+        <a href="#" class="link text-dark d-flex flex-row">
+            <div [inlineSVG]="'./assets/media/svg/bca/icon/save.svg'" cacheSVG="true" class="svg-icon"></div>
+            <div>Simpan</div>
+        </a>
+        <div class="separator"></div>
+        <a href="#" class="link text-dark d-flex flex-row">
+            <div [inlineSVG]="'./assets/media/svg/bca/icon/send.svg'" cacheSVG="true" class="svg-icon"></div>
+            <div>Simpan & Kirim</div>
+        </a>
+    </div>
 </div>
 <div *ngIf="!finishRender" class="pakar-container mx-15 p-8" style="padding-top:calc(2rem + 50px) !important">
     TUNGGU CKEDITOR SELESAI
 </div>
-<div *ngIf="finishRender" class="pakar-container mx-15 p-8" style="padding-top:calc(2rem + 50px) !important">
-    <span class="pakar-text-header">Tambah Artikel</span>
-    <form>
+<div *ngIf="finishRender && dataForm" class="pakar-container mx-15 p-8"
+    style="padding-top:calc(2rem + 50px) !important">
+    <span class="pakar-text-header">{{isEdit ? 'Ubah' : 'Tambah'}} Artikel</span>
+    <form [formGroup]="dataForm" novalidate="novalidate">
         <div class="form-group">
             <label>Judul Artikel *</label>
-            <input class="form-control">
+            <pakar-input-length placeholder="Masukkan nama artikel disini (maks. 50 karakter)" formControlName="title"
+                maxlength="50" (onChange)="checkUniq($event)" [hasError]="hasError">
+            </pakar-input-length>
         </div>
         <div class="form-group">
             <label>Lokasi Artikel *</label>
-            <select class="form-control">
-                <option value="0">-- Silahkan Pilih --</option>
-            </select>
+            <pakar-combo-box-accordion formControlName="locationOption" [options]="locationOptions"
+                placeholder="Pilih lokasi yang tepat untuk artikel yang ingin ditambahkan">
+            </pakar-combo-box-accordion>
         </div>
         <div class="form-group">
             <label>Deskripsi Singkat *</label>
@@ -27,97 +56,182 @@
             <input type="file" class="form-control">
         </div>
         <div class="form-group">
-            <label>Video Artikel *</label>
+            <label>Video Artikel</label>
             <input type="url" class="form-control">
         </div>
         <div class="form-group">
             <label>Content Artikel *</label>
             <div class="border border-light rounded-sm p-3">
                 <mat-accordion [togglePosition]="'before'" multi="true">
-                    <mat-expansion-panel *ngFor="let content of formData.contents;" class="acc-level acc-level-1">
+                    <mat-expansion-panel *ngFor="let content of dataForm.get('contents').value;"
+                        class="acc-level acc-level-1">
                         <mat-expansion-panel-header [@.disabled]="true">
-                            <div>
+                            <mat-panel-title>
                                 <span>{{content.title}}</span>
                                 <span [inlineSVG]="'./assets/media/svg/bca/icon/info.svg'" cacheSVG="true"
                                     class="svg-icon svg-icon-sm" placement="right"
                                     ngbTooltip="Berisi aturan/kaidah/ketetapan/syarat/kriteria atas produk/aplikasi yang harus dipahami pembaca sebelum melakukan prosedur atas produk/aplikasi tersebut; dapat dituangkan dalam bentuk kalimat ataupun tabel."></span>
-                            </div>
+                            </mat-panel-title>
+                            <ng-container [ngTemplateOutlet]="rightIcon" [ngTemplateOutletContext]="{ data: content}">
+                            </ng-container>
                         </mat-expansion-panel-header>
                         <div cdkDropListGroup>
                             <input type="text" class="txt-desc-lvl1"
                                 placeholder="Masukkan kalimat pengantar terkait {{content.title}} disini.">
-                            <div class="input-accordion-separator"></div>
+                            <!-- <div *ngIf="content.children.length" class="input-accordion-separator"></div> -->
                             <ng-container *ngIf="content.children.length" [ngTemplateOutlet]="accordionChild"
                                 [ngTemplateOutletContext]="{ children: content.children, level:2}">
                             </ng-container>
                         </div>
                     </mat-expansion-panel>
                 </mat-accordion>
+                <button *ngIf="dataForm.get('contents').value.length == 0" type="button"
+                    class="btn btn-blue-outline btn-sm rounded-sm w-100">
+                    <!-- <span [inlineSVG]="'./assets/media/svg/bca/icon/plus.svg'" cacheSVG="true"
+                        class="svg-icon"></span> -->
+                    + Tambah Artikel
+                </button>
             </div>
         </div>
-
         <div class="form-group">
-            <label>SK/SE Referensi <span class="text-danger">*</span></label>
-            <pakar-multi-select [(ngModel)]="formData.references" [ngModelOptions]="{standalone: true}"
+            <label>SK/SE Referensi</label>
+            <pakar-multi-select formControlName="references"
                 placeholder="Masukkan Nomor Referensi atau Judul SKSE dari Artikel ini" [dataList]="skReferences"
                 (getData)="getDataSkSeReference($event)">
             </pakar-multi-select>
+            <button type="button" class="btn btn-md btn-seconder">
+
+            </button>
         </div>
         <div class="form-group">
-            <label>Artikel Terkait <span class="text-danger">*</span></label>
-            <pakar-multi-select [(ngModel)]="formData.references" [ngModelOptions]="{standalone: true}"
-                placeholder="Masukkan Nomor Referensi atau Judul SKSE dari Artikel ini"
-                (getData)="getDataSkSeReference($event)">
+            <label>Artikel Terkait</label>
+            <pakar-multi-select formControlName="related"
+                placeholder="Masukkan Artikel terkait lain yang bersangkutan dengan artikel ini"
+                [dataList]="relatedArticle$" (getData)="getDataRelatedArticle($event)" maxSelected="3">
             </pakar-multi-select>
         </div>
         <div class="form-group">
             Suggestion :
-            <pakar-multi-select [(ngModel)]="formData.references" [ngModelOptions]="{standalone: true}"
-                placeholder="Masukkan Nomor Referensi atau Judul SKSE dari Artikel ini"
-                (getData)="getDataSkSeReference($event)">
+            <pakar-multi-select formControlName="suggestions"
+                placeholder="Masukkan Nomor Referensi atau Judul SKSE dari Artikel ini" [dataList]="suggestionArticle$"
+                (getData)="getDataSuggestionArticle($event)" maxSelected="3">
             </pakar-multi-select>
+        </div>
+        <div class="form-group d-flex justify-content-end">
+            <button type="button" class="btn btn-outline-light btn-sm rounded-xl px-5 ml-3">Batal</button>
+            <button type="button" class="btn btn-blue-outline btn-sm px-5 ml-3">Simpan</button>
+            <button type="button" class="btn btn-outline-dark btn-sm rounded-xl px-5 ml-3">Simpan & Kirim</button>
         </div>
     </form>
 </div>
 
 <ng-template #rightIcon let-data="data">
-    <div>
-        <span [inlineSVG]="'./assets/media/svg/bca/icon/plus.svg'" cacheSVG="true"
-            class="svg-icon svg-icon-sm mr-2"></span>
-        <span [inlineSVG]="'./assets/media/svg/bca/icon/pencil.svg'" cacheSVG="true"
-            class="svg-icon svg-icon-sm mr-2"></span>
-        <span [inlineSVG]="'./assets/media/svg/bca/icon/trash-bin.svg'" cacheSVG="true"
-            class="svg-icon svg-icon-sm mr-2"></span>
+    <div class="right-icon d-flex flex-row align-items-center">
+        <!-- add -->
+        <ng-container *ngIf="data.level < 5">
+            <a href='#' class="btn-link" (click)="btnAddClick($event, data)">
+                <span [inlineSVG]="'./assets/media/svg/bca/icon/plus.svg'" cacheSVG="true"
+                    class="svg-icon svg-icon-sm mr-2"></span>
+            </a>
+        </ng-container>
+        <!-- edit & delete -->
+        <ng-container *ngIf="data.level == 1 && (user.roles[0] == 'ADMIN' || user.roles[0] == 'SUPERADMIN')">
+            <a href='#' class="btn-link" (click)="btnEditClick($event, data)">
+                <span [inlineSVG]="'./assets/media/svg/bca/icon/pencil.svg'" cacheSVG="true"
+                    class="svg-icon svg-icon-sm mr-2"></span>
+            </a>
+            <a href='#' class="btn-link" (click)="btnDeleteClick($event, data)">
+                <span [inlineSVG]="'./assets/media/svg/bca/icon/trash-bin.svg'" cacheSVG="true"
+                    class="svg-icon svg-icon-sm mr-2"></span>
+            </a>
+        </ng-container>
+        <ng-container *ngIf="data.level > 1">
+            <a href='#' class="btn-link" (click)="btnEditClick($event, data)">
+                <span [inlineSVG]="'./assets/media/svg/bca/icon/pencil.svg'" cacheSVG="true"
+                    class="svg-icon svg-icon-sm mr-2"></span>
+            </a>
+            <a href='#' class="btn-link" (click)="btnDeleteClick($event, data)">
+                <span [inlineSVG]="'./assets/media/svg/bca/icon/trash-bin.svg'" cacheSVG="true"
+                    class="svg-icon svg-icon-sm mr-2"></span>
+            </a>
+        </ng-container>
     </div>
 </ng-template>
 
 <ng-template #accordionChild let-children="children" let-level="level">
+    <div style="border-bottom:1px solid #C8C6C4; height: 10px;"></div>
     <mat-accordion cdkDropList (cdkDropListDropped)="drop($event)" [cdkDropListData]="children"
         [togglePosition]="'before'" hideToggle="false" multi="true">
-        <mat-expansion-panel [@.disabled]="true" *ngFor="let content of children; let i = index" cdkDrag
-            [cdkDragData]="content" class="acc-level acc-level-{{level}}">
-            <div class="drag-placeholder" *cdkDragPlaceholder></div>
-            <mat-expansion-panel-header>
-                <mat-panel-title>{{content.title}}</mat-panel-title>
-                <ng-container [ngTemplateOutlet]="rightIcon"></ng-container>
-            </mat-expansion-panel-header>
-            <div class="content p-3">
-                <div class="form-group">
-                    <label>Judul Topik *</label>
-                    <input type="text" class="form-control">
+        <ng-container *ngFor="let content of children; let i = index">
+            <!-- [ngClass]="{empty:i >= children.length-1}"  -->
+            <div class="input-accordion-separator"></div>
+            <mat-expansion-panel [@.disabled]="true" cdkDrag [cdkDragData]="content"
+                class="acc-level acc-level-{{level}}">
+                <div class="drag-placeholder" *cdkDragPlaceholder></div>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>{{content.title}}</mat-panel-title>
+                    <ng-container [ngTemplateOutlet]="rightIcon" [ngTemplateOutletContext]="{ data: content}">
+                    </ng-container>
+                </mat-expansion-panel-header>
+                <div class="content">
+                    <div class="p-3">
+                        <div class="form-group">
+                            <label>Judul Topik *</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Isi Topik *</label>
+                            <!-- <ckeditor [editor]="editor" [config]="config" tagName="textarea"></ckeditor> -->
+                        </div>
+                        <div class="text-right">
+                            <button type="button" class="btn btn-outline-light btn-sm rounded-lg px-5">Batal</button>
+                            <button type="button" class="btn btn-sm btn-blue rounded-lg px-5">Simpan</button>
+                        </div>
+                    </div>
+                    <ng-container *ngIf="content.children.length" [ngTemplateOutlet]="accordionChild"
+                        [ngTemplateOutletContext]="{ children: content.children, level : level+1}">
+                    </ng-container>
                 </div>
-                <div class="form-group">
-                    <label>Isi Topik *</label>
-                    <ckeditor [editor]="editor" [config]="config" tagName="textarea"></ckeditor>
-                </div>
-                <div class="text-right">
-                    <button type="button" class="btn btn-outline-light btn-sm rounded-lg px-5">Batal</button>
-                    <button type="button" class="btn btn-sm btn-blue rounded-lg px-5">Simpan</button>
-                </div>
-                <ng-container *ngIf="content.children.length" [ngTemplateOutlet]="accordionChild"
-                    [ngTemplateOutletContext]="{ children: content.children, level : level+1}">
-                </ng-container>
-            </div>
-        </mat-expansion-panel>
+            </mat-expansion-panel>
+        </ng-container>
     </mat-accordion>
+</ng-template>
+
+<ng-template #formAddEdit let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{isAccEdit ? 'Ubah' : 'Tambah'}} Accordion</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <i aria-hidden="true">&times;</i>
+        </button>
+    </div>
+    <div class="modal-body pt-0">
+        <form class="form" [formGroup]="accForm" novalidate="novalidate" (ngSubmit)="accSaveAddEdit()">
+            <div class="form-group">
+                <label>Title <span class="text-danger">*</span></label>
+                <input class="form-control" type="text" maxlength="50" placeholder="Masukkan nama menu" required
+                    formControlName="title" autocomplete="off">
+                <ng-container [ngTemplateOutlet]="formError"
+                    [ngTemplateOutletContext]="{ control: dataForm.controls['name']}"></ng-container>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-light btn-sm rounded-lg px-5" (click)="c('Batal')">Batal</button>
+        <button type="button" class="btn btn-sm btn-blue rounded-lg px-5" (click)="accSaveAddEdit()"
+            [disabled]="dataForm.invalid">{{isAccEdit ? 'Ubah' : 'Tambah'}}</button>
+    </div>
+</ng-template>
+
+<ng-template #formError let-control="control">
+    <ng-container *ngIf="control.errors && control.dirty">
+        <div class="fv-plugins-message-container">
+            <div class="fv-help-block">
+                <ng-container *ngIf="control.errors.required"><span>Field harus disi</span></ng-container>
+                <ng-container *ngIf="control.errors.minlength"><span>Panjang minimal
+                        {{control.errors.minlength.requiredLength}}</span></ng-container>
+                <ng-container *ngIf="control.errors.maxlength"><span>Panjang maximal
+                        {{control.errors.maxlength.requiredLength}}</span></ng-container>
+            </div>
+        </div>
+    </ng-container>
 </ng-template>

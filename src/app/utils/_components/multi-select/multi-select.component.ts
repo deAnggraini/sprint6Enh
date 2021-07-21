@@ -25,6 +25,7 @@ export class MultiSelectComponent implements OnInit, ControlValueAccessor, OnDes
 
   @Input() placeholder: string;
   @Input() hasError: boolean;
+  @Input() maxSelected: number;
   @Input() dataList: BehaviorSubject<Option[]>;
   @Output() onChange = new EventEmitter<any>();
   @Output() getData = new EventEmitter<any>();
@@ -65,7 +66,14 @@ export class MultiSelectComponent implements OnInit, ControlValueAccessor, OnDes
     return false;
   }
 
-  add(item) {
+  private isMaxSelected(): boolean {
+    const result = this.value.length >= this.maxSelected;
+    if (result) {
+      alert(`Maksimal data selected adalah ${this.maxSelected}`);
+    }
+    return result;
+  }
+  private add(item) {
     this.value.push(item);
     this._onChange(this.value);
     return false;
@@ -78,18 +86,26 @@ export class MultiSelectComponent implements OnInit, ControlValueAccessor, OnDes
     return text.replace(regEx, replace);
   }
 
+  // checkbox event
   setChecked(item: Option): boolean {
     return this.value.find(d => d.id == item.id) ? true : false;
   }
-
+  onClickCheck(e, item) {
+    const isChecked: boolean = e.target.checked;
+    if (isChecked && this.isMaxSelected()) {
+      e.preventDefault();
+      return false;
+    }
+    return true;
+  }
   onChangeCheck(e, item) {
     const isChecked: boolean = e.target.checked;
-    // const { id, text, value } = item;
     if (isChecked) {
       this.add(item);
     } else {
       this.cancel(item);
     }
+    return true;
   }
 
   onFocusSearch(value) {
@@ -110,6 +126,7 @@ export class MultiSelectComponent implements OnInit, ControlValueAccessor, OnDes
   ngOnInit(): void {
     if (!this.placeholder) this.placeholder = 'search type here';
     if (!this.dataList) this.dataList = new BehaviorSubject([]);
+    if (!this.maxSelected) this.maxSelected = 100;
     this.subscriptions.push(
       this.dataList.subscribe(resp => {
         this.searching = false;

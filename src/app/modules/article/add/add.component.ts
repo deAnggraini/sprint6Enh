@@ -9,7 +9,7 @@ import { Option } from 'src/app/utils/_model/option';
 import { Router } from '@angular/router';
 import { ArticleService } from '../../_services/article.service';
 import { catchError, map } from 'rxjs/operators';
-
+import { ArticleDTO } from './../../_model/article.dto';
 
 function alphaNumericValidator(control: FormControl): ValidationErrors | null {
   const ALPHA_NUMERIC_REGEX = /^(?:[a-zA-Z0-9\s\-\/]+)?$/;
@@ -83,9 +83,14 @@ export class AddComponent implements OnInit, OnDestroy {
 
   save() {
     if (this.dataForm.valid && !this.hasError) {
-      alert('Form Tambah Artikel Sukses');
-      // this.article.formParam = this.dataForm.value;
-      // this.router.navigate(['/article/form']);
+      this.article.formParam = this.dataForm.value;
+      const params = Object.assign({}, this.dataForm.value, { paramKey: '[Nama Produk]', paramValue: this.dataForm.value.title });
+      this.subscriptions.push(
+        this.article.generate(params).subscribe((resp: ArticleDTO) => {
+          this.article.formData = resp;
+          this.router.navigate(['/article/form']);
+        })
+      );
     } else {
       this.dataForm.markAllAsTouched();
     }

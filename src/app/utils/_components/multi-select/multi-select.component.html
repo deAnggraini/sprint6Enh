@@ -20,7 +20,7 @@
                 <li class="li-item" *ngFor="let item of dataList.value">
                     <label class="d-flex flex-row align-items-center">
                         <input type="checkbox" [checked]="setChecked(item)" [value]="item.id" class=""
-                            (change)="onChangeCheck($event, item)">
+                            (change)="onChangeCheck($event, item)" (click)="onClickCheck($event, item)">
                         <div class="fs14 fb4" [innerHTML]="innetHtml(item.text)">&nbsp;</div>
                     </label>
                 </li>

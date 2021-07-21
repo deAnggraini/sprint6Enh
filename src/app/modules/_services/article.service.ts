@@ -3,6 +3,7 @@ import { ApiService } from 'src/app/utils/_services/api-service.service';
 import { environment } from 'src/environments/environment';
 import { of, BehaviorSubject, Observable } from 'rxjs';
 import * as moment from 'moment';
+import { ArticleDTO } from '../_model/article.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +12,7 @@ export class ArticleService {
 
   // parameter article form add
   public formParam: any = null;
+  public formData: ArticleDTO = null;
 
   private _base_url = `${environment.apiUrl}/doc`;
   private empty_search: any[] = [
@@ -46,12 +48,23 @@ export class ArticleService {
     return this.apiService.post(`${this._base_url}/suggestion`, { keyword });
   }
 
+  generate(params: any) {
+    return this.apiService.post(`${this._base_url}/generateArticle`, params);
+  }
+
+  // search all data [article|faq|pdf]
   search(params: { keyword: string, page: number } = null): Observable<any> {
     if (params) {
-      return this.apiService.post(`${this._base_url}/search`, params);
+      return this.apiService.post(`${this._base_url}/searchAll`, params);
     } else {
       return of(false);
     }
+  }
+
+  // search only article
+  searchArticle(keyword: string, page: number = 1, limit: number = 10) {
+    const params = { keyword, page, limit };
+    return this.apiService.post(`${this._base_url}/searchArticle`, params);
   }
 
   news() {
@@ -68,6 +81,10 @@ export class ArticleService {
 
   checkUniq(title: string) {
     return this.apiService.post(`${this._base_url}/checkUnique`, { title }, this.apiService.getHeaders(true), false);
+  }
+
+  getById(id: number) {
+    return this.apiService.post(`${this._base_url}/getArticle`, { id });
   }
 
 }

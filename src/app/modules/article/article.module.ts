@@ -38,7 +38,13 @@ const routes: Routes = [
       {
         path: 'form', component: FormArticleComponent,
         data: {
-          allowedRoles: ['SUPERADMIN', 'ADMIN', , 'EDITOR', 'PUBLISHER']
+          allowedRoles: ['SUPERADMIN', 'ADMIN', , 'EDITOR']
+        }
+      },
+      {
+        path: 'form/:id', component: FormArticleComponent,
+        data: {
+          allowedRoles: ['SUPERADMIN', 'ADMIN', , 'EDITOR']
         }
       },
       { path: 'search', component: SearchComponent, },
