@@ -179,7 +179,7 @@ public class ArticleController extends BaseController {
 			MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<RestResponse<Boolean>> checkUnique(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @Valid @RequestBody ArticleTitleDto articleTitleDto) {
 		try {
-			logger.info("verify article title {} exist in database ", articleTitleDto.getJudulArticle());
+			logger.info("verify article title {} exist in database", articleTitleDto.getJudulArticle());
 			Boolean exist = articleService.existArticle(articleTitleDto.getJudulArticle());
 			return exist.booleanValue() ? createResponse(exist, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("title.article.exist", null, new Locale("en", "US"))) :
 					createResponse(exist, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
