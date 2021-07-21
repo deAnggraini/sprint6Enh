@@ -71,7 +71,8 @@
   <ng-container *ngIf="!item.submenu">
     <li class="menu-item" aria-haspopup="true" routerLinkActive="menu-item-active">
       <a class="menu-link" *ngIf="!externalLink(item.uri)" [routerLink]="item.uri" routerLinkActive="active">
-        <span *ngIf="item.svg" [inlineSVG]="item.svg" cacheSVG="true" class="arrow svg-icon menu-icon"></span>
+        <!-- <span *ngIf="item.svg" [inlineSVG]="item.svg" cacheSVG="true" class="arrow svg-icon menu-icon"></span> -->
+        <i *ngIf="item.svg" class="arrow menu-arrow" style="color: #0F5EA9; font-size: 14px;"></i>
         <i *ngIf="!item.svg" class="menu-bullet menu-bullet-dot">
           <span></span>
         </i>
@@ -80,7 +81,8 @@
         }}</span>
       </a>
       <a class="menu-link" *ngIf="externalLink(item.uri)" href="{{item.uri}}">
-        <span *ngIf="item.svg" [inlineSVG]="item.svg" cacheSVG="true" class="arrow svg-icon menu-icon"></span>
+        <!-- <span *ngIf="item.svg" [inlineSVG]="item.svg" cacheSVG="true" class="arrow svg-icon menu-icon"></span> -->
+        <i *ngIf="item.svg" class="arrow menu-arrow" style="color: #0F5EA9; font-size: 14px;"></i>
         <i *ngIf="!item.svg" class="menu-bullet menu-bullet-dot">
           <span></span>
         </i>
@@ -98,11 +100,11 @@
       [ngClass]="{ 'menu-item-open': isMenuItemActive(item.uri) }" routerLinkActive="menu-item-open">
       <a class="menu-link menu-toggle" [attr.href]="item.uri" routerLinkActive="active"
         [ngClass]="{ 'active ': isMenuItemActive(item.uri) }">
-        <span [inlineSVG]="item.svg" cacheSVG="true" class="arrow svg-icon menu-icon"></span>
+        <!-- <span [inlineSVG]="item.svg" cacheSVG="true" class="arrow svg-icon menu-icon"></span> -->
+        <i class="arrow menu-arrow" style="color: #0F5EA9; font-size: 14px;"></i>
         <span class="menu-text" [translate]="item.translate"> {{
           item.title
         }}</span>
-        <i class="menu-arrow" style="color: #0F5EA9"></i>
       </a>
       <div class="menu-submenu">
         <i class="menu-arrow"></i>
@@ -153,7 +155,7 @@
         <span class="menu-text parent-level3" [translate]="item.translate">{{
           item.title
         }}</span>
-        <i class="menu-arrow"></i>
+        <!-- <i class="menu-arrow"></i> -->
       </a>
       <div class="menu-submenu">
         <i class="menu-arrow"></i>
@@ -243,7 +245,7 @@
         <span class="menu-text" [translate]="item.translate">{{
           item.title
           }}</span>
-        <i class="menu-arrow" style="color: #0F5EA9"></i>
+        <i class="menu-arrow" style="color: #0F5EA9; font-size: 14px; margin-right: 13px;"></i>
       </a>
       <div class="menu-submenu">
         <i class="menu-arrow"></i>

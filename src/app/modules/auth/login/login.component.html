@@ -33,12 +33,12 @@
         <input class="form-control h-42px py-7 px-6 rounded-lg" type="text" name="u_name" formControlName="username"
           autocomplete="off" [ngClass]="{ 'is-invalid': hasError }" placeholder="Masukkan domain Kamu" />
       </div>
-      <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+      <!-- <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
           validation: 'required',
           message: 'Username is required',
           control: loginForm.controls['username']
-        }"></ng-container>
-      <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+        }"></ng-container> -->
+      <!-- <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
           validation: 'username',
           message: 'Username is invalid',
           control: loginForm.controls['username']
@@ -47,7 +47,7 @@
           validation: 'pattern',
           message: 'Username harus 8 karakter alphanumeric',
           control: loginForm.controls['username']
-        }"></ng-container>
+        }"></ng-container> -->
     </div>
     <!--end::Form group-->
 
@@ -70,16 +70,16 @@
           <i class="far fa-eye-slash icon-md" *ngIf="revealPass"></i>
         </span>
       </div>
-      <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+      <!-- <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
           validation: 'required',
           message: 'Password is required',
           control: loginForm.controls['password']
-        }"></ng-container>
-      <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
+        }"></ng-container> -->
+      <!-- <ng-container [ngTemplateOutlet]="formError" [ngTemplateOutletContext]="{
           validation: 'pattern',
           message: 'Password minimal 6 karakter alphanumeric',
           control: loginForm.controls['password']
-        }"></ng-container>
+        }"></ng-container> -->
       <ng-container *ngIf="hasError">
         <div class="fv-plugins-message-container mt-3">
           <div class="fv-help-block">{{hasErrorMessage}}.</div>
