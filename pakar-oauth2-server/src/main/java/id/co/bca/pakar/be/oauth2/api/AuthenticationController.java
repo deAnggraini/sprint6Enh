@@ -24,18 +24,38 @@ public class AuthenticationController extends BaseController {
 	@Autowired
 	private AuthenticationService authenticationService;
 	
+//	@PostMapping(value = Constant.ApiEndpoint.LOGIN_URL, consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
+//			MediaType.APPLICATION_JSON_VALUE })
+//	public ResponseEntity<RestResponse<LoggedinDto>> login(@Valid @RequestBody CredentialDto dto) {
+//		try {
+//			logger.info("----- authenticate process -----");
+//			LoggedinDto oAuthToken = authenticationService.authenticate(dto);
+//			oAuthToken.setRememberMe(dto.getRememberMe());
+//
+//			return this.createResponse(oAuthToken, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
+//		} catch (Exception e) {
+//			logger.error("exception", e);
+//			return this.createResponse(new LoggedinDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("userid.password.incorrect", null, new Locale("en", "US")));
+//		}
+//	}
+
+	// Edit venty
 	@PostMapping(value = Constant.ApiEndpoint.LOGIN_URL, consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<RestResponse<LoggedinDto>> login(@Valid @RequestBody CredentialDto dto) {
+	public ResponseEntity<RestResponses<LoggedinDto>> login(@Valid @RequestBody CredentialDto dto) {
+		String alertMessage = null;
+		Integer failCount = 0;
+//		 call authenticationService.loginResponse
 		try {
 			logger.info("----- authenticate process -----");
+
 			LoggedinDto oAuthToken = authenticationService.authenticate(dto);
 			oAuthToken.setRememberMe(dto.getRememberMe());
-			
-			return this.createResponse(oAuthToken, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
+
+			return this.createResponses(oAuthToken, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")), alertMessage, 0);
 		} catch (Exception e) {
 			logger.error("exception", e);
-			return this.createResponse(new LoggedinDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("userid.password.incorrect", null, new Locale("en", "US")));
+			return this.createResponses(new LoggedinDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("userid.password.incorrect", null, new Locale("en", "US")), alertMessage, failCount);
 		}
 	}
 	
