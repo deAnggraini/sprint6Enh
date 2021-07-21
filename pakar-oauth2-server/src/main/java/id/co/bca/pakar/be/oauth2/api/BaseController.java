@@ -2,12 +2,17 @@ package id.co.bca.pakar.be.oauth2.api;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public abstract class BaseController {
+	@Autowired
+	protected MessageSource messageSource;
+
 	protected class RestResponse<T> {
 		@JsonProperty("data")
 		private T data;
