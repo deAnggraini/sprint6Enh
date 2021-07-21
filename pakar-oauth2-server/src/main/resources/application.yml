@@ -17,7 +17,10 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQL10Dialect
     properties:
       hibernate:
-        dialect:org.hibernate.dialect.PostgreSQL10Dialect  
+        dialect:org.hibernate.dialect.PostgreSQL10Dialect
+  login:
+    max-failed-login: 5
+    locking-time-failed-login : 30
 --- 
 spring:
   profiles: dev-local
