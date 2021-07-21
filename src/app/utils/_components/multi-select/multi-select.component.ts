@@ -23,6 +23,7 @@ const sample = [{
 })
 export class MultiSelectComponent implements OnInit, ControlValueAccessor, OnDestroy {
 
+  @Input() class: string;
   @Input() placeholder: string;
   @Input() hasError: boolean;
   @Input() maxSelected: number;

@@ -3,36 +3,54 @@
 //
 
 .svg-icon {
-    @include svg-icon-size(get($svg-icon-sizes, md));
-    @include svg-icon-color($text-muted);
+  @include svg-icon-size(get($svg-icon-sizes, md));
+  @include svg-icon-color($text-muted);
 
-    // Theme colors
-    @each $name, $color in $theme-text-colors {
-        &.svg-icon-#{$name} {
-            @include svg-icon-color($color, true);
-        }
-        &.svg-logo-#{$name} {
-            @include svg-logo-color($color, true);
-        }
+  // Theme colors
+  @each $name,
+  $color in $theme-text-colors {
+    &.svg-icon-#{$name} {
+      @include svg-icon-color($color, true);
     }
 
-    // Responsive icon sizes
-    @each $breakpoint in map-keys($grid-breakpoints) {
-        @include media-breakpoint-up($breakpoint) {
-            $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+    &.svg-logo-#{$name} {
+      @include svg-logo-color($color, true);
+    }
+  }
 
-            // Sizes
-            @each $name, $value in $svg-icon-sizes {
-                &.svg-icon#{$infix}-#{$name} {
-                    @include svg-icon-size($value, true);
-                }
-            }
+  // Responsive icon sizes
+  @each $breakpoint in map-keys($grid-breakpoints) {
+    @include media-breakpoint-up($breakpoint) {
+      $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+
+      // Sizes
+      @each $name,
+      $value in $svg-icon-sizes {
+        &.svg-icon#{$infix}-#{$name} {
+          @include svg-icon-size($value, true);
         }
+      }
+    }
+  }
+
+  &.svg-icon-flip {
+    svg {
+      transform: scaleX(-1);
+    }
+  }
+
+  &.svg-tooltip {
+    svg {
+      width: 14px;
+      height: 14px;
     }
 
-    &.svg-icon-flip {
-        svg {
-            transform: scaleX(-1);
+    &:hover {
+      svg {
+        path {
+          fill: #0F5EA9;
         }
+      }
     }
+  }
 }

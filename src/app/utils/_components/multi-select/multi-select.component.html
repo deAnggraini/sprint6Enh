@@ -1,4 +1,4 @@
-<div #multiSelect class="multi-select-search d-flex align-self-center flex-wrap" [ngClass]="{hasError : hasError}">
+<div #multiSelect class="multi-select-search d-flex align-self-center flex-wrap {{class}}" [ngClass]="{hasError : hasError}">
     <div class="selected-item d-flex justify-content-between flex-nowrap" *ngFor="let item of value; let i = index">
         <div class="_title">{{item.text}}</div>
         <a href="#" (click)="cancel(item)" class="_close">

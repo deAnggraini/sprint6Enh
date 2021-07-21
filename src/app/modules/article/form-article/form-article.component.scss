@@ -1,5 +1,8 @@
+$acc-child-margin : 10px;
+
 :host ::ng-deep .top-bar {
-  position: absolute;
+  position: fixed;
+  z-index: 2;
   top: 50px;
   height: 48px;
   background: #F3F2F1;
@@ -26,8 +29,6 @@
     }
   }
 }
-
-$acc-child-margin : 10px;
 
 :host {
   .input-accordion-separator {
@@ -90,7 +91,7 @@ $acc-child-margin : 10px;
     width: 100%;
     border: none;
     padding: 1rem;
-    padding-bottom: 0;
+    padding-bottom: 5px;
     // border-bottom: 1px solid #C8C6C4;
 
     &:focus {

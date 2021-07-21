@@ -30,47 +30,52 @@
 <div *ngIf="!finishRender" class="pakar-container mx-15 p-8" style="padding-top:calc(2rem + 50px) !important">
     TUNGGU CKEDITOR SELESAI
 </div>
-<div *ngIf="finishRender && dataForm" class="pakar-container mx-15 p-8"
-    style="padding-top:calc(2rem + 50px) !important">
+<div *ngIf="finishRender && dataForm" class="pakar-container mx-15 p-8" style="padding-top:60px !important">
     <span class="pakar-text-header">{{isEdit ? 'Ubah' : 'Tambah'}} Artikel</span>
     <form [formGroup]="dataForm" novalidate="novalidate">
-        <div class="form-group">
+        <div class="form-group col-sm-11 col-lg-6 col-xl-6 col-xxl-6">
             <label>Judul Artikel *</label>
             <pakar-input-length placeholder="Masukkan nama artikel disini (maks. 50 karakter)" formControlName="title"
                 maxlength="50" (onChange)="checkUniq($event)" [hasError]="hasError">
             </pakar-input-length>
+            <ng-container *ngIf="hasError">
+                <div class="fv-plugins-message-container">
+                    <div class="fv-help-block"><span>{{errorMsg}}</span></div>
+                </div>
+            </ng-container>
         </div>
-        <div class="form-group">
+        <div class="form-group col-sm-11 col-lg-9 col-xl-9 col-xxl-9">
             <label>Lokasi Artikel *</label>
             <pakar-combo-box-accordion formControlName="locationOption" [options]="locationOptions"
                 placeholder="Pilih lokasi yang tepat untuk artikel yang ingin ditambahkan">
             </pakar-combo-box-accordion>
         </div>
-        <div class="form-group">
+        <div class="form-group col-sm-11 col-lg-9 col-xl-9 col-xxl-9">
             <label>Deskripsi Singkat *</label>
             <ckeditor #editorDesc [editor]="editor" [config]="config" tagName="textarea" (ready)="onReady($event)"
                 (change)="onChange($event)"></ckeditor>
         </div>
-        <div class="form-group">
+        <div class="form-group col-sm-11 col-lg-6 col-xl-6 col-xxl-6">
             <label>Gambar Artikel *</label>
             <input type="file" class="form-control">
         </div>
-        <div class="form-group">
+        <div class="form-group col-sm-11 col-lg-6 col-xl-6 col-xxl-6">
             <label>Video Artikel</label>
             <input type="url" class="form-control">
         </div>
-        <div class="form-group">
+        <div class="form-group col-sm-12 col-lg-11 col-xl-11 col-xxl-11">
             <label>Content Artikel *</label>
             <div class="border border-light rounded-sm p-3">
                 <mat-accordion [togglePosition]="'before'" multi="true">
-                    <mat-expansion-panel *ngFor="let content of dataForm.get('contents').value;"
-                        class="acc-level acc-level-1">
+                    <mat-expansion-panel *ngFor="let content of dataForm.get('contents').value; let i=index;"
+                        class="acc-level acc-level-1" [expanded]="content.expanded">
                         <mat-expansion-panel-header [@.disabled]="true">
                             <mat-panel-title>
                                 <span>{{content.title}}</span>
                                 <span [inlineSVG]="'./assets/media/svg/bca/icon/info.svg'" cacheSVG="true"
-                                    class="svg-icon svg-icon-sm" placement="right"
-                                    ngbTooltip="Berisi aturan/kaidah/ketetapan/syarat/kriteria atas produk/aplikasi yang harus dipahami pembaca sebelum melakukan prosedur atas produk/aplikasi tersebut; dapat dituangkan dalam bentuk kalimat ataupun tabel."></span>
+                                    class="svg-icon svg-tooltip mx-2" placement="right" [ngbTooltip]="tooltips[i]"
+                                    container="body" tooltipClass="my-custom-class fs12">
+                                </span>
                             </mat-panel-title>
                             <ng-container [ngTemplateOutlet]="rightIcon" [ngTemplateOutletContext]="{ data: content}">
                             </ng-container>
@@ -78,9 +83,8 @@
                         <div cdkDropListGroup>
                             <input type="text" class="txt-desc-lvl1"
                                 placeholder="Masukkan kalimat pengantar terkait {{content.title}} disini.">
-                            <!-- <div *ngIf="content.children.length" class="input-accordion-separator"></div> -->
                             <ng-container *ngIf="content.children.length" [ngTemplateOutlet]="accordionChild"
-                                [ngTemplateOutletContext]="{ children: content.children, level:2}">
+                                [ngTemplateOutletContext]="{ children: content.children, level:2, parents:[]}">
                             </ng-container>
                         </div>
                     </mat-expansion-panel>
@@ -93,31 +97,31 @@
                 </button>
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group col-sm-12 col-lg-11 col-xl-11 col-xxl-11">
             <label>SK/SE Referensi</label>
             <pakar-multi-select formControlName="references"
                 placeholder="Masukkan Nomor Referensi atau Judul SKSE dari Artikel ini" [dataList]="skReferences"
                 (getData)="getDataSkSeReference($event)">
             </pakar-multi-select>
-            <button type="button" class="btn btn-md btn-seconder">
-
-            </button>
         </div>
-        <div class="form-group">
+        <div class="form-group col-sm-12 col-lg-11 col-xl-11 col-xxl-11">
             <label>Artikel Terkait</label>
             <pakar-multi-select formControlName="related"
                 placeholder="Masukkan Artikel terkait lain yang bersangkutan dengan artikel ini"
                 [dataList]="relatedArticle$" (getData)="getDataRelatedArticle($event)" maxSelected="3">
             </pakar-multi-select>
         </div>
-        <div class="form-group">
-            Suggestion :
-            <pakar-multi-select formControlName="suggestions"
-                placeholder="Masukkan Nomor Referensi atau Judul SKSE dari Artikel ini" [dataList]="suggestionArticle$"
-                (getData)="getDataSuggestionArticle($event)" maxSelected="3">
-            </pakar-multi-select>
+        <div class="form-group col-sm-12 col-lg-11 col-xl-11 col-xxl-11 d-flex flex-row align-items-center">
+            <div class="fs14 fb6 mr-2 pb-2">Suggestion :</div>
+            <div class="flex-grow-1">
+                <pakar-multi-select formControlName="suggestions"
+                    placeholder="Masukkan Nomor Referensi atau Judul SKSE dari Artikel ini"
+                    [dataList]="suggestionArticle$" (getData)="getDataSuggestionArticle($event)" maxSelected="5"
+                    class="border-less">
+                </pakar-multi-select>
+            </div>
         </div>
-        <div class="form-group d-flex justify-content-end">
+        <div class="form-group col-sm-12 col-lg-11 col-xl-11 col-xxl-11 d-flex justify-content-end">
             <button type="button" class="btn btn-outline-light btn-sm rounded-xl px-5 ml-3">Batal</button>
             <button type="button" class="btn btn-blue-outline btn-sm px-5 ml-3">Simpan</button>
             <button type="button" class="btn btn-outline-dark btn-sm rounded-xl px-5 ml-3">Simpan & Kirim</button>
@@ -158,7 +162,7 @@
     </div>
 </ng-template>
 
-<ng-template #accordionChild let-children="children" let-level="level">
+<ng-template #accordionChild let-children="children" let-level="level" let-parents="parents">
     <div style="border-bottom:1px solid #C8C6C4; height: 10px;"></div>
     <mat-accordion cdkDropList (cdkDropListDropped)="drop($event)" [cdkDropListData]="children"
         [togglePosition]="'before'" hideToggle="false" multi="true">
@@ -166,10 +170,11 @@
             <!-- [ngClass]="{empty:i >= children.length-1}"  -->
             <div class="input-accordion-separator"></div>
             <mat-expansion-panel [@.disabled]="true" cdkDrag [cdkDragData]="content"
-                class="acc-level acc-level-{{level}}">
+                class="acc-level acc-level-{{level}}" [expanded]="content.expanded">
                 <div class="drag-placeholder" *cdkDragPlaceholder></div>
                 <mat-expansion-panel-header>
-                    <mat-panel-title>{{content.title}}</mat-panel-title>
+                    <mat-panel-title>{{numberingFormat(content)}} {{content.title}}
+                    </mat-panel-title>
                     <ng-container [ngTemplateOutlet]="rightIcon" [ngTemplateOutletContext]="{ data: content}">
                     </ng-container>
                 </mat-expansion-panel-header>
@@ -189,7 +194,7 @@
                         </div>
                     </div>
                     <ng-container *ngIf="content.children.length" [ngTemplateOutlet]="accordionChild"
-                        [ngTemplateOutletContext]="{ children: content.children, level : level+1}">
+                        [ngTemplateOutletContext]="{ children: content.children, level : level+1, parents: parents.concat({id:content.id, no:content.no})}">
                     </ng-container>
                 </div>
             </mat-expansion-panel>
