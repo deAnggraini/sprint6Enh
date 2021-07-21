@@ -46,6 +46,7 @@ const sample_basic = {
 const sample_non_basic = {
     id: 101,
     title: 'Tahapan 2',
+    location: 2,
     desc: '',
     image: '',
     video: '',
