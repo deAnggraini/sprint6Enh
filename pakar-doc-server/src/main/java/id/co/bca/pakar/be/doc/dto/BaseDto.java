@@ -1,7 +1,11 @@
 package id.co.bca.pakar.be.doc.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class BaseDto {
+    @JsonIgnore
     protected String token;
+    @JsonIgnore
     protected String username;
 
     public String getToken() {
