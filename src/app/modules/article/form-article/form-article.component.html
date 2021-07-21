@@ -68,7 +68,7 @@
             <div class="border border-light rounded-sm p-3">
                 <mat-accordion [togglePosition]="'before'" multi="true">
                     <mat-expansion-panel *ngFor="let content of dataForm.get('contents').value; let i=index;"
-                        class="acc-level acc-level-1" [expanded]="content.expanded">
+                        class="acc-level acc-level-1" [(expanded)]="content.expanded">
                         <mat-expansion-panel-header [@.disabled]="true">
                             <mat-panel-title>
                                 <span>{{content.title}}</span>
@@ -122,9 +122,11 @@
             </div>
         </div>
         <div class="form-group col-sm-12 col-lg-11 col-xl-11 col-xxl-11 d-flex justify-content-end">
-            <button type="button" class="btn btn-outline-light btn-sm rounded-xl px-5 ml-3">Batal</button>
-            <button type="button" class="btn btn-blue-outline btn-sm px-5 ml-3">Simpan</button>
-            <button type="button" class="btn btn-outline-dark btn-sm rounded-xl px-5 ml-3">Simpan & Kirim</button>
+            <button type="button" class="btn btn-outline-light btn-sm rounded-xl px-5 ml-3"
+                (click)="onCancel()">Batal</button>
+            <button type="button" class="btn btn-blue-outline btn-sm px-5 ml-3" disabled>Simpan</button>
+            <button type="button" class="btn btn-outline-dark btn-sm rounded-xl px-5 ml-3" disabled>Simpan &
+                Kirim</button>
         </div>
     </form>
 </div>
@@ -167,13 +169,12 @@
     <mat-accordion cdkDropList (cdkDropListDropped)="drop($event)" [cdkDropListData]="children"
         [togglePosition]="'before'" hideToggle="false" multi="true">
         <ng-container *ngFor="let content of children; let i = index">
-            <!-- [ngClass]="{empty:i >= children.length-1}"  -->
             <div class="input-accordion-separator"></div>
             <mat-expansion-panel [@.disabled]="true" cdkDrag [cdkDragData]="content"
-                class="acc-level acc-level-{{level}}" [expanded]="content.expanded">
+                class="acc-level acc-level-{{level}}" [(expanded)]="content.expanded">
                 <div class="drag-placeholder" *cdkDragPlaceholder></div>
                 <mat-expansion-panel-header>
-                    <mat-panel-title>{{numberingFormat(content)}} {{content.title}}
+                    <mat-panel-title>{{numberingFormat(content)}}. {{content.title}}
                     </mat-panel-title>
                     <ng-container [ngTemplateOutlet]="rightIcon" [ngTemplateOutletContext]="{ data: content}">
                     </ng-container>
@@ -190,7 +191,8 @@
                         </div>
                         <div class="text-right">
                             <button type="button" class="btn btn-outline-light btn-sm rounded-lg px-5">Batal</button>
-                            <button type="button" class="btn btn-sm btn-blue rounded-lg px-5">Simpan</button>
+                            <button type="button" class="btn btn-sm btn-blue rounded-lg px-5 ml-2"
+                                disabled>Simpan</button>
                         </div>
                     </div>
                     <ng-container *ngIf="content.children.length" [ngTemplateOutlet]="accordionChild"
@@ -204,7 +206,7 @@
 
 <ng-template #formAddEdit let-c="close" let-d="dismiss">
     <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">{{isAccEdit ? 'Ubah' : 'Tambah'}} Accordion</h4>
+        <h4 class="modal-title" id="modal-basic-title">Ubah Accordion</h4>
         <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
             <i aria-hidden="true">&times;</i>
         </button>
@@ -215,15 +217,13 @@
                 <label>Title <span class="text-danger">*</span></label>
                 <input class="form-control" type="text" maxlength="50" placeholder="Masukkan nama menu" required
                     formControlName="title" autocomplete="off">
-                <ng-container [ngTemplateOutlet]="formError"
-                    [ngTemplateOutletContext]="{ control: dataForm.controls['name']}"></ng-container>
             </div>
         </form>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-outline-light btn-sm rounded-lg px-5" (click)="c('Batal')">Batal</button>
         <button type="button" class="btn btn-sm btn-blue rounded-lg px-5" (click)="accSaveAddEdit()"
-            [disabled]="dataForm.invalid">{{isAccEdit ? 'Ubah' : 'Tambah'}}</button>
+            [disabled]="accForm.invalid">Tambah</button>
     </div>
 </ng-template>
 

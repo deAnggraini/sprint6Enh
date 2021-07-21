@@ -12,6 +12,8 @@ import { ArticleDTO, ArticleContentDTO, ArticleParentDTO } from '../../_model/ar
 import { FormGroup, FormBuilder, Validators, FormControl, ValidationErrors } from '@angular/forms';
 import { StrukturService } from '../../_services/struktur.service';
 import { catchError, map } from 'rxjs/operators';
+import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { ConfirmService } from 'src/app/utils/_services/confirm.service';
 
 const TOOL_TIPS = [
   'Berisi aturan/kaidah/ketetapan/syarat/kriteria atas produk/aplikasi yang harus dipahami pembaca sebelum melakukan prosedur atas produk/aplikasi tersebut; dapat dituangkan dalam bentuk kalimat ataupun tabel.',
@@ -140,6 +142,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   locationOptions: BehaviorSubject<Option[]> = new BehaviorSubject([]);
 
   // accordion
+  selectedAccordion: ArticleContentDTO;
   tooltips = TOOL_TIPS;
   isAccEdit: boolean = false;
   accForm: FormGroup;
@@ -152,53 +155,108 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     private auth: AuthService,
     private route: ActivatedRoute,
     private fb: FormBuilder,
-    private struktur: StrukturService) {
+    private struktur: StrukturService,
+    private modalService: NgbModal,
+    private configModal: NgbModalConfig,
+    private confirm: ConfirmService) {
+
+    this.configModal.backdrop = 'static';
+    this.configModal.keyboard = false;
   }
 
   // node calculation
   private findMaxSort(children: ArticleContentDTO[]): number {
     return Math.max(...children.map(d => d.sort)) | 0;
   }
-  private findNode(item) {
-    // const { contents } = this.dataForm;
-    // contents.
+  private findNode(id, dataList: ArticleContentDTO[]): ArticleContentDTO {
+    let found = dataList.find(d => d.id == id);
+    if (!found) {
+      dataList.forEach(d => {
+        if (found) return;
+        found = this.findNode(id, d.children);
+      });
+    }
+    return found;
+  }
+
+  // article action button
+  onCancel(e) {
+    console.log(this.dataForm.value.contents);
   }
 
   // Right icon event
+  private open() {
+    this.modalService.open(this.formAddEdit);
+  }
   btnAddClick(e, data: ArticleContentDTO) {
-    console.log({ e, data });
-    const maxSort: number = this.findMaxSort(data.children);
-    const listParent: ArticleParentDTO[] = JSON.parse(JSON.stringify(data.listParent));
-    if (data.level >= 2) {
-      listParent.push({ id: 0, no: data.no, title: data.title });
-    }
-    const newNode: ArticleContentDTO = {
-      id: 0,
-      title: 'New Data',
-      level: data.level + 1,
-      parent: data.id,
-      sort: maxSort + 1,
-      children: [],
-      expanded: true,
-      listParent,
-      no: `${data.children.length + 1}`
-    }
-    data.expanded = true;
-    data.children.push(newNode);
+    this.subscriptions.push(
+      this.article.getContentId().subscribe(resp => {
+        if (resp) {
+          console.log({ resp });
+          const maxSort: number = this.findMaxSort(data.children);
+          const listParent: ArticleParentDTO[] = JSON.parse(JSON.stringify(data.listParent));
+          if (data.level >= 2) {
+            listParent.push({ id: 0, no: data.no, title: data.title });
+          }
+          const newNode: ArticleContentDTO = {
+            id: resp,
+            title: 'New Data',
+            level: data.level + 1,
+            parent: data.id,
+            sort: maxSort + 1,
+            children: [],
+            expanded: true,
+            listParent,
+            no: `${data.children.length + 1}`
+          }
+          data.expanded = true;
+          data.children.push(newNode);
+          this.cdr.detectChanges();
+        }
+      })
+    );
     e.stopPropagation();
-    console.log('new data', { newNode });
-    this.cdr.detectChanges();
     return false;
   }
   btnEditClick(e, data: ArticleContentDTO) {
-    console.log({ e, data });
+    this.selectedAccordion = data;
+    const { id, title, level, sort } = data;
+    this.accForm.reset(Object.assign({}, { id, title, level, sort }));
+    this.open();
     e.stopPropagation();
     return false;
   }
-  btnDeleteClick(e, data) {
-    console.log({ e, data });
+  btnDeleteClick(e, data: ArticleContentDTO) {
+    this.confirm.open({
+      title: `Hapus Topik`,
+      message: `<p>Apakah Kamu yakin ingin menghapus topik “<b>${data.title}</b>”?`,
+      btnOkText: 'Hapus',
+      btnCancelText: 'Batal'
+    }).then((confirmed) => {
+      if (confirmed === true) {
+        this.subscriptions.push(
+          this.article.deleteContent(data.id).subscribe(resp => {
+            if (resp) this.deleteNode(data);
+          })
+        );
+      }
+    });
     e.stopPropagation();
     return false;
+  }
+  private deleteNode(data: ArticleContentDTO) {
+    let _contents: ArticleContentDTO[] = JSON.parse(JSON.stringify(this.dataForm.get('contents').value));
+    const _parent = this.findNode(data.parent, _contents);
+    if (data.level > 1) {
+      console.log({ delete: data.id, _parent });
+      _parent.children = _parent.children.filter(d => d.id != data.id);
+    } else {
+      _contents = _contents.filter(d => d.id != data.id);
+    }
+    this.recalculateChildren(_contents, []);
+    console.log({ _contents });
+    this.dataForm.get('contents').setValue(_contents);
+    this.cdr.detectChanges();
   }
 
   checkUniq(value) {
@@ -255,14 +313,20 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // accordion event
   numberingFormat(data: ArticleContentDTO): string {
-    // console.log({ data });
     const listParent = data.listParent;
     const strNoParent = listParent.map(d => d.no);
     strNoParent.push(data.no);
     return strNoParent.join(".");
   }
   accSaveAddEdit() {
-
+    this.subscriptions.push(
+      this.article.saveContent(this.accForm.value).subscribe(resp => {
+        if (resp) {
+          this.selectedAccordion.title = this.accForm.value.title;
+          this.modalService.dismissAll();
+        }
+      })
+    );
   }
 
   private getArticle(id: number) {
@@ -272,27 +336,39 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
       })
     );
   }
-  private setDefaultContentValue(children: ArticleContentDTO[], listParent: ArticleParentDTO[]) {
+  // private setDefaultContentValue(children: ArticleContentDTO[], listParent: ArticleParentDTO[]) {
+  //   if (children && children.length) {
+  //     children.forEach((d, i) => {
+  //       d.expanded = false;
+  //       d.listParent = listParent;
+  //       if (d.level == 1) {
+  //         d.no = '';
+  //         this.setDefaultContentValue(d.children, listParent.concat([]));
+  //       } else {
+  //         d.no = `${i + 1}`;
+  //         const { id, title, no } = d;
+  //         this.setDefaultContentValue(d.children, listParent.concat([{ id, title, no }]));
+  //       }
+  //     });
+  //   }
+  // }
+  private recalculateChildren(children: ArticleContentDTO[], listParent: ArticleParentDTO[]) {
     if (children && children.length) {
       children.forEach((d, i) => {
-        d.expanded = false;
+        if (!d.expanded) d.expanded = false;
         d.listParent = listParent;
         if (d.level == 1) {
           d.no = '';
-          this.setDefaultContentValue(d.children, listParent.concat([]));
+          this.recalculateChildren(d.children, listParent.concat([]));
         } else {
           d.no = `${i + 1}`;
           const { id, title, no } = d;
-          this.setDefaultContentValue(d.children, listParent.concat([{ id, title, no }]));
+          this.recalculateChildren(d.children, listParent.concat([{ id, title, no }]));
         }
       });
     }
   }
-  private recalculateChildren(children: ArticleContentDTO, listParent: ArticleParentDTO[]) {
-
-  }
   private setArticle(article: ArticleDTO) {
-    console.log('setArticle', { article });
     if (article) {
       const locationSelected = this.struktur.findNodeById(article.location);
       if (locationSelected) {
@@ -303,9 +379,8 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
       }
 
       // set expanded default value
-      this.setDefaultContentValue(article.contents, []);
+      this.recalculateChildren(article.contents, []);
 
-      console.log('result', { article });
       this.dataForm.reset(article);
       this.cdr.detectChanges();
     } else {

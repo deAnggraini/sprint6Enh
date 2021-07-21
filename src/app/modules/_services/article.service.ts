@@ -87,4 +87,16 @@ export class ArticleService {
     return this.apiService.get(`${this._base_url}/getArticle?id=${id}`);
   }
 
+  getContentId() {
+    return this.apiService.get(`${this._base_url}/getContentId`);
+  }
+
+  saveContent(params: any) {
+    return this.apiService.post(`${this._base_url}/saveContent`, params);
+  }
+
+  deleteContent(id: number) {
+    return this.apiService.post(`${this._base_url}/deleteContent`, { id });
+  }
+
 }
