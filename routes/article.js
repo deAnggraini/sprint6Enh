@@ -390,11 +390,11 @@ router.post('/generateArticle', (req, res) => {
     res.send({ error: false, msg: "", data: sample_basic });
 });
 
-router.post('/getArticle', (req, res) => {
-    const { body } = req;
-    const { id } = body;
-    console.log({ body, sample_basic });
-    res.send({ error: false, msg: "", data: sample_non_basic });
+router.get('/getArticle', (req, res) => {
+    // const { body } = ;
+    const { id } = req.query;
+    console.log({ id, sample_basic });
+    res.send({ error: false, msg: "", data: sample_basic });
 });
 
 module.exports = router;
