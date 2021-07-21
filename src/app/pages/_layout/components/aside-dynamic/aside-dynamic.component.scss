@@ -46,7 +46,10 @@
   }
 
   .arrow {
-    filter: invert(19%) sepia(95%) saturate(2662%) hue-rotate(197deg) brightness(87%) contrast(88%);
+    // filter: invert(19%) sepia(95%) saturate(2662%) hue-rotate(197deg) brightness(55%) contrast(85%);
+    margin-left: -2px;
+    margin-right: 17px;
+    
   }
 
   .menu-item.menu-item-active {
@@ -70,10 +73,10 @@
     .menu-link {
       background-color: transparent;
 
-      .menu-text.parent-level3:hover {
-        color: #3699ff;
-        text-decoration: underline;
-      }
+      // .menu-text.parent-level3:hover {
+      //   color: #3699ff;
+      //   text-decoration: underline;
+      // }
 
       .menu-arrow,
       .menu-text {
