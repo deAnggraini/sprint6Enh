@@ -89,32 +89,6 @@ public class ArticleController extends BaseController {
 
 	}
 
-	/*@PostMapping("/api/doc/upload")
-	public ResponseEntity<RestResponse<UploadFileDto>> uploadFile(
-			@RequestParam("file") MultipartFile file, @RequestHeader(name="Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @RequestParam String imageType) {
-		logger.info("uploadFile process");
-		try {
-			logger.info("received token bearer --- " + authorization);
-			String tokenValue = "";
-			if (authorization != null && authorization.contains("Bearer")) {
-				tokenValue = authorization.replace("Bearer", "").trim();
-
-				logger.info("token value request header --- " + tokenValue);
-				logger.info("username request header --- " + username);
-			}
-			HttpHeaders headers = new HttpHeaders();
-			headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-
-			logger.info("image type " + imageType);
-			UploadFileDto uploadFileDto = uploadService.storeFile(file, imageType, username);
-			return this.createResponse(uploadFileDto, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
-
-		}catch (Exception e){
-			logger.error("exception", e);
-			return this.createResponse(new UploadFileDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
-		}
-	}*/
-
 	@PostMapping("/api/doc/recomendation")
 	public String recomendation(@RequestBody String message) {
 		return String.format("Message was created. Content: %s", message);
@@ -219,29 +193,67 @@ public class ArticleController extends BaseController {
 	 *
 	 * @param authorization
 	 * @param username
-	 * @param articleDto
+	 * @param generateArticleDto
 	 * @return
 	 */
 	@PostMapping(value = "/api/doc/generateArticle", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<RestResponse<Long>> generateArticle(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @Valid @RequestBody BaseArticleDto articleDto) {
+	public ResponseEntity<RestResponse<ArticleDto>> generateArticle(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @Valid @RequestBody GenerateArticleDto generateArticleDto) {
 		try {
 			logger.info("generate article process");
 			logger.info("received token bearer --- {}", authorization);
-			articleDto.setUsername(username);
-			articleDto.setToken(getTokenFromHeader(authorization));
-			Long articleId = articleService.generateArticle(articleDto);
-			return articleId.longValue() > 0 ? createResponse(articleId, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US"))) :
-					createResponse(articleId, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
+			generateArticleDto.setUsername(username);
+			generateArticleDto.setToken(getTokenFromHeader(authorization));
+			ArticleDto articleDto = articleService.generateArticle(generateArticleDto);
+			return createResponse(articleDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
 		} catch (Exception e) {
 			logger.error("exception", e);
-			return createResponse(0L, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
+			return createResponse(new ArticleDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
+		}
+	}
+
+	/**
+	 *
+	 * @param authorization
+	 * @param username
+	 * @param generateArticleDto
+	 * @return
+	 */
+	@PostMapping(value = "/api/doc/getArticle", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
+			MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<RestResponse<ArticleDto>> geArticle(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @Valid @RequestBody GenerateArticleDto generateArticleDto) {
+		try {
+			logger.info("generate article process");
+			logger.info("received token bearer --- {}", authorization);
+			generateArticleDto.setUsername(username);
+			generateArticleDto.setToken(getTokenFromHeader(authorization));
+			ArticleDto articleDto = articleService.generateArticle(generateArticleDto);
+			return createResponse(articleDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
+		} catch (Exception e) {
+			logger.error("exception", e);
+			return createResponse(new ArticleDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
 		}
 	}
 
 	@PostMapping(value = "/api/doc/saveArticle", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE }, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<RestResponse<ArticleDto>> saveArticle(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @ModelAttribute ArticleDto articleDto, BindingResult bindingResult) {
+		try {
+			logger.info("save article process");
+			logger.info("received token bearer --- {}", authorization);
+			articleDto.setUsername(username);
+			articleDto.setToken(getTokenFromHeader(authorization));
+			articleDto = articleService.saveArticle(articleDto);
+			return createResponse(articleDto, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
+		} catch (Exception e) {
+			logger.error("exception", e);
+			return createResponse(new ArticleDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
+		}
+	}
+
+	@PostMapping(value = "/api/doc/saveContent", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
+			MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<RestResponse<ArticleDto>> saveArticleContent(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @ModelAttribute ArticleDto articleDto, BindingResult bindingResult) {
 		try {
 			logger.info("save article process");
 			logger.info("received token bearer --- {}", authorization);
