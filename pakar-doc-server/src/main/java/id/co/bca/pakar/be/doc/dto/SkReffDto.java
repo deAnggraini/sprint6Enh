@@ -7,7 +7,7 @@ public class SkReffDto {
     private Long id;
     @JsonProperty("title")
     private String title;
-    @JsonProperty("number")
+    @JsonProperty("no")
     private String skNumber;
 
     public Long getId() {

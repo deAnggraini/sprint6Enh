@@ -4,21 +4,27 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
-public class ArticleContentDto {
+public class ArticleContentDto extends BaseDto {
     @JsonProperty("id")
     private Long id;
     @JsonProperty("title")
     private String title;
-    @JsonProperty("desc")
-    private String desc;
+    @JsonProperty("intro")
+    private String introduction;
     @JsonProperty("sort")
     private Long order;
     @JsonProperty("level")
     private Long level;
+    @JsonProperty("topicTitle")
+    private String topicTitle;
+    @JsonProperty("topicContent")
+    private String topicContent;
     @JsonProperty("children")
-    private List<ArticleContentDto> childs;
+    private List<ArticleContentDto> listParent;
     @JsonProperty("parent")
     private Long parent = 0L;
+    @JsonProperty("articleId")
+    private Long articleId;
 
     public Long getId() {
         return id;
@@ -36,20 +42,36 @@ public class ArticleContentDto {
         this.title = title;
     }
 
-    public String getDesc() {
-        return desc;
+    public String getIntroduction() {
+        return introduction;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setIntroduction(String introduction) {
+        this.introduction = introduction;
     }
 
-    public List<ArticleContentDto> getChilds() {
-        return childs;
+    public String getTopicTitle() {
+        return topicTitle;
     }
 
-    public void setChilds(List<ArticleContentDto> childs) {
-        this.childs = childs;
+    public void setTopicTitle(String topicTitle) {
+        this.topicTitle = topicTitle;
+    }
+
+    public String getTopicContent() {
+        return topicContent;
+    }
+
+    public void setTopicContent(String topicContent) {
+        this.topicContent = topicContent;
+    }
+
+    public List<ArticleContentDto> getListParent() {
+        return listParent;
+    }
+
+    public void setListParent(List<ArticleContentDto> listParent) {
+        this.listParent = listParent;
     }
 
     public Long getOrder() {
@@ -76,15 +98,25 @@ public class ArticleContentDto {
         this.parent = parent;
     }
 
+    public Long getArticleId() {
+        return articleId;
+    }
+
+    public void setArticleId(Long articleId) {
+        this.articleId = articleId;
+    }
+
     @Override
     public String toString() {
-        return "ContentTemplateDto{" +
+        return "ArticleContentDto{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
-                ", desc='" + desc + '\'' +
+                ", introduction='" + introduction + '\'' +
                 ", order=" + order +
                 ", level=" + level +
-                ", childs=" + childs +
+                ", topicTitle='" + topicTitle + '\'' +
+                ", topicContent='" + topicContent + '\'' +
+                ", listParent=" + listParent +
                 ", parent=" + parent +
                 '}';
     }

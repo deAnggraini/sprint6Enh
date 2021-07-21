@@ -187,13 +187,67 @@ public class ArticleServiceImpl implements ArticleService {
      */
     @Override
     @Transactional(rollbackOn = {Exception.class})
-    public ArticleDto saveArticle(ArticleDto articleDto) {
+    public ArticleDto saveArticle(MultipartArticleDto articleDto) throws Exception {
         try {
             logger.info("save article process");
+            Optional<Article> articleOpt = articleRepository.findById(articleDto.getId());
+            if(articleOpt.isEmpty()) {
+                logger.info("not found article data with id {}", articleDto.getId());
+                throw new DataNotFoundException("data not found");
+            }
             return null;
         } catch (Exception e) {
             logger.error("", e);
-            return new ArticleDto();
+            throw new Exception("exception", e);
+        }
+    }
+
+    /**
+     * get content id
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public Long getContentId() throws Exception {
+        try {
+            logger.info("get content id");
+            Long contentId = articleContentRepository.getContentId();
+            return contentId;
+        } catch (Exception e) {
+            logger.error("exception", e);
+            throw new Exception("exception", e);
+        }
+    }
+
+    /**
+     *
+     * @param articleContentDto
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public ArticleContentDto saveContent(ArticleContentDto articleContentDto) throws Exception {
+        try {
+            logger.info("process save content");
+            ArticleContent articleContent = new ArticleContent();
+            articleContent.setCreatedBy(articleContentDto.getUsername());
+            articleContent.setId(articleContentDto.getId());
+            articleContent.setName(articleContentDto.getTitle());
+            articleContent.setDescription(articleContentDto.getIntroduction());
+            articleContent.setTopicCaption(articleContentDto.getTopicTitle());
+            articleContent.setTopicContent(articleContentDto.getTopicContent());
+            articleContent.setSort(articleContentDto.getOrder());
+            articleContent.setLevel(articleContentDto.getLevel());
+            Optional<Article> articleOpt = articleRepository.findById(articleContentDto.getArticleId());
+            if(!articleOpt.isEmpty()) {
+                articleContent.setArticle(articleOpt.get());
+            }
+            logger.info("save article content to db");
+            articleContentRepository.save(articleContent);
+            return articleContentDto;
+        } catch (Exception e) {
+            logger.error("exception",e);
+            throw new Exception("exception",e);
         }
     }
 
@@ -206,7 +260,7 @@ public class ArticleServiceImpl implements ArticleService {
             contentDto.setOrder(content.getSort());
             contentDto.setTitle(content.getName());
             if(content.getLevel().intValue() == 1)
-                contentDto.setDesc(content.getDescription());
+                contentDto.setIntroduction(content.getDescription());
             contentDto.setParent(content.getParent());
             listOfContents.add(contentDto);
         }

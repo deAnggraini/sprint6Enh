@@ -39,6 +39,8 @@ spring:
     file-type: image/png,image/jpeg
   article:
     param-tag: "{}|[]"
+    width-article-image: 307
+    height-article-image: 425
 ---
 spring:
   profiles: dev-local

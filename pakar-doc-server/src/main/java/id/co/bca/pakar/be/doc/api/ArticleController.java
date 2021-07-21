@@ -3,6 +3,7 @@ package id.co.bca.pakar.be.doc.api;
 import id.co.bca.pakar.be.doc.common.Constant;
 import id.co.bca.pakar.be.doc.dto.*;
 import id.co.bca.pakar.be.doc.exception.DataNotFoundException;
+import id.co.bca.pakar.be.doc.model.ArticleContent;
 import id.co.bca.pakar.be.doc.service.ArticleService;
 import id.co.bca.pakar.be.doc.service.ArticleTemplateService;
 import id.co.bca.pakar.be.doc.service.ThemeService;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -236,35 +238,65 @@ public class ArticleController extends BaseController {
 		}
 	}
 
+//	@PostMapping(value = "/api/doc/searchRelatedArticle", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE }, produces = {
+//			MediaType.APPLICATION_JSON_VALUE })
+//	public ResponseEntity<RestResponse<ArticleDto>> searchRelatedArticle(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @ModelAttribute ArticleDto articleDto, BindingResult bindingResult) {
+//		try {
+//			logger.info("save article process");
+//			logger.info("received token bearer --- {}", authorization);
+//			articleDto.setUsername(username);
+//			articleDto.setToken(getTokenFromHeader(authorization));
+//			articleDto = articleService.saveArticle(articleDto);
+//			return createResponse(articleDto, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
+//		} catch (Exception e) {
+//			logger.error("exception", e);
+//			return createResponse(new ArticleDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
+//		}
+//	}
+
 //	@PostMapping(value = "/api/doc/saveArticle", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE }, produces = {
 //			MediaType.APPLICATION_JSON_VALUE })
-//	public ResponseEntity<RestResponse<ArticleDto>> saveArticle(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @ModelAttribute ArticleDto articleDto, BindingResult bindingResult) {
+//	public ResponseEntity<RestResponse<ArticleDto>> saveArticle(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @ModelAttribute MultipartArticleDto articleDto, BindingResult bindingResult) {
 //		try {
 //			logger.info("save article process");
 //			logger.info("received token bearer --- {}", authorization);
 //			articleDto.setUsername(username);
 //			articleDto.setToken(getTokenFromHeader(authorization));
-//			articleDto = articleService.saveArticle(articleDto);
-//			return createResponse(articleDto, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
+//			ArticleDto _articleDto = articleService.saveArticle(articleDto);
+//			return createResponse(_articleDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
 //		} catch (Exception e) {
 //			logger.error("exception", e);
-//			return createResponse(new ArticleDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
+//			return createResponse(new ArticleDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
 //		}
 //	}
-//
-//	@PostMapping(value = "/api/doc/saveContent", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
-//			MediaType.APPLICATION_JSON_VALUE })
-//	public ResponseEntity<RestResponse<ArticleDto>> saveArticleContent(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @ModelAttribute ArticleDto articleDto, BindingResult bindingResult) {
-//		try {
-//			logger.info("save article process");
-//			logger.info("received token bearer --- {}", authorization);
-//			articleDto.setUsername(username);
-//			articleDto.setToken(getTokenFromHeader(authorization));
-//			articleDto = articleService.saveArticle(articleDto);
-//			return createResponse(articleDto, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
-//		} catch (Exception e) {
-//			logger.error("exception", e);
-//			return createResponse(new ArticleDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
-//		}
-//	}
+
+	@GetMapping(value = "/api/doc/getContentId", produces = {
+			MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<RestResponse<Long>> getContentId(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username) {
+		try {
+			logger.info("get content id");
+			logger.info("received token bearer --- {}", authorization);
+			Long contentId = articleService.getContentId();
+			return createResponse(contentId, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
+		} catch (Exception e) {
+			logger.error("exception", e);
+			return createResponse(0L, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
+		}
+	}
+
+	@PostMapping(value = "/api/doc/saveContent", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
+			MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<RestResponse<ArticleContentDto>> saveArticleContent(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @Valid @RequestBody ArticleContentDto articleContentDto) {
+		try {
+			logger.info("save article content");
+			logger.info("received token bearer --- {}", authorization);
+			articleContentDto.setUsername(username);
+			articleContentDto.setToken(getTokenFromHeader(authorization));
+			articleContentDto = articleService.saveContent(articleContentDto);
+			return createResponse(articleContentDto, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
+		} catch (Exception e) {
+			logger.error("exception", e);
+			return createResponse(new ArticleContentDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
+		}
+	}
 }

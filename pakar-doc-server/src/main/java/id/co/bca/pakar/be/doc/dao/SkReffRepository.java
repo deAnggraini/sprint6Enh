@@ -1,6 +1,5 @@
 package id.co.bca.pakar.be.doc.dao;
 
-import id.co.bca.pakar.be.doc.model.ArticleSkReff;
 import id.co.bca.pakar.be.doc.model.SkRefference;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -8,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface SkReffRepository extends CrudRepository<ArticleSkReff, Long> {
+public interface SkReffRepository extends CrudRepository<SkRefference, Long> {
     @Query("SELECT m.skRefference FROM ArticleSkReff m " +
             "WHERE m.article.id=:articleId " +
             "AND m.deleted IS FALSE " +
@@ -16,4 +15,10 @@ public interface SkReffRepository extends CrudRepository<ArticleSkReff, Long> {
             "AND m.article.deleted IS FALSE " +
             "ORDER BY m.skRefference.id ASC ")
     Iterable<SkRefference> findByArticleId(@Param("articleId") Long articleId);
+
+    @Query("SELECT m FROM SkRefference m " +
+            "WHERE m.title LIKE %:keyword% " +
+            "AND m.deleted IS FALSE "+
+            "ORDER BY m.id ASC ")
+    Iterable<SkRefference> searchSkReffLike(@Param("keyword") String keyword);
 }
