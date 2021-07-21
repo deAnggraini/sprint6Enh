@@ -78,4 +78,93 @@ public abstract class BaseController {
 			String errorMessage) {
 		return new ResponseEntity<>(new RestResponse<>(dataList, errorCode, errorMessage), HttpStatus.OK);
 	}
+
+	// login
+	protected class RestResponses<T> {
+		@JsonProperty("data")
+		private T data;
+		@JsonProperty("status")
+		private ApiStatus2 apiStatus;
+
+		public RestResponses(T pData) {
+			this.data = pData;
+		}
+
+		public RestResponses(T pData, String errorCode, String errorMessage, String alertMessage, Integer failCount) {
+			this.data = pData;
+			this.apiStatus = new ApiStatus2(errorCode, errorMessage, alertMessage, failCount);
+		}
+
+		public T getData() {
+			return data;
+		}
+
+		public void setData(T pData) {
+			this.data = pData;
+		}
+	}
+
+	protected class ApiStatus2 {
+		@JsonProperty("code")
+		private String code;
+		@JsonProperty("message")
+		private String message;
+		@JsonProperty("alert")
+		private String alert;
+		@JsonProperty("failCount")
+		private Integer failCount;
+
+		public ApiStatus2() {
+			super();
+		}
+
+		public ApiStatus2(String code, String message, String alert, int failCount) {
+			super();
+			this.code = code;
+			this.message = message;
+			this.alert = alert;
+			this.failCount = failCount;
+		}
+
+		public String getCode() {
+			return code;
+		}
+
+		public void setCode(String code) {
+			this.code = code;
+		}
+
+		public String getMessage() {
+			return message;
+		}
+
+		public void setMessage(String message) {
+			this.message = message;
+		}
+
+		public String getAlert() {
+			return alert;
+		}
+
+		public void setAlert(String alert) {
+			this.alert = alert;
+		}
+
+		public Integer getFailCount() {
+			return failCount;
+		}
+
+		public void setFailCount(Integer failCount) {
+			this.failCount = failCount;
+		}
+	}
+
+	protected <T> ResponseEntity<RestResponses<T>> createResponses(T data, String errorCode, String errorMessage, String alertMessage, int failCount) {
+		return new ResponseEntity<>(new RestResponses<>(data, errorCode, errorMessage, alertMessage, failCount), HttpStatus.OK);
+	}
+
+	protected <T> ResponseEntity<RestResponses<List<T>>> createResponses(List<T> dataList, String errorCode,
+																	   String errorMessage, String alertMessage, int failCount) {
+		return new ResponseEntity<>(new RestResponses<>(dataList, errorCode, errorMessage, alertMessage, failCount), HttpStatus.OK);
+	}
 }
