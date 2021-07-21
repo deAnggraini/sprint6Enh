@@ -36,6 +36,8 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
         HashMap<String, String> responseStatus = new HashMap<>();
         responseStatus.put("code", Constant.ApiResponseCode.INCORRECT_USERNAME_PASSWORD.getAction()[0]);
         responseStatus.put("message", Constant.ApiResponseCode.INCORRECT_USERNAME_PASSWORD.getAction()[1]);
+		responseStatus.put("alert", Constant.ApiResponseCode.INCORRECT_USERNAME_PASSWORD.getAction()[1]);
+		responseStatus.put("failCount", Constant.ApiResponseCode.INCORRECT_USERNAME_PASSWORD.getAction()[1]);
 
         body.put("data", 0);
         body.put("status", responseStatus);

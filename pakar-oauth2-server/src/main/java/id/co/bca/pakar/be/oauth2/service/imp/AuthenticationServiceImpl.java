@@ -1,8 +1,10 @@
 package id.co.bca.pakar.be.oauth2.service.imp;
 
+import id.co.bca.pakar.be.oauth2.common.Constant;
 import id.co.bca.pakar.be.oauth2.dao.RoleRepository;
 import id.co.bca.pakar.be.oauth2.dao.UserProfileRepository;
 import id.co.bca.pakar.be.oauth2.dto.*;
+import id.co.bca.pakar.be.oauth2.model.AuditLogin;
 import id.co.bca.pakar.be.oauth2.model.UserProfile;
 import id.co.bca.pakar.be.oauth2.model.UserRole;
 import id.co.bca.pakar.be.oauth2.service.AuthenticationService;
@@ -182,4 +184,32 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			throw new Exception("generate new token fail");
 		}
 	}
+
+	/**
+	 * generate new access token
+	 */
+	@Override
+	public EaiErrorSchemaLoginResponse loginResponse(String username) throws Exception {
+		logger.info("--- processing count failed login ---");
+		AuditLogin auditLogin = userProfileRepository.findFailedLogin(username);
+		EaiErrorSchemaLoginResponse dto = new EaiErrorSchemaLoginResponse();
+		Integer sisaLogin = null;
+		if (auditLogin.getFailed_login() <= 2) {
+			dto.setErroCode("01");
+			dto.setFailCount(auditLogin.getFailed_login());
+			dto.setAlertMessage(null);
+//			dto.setErrorMessage(Constant.ApiResponseCode.INCORRECT_USERNAME_PASSWORD));
+		} else if (auditLogin.getFailed_login() >2 && auditLogin.getFailed_login() <5){
+			dto.setErroCode("01");
+			dto.setFailCount(auditLogin.getFailed_login());
+			sisaLogin = 5 - auditLogin.getFailed_login();
+			dto.setAlertMessage("You Have "+ sisaLogin +" remaining attemps to login");
+		} else {
+			dto.setErroCode("01");
+			dto.setFailCount(auditLogin.getFailed_login());
+			dto.setAlertMessage("user "+ username +" currently locked. Please try again in 29 minutes");
+		}
+		return dto;
+	}
+
 }

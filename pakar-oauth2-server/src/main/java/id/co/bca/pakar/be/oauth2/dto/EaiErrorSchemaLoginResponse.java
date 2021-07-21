@@ -10,6 +10,24 @@ public class EaiErrorSchemaLoginResponse {
 	private String erroCode;
 	@JsonProperty("ErrorMessage")
 	private Map<String, String> errorMessage = new HashMap<>();
+	@JsonProperty("AlertMessage")
+	private String alertMessage ;
+	@JsonProperty("FailCount")
+	private Integer failCount;
+
+	public String getAlertMessage() {
+		return alertMessage;
+	}
+	public void setAlertMessage(String alertMessage) {
+		this.alertMessage = alertMessage;
+	}
+	public Integer getFailCount() {
+		return failCount;
+	}
+	public void setFailCount(Integer failCount) {
+		this.failCount = failCount;
+	}
+
 	public String getErroCode() {
 		return erroCode;
 	}
