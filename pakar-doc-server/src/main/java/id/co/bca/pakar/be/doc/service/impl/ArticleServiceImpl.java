@@ -1,12 +1,11 @@
 package id.co.bca.pakar.be.doc.service.impl;
 
 import id.co.bca.pakar.be.doc.dao.*;
-import id.co.bca.pakar.be.doc.dto.ArticleDto;
-import id.co.bca.pakar.be.doc.dto.BaseArticleDto;
-import id.co.bca.pakar.be.doc.dto.ContentTemplateDto;
+import id.co.bca.pakar.be.doc.dto.*;
+import id.co.bca.pakar.be.doc.exception.DataNotFoundException;
 import id.co.bca.pakar.be.doc.model.*;
 import id.co.bca.pakar.be.doc.service.ArticleService;
-import id.co.bca.pakar.be.doc.util.TreeContents;
+import id.co.bca.pakar.be.doc.util.TreeArticleContents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class ArticleServiceImpl implements ArticleService {
@@ -37,7 +35,19 @@ public class ArticleServiceImpl implements ArticleService {
     private ArticleTemplateContentRepository articleTemplateContentRepository;
 
     @Autowired
+    private ArticleContentRepository articleContentRepository;
+
+    @Autowired
     private StructureRepository structureRepository;
+
+    @Autowired
+    private SkReffRepository skReffRepository;
+
+    @Autowired
+    private ArticleImageRepository articleImageRepository;
+
+    @Autowired
+    private ArticleRefferenceRepository articleRefferenceRepository;
 
     @Override
     @Transactional
@@ -54,42 +64,127 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     /**
-     *
-     * @param articleDto
+     * @param generateArticleDto
      * @return
      */
     @Override
     @Transactional(rollbackOn = {Exception.class})
-    public Long generateArticle(BaseArticleDto articleDto) {
+    public ArticleDto generateArticle(GenerateArticleDto generateArticleDto) throws Exception {
         try {
             logger.info("generate article process");
-            ArticleTemplateStructure articleTemplateStructure = articleTemplateStructureRepository.findArticleTemplates(articleDto.getTemplateId(), articleDto.getStructureId());
+            ArticleTemplateStructure articleTemplateStructure = articleTemplateStructureRepository.findArticleTemplates(generateArticleDto.getTemplateId(), generateArticleDto.getStructureId());
             ArticleTemplate template = articleTemplateStructure.getArticleTemplate();
+
+            logger.info("populate article");
             Article article = new Article();
-            article.setCreatedBy(articleDto.getUsername());
-            article.setJudulArticle(articleDto.getJudulArticle());
+            article.setCreatedBy(generateArticleDto.getUsername());
+            article.setJudulArticle(generateArticleDto.getJudulArticle());
             article.setArticleTemplate(template.getId());
-            article.setArticleUsedBy(articleDto.getUsedBy());
-            Structure structure = structureRepository.findStructure(articleDto.getStructureId());
+            article.setArticleUsedBy(generateArticleDto.getUsedBy());
+            Structure structure = structureRepository.findStructure(generateArticleDto.getStructureId());
             article.setStructure(structure);
-            article.setShortDescription(template.getDescription());
+
+            logger.info("populate article contents");
+            Iterable<ArticleTemplateContent> templateContents = articleTemplateContentRepository.findByTemplateId(template.getId());
+            for (ArticleTemplateContent articleTemplateContent : templateContents) {
+                ArticleContent articleContent = new ArticleContent();
+                articleContent.setCreatedBy(generateArticleDto.getUsername());
+                articleContent.setName(replaceTextByParams(articleTemplateContent.getName(), generateArticleDto.getParamKey(), generateArticleDto.getParamValue()));
+                articleContent.setLevel(articleTemplateContent.getLevel());
+                articleContent.setSort(articleTemplateContent.getSort());
+                articleContent.setTopicCaption(articleTemplateContent.getTopicCaption());
+                articleContent.setTopicContent(articleTemplateContent.getTopicContent());
+                article.getArticleContents().add(articleContent);
+                articleContent.setArticle(article);
+            }
 
             logger.info("save article");
             article = articleRepository.save(article);
+            logger.info("generate article success");
 
-            // save content article
-            Iterable<ArticleTemplateContent> templateContents = articleTemplateContentRepository.findByTemplateId(template.getId());
-            List<ContentTemplateDto> contentTemplateDtos = new TreeContents().menuTree(mapToList(templateContents));
-            for(ContentTemplateDto contentTemplateDto : contentTemplateDtos) {
-
+            // reset parent for article content
+            for (ArticleContent articleContent : article.getArticleContents()) {
+                for (ArticleTemplateContent articleTemplateContent : templateContents) {
+                    if (articleContent.getName().equals(replaceTextByParams(articleTemplateContent.getName(), generateArticleDto.getParamKey(), generateArticleDto.getParamValue()))) {
+                        if (articleTemplateContent.getParent() == null) {
+                            articleContent.setParent(0L);
+                            articleContentRepository.save(articleContent);
+                            break;
+                        } else {
+                            Optional<ArticleTemplateContent> parent = articleTemplateContentRepository.findById(articleTemplateContent.getId());
+                            if(!parent.isEmpty()) {
+                                ArticleTemplateContent _parent = parent.get();
+                                for(ArticleContent articleContent1 : article.getArticleContents()) {
+                                    if(articleContent1.getName().equals(replaceTextByParams(_parent.getName(), generateArticleDto.getParamKey(), generateArticleDto.getParamValue()))) {
+                                        articleContent.setParent(articleContent1.getId());
+                                        articleContentRepository.save(articleContent);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
-            return article.getId();
+
+            logger.info("populate response article");
+            ArticleDto articleDto = new ArticleDto();
+            articleDto.setId(article.getId());
+            articleDto.setJudulArticle(article.getJudulArticle());
+            articleDto.setShortDescription(article.getShortDescription());
+            List<ArticleContentDto> articleContentDtos = new TreeArticleContents().menuTree(mapToListArticleContentDto(article.getArticleContents()));
+            articleDto.setContents(articleContentDtos);
+
+            return articleDto;
         } catch (Exception e) {
-            logger.error("",e);
-            return 0L;
+            logger.error("", e);
+            throw new Exception("generate article failed");
         }
     }
 
+    /**
+     *
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    @Override
+    @Transactional
+    public ArticleDto getArticleById(Long id) throws Exception {
+        try {
+            Optional<Article> articleOpt = articleRepository.findById(id);
+
+            if(articleOpt.isEmpty()) {
+                throw new DataNotFoundException("not found article with id --> "+ id);
+            }
+
+            Article article = articleOpt.get();
+            ArticleDto articleDto = new ArticleDto();
+            articleDto.setId(article.getId());
+            articleDto.setJudulArticle(article.getJudulArticle());
+            articleDto.setShortDescription(article.getShortDescription());
+            List<ArticleContentDto> articleContentDtos = new TreeArticleContents().menuTree(mapToListArticleContentDto(article.getArticleContents()));
+            articleDto.setContents(articleContentDtos);
+            Iterable<SkRefference> skRefferenceList = skReffRepository.findByArticleId(id);
+            articleDto.setSkReff(mapToSkReffDto(skRefferenceList));
+            Optional<Images> imageOpt = articleImageRepository.findByArticleId(article.getId());
+            if(!imageOpt.isEmpty()) {
+                Images image = imageOpt.get();
+                articleDto.setImage(image.getUri());
+            }
+            Iterable<Article> realatedArticles = articleRefferenceRepository.findByArticleId(article.getId());
+            articleDto.setRelated(mapToRelatedArticleDto(realatedArticles));
+            return articleDto;
+        } catch (Exception e) {
+            logger.error("exception", e);
+            throw new Exception("get article failed");
+        }
+    }
+
+    /**
+     * @param articleDto
+     * @return
+     */
     @Override
     @Transactional(rollbackOn = {Exception.class})
     public ArticleDto saveArticle(ArticleDto articleDto) {
@@ -97,53 +192,110 @@ public class ArticleServiceImpl implements ArticleService {
             logger.info("save article process");
             return null;
         } catch (Exception e) {
-            logger.error("",e);
+            logger.error("", e);
             return new ArticleDto();
         }
     }
 
-    private List<ContentTemplateDto> mapToList(Iterable<ArticleTemplateContent> iterable) {
-        List<ContentTemplateDto> listOfContents = new ArrayList<>();
-        for (ArticleTemplateContent content : iterable) {
-            ContentTemplateDto contentDto = new ContentTemplateDto();
+    private List<ArticleContentDto> mapToListArticleContentDto(Iterable<ArticleContent> iterable) {
+        List<ArticleContentDto> listOfContents = new ArrayList<>();
+        for (ArticleContent content : iterable) {
+            ArticleContentDto contentDto = new ArticleContentDto();
             contentDto.setId(content.getId());
             contentDto.setLevel(content.getLevel());
             contentDto.setOrder(content.getSort());
             contentDto.setTitle(content.getName());
-            contentDto.setDesc(content.getDescription());
-            contentDto.setParams(getParams(content.getName()));
+            if(content.getLevel().intValue() == 1)
+                contentDto.setDesc(content.getDescription());
             contentDto.setParent(content.getParent());
             listOfContents.add(contentDto);
         }
         return listOfContents;
     }
 
+    private List<SkReffDto> mapToSkReffDto(Iterable<SkRefference> iterable) {
+        List<SkReffDto> listOfDtos = new ArrayList<>();
+        for (SkRefference entity : iterable) {
+            SkReffDto dto = new SkReffDto();
+            dto.setId(entity.getId());
+            dto.setTitle(entity.getTitle());
+            dto.setSkNumber(entity.getSkNumber());
+            listOfDtos.add(dto);
+        }
+        return listOfDtos;
+    }
+
+    private List<ArticleDto> mapToRelatedArticleDto(Iterable<Article> iterable) {
+        List<ArticleDto> listOfDtos = new ArrayList<>();
+        for (Article entity : iterable) {
+            ArticleDto dto = new ArticleDto();
+            dto.setId(entity.getId());
+            dto.setVideoLink(entity.getVideLink());
+            listOfDtos.add(dto);
+        }
+        return listOfDtos;
+    }
+
+    /**
+     * get param from template
+     *
+     * @param text
+     * @return
+     */
     private List<String> getParams(String text) {
         logger.debug("split param tag {}", paramtTag);
         String[] tags = paramtTag.split("\\|");
         List<String> params = new ArrayList<>();
-        for(int i = 0; i < tags.length; i++) {
+        for (int i = 0; i < tags.length; i++) {
             String tagEl = tags[i];
             Character openTag = tagEl.charAt(0);
             Character closeTag = tagEl.charAt(1);
 
             boolean startExtract = false;
             String param = "";
-            for(int j = 0 ; j < text.length(); j++) {
-                if(text.charAt(j) == closeTag) {
+            for (int j = 0; j < text.length(); j++) {
+                if (text.charAt(j) == closeTag) {
                     startExtract = false;
                     params.add(param.trim());
                 }
 
-                if(startExtract) {
+                if (startExtract) {
                     param = param + text.charAt(j);
                 }
 
-                if(text.charAt(j) == openTag) {
+                if (text.charAt(j) == openTag) {
                     startExtract = true;
                 }
             }
         }
         return params;
+    }
+
+    /**
+     * replace accordeon text with params
+     *
+     * @param replacedText
+     * @param paramKey
+     * @param paramValue
+     * @return
+     */
+    private String replaceTextByParams(String replacedText, String paramKey, String paramValue) {
+        logger.debug("split param tag {}", paramtTag);
+        String[] tags = paramtTag.split("\\|");
+        String key = paramKey;
+        for (int i = 0; i < tags.length; i++) {
+            String tagEl = tags[i];
+            Character openTag = tagEl.charAt(0);
+            Character closeTag = tagEl.charAt(1);
+            paramKey = openTag + paramKey + closeTag;
+            logger.debug("param key {} ---> param value {}", paramKey, paramValue);
+            if (replacedText.contains(paramKey)) {
+                replacedText = replacedText.replace(paramKey, paramValue);
+                break;
+            }
+            paramKey = key;
+        }
+        logger.debug("replaced content title {}", replacedText);
+        return replacedText;
     }
 }

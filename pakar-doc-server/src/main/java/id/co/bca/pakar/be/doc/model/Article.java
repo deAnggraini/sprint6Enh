@@ -1,13 +1,8 @@
 package id.co.bca.pakar.be.doc.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "t_article")
@@ -17,7 +12,9 @@ public class Article extends EntityBase {
 	@GeneratedValue(generator = "articleSeqGen")
 	@Column(name = "id")
 	private Long id;
-	
+	@Version
+	@Column(name = "optlock", columnDefinition = "integer DEFAULT 0", nullable = false)
+	private Long version;
 	@ManyToOne
 	@JoinColumn(name = "structure_id", nullable = false)
 	private Structure structure;
@@ -32,7 +29,13 @@ public class Article extends EntityBase {
 	private String articleUsedBy;
 
 	@Column(name = "short_desc", columnDefinition="TEXT", length = 1000, nullable = false)
-	private String shortDescription;
+	private String shortDescription = new String();
+
+	@Column(name = "video_link")
+	private String videLink;
+
+	@OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	private List<ArticleContent> articleContents = new ArrayList<>();
 
 	public Long getId() {
 		return id;
@@ -40,6 +43,14 @@ public class Article extends EntityBase {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public Long getVersion() {
+		return version;
+	}
+
+	public void setVersion(Long version) {
+		this.version = version;
 	}
 
 	public Structure getStructure() {
@@ -80,5 +91,21 @@ public class Article extends EntityBase {
 
 	public void setShortDescription(String shortDescription) {
 		this.shortDescription = shortDescription;
+	}
+
+	public List<ArticleContent> getArticleContents() {
+		return articleContents;
+	}
+
+	public void setArticleContents(List<ArticleContent> articleContents) {
+		this.articleContents = articleContents;
+	}
+
+	public String getVideLink() {
+		return videLink;
+	}
+
+	public void setVideLink(String videLink) {
+		this.videLink = videLink;
 	}
 }

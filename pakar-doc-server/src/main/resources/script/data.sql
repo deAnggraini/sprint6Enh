@@ -83,3 +83,15 @@ INSERT INTO public.t_article_template_image
 (id, created_by, created_date, deleted, modify_by, modify_date, article_template_id, image_id)
 VALUES(nextval('article_template_image_seq'), 'system',now()::DATE, 'f','system',now()::DATE, 2, 52);
 
+INSERT INTO public.r_sk_reff
+(id, created_by, created_date, deleted, modify_by, modify_date, title, sk_number)
+VALUES(nextval('public.sk_reff_seq'), 'system', now()::DATE, false, NULL, NULL, 'Perihal Ketentuan Tahapan 1', 'no: 025/SKSE/TL/2020');
+(id, created_by, created_date, deleted, modify_by, modify_date, title, sk_number)
+VALUES(nextval('public.sk_reff_seq'), 'system', now()::DATE, false, NULL, NULL, 'Perihal Ketentuan Tahapan 2', 'no: 026/SKSE/TL/2020');
+
+INSERT INTO public.t_article_sk_reff
+(id, created_by, created_date, deleted, modify_by, modify_date, article_id, sk_reff_id)
+VALUES(nextval('public.article_sk_reff_seq'), 'system', now()::DATE, false, NULL, NULL, 32, 1);
+INSERT INTO public.t_article_sk_reff
+(id, created_by, created_date, deleted, modify_by, modify_date, article_id, sk_reff_id)
+VALUES(nextval('public.article_sk_reff_seq'), 'system', now()::DATE, false, NULL, NULL, 32, 2);

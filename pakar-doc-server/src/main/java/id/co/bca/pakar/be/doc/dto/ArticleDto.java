@@ -1,8 +1,6 @@
 package id.co.bca.pakar.be.doc.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import id.co.bca.pakar.be.doc.model.SkRefference;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +10,7 @@ public class ArticleDto extends BaseArticleDto {
     private String shortDescription;
 
     @JsonProperty("image")
-    private MultipartFile image;
+    private String image;
 
     @JsonProperty("video")
     private String videoLink;
@@ -21,10 +19,10 @@ public class ArticleDto extends BaseArticleDto {
     private List<ArticleContentDto> contents = new ArrayList<>();
 
     @JsonProperty("references")
-    private List<SkRefference> refferences = new ArrayList<>();
+    private List<SkReffDto> skReff = new ArrayList<>();
 
     @JsonProperty("related")
-    private List<RelatedArticleDto> related = new ArrayList<>();
+    private List<ArticleDto> related = new ArrayList<>();
 
     @JsonProperty("suggestions")
     private List<SuggestionArticleDto> suggestions = new ArrayList<>();
@@ -37,11 +35,11 @@ public class ArticleDto extends BaseArticleDto {
         this.shortDescription = shortDescription;
     }
 
-    public MultipartFile getImage() {
+    public String getImage() {
         return image;
     }
 
-    public void setImage(MultipartFile image) {
+    public void setImage(String image) {
         this.image = image;
     }
 
@@ -61,19 +59,19 @@ public class ArticleDto extends BaseArticleDto {
         this.contents = contents;
     }
 
-    public List<SkRefference> getRefferences() {
-        return refferences;
+    public List<SkReffDto> getSkReff() {
+        return skReff;
     }
 
-    public void setRefferences(List<SkRefference> refferences) {
-        this.refferences = refferences;
+    public void setSkReff(List<SkReffDto> skReff) {
+        this.skReff = skReff;
     }
 
-    public List<RelatedArticleDto> getRelated() {
+    public List<ArticleDto> getRelated() {
         return related;
     }
 
-    public void setRelated(List<RelatedArticleDto> related) {
+    public void setRelated(List<ArticleDto> related) {
         this.related = related;
     }
 

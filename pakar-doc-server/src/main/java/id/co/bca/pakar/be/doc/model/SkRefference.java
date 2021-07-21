@@ -11,7 +11,14 @@ public class SkRefference extends EntityBase {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "number")
+    @Version
+    @Column(name = "optlock", columnDefinition = "integer DEFAULT 0", nullable = false)
+    private Long version;
+
+    @Column(name = "title")
+    private String title;
+
+    @Column(name = "sk_number")
     public String skNumber;
 
     public Long getId() {
@@ -20,6 +27,22 @@ public class SkRefference extends EntityBase {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getSkNumber() {
