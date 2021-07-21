@@ -48,6 +48,11 @@ $border-color-active: #0F5EA9;
   }
 }
 
+:host ::ng-deep .multi-select-search.border-less {
+  border: none;
+  padding: 0 !important;
+}
+
 :host ::ng-deep .dropdown-menu {
   border: 1px solid $border-color-active;
   border-top-left-radius: 0;

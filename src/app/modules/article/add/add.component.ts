@@ -62,9 +62,8 @@ export class AddComponent implements OnInit, OnDestroy {
     const checkUniqSubrcr = this.article.checkUniq(value.trim())
       .pipe(
         catchError((err) => {
-          // this.dataForm.controls['title'].setAsyncValidators() //.updateValueAndValidity();
           this.hasError = true;
-          this.errorMsg = err;
+          this.errorMsg = JSON.parse(err.message).message;
           return of(null);
         }),
         map(resp => resp),
@@ -88,7 +87,7 @@ export class AddComponent implements OnInit, OnDestroy {
       this.subscriptions.push(
         this.article.generate(params).subscribe((resp: ArticleDTO) => {
           this.article.formData = resp;
-          this.router.navigate(['/article/form']);
+          this.router.navigate([`/article/form/${resp.id}`]);
         })
       );
     } else {

@@ -8,10 +8,19 @@ import { BehaviorSubject, Subscription, of } from 'rxjs';
 import { Option } from 'src/app/utils/_model/option';
 import { SkReferenceService } from '../../_services/sk-reference.service';
 import { AuthService, UserModel } from '../../auth';
-import { ArticleDTO, ArticleContentDTO } from '../../_model/article.dto';
+import { ArticleDTO, ArticleContentDTO, ArticleParentDTO } from '../../_model/article.dto';
 import { FormGroup, FormBuilder, Validators, FormControl, ValidationErrors } from '@angular/forms';
 import { StrukturService } from '../../_services/struktur.service';
 import { catchError, map } from 'rxjs/operators';
+
+const TOOL_TIPS = [
+  'Berisi aturan/kaidah/ketetapan/syarat/kriteria atas produk/aplikasi yang harus dipahami pembaca sebelum melakukan prosedur atas produk/aplikasi tersebut; dapat dituangkan dalam bentuk kalimat ataupun tabel.',
+  'Berisi proses/alur kerja/tahapan/cara kerja yang terkait atas suatu produk/aplikasi, biasanya dijelaskan dalam bentuk diagram alur.',
+  'Berisi list-list formulir apa saja yang digunakan atas suatu produk/aplikasi.',
+  'Berisi aturan/kaidah/ketetapan/syarat/kriteria atas produk/aplikasi yang harus dipahami pembaca sebelum melakukan prosedur atas produk/aplikasi tersebut; dapat dituangkan dalam bentuk kalimat ataupun tabel.',
+  'Berisi proses/alur kerja/tahapan/cara kerja yang terkait atas suatu produk/aplikasi, biasanya dijelaskan dalam bentuk diagram alur.',
+  'Berisi list-list formulir apa saja yang digunakan atas suatu produk/aplikasi.'
+];
 
 const defaultValue: ArticleDTO = {
   id: 0,
@@ -119,6 +128,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   };
 
   hasError: boolean = false;
+  errorMsg: string = '';
   user: UserModel;
   isEdit: boolean = false;
   dataForm: FormGroup;
@@ -130,6 +140,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   locationOptions: BehaviorSubject<Option[]> = new BehaviorSubject([]);
 
   // accordion
+  tooltips = TOOL_TIPS;
   isAccEdit: boolean = false;
   accForm: FormGroup;
 
@@ -157,20 +168,29 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   btnAddClick(e, data: ArticleContentDTO) {
     console.log({ e, data });
     const maxSort: number = this.findMaxSort(data.children);
+    const listParent: ArticleParentDTO[] = JSON.parse(JSON.stringify(data.listParent));
+    if (data.level >= 2) {
+      listParent.push({ id: 0, no: data.no, title: data.title });
+    }
     const newNode: ArticleContentDTO = {
       id: 0,
       title: 'New Data',
       level: data.level + 1,
       parent: data.id,
       sort: maxSort + 1,
-      children: []
+      children: [],
+      expanded: true,
+      listParent,
+      no: `${data.children.length + 1}`
     }
+    data.expanded = true;
     data.children.push(newNode);
     e.stopPropagation();
-    console.log('new data', { data });
+    console.log('new data', { newNode });
+    this.cdr.detectChanges();
     return false;
   }
-  btnEditClick(e, data) {
+  btnEditClick(e, data: ArticleContentDTO) {
     console.log({ e, data });
     e.stopPropagation();
     return false;
@@ -185,9 +205,8 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     const checkUniqSubrcr = this.article.checkUniq(value.trim())
       .pipe(
         catchError((err) => {
-          // this.dataForm.controls['title'].setAsyncValidators() //.updateValueAndValidity();
           this.hasError = true;
-          // this.errorMsg = err;
+          this.errorMsg = JSON.parse(err.message).message;
           return of(null);
         }),
         map(resp => resp),
@@ -196,7 +215,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
         resp => {
           if (resp === false) {
             this.hasError = false;
-            // this.errorMsg = '';
+            this.errorMsg = '';
           }
           this.cdr.detectChanges();
         }
@@ -235,20 +254,12 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   // accordion event
-  numberingFormat(data: ArticleContentDTO, index: number, parents: any[]): string {
-    console.log({ data, parents });
-    data.no = `${index}`;
-    if (data.level == 2) {
-      // data.listParent = []
-      return `${index + 1}.`;
-    } else if (data.level == 3) {
-      return `${index + 1}.`;
-    } else if (data.level == 4) {
-      return `${index + 1}.`;
-    } else if (data.level == 5) {
-      return `${index + 1}.`;
-    }
-    return '';
+  numberingFormat(data: ArticleContentDTO): string {
+    // console.log({ data });
+    const listParent = data.listParent;
+    const strNoParent = listParent.map(d => d.no);
+    strNoParent.push(data.no);
+    return strNoParent.join(".");
   }
   accSaveAddEdit() {
 
@@ -261,18 +272,40 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
       })
     );
   }
+  private setDefaultContentValue(children: ArticleContentDTO[], listParent: ArticleParentDTO[]) {
+    if (children && children.length) {
+      children.forEach((d, i) => {
+        d.expanded = false;
+        d.listParent = listParent;
+        if (d.level == 1) {
+          d.no = '';
+          this.setDefaultContentValue(d.children, listParent.concat([]));
+        } else {
+          d.no = `${i + 1}`;
+          const { id, title, no } = d;
+          this.setDefaultContentValue(d.children, listParent.concat([{ id, title, no }]));
+        }
+      });
+    }
+  }
+  private recalculateChildren(children: ArticleContentDTO, listParent: ArticleParentDTO[]) {
 
+  }
   private setArticle(article: ArticleDTO) {
     console.log('setArticle', { article });
     if (article) {
       const locationSelected = this.struktur.findNodeById(article.location);
-      console.log({ locationSelected });
       if (locationSelected) {
         const { id, title, listParent } = locationSelected;
         const concatParent = listParent.map(d => d.title);
         concatParent.push(locationSelected.title);
         article.locationOption = { id: `${id}`, text: title, value: concatParent.join(' > ') };
       }
+
+      // set expanded default value
+      this.setDefaultContentValue(article.contents, []);
+
+      console.log('result', { article });
       this.dataForm.reset(article);
       this.cdr.detectChanges();
     } else {
@@ -394,7 +427,6 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     this.subscriptions.forEach(sb => sb.unsubscribe());
   }
   ngAfterViewInit(): void {
-    console.log('ngAfterViewInit');
     this.finishRender = true;
   }
 

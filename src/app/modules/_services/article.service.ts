@@ -84,7 +84,7 @@ export class ArticleService {
   }
 
   getById(id: number) {
-    return this.apiService.post(`${this._base_url}/getArticle`, { id });
+    return this.apiService.get(`${this._base_url}/getArticle?id=${id}`);
   }
 
 }
