@@ -1,5 +1,6 @@
 :host ::ng-deep .top-bar {
-  position: absolute;
+  position: fixed;
+  z-index: 100;
   top: 50px;
   height: 48px;
   background: #F3F2F1;

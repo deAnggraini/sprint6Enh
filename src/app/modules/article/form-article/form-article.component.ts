@@ -235,6 +235,21 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   // accordion event
+  numberingFormat(data: ArticleContentDTO, index: number, parents: any[]): string {
+    console.log({ data, parents });
+    data.no = `${index}`;
+    if (data.level == 2) {
+      // data.listParent = []
+      return `${index + 1}.`;
+    } else if (data.level == 3) {
+      return `${index + 1}.`;
+    } else if (data.level == 4) {
+      return `${index + 1}.`;
+    } else if (data.level == 5) {
+      return `${index + 1}.`;
+    }
+    return '';
+  }
   accSaveAddEdit() {
 
   }

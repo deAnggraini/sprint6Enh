@@ -11,13 +11,21 @@ export declare interface ArticleRelatedDTO {
     title: string
 }
 
+export declare interface ArticleParentDTO {
+    id: number,
+    title: string,
+    no?: string,
+}
+
 export declare interface ArticleContentDTO {
     id: number,
     title: string,
+    no?: string,
     level: number,
     sort: number,
     parent: number,
     children: ArticleContentDTO[],
+    listParent?: ArticleParentDTO[],
 }
 
 export declare interface ArticleDTO {

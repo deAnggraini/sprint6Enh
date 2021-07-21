@@ -78,9 +78,8 @@
                         <div cdkDropListGroup>
                             <input type="text" class="txt-desc-lvl1"
                                 placeholder="Masukkan kalimat pengantar terkait {{content.title}} disini.">
-                            <!-- <div *ngIf="content.children.length" class="input-accordion-separator"></div> -->
                             <ng-container *ngIf="content.children.length" [ngTemplateOutlet]="accordionChild"
-                                [ngTemplateOutletContext]="{ children: content.children, level:2}">
+                                [ngTemplateOutletContext]="{ children: content.children, level:2, parents:[]}">
                             </ng-container>
                         </div>
                     </mat-expansion-panel>
@@ -158,7 +157,7 @@
     </div>
 </ng-template>
 
-<ng-template #accordionChild let-children="children" let-level="level">
+<ng-template #accordionChild let-children="children" let-level="level" let-parents="parents">
     <div style="border-bottom:1px solid #C8C6C4; height: 10px;"></div>
     <mat-accordion cdkDropList (cdkDropListDropped)="drop($event)" [cdkDropListData]="children"
         [togglePosition]="'before'" hideToggle="false" multi="true">
@@ -169,7 +168,7 @@
                 class="acc-level acc-level-{{level}}">
                 <div class="drag-placeholder" *cdkDragPlaceholder></div>
                 <mat-expansion-panel-header>
-                    <mat-panel-title>{{content.title}}</mat-panel-title>
+                    <mat-panel-title>{{numberingFormat(content, i, parents)}} {{content.title}} {{contents | json}}</mat-panel-title>
                     <ng-container [ngTemplateOutlet]="rightIcon" [ngTemplateOutletContext]="{ data: content}">
                     </ng-container>
                 </mat-expansion-panel-header>
@@ -189,7 +188,7 @@
                         </div>
                     </div>
                     <ng-container *ngIf="content.children.length" [ngTemplateOutlet]="accordionChild"
-                        [ngTemplateOutletContext]="{ children: content.children, level : level+1}">
+                        [ngTemplateOutletContext]="{ children: content.children, level : level+1, parents: parents.concat({id:content.id, no:content.no})}">
                     </ng-container>
                 </div>
             </mat-expansion-panel>
