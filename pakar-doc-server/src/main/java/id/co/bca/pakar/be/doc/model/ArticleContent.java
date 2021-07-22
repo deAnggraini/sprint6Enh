@@ -39,4 +39,6 @@ public class ArticleContent extends CommonArticleContent {
     public void setVersion(Long version) {
         this.version = version;
     }
+
+
 }

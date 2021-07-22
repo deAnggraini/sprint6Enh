@@ -2,6 +2,7 @@ package id.co.bca.pakar.be.doc.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ArticleContentDto extends BaseDto {
@@ -20,11 +21,13 @@ public class ArticleContentDto extends BaseDto {
     @JsonProperty("topicContent")
     private String topicContent;
     @JsonProperty("children")
-    private List<ArticleContentDto> listParent;
+    private List<ArticleContentDto> childs;
     @JsonProperty("parent")
     private Long parent = 0L;
     @JsonProperty("articleId")
     private Long articleId;
+    @JsonProperty("listParent")
+    private List<ArticleContentDto> listParent = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -66,12 +69,12 @@ public class ArticleContentDto extends BaseDto {
         this.topicContent = topicContent;
     }
 
-    public List<ArticleContentDto> getListParent() {
-        return listParent;
+    public List<ArticleContentDto> getChilds() {
+        return childs;
     }
 
-    public void setListParent(List<ArticleContentDto> listParent) {
-        this.listParent = listParent;
+    public void setChilds(List<ArticleContentDto> childs) {
+        this.childs = childs;
     }
 
     public Long getOrder() {
@@ -116,8 +119,9 @@ public class ArticleContentDto extends BaseDto {
                 ", level=" + level +
                 ", topicTitle='" + topicTitle + '\'' +
                 ", topicContent='" + topicContent + '\'' +
-                ", listParent=" + listParent +
+                ", childs=" + childs +
                 ", parent=" + parent +
+                ", articleId=" + articleId +
                 '}';
     }
 }
