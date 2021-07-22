@@ -238,12 +238,16 @@ public class ArticleServiceImpl implements ArticleService {
             articleContent.setTopicContent(articleContentDto.getTopicContent());
             articleContent.setSort(articleContentDto.getOrder());
             articleContent.setLevel(articleContentDto.getLevel());
+            Optional<ArticleContent> parentOpt = articleContentRepository.findById(articleContentDto.getParent());
+            if(!parentOpt.isEmpty()) {
+                articleContent.setParent(parentOpt.get().getId());
+            }
             Optional<Article> articleOpt = articleRepository.findById(articleContentDto.getArticleId());
             if(!articleOpt.isEmpty()) {
                 articleContent.setArticle(articleOpt.get());
             }
             logger.info("save article content to db");
-            articleContentRepository.save(articleContent);
+            articleContent = articleContentRepository.save(articleContent);
             return articleContentDto;
         } catch (Exception e) {
             logger.error("exception",e);
