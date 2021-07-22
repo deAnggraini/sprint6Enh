@@ -2,6 +2,7 @@ package id.co.bca.pakar.be.doc.api;
 
 import id.co.bca.pakar.be.doc.common.Constant;
 import id.co.bca.pakar.be.doc.dto.*;
+import id.co.bca.pakar.be.doc.exception.AccesDeniedDeleteContentException;
 import id.co.bca.pakar.be.doc.exception.DataNotFoundException;
 import id.co.bca.pakar.be.doc.model.ArticleContent;
 import id.co.bca.pakar.be.doc.service.ArticleService;
@@ -297,6 +298,28 @@ public class ArticleController extends BaseController {
 		} catch (Exception e) {
 			logger.error("exception", e);
 			return createResponse(new ArticleContentDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
+		}
+	}
+
+	@PostMapping(value = "/api/doc/deleteContent", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
+			MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<RestResponse<Boolean>> deleteArticleContent(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @Valid @RequestBody DeleteContentDto deleteContentDto) {
+		try {
+			logger.info("save article content");
+			logger.info("received token bearer --- {}", authorization);
+			deleteContentDto.setUsername(username);
+			deleteContentDto.setToken(getTokenFromHeader(authorization));
+			Boolean status = articleService.deleteContent(deleteContentDto);
+			return createResponse(status, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, Locale.ENGLISH));
+		} catch (DataNotFoundException e) {
+			logger.error("exception", e);
+			return createResponse(Boolean.FALSE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, Locale.ENGLISH));
+		} catch (AccesDeniedDeleteContentException e) {
+			logger.error("exception", e);
+			return createResponse(Boolean.FALSE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("access.denied.delete.content", new Object[] {username}, Locale.ENGLISH));
+		} catch (Exception e) {
+			logger.error("exception", e);
+			return createResponse(Boolean.FALSE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, Locale.ENGLISH));
 		}
 	}
 }

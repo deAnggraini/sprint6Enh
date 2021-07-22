@@ -1,7 +1,10 @@
 package id.co.bca.pakar.be.doc.service.impl;
 
+import id.co.bca.pakar.be.doc.client.ApiResponseWrapper;
+import id.co.bca.pakar.be.doc.client.PakarOauthClient;
 import id.co.bca.pakar.be.doc.dao.*;
 import id.co.bca.pakar.be.doc.dto.*;
+import id.co.bca.pakar.be.doc.exception.AccesDeniedDeleteContentException;
 import id.co.bca.pakar.be.doc.exception.DataNotFoundException;
 import id.co.bca.pakar.be.doc.model.*;
 import id.co.bca.pakar.be.doc.service.ArticleService;
@@ -10,10 +13,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+
+import static id.co.bca.pakar.be.doc.common.Constant.Headers.BEARER;
+import static id.co.bca.pakar.be.doc.common.Constant.Roles.ROLE_ADMIN;
 
 @Service
 public class ArticleServiceImpl implements ArticleService {
@@ -48,6 +58,9 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Autowired
     private ArticleRefferenceRepository articleRefferenceRepository;
+
+    @Autowired
+    private PakarOauthClient pakarOauthClient;
 
     @Override
     @Transactional
@@ -112,10 +125,10 @@ public class ArticleServiceImpl implements ArticleService {
                             break;
                         } else {
                             Optional<ArticleTemplateContent> parent = articleTemplateContentRepository.findById(articleTemplateContent.getId());
-                            if(!parent.isEmpty()) {
+                            if (!parent.isEmpty()) {
                                 ArticleTemplateContent _parent = parent.get();
-                                for(ArticleContent articleContent1 : article.getArticleContents()) {
-                                    if(articleContent1.getName().equals(replaceTextByParams(_parent.getName(), generateArticleDto.getParamKey(), generateArticleDto.getParamValue()))) {
+                                for (ArticleContent articleContent1 : article.getArticleContents()) {
+                                    if (articleContent1.getName().equals(replaceTextByParams(_parent.getName(), generateArticleDto.getParamKey(), generateArticleDto.getParamValue()))) {
                                         articleContent.setParent(articleContent1.getId());
                                         articleContentRepository.save(articleContent);
                                         break;
@@ -143,7 +156,6 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     /**
-     *
      * @param id
      * @return
      * @throws Exception
@@ -154,8 +166,8 @@ public class ArticleServiceImpl implements ArticleService {
         try {
             Optional<Article> articleOpt = articleRepository.findById(id);
 
-            if(articleOpt.isEmpty()) {
-                throw new DataNotFoundException("not found article with id --> "+ id);
+            if (articleOpt.isEmpty()) {
+                throw new DataNotFoundException("not found article with id --> " + id);
             }
 
             Article article = articleOpt.get();
@@ -168,7 +180,7 @@ public class ArticleServiceImpl implements ArticleService {
             Iterable<SkRefference> skRefferenceList = skReffRepository.findByArticleId(id);
             articleDto.setSkReff(mapToSkReffDto(skRefferenceList));
             Optional<Images> imageOpt = articleImageRepository.findByArticleId(article.getId());
-            if(!imageOpt.isEmpty()) {
+            if (!imageOpt.isEmpty()) {
                 Images image = imageOpt.get();
                 articleDto.setImage(image.getUri());
             }
@@ -191,7 +203,7 @@ public class ArticleServiceImpl implements ArticleService {
         try {
             logger.info("save article process");
             Optional<Article> articleOpt = articleRepository.findById(articleDto.getId());
-            if(articleOpt.isEmpty()) {
+            if (articleOpt.isEmpty()) {
                 logger.info("not found article data with id {}", articleDto.getId());
                 throw new DataNotFoundException("data not found");
             }
@@ -204,6 +216,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     /**
      * get content id
+     *
      * @return
      * @throws Exception
      */
@@ -220,7 +233,6 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     /**
-     *
      * @param articleContentDto
      * @return
      * @throws Exception
@@ -239,19 +251,66 @@ public class ArticleServiceImpl implements ArticleService {
             articleContent.setSort(articleContentDto.getOrder());
             articleContent.setLevel(articleContentDto.getLevel());
             Optional<ArticleContent> parentOpt = articleContentRepository.findById(articleContentDto.getParent());
-            if(!parentOpt.isEmpty()) {
+            if (!parentOpt.isEmpty()) {
                 articleContent.setParent(parentOpt.get().getId());
             }
             Optional<Article> articleOpt = articleRepository.findById(articleContentDto.getArticleId());
-            if(!articleOpt.isEmpty()) {
+            if (!articleOpt.isEmpty()) {
                 articleContent.setArticle(articleOpt.get());
             }
             logger.info("save article content to db");
             articleContent = articleContentRepository.save(articleContent);
             return articleContentDto;
         } catch (Exception e) {
-            logger.error("exception",e);
-            throw new Exception("exception",e);
+            logger.error("exception", e);
+            throw new Exception("exception", e);
+        }
+    }
+
+    /**
+     * @param deleteContentDto
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public Boolean deleteContent(DeleteContentDto deleteContentDto) throws Exception {
+        try {
+            logger.info("delete content with id {}", deleteContentDto.getContentId());
+            Optional<ArticleContent> articleContentOpt = articleContentRepository.findById(deleteContentDto.getContentId());
+            if (articleContentOpt.isEmpty()) {
+                logger.info("not found article content with id {}", deleteContentDto.getContentId());
+                throw new DataNotFoundException("data not found");
+            }
+            logger.debug("call get roles api with token {}", deleteContentDto.getContentId());
+            ResponseEntity<ApiResponseWrapper.RestResponse<List<String>>> restResponse = pakarOauthClient.getRoles(BEARER + deleteContentDto.getToken(), deleteContentDto.getUsername());
+            logger.debug("response api request {}", restResponse);
+
+            ArticleContent articleContent = articleContentOpt.get();
+            List<String> roles = restResponse.getBody().getData();
+            String role = roles.get(0);
+            Long level = articleContent.getLevel();
+            if (level.longValue() == 1) {
+                logger.info("validate role user with level content");
+                if (!role.equals(ROLE_ADMIN)) {
+                    logger.info("user with role {} has no authorize to delete content level 1", role);
+                    throw new AccesDeniedDeleteContentException("role " + role + " has no authorize delete content");
+                }
+            }
+
+            logger.debug("username {} ---> has roles {}", deleteContentDto.getUsername(), roles);
+            articleContent.setDeleted(Boolean.TRUE);
+            articleContent.setModifyDate(new Date());
+            articleContent.setModifyBy(deleteContentDto.getUsername());
+            articleContent.setChildren(articleContent.getDeletedAllChildren(deleteContentDto.getUsername()));
+            logger.info("delete article content set deleted value to true");
+            articleContentRepository.save(articleContent);
+            return Boolean.TRUE;
+        } catch (AccesDeniedDeleteContentException e) {
+            logger.error("exception", e);
+            throw new AccesDeniedDeleteContentException("has no authorize delete content level 1");
+        } catch (Exception e) {
+            logger.error("exception", e);
+            throw new Exception("exception", e);
         }
     }
 
@@ -263,7 +322,7 @@ public class ArticleServiceImpl implements ArticleService {
             contentDto.setLevel(content.getLevel());
             contentDto.setOrder(content.getSort());
             contentDto.setTitle(content.getName());
-            if(content.getLevel().intValue() == 1)
+            if (content.getLevel().intValue() == 1)
                 contentDto.setIntroduction(content.getDescription());
             contentDto.setParent(content.getParent());
             listOfContents.add(contentDto);
