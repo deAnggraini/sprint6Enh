@@ -99,7 +99,7 @@
 		<profile>
 			<id>kubernetes</id>
 			<build>
-				<finalName>pakarAuthService</finalName>
+				<finalName>auth-services</finalName>
 				<plugins>
 					<plugin>
 						<groupId>org.eclipse.jkube</groupId>
@@ -112,7 +112,7 @@
 		<profile>
 			<id>openshift</id>
 			<build>
-				<finalName>pakarAuthService</finalName>
+				<finalName>auth-services</finalName>
 				<plugins>
 					<plugin>
 						<groupId>org.eclipse.jkube</groupId>
