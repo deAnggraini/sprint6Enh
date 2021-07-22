@@ -24,9 +24,9 @@ function alphaNumericValidator(control: FormControl): ValidationErrors | null {
 export class AddComponent implements OnInit, OnDestroy {
   defaultValue = {
     title: '',
-    location: '',
+    structureId: '',
     usedBy: '',
-    template: '',
+    templateId: '',
   }
   backend_img = environment.backend_img;
   preview_img: string;
@@ -83,7 +83,7 @@ export class AddComponent implements OnInit, OnDestroy {
   save() {
     if (this.dataForm.valid && !this.hasError) {
       this.article.formParam = this.dataForm.value;
-      const params = Object.assign({}, this.dataForm.value, { paramKey: '[Nama Produk]', paramValue: this.dataForm.value.title });
+      const params = Object.assign({}, this.dataForm.value, {paramKey: '[Nama Produk]', paramValue: this.dataForm.value.title });
       this.subscriptions.push(
         this.article.generate(params).subscribe((resp: ArticleDTO) => {
           this.article.formData = resp;
@@ -101,7 +101,6 @@ export class AddComponent implements OnInit, OnDestroy {
 
   changeLocation(item) {
     this.disabledUsedBy = false;
-
     const templateSubrc = this.templateService.findByCategories(item.id).subscribe(resp => {
       this.listTemplate = resp;
       this.cdr.detectChanges();
@@ -133,17 +132,17 @@ export class AddComponent implements OnInit, OnDestroy {
     this.dataForm = this.fb.group({
       id: [0],
       title: [this.defaultValue.title, Validators.compose([Validators.required, Validators.maxLength(50), alphaNumericValidator])],
-      location: [this.defaultValue.location, Validators.compose([Validators.required])],
+      structureId: [this.defaultValue.structureId, Validators.compose([Validators.required])],
       usedBy: [{ value: this.defaultValue.usedBy, disabled: true }, Validators.compose([Validators.required])],
-      template: [this.defaultValue.template, Validators.compose([Validators.required])]
+      templateId: [this.defaultValue.templateId, Validators.compose([Validators.required])]
     });
-    const locationSubrc = this.dataForm.get('location').valueChanges.subscribe(d => {
+    const locationSubrc = this.dataForm.get('structureId').valueChanges.subscribe(d => {
       if (d) {
         this.dataForm.get('usedBy').enable();
       }
     })
     this.subscriptions.push(locationSubrc);
-    const templateSubrc = this.dataForm.get('template').valueChanges.subscribe(d => {
+    const templateSubrc = this.dataForm.get('templateId').valueChanges.subscribe(d => {
       if (d) {
         const found = this.listTemplate.find(r => r.id == parseInt(d));
         if (found) {
