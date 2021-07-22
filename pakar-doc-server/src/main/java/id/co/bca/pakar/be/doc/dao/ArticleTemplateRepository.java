@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ArticleTemplateRepository extends CrudRepository<ArticleTemplate, Long> {
@@ -40,4 +41,9 @@ public interface ArticleTemplateRepository extends CrudRepository<ArticleTemplat
             "            DESC",
             nativeQuery = true)
     List<ArticleTemplate> findArticleTemplates(@Param("role") String role);
+
+    @Query(value = "SELECT m FROM ArticleTemplate m " +
+            "WHERE m.id=:id " +
+            "AND m.deleted IS FALSE ")
+    Optional<ArticleTemplate> findById(@Param("id") Long id);
 }

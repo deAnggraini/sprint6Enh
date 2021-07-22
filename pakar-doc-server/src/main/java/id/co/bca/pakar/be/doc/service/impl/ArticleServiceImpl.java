@@ -6,6 +6,7 @@ import id.co.bca.pakar.be.doc.dao.*;
 import id.co.bca.pakar.be.doc.dto.*;
 import id.co.bca.pakar.be.doc.exception.AccesDeniedDeleteContentException;
 import id.co.bca.pakar.be.doc.exception.DataNotFoundException;
+import id.co.bca.pakar.be.doc.exception.NotFoundArticleTemplateException;
 import id.co.bca.pakar.be.doc.model.*;
 import id.co.bca.pakar.be.doc.service.ArticleService;
 import id.co.bca.pakar.be.doc.util.TreeArticleContents;
@@ -83,7 +84,16 @@ public class ArticleServiceImpl implements ArticleService {
         try {
             logger.info("generate article process");
             ArticleTemplateStructure articleTemplateStructure = articleTemplateStructureRepository.findArticleTemplates(generateArticleDto.getTemplateId(), generateArticleDto.getStructureId());
-            ArticleTemplate template = articleTemplateStructure.getArticleTemplate();
+            ArticleTemplate template = null;
+            if (articleTemplateStructure == null) {
+                Optional<ArticleTemplate> templateOpt = articleTemplateRepository.findById(generateArticleDto.getTemplateId());
+                if (templateOpt.isEmpty()) {
+                    logger.info("data not found template");
+                    throw new NotFoundArticleTemplateException("article template not found");
+                }
+                template = templateOpt.get();
+            } else
+                template = articleTemplateStructure.getArticleTemplate();
 
             logger.info("populate article");
             Article article = new Article();
@@ -146,6 +156,9 @@ public class ArticleServiceImpl implements ArticleService {
             articleDto.setContents(articleContentDtos);
 
             return articleDto;
+        } catch (NotFoundArticleTemplateException e) {
+            logger.error("", e);
+            throw new Exception("not found article template");
         } catch (Exception e) {
             logger.error("", e);
             throw new Exception("generate article failed");
@@ -311,7 +324,7 @@ public class ArticleServiceImpl implements ArticleService {
 //            }
 //            articleContent.getDeletedAllChildren(deleteContentDto.getUsername());
 //            List<ArticleContent> children = articleContent.getAllChildren();
-            for(ArticleContent content : children) {
+            for (ArticleContent content : children) {
                 logger.debug("content level {} and title {}", content.getLevel(), content.getName());
                 content.setModifyBy(deleteContentDto.getUsername());
                 content.setModifyDate(new Date());

@@ -4,6 +4,7 @@ import id.co.bca.pakar.be.doc.common.Constant;
 import id.co.bca.pakar.be.doc.dto.*;
 import id.co.bca.pakar.be.doc.exception.AccesDeniedDeleteContentException;
 import id.co.bca.pakar.be.doc.exception.DataNotFoundException;
+import id.co.bca.pakar.be.doc.exception.NotFoundArticleTemplateException;
 import id.co.bca.pakar.be.doc.model.ArticleContent;
 import id.co.bca.pakar.be.doc.service.ArticleService;
 import id.co.bca.pakar.be.doc.service.ArticleTemplateService;
@@ -209,6 +210,9 @@ public class ArticleController extends BaseController {
 			generateArticleDto.setToken(getTokenFromHeader(authorization));
 			ArticleDto articleDto = articleService.generateArticle(generateArticleDto);
 			return createResponse(articleDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
+		} catch (NotFoundArticleTemplateException e) {
+			logger.error("exception", e);
+			return createResponse(new ArticleDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("article.templete.not.found", null, new Locale("en", "US")));
 		} catch (Exception e) {
 			logger.error("exception", e);
 			return createResponse(new ArticleDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
