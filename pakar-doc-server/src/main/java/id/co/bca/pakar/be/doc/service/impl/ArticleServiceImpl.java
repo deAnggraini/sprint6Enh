@@ -17,10 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static id.co.bca.pakar.be.doc.common.Constant.Headers.BEARER;
 import static id.co.bca.pakar.be.doc.common.Constant.Roles.ROLE_ADMIN;
@@ -301,9 +298,27 @@ public class ArticleServiceImpl implements ArticleService {
             articleContent.setDeleted(Boolean.TRUE);
             articleContent.setModifyDate(new Date());
             articleContent.setModifyBy(deleteContentDto.getUsername());
-            articleContent.setChildren(articleContent.getDeletedAllChildren(deleteContentDto.getUsername()));
-            logger.info("delete article content set deleted value to true");
             articleContentRepository.save(articleContent);
+            List<ArticleContent> children = articleContentRepository.findArticleContent(articleContent.getId());
+            // sorting root children
+//            for(ArticleContent content : children) {
+//            Collections.sort(children, new Comparator<ArticleContent>() {
+//                @Override
+//                public int compare(ArticleContent o1, ArticleContent o2) {
+//                    return o1.getSort().intValue() - o2.getSort().intValue();
+//                }
+//            });
+//            }
+//            articleContent.getDeletedAllChildren(deleteContentDto.getUsername());
+//            List<ArticleContent> children = articleContent.getAllChildren();
+            for(ArticleContent content : children) {
+                logger.debug("content level {} and title {}", content.getLevel(), content.getName());
+                content.setModifyBy(deleteContentDto.getUsername());
+                content.setModifyDate(new Date());
+                content.setDeleted(Boolean.TRUE);
+                articleContentRepository.save(content);
+            }
+            logger.info("delete article content set deleted value to true");
             return Boolean.TRUE;
         } catch (AccesDeniedDeleteContentException e) {
             logger.error("exception", e);
