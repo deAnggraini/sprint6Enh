@@ -184,6 +184,23 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   onCancel(e) {
     console.log(this.dataForm.valid, this.dataForm);
     console.log(this.dataForm.value.contents);
+    this.confirm.open({
+      title: `Batal Tambah Artikel`,
+      message: `<p>Apakah Kamu yakin ingin keluar dan membatalkan membuat artikel baru?`,
+      btnOkText: 'Ya, Batal Tambah',
+      btnCancelText: 'Batal'
+    }).then((confirmed) => {
+      if (confirmed === true) {
+        // this.subscriptions.push(
+        //   this.article.deleteArticle(data.id).subscribe(resp => {
+        //     if (resp) this.deleteNode(data);
+        //   })
+        // );
+        this.article.formParam = null;
+        this.article.formData = null;
+        this.router.navigate(['/homepage']);
+      }
+    });
   }
 
   // Right icon event
@@ -202,6 +219,9 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
           const newNode: ArticleContentDTO = {
             id: resp,
             title: '',
+            intro: '',
+            topicContent: '',
+            topicTitle: '',
             level: data.level + 1,
             parent: data.id,
             sort: maxSort + 1,
@@ -324,9 +344,10 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
       this.article.saveContent(this.accForm.value).subscribe(resp => {
         if (resp) {
           this.selectedAccordion.title = this.accForm.value.title;
-          this.modalService.dismissAll();
+          this.selectedAccordion.topicTitle = this.accForm.value.title;
           this.addLog();
           this.cdr.detectChanges();
+          this.modalService.dismissAll();
         }
       })
     );
@@ -462,6 +483,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
       location: [defaultValue.location, Validators.compose([Validators.required])],
       locationOption: [defaultValue.locationOption, Validators.compose([Validators.required])],
       image: [defaultValue.image],
+      video: [defaultValue.video],
       contents: [defaultValue.contents],
       references: [defaultValue.references],
       related: [defaultValue.related],

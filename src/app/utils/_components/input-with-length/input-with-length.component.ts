@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, forwardRef, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, forwardRef, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
@@ -27,11 +27,7 @@ export class InputWithLengthComponent implements OnInit, ControlValueAccessor {
   value: string;
   disabled: boolean = false;
 
-  constructor() { }
-
-  // change(value) {
-  //   this.onChange.emit(value);
-  // }
+  constructor(private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
   }
@@ -39,6 +35,7 @@ export class InputWithLengthComponent implements OnInit, ControlValueAccessor {
   // ControlValueAccessor interface
   writeValue(obj: any): void {
     this.value = obj;
+    if (obj) { this.cdr.detectChanges(); }
   }
   registerOnChange(fn: any): void {
     this._onChange = fn;
