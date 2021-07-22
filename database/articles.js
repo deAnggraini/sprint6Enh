@@ -13,7 +13,7 @@ const sample_basic = {
         {
             id: 1,
             title: 'Ketentuan Tahapan',
-            desc: '',
+            intro: '',
             parent: 0,
             level: 1,
             sort: 1,
@@ -22,7 +22,7 @@ const sample_basic = {
         {
             id: 2,
             title: 'Prosedur Tahapan',
-            desc: '',
+            intro: '',
             parent: 0,
             level: 1,
             sort: 2,
@@ -31,7 +31,7 @@ const sample_basic = {
         {
             id: 3,
             title: 'Formulir Tahapan',
-            desc: '',
+            intro: '',
             parent: 0,
             level: 1,
             sort: 2,
@@ -56,7 +56,7 @@ const sample_non_basic = {
         {
             id: 1,
             title: 'Ketentuan Tahapan 2',
-            desc: '',
+            intro: '',
             parent: 0,
             level: 1,
             sort: 1,
@@ -64,7 +64,8 @@ const sample_non_basic = {
                 {
                     id: 3,
                     title: 'Rekening Tahapan 2',
-                    desc: '',
+                    topicTitle: '',
+                    topicContent: '',
                     parent: 1,
                     level: 2,
                     sort: 1,
@@ -72,7 +73,8 @@ const sample_non_basic = {
                         {
                             id: 18,
                             title: 'Satu',
-                            desc: '',
+                            topicTitle: '',
+                            topicContent: '',
                             parent: 3,
                             level: 3,
                             sort: 1,
@@ -119,7 +121,8 @@ const sample_non_basic = {
                         {
                             id: 19,
                             title: 'Dua',
-                            desc: '',
+                            topicTitle: '',
+                            topicContent: '',
                             parent: 3,
                             level: 3,
                             sort: 2,
@@ -128,7 +131,8 @@ const sample_non_basic = {
                         {
                             id: 20,
                             title: 'Tiga',
-                            desc: '',
+                            topicTitle: '',
+                            topicContent: '',
                             parent: 3,
                             level: 3,
                             sort: 3,
@@ -139,7 +143,8 @@ const sample_non_basic = {
                 {
                     id: 4,
                     title: 'Pembukaan Rekening Tahapan 2',
-                    desc: '',
+                    topicTitle: '',
+                    topicContent: '',
                     parent: 1,
                     level: 2,
                     sort: 2,
@@ -147,7 +152,8 @@ const sample_non_basic = {
                         {
                             id: 18,
                             title: 'Satu',
-                            desc: '',
+                            topicTitle: '',
+                            topicContent: '',
                             parent: 3,
                             level: 3,
                             sort: 1,
@@ -155,7 +161,8 @@ const sample_non_basic = {
                                 {
                                     id: 181,
                                     title: 'Satu titik satu',
-                                    desc: '',
+                                    topicTitle: '',
+                                    topicContent: '',
                                     parent: 18,
                                     level: 4,
                                     sort: 1,
@@ -163,7 +170,8 @@ const sample_non_basic = {
                                         {
                                             id: 1811,
                                             title: 'Terkahir minus satu',
-                                            desc: '',
+                                            topicTitle: '',
+                                            topicContent: '',
                                             parent: 181,
                                             level: 5,
                                             sort: 1,
@@ -172,7 +180,8 @@ const sample_non_basic = {
                                         {
                                             id: 1812,
                                             title: 'Terkahir minus 2',
-                                            desc: '',
+                                            topicTitle: '',
+                                            topicContent: '',
                                             parent: 181,
                                             level: 5,
                                             sort: 2,
@@ -183,7 +192,8 @@ const sample_non_basic = {
                                 {
                                     id: 182,
                                     title: 'Satu titik dua',
-                                    desc: '',
+                                    topicTitle: '',
+                                    topicContent: '',
                                     parent: 18,
                                     level: 4,
                                     sort: 2,
@@ -194,7 +204,8 @@ const sample_non_basic = {
                         {
                             id: 19,
                             title: 'Dua',
-                            desc: '',
+                            topicTitle: '',
+                            topicContent: '',
                             parent: 3,
                             level: 3,
                             sort: 2,
@@ -205,7 +216,8 @@ const sample_non_basic = {
                 {
                     id: 5,
                     title: 'Perubahan Data Rekening Tahapan 2',
-                    desc: '',
+                    topicTitle: '',
+                    topicContent: '',
                     parent: 1,
                     level: 2,
                     sort: 3,
@@ -214,7 +226,8 @@ const sample_non_basic = {
                 {
                     id: 6,
                     title: 'Penutupan Tahapan 2',
-                    desc: '',
+                    topicTitle: '',
+                    topicContent: '',
                     parent: 1,
                     level: 2,
                     sort: 4,
@@ -223,7 +236,8 @@ const sample_non_basic = {
                 {
                     id: 7,
                     title: 'Biaya Tahapan 2',
-                    desc: '',
+                    topicTitle: '',
+                    topicContent: '',
                     parent: 1,
                     level: 2,
                     sort: 5,
@@ -234,7 +248,7 @@ const sample_non_basic = {
         {
             id: 2,
             title: 'Prosedur Tahapan 2',
-            desc: '',
+            intro: '',
             parent: 0,
             level: 1,
             sort: 2,
@@ -242,7 +256,8 @@ const sample_non_basic = {
                 {
                     id: 8,
                     title: 'Rekening Tahapan',
-                    desc: '',
+                    topicTitle: '',
+                    topicContent: '',
                     parent: 2,
                     level: 2,
                     sort: 1,
@@ -251,7 +266,8 @@ const sample_non_basic = {
                 {
                     id: 9,
                     title: 'Pembukaan Rekening Tahapan',
-                    desc: '',
+                    topicTitle: '',
+                    topicContent: '',
                     parent: 2,
                     level: 2,
                     sort: 2,
@@ -260,7 +276,8 @@ const sample_non_basic = {
                 {
                     id: 10,
                     title: 'Perubahan Data Rekening Tahapan',
-                    desc: '',
+                    topicTitle: '',
+                    topicContent: '',
                     parent: 2,
                     level: 2,
                     sort: 3,
@@ -269,7 +286,8 @@ const sample_non_basic = {
                 {
                     id: 11,
                     title: 'Penutupan Tahapan',
-                    desc: '',
+                    topicTitle: '',
+                    topicContent: '',
                     parent: 2,
                     level: 2,
                     sort: 4,
@@ -278,7 +296,8 @@ const sample_non_basic = {
                 {
                     id: 12,
                     title: 'Biaya Tahapan',
-                    desc: '',
+                    topicTitle: '',
+                    topicContent: '',
                     parent: 2,
                     level: 2,
                     sort: 5,
@@ -289,7 +308,7 @@ const sample_non_basic = {
         {
             id: 3,
             title: 'Formulir Tahapan 2',
-            desc: '',
+            intro: '',
             parent: 0,
             level: 1,
             sort: 2,
