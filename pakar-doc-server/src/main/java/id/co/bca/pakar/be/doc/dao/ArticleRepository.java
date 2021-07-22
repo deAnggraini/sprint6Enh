@@ -1,6 +1,8 @@
 package id.co.bca.pakar.be.doc.dao;
 
 import id.co.bca.pakar.be.doc.model.Article;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -17,4 +19,6 @@ public interface ArticleRepository extends CrudRepository<Article, Long> {
             "WHERE m.id=:id " +
             "AND m.deleted IS FALSE ")
     Optional<Article> findById(@Param("id") Long id);
+
+    Page<Article> findRelatedArticles(boolean published, Pageable pageable);
 }

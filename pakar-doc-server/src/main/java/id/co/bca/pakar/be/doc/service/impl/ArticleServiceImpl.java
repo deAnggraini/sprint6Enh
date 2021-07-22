@@ -272,6 +272,7 @@ public class ArticleServiceImpl implements ArticleService {
             articleContent = articleContentRepository.save(articleContent);
 
             // reset list parent
+            logger.info("get breadcumb article content");
             List<ArticleContent> parentArticleContents = articleContentRepository.findArticleContentParent(articleContent.getId());
             articleContentDto.setBreadcumbArticleContentDtos(mapToListParentArticleContentDto(parentArticleContents));
             return articleContentDto;
@@ -344,6 +345,17 @@ public class ArticleServiceImpl implements ArticleService {
             logger.error("exception", e);
             throw new Exception("exception", e);
         }
+    }
+
+    /**
+     *
+     * @param searchDto
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public List<ArticleDto> search(SearchDto searchDto) throws Exception {
+        return null;
     }
 
     private List<ArticleContentDto> mapToListArticleContentDto(Iterable<ArticleContent> iterable) {

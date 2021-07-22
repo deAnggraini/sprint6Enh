@@ -13,6 +13,8 @@ import id.co.bca.pakar.be.doc.util.JSONMapperAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -239,21 +241,32 @@ public class ArticleController extends BaseController {
         }
     }
 
-//	@PostMapping(value = "/api/doc/searchRelatedArticle", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE }, produces = {
-//			MediaType.APPLICATION_JSON_VALUE })
-//	public ResponseEntity<RestResponse<ArticleDto>> searchRelatedArticle(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @ModelAttribute ArticleDto articleDto, BindingResult bindingResult) {
-//		try {
-//			logger.info("save article process");
-//			logger.info("received token bearer --- {}", authorization);
-//			articleDto.setUsername(username);
-//			articleDto.setToken(getTokenFromHeader(authorization));
-//			articleDto = articleService.saveArticle(articleDto);
-//			return createResponse(articleDto, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
-//		} catch (Exception e) {
-//			logger.error("exception", e);
-//			return createResponse(new ArticleDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
-//		}
-//	}
+    /**
+     * search related article
+     * @param authorization
+     * @param username
+     * @return
+     */
+	@PostMapping(value = "/api/doc/searchRelatedArticle", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
+			MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<RestResponse<List<ArticleDto>>> searchRelatedArticle(@RequestHeader("Authorization") String authorization,
+                                                                         @RequestHeader (name="X-USERNAME") String username,
+                                                                         @RequestBody SearchDto searchDto) {
+		try {
+			logger.info("search related articles process");
+			logger.info("received token bearer --- {}", authorization);
+            searchDto.setUsername(username);
+            searchDto.setToken(getTokenFromHeader(authorization));
+
+            Pageable paging = PageRequest.of(searchDto.getPage().intValue(), searchDto.getSize().intValue());
+
+            List<ArticleDto> articleDtos = articleService.search(searchDto);
+			return createResponse(articleDtos, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
+		} catch (Exception e) {
+			logger.error("exception", e);
+			return createResponse(new ArrayList<ArticleDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
+		}
+	}
 
 //	@PostMapping(value = "/api/doc/saveArticle", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE }, produces = {
 //			MediaType.APPLICATION_JSON_VALUE })
