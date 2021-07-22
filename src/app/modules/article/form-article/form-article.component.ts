@@ -129,6 +129,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     Time Loan - SME merupakan salah satu produk kredit produktif untuk modal kerja kepada debitur segmen Small dan Medium Enterprises (SME) dalam mata uang rupiah ataupun valas yang penarikannya menggunakan Surat Permohonan Penarikan Fasilitas Kredit/Perpanjangan Pembayaran untuk jangka waktu tertentu.`
   };
 
+  logs: ArticleDTO[] = [];
   hasError: boolean = false;
   errorMsg: string = '';
   user: UserModel;
@@ -181,6 +182,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // article action button
   onCancel(e) {
+    console.log(this.dataForm.valid, this.dataForm);
     console.log(this.dataForm.value.contents);
   }
 
@@ -192,7 +194,6 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     this.subscriptions.push(
       this.article.getContentId().subscribe(resp => {
         if (resp) {
-          console.log({ resp });
           const maxSort: number = this.findMaxSort(data.children);
           const listParent: ArticleParentDTO[] = JSON.parse(JSON.stringify(data.listParent));
           if (data.level >= 2) {
@@ -200,7 +201,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
           }
           const newNode: ArticleContentDTO = {
             id: resp,
-            title: 'New Data',
+            title: '',
             level: data.level + 1,
             parent: data.id,
             sort: maxSort + 1,
@@ -211,6 +212,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
           }
           data.expanded = true;
           data.children.push(newNode);
+          this.addLog(); // log article
           this.cdr.detectChanges();
         }
       })
@@ -221,7 +223,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   btnEditClick(e, data: ArticleContentDTO) {
     this.selectedAccordion = data;
     const { id, title, level, sort } = data;
-    this.accForm.reset(Object.assign({}, { id, title, level, sort }));
+    this.accForm.reset(Object.assign({}, { articleId: this.dataForm.value.id, id, title, level, sort }));
     this.open();
     e.stopPropagation();
     return false;
@@ -248,14 +250,13 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     let _contents: ArticleContentDTO[] = JSON.parse(JSON.stringify(this.dataForm.get('contents').value));
     const _parent = this.findNode(data.parent, _contents);
     if (data.level > 1) {
-      console.log({ delete: data.id, _parent });
       _parent.children = _parent.children.filter(d => d.id != data.id);
     } else {
       _contents = _contents.filter(d => d.id != data.id);
     }
     this.recalculateChildren(_contents, []);
-    console.log({ _contents });
     this.dataForm.get('contents').setValue(_contents);
+    this.addLog();
     this.cdr.detectChanges();
   }
 
@@ -324,6 +325,8 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
         if (resp) {
           this.selectedAccordion.title = this.accForm.value.title;
           this.modalService.dismissAll();
+          this.addLog();
+          this.cdr.detectChanges();
         }
       })
     );
@@ -336,22 +339,6 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
       })
     );
   }
-  // private setDefaultContentValue(children: ArticleContentDTO[], listParent: ArticleParentDTO[]) {
-  //   if (children && children.length) {
-  //     children.forEach((d, i) => {
-  //       d.expanded = false;
-  //       d.listParent = listParent;
-  //       if (d.level == 1) {
-  //         d.no = '';
-  //         this.setDefaultContentValue(d.children, listParent.concat([]));
-  //       } else {
-  //         d.no = `${i + 1}`;
-  //         const { id, title, no } = d;
-  //         this.setDefaultContentValue(d.children, listParent.concat([{ id, title, no }]));
-  //       }
-  //     });
-  //   }
-  // }
   private recalculateChildren(children: ArticleContentDTO[], listParent: ArticleParentDTO[]) {
     if (children && children.length) {
       children.forEach((d, i) => {
@@ -385,6 +372,24 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
       this.cdr.detectChanges();
     } else {
       this.goBackToAdd('Data article tidak valid');
+    }
+  }
+  private addLog() {
+    this.logs.push(JSON.parse(JSON.stringify(this.dataForm.value)));
+  }
+  onImageChange(e) {
+    if (e.target.files && e.target.files.length) {
+      const [file] = e.target.files;
+      this.dataForm.patchValue({
+        image: file
+      });
+    };
+  }
+  showImageName() {
+    if (typeof (this.dataForm.value.image) === "string") {
+      return this.dataForm.value.image;
+    } else {
+      return this.dataForm.value.image?.name;
     }
   }
 
@@ -456,13 +461,15 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
       title: [defaultValue.title, Validators.compose([Validators.required, Validators.maxLength(50), alphaNumericValidator])],
       location: [defaultValue.location, Validators.compose([Validators.required])],
       locationOption: [defaultValue.locationOption, Validators.compose([Validators.required])],
+      image: [defaultValue.image],
       contents: [defaultValue.contents],
       references: [defaultValue.references],
       related: [defaultValue.related],
       suggestions: [defaultValue.suggestions],
     });
     this.accForm = this.fb.group({
-      id: [0],
+      articleId: [0, Validators.compose([Validators.required])],
+      id: [0, Validators.compose([Validators.required])],
       title: ['', Validators.compose([Validators.required])],
       level: [1, Validators.compose([Validators.required])],
       sort: [1, Validators.compose([Validators.required])],

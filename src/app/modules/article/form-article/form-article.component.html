@@ -16,7 +16,7 @@
             <div>Preview</div>
         </a>
         <div class="separator"></div>
-        <a href="#" class="link text-dark d-flex flex-row">
+        <a href="#" class="btn btn-link link text-dark d-flex flex-row" [ngClass]="{'disabled' : !dataForm.valid}">
             <div [inlineSVG]="'./assets/media/svg/bca/icon/save.svg'" cacheSVG="true" class="svg-icon"></div>
             <div>Simpan</div>
         </a>
@@ -57,7 +57,11 @@
         </div>
         <div class="form-group col-sm-11 col-lg-6 col-xl-6 col-xxl-6">
             <label>Gambar Artikel *</label>
-            <input type="file" class="form-control">
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" id="inputGroupFile04" accept="image/*"
+                    (change)="onImageChange($event)">
+                <label class="custom-file-label" for="inputGroupFile04">{{ showImageName() }}</label>
+            </div>
         </div>
         <div class="form-group col-sm-11 col-lg-6 col-xl-6 col-xxl-6">
             <label>Video Artikel</label>
@@ -123,8 +127,9 @@
         </div>
         <div class="form-group col-sm-12 col-lg-11 col-xl-11 col-xxl-11 d-flex justify-content-end">
             <button type="button" class="btn btn-outline-light btn-sm rounded-xl px-5 ml-3"
-                (click)="onCancel()">Batal</button>
-            <button type="button" class="btn btn-blue-outline btn-sm px-5 ml-3" disabled>Simpan</button>
+                (click)="onCancel($event)">Batal</button>
+            <button type="button" class="btn btn-blue-outline btn-sm px-5 ml-3"
+                [disabled]="!dataForm.valid">Simpan</button>
             <button type="button" class="btn btn-outline-dark btn-sm rounded-xl px-5 ml-3" disabled>Simpan &
                 Kirim</button>
         </div>
@@ -174,7 +179,7 @@
                 class="acc-level acc-level-{{level}}" [(expanded)]="content.expanded">
                 <div class="drag-placeholder" *cdkDragPlaceholder></div>
                 <mat-expansion-panel-header>
-                    <mat-panel-title>{{numberingFormat(content)}}. {{content.title}}
+                    <mat-panel-title class="text-ellipsis-1">{{numberingFormat(content)}}. {{content.title}}
                     </mat-panel-title>
                     <ng-container [ngTemplateOutlet]="rightIcon" [ngTemplateOutletContext]="{ data: content}">
                     </ng-container>
@@ -183,16 +188,20 @@
                     <div class="p-3">
                         <div class="form-group">
                             <label>Judul Topik *</label>
-                            <input type="text" class="form-control">
+                            <pakar-input-length placeholder="Masukkan judul topik disini (maks. 150 karakter)"
+                                [(ngModel)]="content.title" maxlength="150">
+                            </pakar-input-length>
                         </div>
                         <div class="form-group">
                             <label>Isi Topik *</label>
                             <!-- <ckeditor [editor]="editor" [config]="config" tagName="textarea"></ckeditor> -->
+                            <textarea class="form-control" [(ngModel)]="content.desc"
+                                placeholder="Masukkan Isi topik disini"></textarea>
                         </div>
                         <div class="text-right">
                             <button type="button" class="btn btn-outline-light btn-sm rounded-lg px-5">Batal</button>
                             <button type="button" class="btn btn-sm btn-blue rounded-lg px-5 ml-2"
-                                disabled>Simpan</button>
+                                [disabled]="!content.desc">Simpan {{content.desc}}</button>
                         </div>
                     </div>
                     <ng-container *ngIf="content.children.length" [ngTemplateOutlet]="accordionChild"
