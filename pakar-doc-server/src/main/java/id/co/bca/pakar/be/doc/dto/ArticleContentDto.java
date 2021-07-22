@@ -27,7 +27,7 @@ public class ArticleContentDto extends BaseDto {
     @JsonProperty("articleId")
     private Long articleId;
     @JsonProperty("listParent")
-    private List<ArticleContentDto> listParent = new ArrayList<>();
+    private List<BreadcumbArticleContentDto> breadcumbArticleContentDtos = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -109,6 +109,14 @@ public class ArticleContentDto extends BaseDto {
         this.articleId = articleId;
     }
 
+    public List<BreadcumbArticleContentDto> getBreadcumbArticleContentDtos() {
+        return breadcumbArticleContentDtos;
+    }
+
+    public void setBreadcumbArticleContentDtos(List<BreadcumbArticleContentDto> breadcumbArticleContentDtos) {
+        this.breadcumbArticleContentDtos = breadcumbArticleContentDtos;
+    }
+
     @Override
     public String toString() {
         return "ArticleContentDto{" +
@@ -122,6 +130,7 @@ public class ArticleContentDto extends BaseDto {
                 ", childs=" + childs +
                 ", parent=" + parent +
                 ", articleId=" + articleId +
+                ", breadcumbArticleContentDtos=" + breadcumbArticleContentDtos +
                 '}';
     }
 }

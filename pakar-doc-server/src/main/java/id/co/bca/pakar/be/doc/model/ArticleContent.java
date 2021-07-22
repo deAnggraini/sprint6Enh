@@ -1,9 +1,6 @@
 package id.co.bca.pakar.be.doc.model;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 @Entity
 @Table(name = "t_article_content")
@@ -18,9 +15,6 @@ public class ArticleContent extends CommonArticleContent {
     @ManyToOne
     @JoinColumn(name = "article_id")
     private Article article;
-
-//    @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
-//    private List<ArticleContent> children = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -45,51 +39,4 @@ public class ArticleContent extends CommonArticleContent {
     public void setVersion(Long version) {
         this.version = version;
     }
-
-//    //returns direct children
-//    public List<ArticleContent> getChildren(){
-//        return children;
-//    }
-//
-//    public void setChildren(List<ArticleContent> children) {
-//        this.children = children;
-//    }
-//
-//    //returns all children to any level
-//    @Transient
-//    public List<ArticleContent> getAllChildren(){
-//        return getAllChildren(this);
-//    }
-//
-//    //recursive function to walk the tree
-//    @Transient
-//    private List<ArticleContent> getAllChildren(ArticleContent parent){
-//        List<ArticleContent> allChildren = new ArrayList<>();
-//        for(ArticleContent child : children){
-//            allChildren.add(child);
-//            allChildren.addAll(getAllChildren(child));
-//        }
-//        return allChildren;
-//    }
-//
-//    //returns all children to any level
-//    @Transient
-//    public void getDeletedAllChildren(String username){
-//        getDeletedAllChildren(this, username);
-//    }
-//
-//    //recursive function to walk the tree
-//    @Transient
-//    private void getDeletedAllChildren(ArticleContent parent, String username){
-////        List<ArticleContent> allChildren = new ArrayList<>();
-//        for(ArticleContent child : children){
-//            child.setDeleted(Boolean.TRUE);
-//            child.setModifyBy(username);
-//            child.setModifyDate(new Date());
-//            getDeletedAllChildren(child, username);
-////            allChildren.add(child);
-////            allChildren.addAll(getDeletedAllChildren(child, username));
-//        }
-////        return allChildren;
-//    }
 }

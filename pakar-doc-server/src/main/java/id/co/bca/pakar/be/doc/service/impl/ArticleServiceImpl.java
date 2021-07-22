@@ -270,6 +270,10 @@ public class ArticleServiceImpl implements ArticleService {
             }
             logger.info("save article content to db");
             articleContent = articleContentRepository.save(articleContent);
+
+            // reset list parent
+            List<ArticleContent> parentArticleContents = articleContentRepository.findArticleContentParent(articleContent.getId());
+            articleContentDto.setBreadcumbArticleContentDtos(mapToListParentArticleContentDto(parentArticleContents));
             return articleContentDto;
         } catch (Exception e) {
             logger.error("exception", e);
@@ -379,6 +383,18 @@ public class ArticleServiceImpl implements ArticleService {
             listOfDtos.add(dto);
         }
         return listOfDtos;
+    }
+
+    private List<BreadcumbArticleContentDto> mapToListParentArticleContentDto(Iterable<ArticleContent> iterable) {
+        List<BreadcumbArticleContentDto> listOfContents = new ArrayList<>();
+        for (ArticleContent content : iterable) {
+            BreadcumbArticleContentDto contentDto = new BreadcumbArticleContentDto();
+            contentDto.setId(content.getId());
+            contentDto.setLevel(content.getLevel());
+            contentDto.setName(content.getName());
+            listOfContents.add(contentDto);
+        }
+        return listOfContents;
     }
 
     /**

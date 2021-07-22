@@ -1,7 +1,6 @@
 package id.co.bca.pakar.be.doc.service;
 
 import id.co.bca.pakar.be.doc.dto.*;
-import org.hibernate.sql.Delete;
 
 public interface ArticleService {
     Boolean existArticle(String title);
