@@ -12,6 +12,8 @@ public class Constant {
 		// String argument
 		LOGIN_SUCCEED(new String[] { "00", "LOGIN SUCCESS" }),
 		INCORRECT_USERNAME_PASSWORD(new String[] { "01", "Incorrect User ID or password" }),
+		LOCKING_USERNAME_PASSWORD(new String[] { "01", " currently locked. Please try again in " }),
+		INCORRECT_USERNAME_PASSWORD_UPDATE(new String[] {"01", "User ID atau Password tidak sesuai. Pastikan kamu memasukkan user ID dan Password yang benar agar akun tidak terkunci."}),
 		LOGOUT_SUCCEED(new String[] { "00", "User Has Logout" }),
 		LOGOUT_FAILED(new String[] { "01", "User Fail to Logout" }),
 		REFRESH_TOKEN_SUCCEED(new String[] { "00", "New Access Token Has Generated" }),
