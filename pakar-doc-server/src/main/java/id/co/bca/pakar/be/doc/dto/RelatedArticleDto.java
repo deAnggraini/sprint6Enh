@@ -2,17 +2,18 @@ package id.co.bca.pakar.be.doc.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class RelatedArticleDto extends ArticleDto {
-    @JsonProperty("id")
-    private Long id;
+import java.util.ArrayList;
+import java.util.List;
 
-    @Override
-    public Long getId() {
-        return id;
+public class RelatedArticleDto extends PagingResponseDto {
+    @JsonProperty("articles")
+    private List<RelatedArticleDto> relatedArticleDtos = new ArrayList<RelatedArticleDto>();
+
+    public List<RelatedArticleDto> getRelatedArticleDtos() {
+        return relatedArticleDtos;
     }
 
-    @Override
-    public void setId(Long id) {
-        this.id = id;
+    public void setRelatedArticleDtos(List<RelatedArticleDto> relatedArticleDtos) {
+        this.relatedArticleDtos = relatedArticleDtos;
     }
 }

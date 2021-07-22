@@ -19,5 +19,5 @@ public interface ArticleService {
 
     Boolean deleteContent(DeleteContentDto deleteContentDto) throws Exception;
 
-    List<ArticleDto> search(SearchDto searchDto) throws Exception;
+    RelatedArticleDto search(SearchDto searchDto) throws Exception;
 }

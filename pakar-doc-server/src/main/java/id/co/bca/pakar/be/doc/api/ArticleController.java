@@ -21,10 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 @CrossOrigin
 @RestController
@@ -249,9 +246,9 @@ public class ArticleController extends BaseController {
      */
 	@PostMapping(value = "/api/doc/searchRelatedArticle", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<RestResponse<List<ArticleDto>>> searchRelatedArticle(@RequestHeader("Authorization") String authorization,
-                                                                         @RequestHeader (name="X-USERNAME") String username,
-                                                                         @RequestBody SearchDto searchDto) {
+	public ResponseEntity<RestResponse<RelatedArticleDto>> searchRelatedArticle(@RequestHeader("Authorization") String authorization,
+                                                                                  @RequestHeader (name="X-USERNAME") String username,
+                                                                                  @RequestBody SearchDto searchDto) {
 		try {
 			logger.info("search related articles process");
 			logger.info("received token bearer --- {}", authorization);
@@ -260,11 +257,11 @@ public class ArticleController extends BaseController {
 
             Pageable paging = PageRequest.of(searchDto.getPage().intValue(), searchDto.getSize().intValue());
 
-            List<ArticleDto> articleDtos = articleService.search(searchDto);
-			return createResponse(articleDtos, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
+            RelatedArticleDto articleDto = articleService.search(searchDto);
+			return createResponse(articleDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
 		} catch (Exception e) {
 			logger.error("exception", e);
-			return createResponse(new ArrayList<ArticleDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
+			return createResponse(new RelatedArticleDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
 		}
 	}
 

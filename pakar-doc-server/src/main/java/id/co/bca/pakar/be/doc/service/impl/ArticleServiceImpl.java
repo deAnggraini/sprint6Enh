@@ -354,7 +354,7 @@ public class ArticleServiceImpl implements ArticleService {
      * @throws Exception
      */
     @Override
-    public List<ArticleDto> search(SearchDto searchDto) throws Exception {
+    public RelatedArticleDto search(SearchDto searchDto) throws Exception {
         return null;
     }
 
