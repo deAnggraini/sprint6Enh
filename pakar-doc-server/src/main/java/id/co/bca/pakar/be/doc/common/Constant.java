@@ -59,4 +59,12 @@ public class Constant {
 		public static final String ROLE_EDITOR = "EDITOR";
 		public static final String ROLE_PUBLISHER = "PUBLISHER";
 	}
+
+	public static final class ArticleWfState {
+		public static final String PRE_DRAFT = "PREDRAFT";
+		public static final String DRAFT = "DRAFT";
+		public static final String PENDING = "PENDING";
+		public static final String PUBLISHED = "PUBLISHED";
+		public static final String REJECTED = "REJECTED";
+	}
 }

@@ -2,11 +2,13 @@ package id.co.bca.pakar.be.doc.service.impl;
 
 import id.co.bca.pakar.be.doc.client.ApiResponseWrapper;
 import id.co.bca.pakar.be.doc.client.PakarOauthClient;
+import id.co.bca.pakar.be.doc.common.Constant;
 import id.co.bca.pakar.be.doc.dao.*;
 import id.co.bca.pakar.be.doc.dto.*;
 import id.co.bca.pakar.be.doc.exception.*;
 import id.co.bca.pakar.be.doc.model.*;
 import id.co.bca.pakar.be.doc.service.ArticleService;
+import id.co.bca.pakar.be.doc.util.FileUploadUtil;
 import id.co.bca.pakar.be.doc.util.TreeArticleContents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +22,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -64,7 +68,21 @@ public class ArticleServiceImpl implements ArticleService {
     private ArticleRefferenceRepository articleRefferenceRepository;
 
     @Autowired
+    private ArticleSkReffRepository articleSkReffRepository;
+
+    @Autowired
+    private RelatedArticleRepository relatedArticleRepository;
+
+    @Autowired
+    private ImageRepository imageRepository;
+
+    @Autowired
     private PakarOauthClient pakarOauthClient;
+
+    @Value("${upload.path.category}")
+    private String pathCategory;
+    @Value("${upload.path.base}")
+    private String basePath;
 
     @Override
     @Transactional
@@ -109,6 +127,7 @@ public class ArticleServiceImpl implements ArticleService {
             article.setArticleUsedBy(generateArticleDto.getUsedBy());
             Structure structure = structureRepository.findStructure(generateArticleDto.getStructureId());
             article.setStructure(structure);
+            article.setArticleState(Constant.ArticleWfState.PRE_DRAFT);
 
             logger.info("populate article contents");
             Iterable<ArticleTemplateContent> templateContents = articleTemplateContentRepository.findByTemplateId(template.getId());
@@ -215,7 +234,7 @@ public class ArticleServiceImpl implements ArticleService {
      */
     @Override
     @Transactional(rollbackOn = {Exception.class})
-    public ArticleDto saveArticle(MultipartArticleDto articleDto) throws Exception {
+    public MultipartArticleDto saveArticle(MultipartArticleDto articleDto) throws Exception {
         try {
             logger.info("save article process");
             Optional<Article> articleOpt = articleRepository.findById(articleDto.getId());
@@ -223,7 +242,71 @@ public class ArticleServiceImpl implements ArticleService {
                 logger.info("not found article data with id {}", articleDto.getId());
                 throw new DataNotFoundException("data not found");
             }
-            return null;
+
+            Article article = articleOpt.get();
+            article.setModifyBy(articleDto.getUsername());
+            article.setModifyDate(new Date());
+            article.setArticleState(Constant.ArticleWfState.DRAFT);
+            article.setVideoLink(articleDto.getVideoLink());
+
+            article = articleRepository.save(article);
+
+            for(SkReffDto skReffDto : articleDto.getSkReff()) {
+                ArticleSkReff articleSkReff = new ArticleSkReff();
+                articleSkReff.setCreatedBy(articleDto.getUsername());
+                articleSkReff.setArticle(article);
+                Optional<SkRefference> skRefferenceOpt = skReffRepository.findById(skReffDto.getId());
+                articleSkReff.setSkRefference(skRefferenceOpt.isPresent() ? skRefferenceOpt.get() : null);
+
+                articleSkReffRepository.save(articleSkReff);
+            }
+
+            for(MultipartArticleDto dto : articleDto.getRelated()) {
+                RelatedArticle relatedArticle = new RelatedArticle();
+                relatedArticle.setCreatedBy(articleDto.getUsername());
+                relatedArticle.setSourceArticle(article);
+                Optional<Article> relatedOpt = articleRepository.findById(dto.getId());
+                relatedArticle.setRelatedArticle(relatedOpt.isPresent() ? relatedOpt.get(): null );
+
+                relatedArticleRepository.save(relatedArticle);
+            }
+
+            Images _images = null;
+            if (articleDto.getImage() != null) {
+                if (!articleDto.getImage().isEmpty()) {
+                    String location = basePath + pathCategory;
+                    logger.debug("folder location {}", location);
+                    logger.debug("image file name {}", articleDto.getImage().getOriginalFilename());
+
+                    Path path = Paths.get(location + articleDto.getImage().getOriginalFilename());
+
+                    logger.info("saving image");
+                    Images images = new Images();
+                    images.setCreatedBy(articleDto.getUsername());
+                    logger.debug("save file name to db {}", path.getFileName().toString());
+                    images.setImageName(path.getFileName().toString());
+                    logger.debug("save path file to db {}", path.toAbsolutePath().toString());
+
+                    Path pathLocation = Paths.get(pathCategory + articleDto.getImage().getOriginalFilename());
+                    images.setUri(pathLocation.toAbsolutePath().toString());
+                    _images = imageRepository.save(images);
+
+                    // save image to folder
+                    logger.info("saving image to share folder");
+                    FileUploadUtil.saveFile(location, articleDto.getImage());
+                }
+            }
+
+            if (_images != null) {
+                logger.info("saving article image mapper");
+                ArticleImage am = new ArticleImage();
+                am.setCreatedBy(articleDto.getUsername());
+                am.setArticle(article);
+                am.setImage(_images);
+                articleImageRepository.save(am);
+            }
+
+            return articleDto;
         } catch (Exception e) {
             logger.error("", e);
             throw new Exception("exception", e);
@@ -481,7 +564,7 @@ public class ArticleServiceImpl implements ArticleService {
         for (Article entity : iterable) {
             ArticleDto dto = new ArticleDto();
             dto.setId(entity.getId());
-            dto.setVideoLink(entity.getVideLink());
+            dto.setVideoLink(entity.getVideoLink());
             listOfDtos.add(dto);
         }
         return listOfDtos;

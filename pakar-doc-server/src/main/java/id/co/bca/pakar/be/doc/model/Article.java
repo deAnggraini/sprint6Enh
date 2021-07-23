@@ -32,7 +32,7 @@ public class Article extends EntityBase {
 	private String shortDescription = new String();
 
 	@Column(name = "video_link")
-	private String videLink;
+	private String videoLink;
 
 	@Column(name = "state", columnDefinition = "VARCHAR(255) default 'PREDRAFT'")
 	private String articleState; // PREDRAFT, DRAFT, PENDING, PUBLISHED, REJECTED
@@ -104,12 +104,12 @@ public class Article extends EntityBase {
 		this.articleContents = articleContents;
 	}
 
-	public String getVideLink() {
-		return videLink;
+	public String getVideoLink() {
+		return videoLink;
 	}
 
-	public void setVideLink(String videLink) {
-		this.videLink = videLink;
+	public void setVideoLink(String videoLink) {
+		this.videoLink = videoLink;
 	}
 
 	public String getArticleState() {
