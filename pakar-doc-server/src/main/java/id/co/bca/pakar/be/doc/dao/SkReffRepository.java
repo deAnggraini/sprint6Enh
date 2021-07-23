@@ -6,6 +6,8 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface SkReffRepository extends CrudRepository<SkRefference, Long> {
     @Query("SELECT m.skRefference FROM ArticleSkReff m " +
@@ -21,4 +23,9 @@ public interface SkReffRepository extends CrudRepository<SkRefference, Long> {
             "AND m.deleted IS FALSE "+
             "ORDER BY m.id ASC ")
     Iterable<SkRefference> searchSkReffLike(@Param("keyword") String keyword);
+
+    @Query("SELECT m FROM SkRefference m " +
+            "WHERE m.id=:id " +
+            "AND m.deleted IS FALSE ")
+    Optional<SkRefference> findById(@Param("id") Long id);
 }
