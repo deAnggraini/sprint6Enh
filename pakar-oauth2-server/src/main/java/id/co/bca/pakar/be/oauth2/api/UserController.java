@@ -1,11 +1,8 @@
 package id.co.bca.pakar.be.oauth2.api;
 
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import id.co.bca.pakar.be.oauth2.dto.MenuDto;
+import id.co.bca.pakar.be.oauth2.common.Constant;
+import id.co.bca.pakar.be.oauth2.dto.LoggedinDto;
+import id.co.bca.pakar.be.oauth2.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +15,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
-import id.co.bca.pakar.be.oauth2.common.Constant;
-import id.co.bca.pakar.be.oauth2.dto.LoggedinDto;
-import id.co.bca.pakar.be.oauth2.service.UserService;
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @RestController
 public class UserController extends BaseController {
