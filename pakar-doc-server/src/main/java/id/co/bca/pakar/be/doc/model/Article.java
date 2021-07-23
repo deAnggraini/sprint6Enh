@@ -34,6 +34,9 @@ public class Article extends EntityBase {
 	@Column(name = "video_link")
 	private String videLink;
 
+	@Column(name = "state", columnDefinition = "varchar(255) default 'PREDRAFT'")
+	private String articleState; // PREDRAFT, DRAFT, PENDING, PUBLISHED, REJECTED
+
 	@OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private List<ArticleContent> articleContents = new ArrayList<>();
 
@@ -107,5 +110,13 @@ public class Article extends EntityBase {
 
 	public void setVideLink(String videLink) {
 		this.videLink = videLink;
+	}
+
+	public String getArticleState() {
+		return articleState;
+	}
+
+	public void setArticleState(String articleState) {
+		this.articleState = articleState;
 	}
 }
