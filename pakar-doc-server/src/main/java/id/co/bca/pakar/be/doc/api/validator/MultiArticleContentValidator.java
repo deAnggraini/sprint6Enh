@@ -1,7 +1,6 @@
 package id.co.bca.pakar.be.doc.api.validator;
 
 import id.co.bca.pakar.be.doc.dto.ArticleContentDto;
-import id.co.bca.pakar.be.doc.dto.StructureWithFileDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,16 +33,16 @@ public class MultiArticleContentValidator implements Validator {
             int index = 0;
             // validate maximum level
             for (ArticleContentDto contentDto : multiDto) {
-                if(contentDto.getLevel() > 5) {
-                    errors.rejectValue("level", "maximum.topic.level.reached",new Object[]{5}, "topic title level maximum 5");
+                if (contentDto.getLevel() > 5) {
+                    errors.rejectValue("level", "maximum.topic.level.reached", new Object[]{5}, "topic title level maximum 5");
                     return;
                 }
             }
 
             for (ArticleContentDto contentDto : multiDto) {
                 if (!contentDto.getTopicTitle().isEmpty()) {
-                    if(contentDto.getTopicTitle().length() > 150)
-                    errors.rejectValue("topicTitle", "maximum.topic.title.reached",new Object[]{150}, "topic title maximum 150 characters");
+                    if (contentDto.getTopicTitle().length() > 150)
+                        errors.rejectValue("topicTitle", "maximum.topic.title.reached", new Object[]{150}, "topic title maximum 150 characters");
                     return;
                 }
             }
