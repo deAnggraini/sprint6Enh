@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public abstract class PageDto extends BaseDto {
     @JsonProperty("page")
-    protected Long page;
+    protected Long page = 0L;
     @JsonProperty("limit")
-    protected Long size;
+    protected Long size = 10L;
 
     public Long getPage() {
         return page;

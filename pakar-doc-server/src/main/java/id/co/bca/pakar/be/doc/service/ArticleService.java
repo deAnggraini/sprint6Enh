@@ -1,6 +1,7 @@
 package id.co.bca.pakar.be.doc.service;
 
 import id.co.bca.pakar.be.doc.dto.*;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -21,5 +22,5 @@ public interface ArticleService {
 
     Boolean deleteContent(DeleteContentDto deleteContentDto) throws Exception;
 
-    RelatedArticleDto search(SearchDto searchDto) throws Exception;
+    Page<RelatedArticleDto> search(SearchDto searchDto) throws Exception;
 }

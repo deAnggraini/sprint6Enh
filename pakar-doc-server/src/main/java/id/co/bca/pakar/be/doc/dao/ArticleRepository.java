@@ -20,5 +20,11 @@ public interface ArticleRepository extends CrudRepository<Article, Long> {
             "AND m.deleted IS FALSE ")
     Optional<Article> findById(@Param("id") Long id);
 
-    Page<Article> findRelatedArticles(boolean published, Pageable pageable);
+    @Query("SELECT m FROM Article m " +
+            "WHERE m.deleted IS FALSE " +
+            "AND m.articleState <>  'PREDRAFT' " +
+            "AND m.id <> :id " +
+            "AND (m.judulArticle LIKE %:keyword% " +
+            "OR m.shortDescription LIKE %:keyword%) ")
+    Page<Article> findRelatedArticles(@Param("id") Long id, @Param("keyword") String keyword, Pageable pageable);
 }

@@ -12,6 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -298,7 +300,6 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     /**
-     *
      * @param articleContentDtos
      * @return
      * @throws Exception
@@ -308,10 +309,10 @@ public class ArticleServiceImpl implements ArticleService {
     public List<ArticleContentDto> saveBatchContents(List<ArticleContentDto> articleContentDtos, String username, String token) throws Exception {
         try {
             logger.info("save batch contents");
-            for(ArticleContentDto articleContentDto : articleContentDtos) {
+            for (ArticleContentDto articleContentDto : articleContentDtos) {
                 logger.info("find content byd id");
                 Optional<ArticleContent> contentOpt = articleContentRepository.findById(articleContentDto.getId());
-                if(contentOpt.isEmpty()) {
+                if (contentOpt.isEmpty()) {
                     logger.info("not found article content with id {}", articleContentDto.getId());
                     throw new DataNotFoundException("data not found");
                 }
@@ -433,11 +434,14 @@ public class ArticleServiceImpl implements ArticleService {
      * @throws Exception
      */
     @Override
-    public RelatedArticleDto search(SearchDto searchDto) throws Exception {
+    public Page<RelatedArticleDto> search(SearchDto searchDto) throws Exception {
         try {
             logger.info("search related article");
-            Pageable paging = PageRequest.of(searchDto.getPage().intValue(), searchDto.getSize().intValue());
-            return null;
+            Pageable pageable = PageRequest.of(searchDto.getPage().intValue(), searchDto.getSize().intValue());
+            Page<Article> searchResultPage = articleRepository.findRelatedArticles(searchDto.getExclude(), searchDto.getKeyword(), pageable);
+            logger.debug("total items {}", searchResultPage.getTotalElements());
+            logger.debug("total contents {}", searchResultPage.getContent().size());
+            return new ToDoMapper().mapEntityPageIntoDTOPage(pageable, searchResultPage);
         } catch (Exception e) {
             logger.error("exception", e);
             throw new Exception("exception", e);
@@ -556,5 +560,38 @@ public class ArticleServiceImpl implements ArticleService {
         }
         logger.debug("replaced content title {}", replacedText);
         return replacedText;
+    }
+
+    private class ToDoMapper {
+        public List<RelatedArticleDto> mapEntitiesIntoDTOs(Iterable<Article> entities) {
+            List<RelatedArticleDto> dtos = new ArrayList<>();
+            entities.forEach(e -> dtos.add(mapEntityIntoDTO(e)));
+            return dtos;
+        }
+
+        /*
+
+         */
+        public RelatedArticleDto mapEntityIntoDTO(Article entity) {
+            RelatedArticleDto dto = new RelatedArticleDto();
+
+            dto.setCreatedBy(entity.getCreatedBy());
+            dto.setCreatedDate(entity.getCreatedDate());
+            dto.setId(entity.getId());
+            dto.setTitle(entity.getJudulArticle());
+            return dto;
+        }
+
+        /**
+         * Transforms {@code Page<ENTITY>} objects into {@code Page<DTO>} objects.
+         *
+         * @param pageRequest The information of the requested page.
+         * @param source      The {@code Page<ENTITY>} object.
+         * @return The created {@code Page<DTO>} object.
+         */
+        public Page<RelatedArticleDto> mapEntityPageIntoDTOPage(Pageable pageRequest, Page<Article> source) {
+            List<RelatedArticleDto> dtos = mapEntitiesIntoDTOs(source.getContent());
+            return new PageImpl<>(dtos, pageRequest, source.getTotalElements());
+        }
     }
 }

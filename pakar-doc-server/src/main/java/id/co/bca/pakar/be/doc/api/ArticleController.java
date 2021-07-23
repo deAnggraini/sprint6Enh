@@ -15,6 +15,7 @@ import id.co.bca.pakar.be.doc.util.JSONMapperAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,10 +24,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 @CrossOrigin
 @RestController
@@ -255,19 +253,24 @@ public class ArticleController extends BaseController {
      */
     @PostMapping(value = "/api/doc/searchRelatedArticle", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
             MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<RestResponse<RelatedArticleDto>> searchRelatedArticle(@RequestHeader("Authorization") String authorization,
-                                                                                @RequestHeader(name = "X-USERNAME") String username,
-                                                                                @RequestBody SearchDto searchDto) {
+    public ResponseEntity<RestResponse<Map<String, Object>>> searchRelatedArticle(@RequestHeader("Authorization") String authorization,
+                                                                                  @RequestHeader(name = "X-USERNAME") String username,
+                                                                                  @RequestBody SearchDto searchDto) {
         try {
             logger.info("search related articles process");
             logger.info("received token bearer --- {}", authorization);
             searchDto.setUsername(username);
             searchDto.setToken(getTokenFromHeader(authorization));
-            RelatedArticleDto articleDto = articleService.search(searchDto);
-            return createResponse(articleDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
+            Page<RelatedArticleDto> pageArticleDto = articleService.search(searchDto);
+            Map<String, Object> maps = new HashMap<String, Object>();
+            maps.put("list", pageArticleDto.getContent());
+            maps.put("totalElements", pageArticleDto.getTotalElements());
+            maps.put("totalPages", pageArticleDto.getTotalPages());
+            maps.put("currentPage", searchDto.getPage() + 1);
+            return createResponse(maps, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
         } catch (Exception e) {
             logger.error("exception", e);
-            return createResponse(new RelatedArticleDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
+            return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
         }
     }
 

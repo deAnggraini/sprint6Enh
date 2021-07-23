@@ -34,7 +34,7 @@ public class Article extends EntityBase {
 	@Column(name = "video_link")
 	private String videLink;
 
-	@Column(name = "state", columnDefinition = "varchar(255) default 'PREDRAFT'")
+	@Column(name = "state", columnDefinition = "VARCHAR(255) default 'PREDRAFT'")
 	private String articleState; // PREDRAFT, DRAFT, PENDING, PUBLISHED, REJECTED
 
 	@OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
