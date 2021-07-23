@@ -11,12 +11,15 @@
   </a>
 
   <ng-container *ngIf="asideSelfMinimizeToggle">
-    <button #kt_aside_toggle class="brand-toggle btn btn-sm px-0 active" id="kt_aside_toggle" style="padding-top: 0;">
+    <button #kt_aside_toggle class="btn btn-sm px-0 active" id="kt_aside_toggle" >
       <!-- *ngIf="!showAside" (click)="asideShow()" -->
       <div class="logo">
-        <span [inlineSVG]="'./assets/media/svg/icons/Text/Menu.svg'" cacheSVG="true"
-          class="svg-icon svg-icon-xl svg-icon-white pl-1"></span>
-        <div class="bottom">MENU</div>
+        <!-- <span [inlineSVG]="'./assets/media/svg/icons/Text/Menu.svg'" cacheSVG="true"
+          class="svg-icon svg-icon-xl svg-icon-white pl-1"></span> -->
+        <!-- <div class="bottom">MENU</div> -->
+        <span [inlineSVG]="'./assets/media/svg/bca/menu.svg'" cacheSVG="true"
+          class="svg-icon svg-icon-xl svg-icon-white pl-1"
+          style="width: 21px; height: 27px;"></span>
       </div>
       <!-- *ngIf="showAside" (click)="asideShow()" -->
       <span [inlineSVG]="'./assets/media/svg/bca/close_white.svg'" cacheSVG="true" class="close_"></span>

@@ -29,6 +29,22 @@
         }
       }
 
+      @media (min-width: 2160px) {
+        img {
+          margin-left: 34%;
+          position: static;
+          height: 50px;
+        }
+      }
+
+      @media (min-width: 4320px) {
+        img {
+          margin-left: 41%;
+          position: static;
+          height: 50px;
+        }
+      }
+
       .aside-img {
         background-size: 600px 409.79px;
       }
