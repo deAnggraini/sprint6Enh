@@ -4,9 +4,7 @@ import id.co.bca.pakar.be.doc.client.ApiResponseWrapper;
 import id.co.bca.pakar.be.doc.client.PakarOauthClient;
 import id.co.bca.pakar.be.doc.dao.*;
 import id.co.bca.pakar.be.doc.dto.*;
-import id.co.bca.pakar.be.doc.exception.AccesDeniedDeleteContentException;
-import id.co.bca.pakar.be.doc.exception.DataNotFoundException;
-import id.co.bca.pakar.be.doc.exception.NotFoundArticleTemplateException;
+import id.co.bca.pakar.be.doc.exception.*;
 import id.co.bca.pakar.be.doc.model.*;
 import id.co.bca.pakar.be.doc.service.ArticleService;
 import id.co.bca.pakar.be.doc.util.TreeArticleContents;
@@ -299,9 +297,80 @@ public class ArticleServiceImpl implements ArticleService {
         }
     }
 
+    /**
+     *
+     * @param articleContentDtos
+     * @return
+     * @throws Exception
+     */
     @Override
-    public ArticleContentDto saveBatchContents(List<ArticleContentDto> articleContentDtos) throws Exception {
-        return null;
+    @Transactional(rollbackOn = {Exception.class, DataNotFoundException.class})
+    public List<ArticleContentDto> saveBatchContents(List<ArticleContentDto> articleContentDtos, String username, String token) throws Exception {
+        try {
+            logger.info("save batch contents");
+            for(ArticleContentDto articleContentDto : articleContentDtos) {
+                logger.info("find content byd id");
+                Optional<ArticleContent> contentOpt = articleContentRepository.findById(articleContentDto.getId());
+                if(contentOpt.isEmpty()) {
+                    logger.info("not found article content with id {}", articleContentDto.getId());
+                    throw new DataNotFoundException("data not found");
+                }
+
+                ArticleContent articleContent = contentOpt.get();
+
+                Long currentLevel = articleContent.getLevel();
+                Long currentPid = articleContent.getParent();
+                // validate parent id exist in database base on current pid if current pid != 0
+                if (currentPid.intValue() > 0) {
+                    boolean isExist = articleContentRepository.existsById(currentPid);
+                    if (!isExist) {
+                        logger.info("no article content found in database, process stopped");
+                        throw new DataNotFoundException("article content found in database");
+                    }
+                }
+
+                if (currentPid.intValue() == 0) {
+                    if (currentLevel.intValue() != 1) {
+                        logger.info("invalid level, cause article content has parent value 0 but level != 1, process stopped");
+                        throw new InvalidLevelException("invalid level, cause article content has parent value 0 but level != 1");
+                    }
+                }
+
+                /**
+                 * if current parent id != 0 then
+                 *   get structure with parent id = compared structure id
+                 *   if child
+                 */
+                logger.info("validate article content structure");
+                for (ArticleContentDto articleContentDto1 : articleContentDtos) {
+                    logger.info("article content structure compared to {}", articleContentDto1.toString());
+                    if (articleContentDto1.getId().intValue() == currentPid.intValue()) {
+                        Long parentLevel = articleContentDto1.getLevel();
+                        if (currentLevel.intValue() <= parentLevel.intValue()) {
+                            logger.info("child level has value smaller than parent level, process stopped");
+                            throw new InvalidLevelException("child level has value smaller than parent level");
+                        }
+                    }
+                }
+
+                logger.info("repopulate article content from dto");
+                articleContent.setModifyBy(username);
+                articleContent.setModifyDate(new Date());
+                articleContent.setLevel(articleContentDto.getLevel());
+                articleContent.setSort(articleContentDto.getOrder());
+                articleContent.setParent(articleContentDto.getParent());
+
+                logger.info("save batch content");
+                articleContentRepository.save(articleContent);
+            }
+            return articleContentDtos;
+        } catch (DataNotFoundException e) {
+            logger.error("exception", e);
+            throw new DataNotFoundException("data not found exception", e);
+        } catch (Exception e) {
+            logger.error("exception", e);
+            throw new SaveBatchException("failed save batch exception", e);
+        }
     }
 
     /**
@@ -340,17 +409,6 @@ public class ArticleServiceImpl implements ArticleService {
             articleContent.setModifyBy(deleteContentDto.getUsername());
             articleContentRepository.save(articleContent);
             List<ArticleContent> children = articleContentRepository.findArticleContent(articleContent.getId());
-            // sorting root children
-//            for(ArticleContent content : children) {
-//            Collections.sort(children, new Comparator<ArticleContent>() {
-//                @Override
-//                public int compare(ArticleContent o1, ArticleContent o2) {
-//                    return o1.getSort().intValue() - o2.getSort().intValue();
-//                }
-//            });
-//            }
-//            articleContent.getDeletedAllChildren(deleteContentDto.getUsername());
-//            List<ArticleContent> children = articleContent.getAllChildren();
             for (ArticleContent content : children) {
                 logger.debug("content level {} and title {}", content.getLevel(), content.getName());
                 content.setModifyBy(deleteContentDto.getUsername());

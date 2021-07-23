@@ -17,7 +17,7 @@ public interface ArticleService {
 
     ArticleContentDto saveContent(ArticleContentDto articleContentDto) throws Exception;
 
-    ArticleContentDto saveBatchContents(List<ArticleContentDto> articleContentDtos) throws Exception;
+    List<ArticleContentDto> saveBatchContents(List<ArticleContentDto> articleContentDtos, String username, String token) throws Exception;
 
     Boolean deleteContent(DeleteContentDto deleteContentDto) throws Exception;
 

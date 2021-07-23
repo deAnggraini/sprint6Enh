@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ArticleContentRepository extends CrudRepository<ArticleContent, Long> {
@@ -36,4 +37,14 @@ public interface ArticleContentRepository extends CrudRepository<ArticleContent,
             "SELECT tacp.* FROM tac_parent tacp group by tacp.id, tacp.parent_id, tacp.name",
             nativeQuery = true)
     List<ArticleContent>  findArticleContentParent(@Param("id") Long id);
+
+    @Query(value = "SELECT m FROM ArticleContent m " +
+            "WHERE m.deleted IS FALSE " +
+            "AND m.id=:id ")
+    Optional<ArticleContent> findById(@Param("id") Long id);
+
+    @Query("SELECT CASE WHEN COUNT(m) > 0 THEN TRUE ELSE FALSE END FROM ArticleContent m " +
+            "WHERE m.deleted IS FALSE " +
+            "AND m.id=:id ")
+    boolean existsById(@Param("id") Long id);
 }

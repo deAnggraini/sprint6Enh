@@ -5,6 +5,7 @@ import id.co.bca.pakar.be.doc.common.Constant;
 import id.co.bca.pakar.be.doc.dto.*;
 import id.co.bca.pakar.be.doc.exception.AccesDeniedDeleteContentException;
 import id.co.bca.pakar.be.doc.exception.DataNotFoundException;
+import id.co.bca.pakar.be.doc.exception.InvalidLevelException;
 import id.co.bca.pakar.be.doc.exception.NotFoundArticleTemplateException;
 import id.co.bca.pakar.be.doc.service.ArticleService;
 import id.co.bca.pakar.be.doc.service.ArticleTemplateService;
@@ -348,13 +349,17 @@ public class ArticleController extends BaseController {
                 }
                 return createResponse(new ArrayList<ArticleContentDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], errorMessage);
             }
-//            articleContentDto.setUsername(username);
-//            articleContentDto.setToken(getTokenFromHeader(authorization));
-            articleService.saveBatchContents(articleContentDtos);
-            return createResponse(new ArrayList<ArticleContentDto>(), Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
+            articleService.saveBatchContents(articleContentDtos, username, getTokenFromHeader(authorization));
+            return createResponse(articleContentDtos, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, Locale.ENGLISH));
+        } catch (DataNotFoundException e) {
+            logger.error("exception", e);
+            return createResponse(new ArrayList<ArticleContentDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, Locale.ENGLISH));
+        } catch (InvalidLevelException e) {
+            logger.error("exception", e);
+            return createResponse(new ArrayList<ArticleContentDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("level.article.content.invalid", null, Locale.ENGLISH));
         } catch (Exception e) {
             logger.error("exception", e);
-            return createResponse(new ArrayList<ArticleContentDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
+            return createResponse(new ArrayList<ArticleContentDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, Locale.ENGLISH));
         }
     }
 
