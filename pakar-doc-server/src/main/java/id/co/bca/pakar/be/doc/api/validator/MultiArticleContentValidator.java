@@ -3,7 +3,6 @@ package id.co.bca.pakar.be.doc.api.validator;
 import id.co.bca.pakar.be.doc.dto.ArticleContentDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -13,12 +12,6 @@ import java.util.List;
 @Component
 public class MultiArticleContentValidator implements Validator {
     private Logger logger = LoggerFactory.getLogger(getClass());
-
-    @Value("${spring.multipart.max-size}")
-    private String maxFileSize = "2000000";
-
-    @Value("${spring.multipart.file-type}")
-    private String fileType;
 
     @Override
     public boolean supports(Class<?> clazz) {
