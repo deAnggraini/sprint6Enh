@@ -13,9 +13,11 @@ public interface ArticleService {
 
     ArticleDto saveArticle(MultipartArticleDto articleDto) throws Exception;
 
-    Long getContentId() throws Exception;
+    Long getContentId(BaseDto baseDto) throws Exception;
 
     ArticleContentDto saveContent(ArticleContentDto articleContentDto) throws Exception;
+
+    ArticleContentDto saveBatchContents(List<ArticleContentDto> articleContentDtos) throws Exception;
 
     Boolean deleteContent(DeleteContentDto deleteContentDto) throws Exception;
 

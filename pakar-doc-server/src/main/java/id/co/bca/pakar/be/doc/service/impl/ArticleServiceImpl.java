@@ -14,14 +14,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 import static id.co.bca.pakar.be.doc.common.Constant.Headers.BEARER;
 import static id.co.bca.pakar.be.doc.common.Constant.Roles.ROLE_ADMIN;
+import static id.co.bca.pakar.be.doc.common.Constant.Roles.ROLE_READER;
 
 @Service
 public class ArticleServiceImpl implements ArticleService {
@@ -231,11 +237,22 @@ public class ArticleServiceImpl implements ArticleService {
      * @throws Exception
      */
     @Override
-    public Long getContentId() throws Exception {
+    public Long getContentId(BaseDto baseDto) throws Exception {
         try {
             logger.info("get content id");
+            ResponseEntity<ApiResponseWrapper.RestResponse<List<String>>> restResponse = pakarOauthClient.getRoles(BEARER + baseDto.getToken(), baseDto.getUsername());
+            logger.debug("response api request {}", restResponse);
+            List<String> roles = restResponse.getBody().getData();
+            String role = roles.get(0);
+            if (role.equals(ROLE_READER)) {
+                logger.info("role {} has no authorize get content id", role);
+                throw new AccesDeniedDeleteContentException("role " + role + " has no authorize get content id");
+            }
             Long contentId = articleContentRepository.getContentId();
             return contentId;
+        } catch (AccesDeniedDeleteContentException e) {
+            logger.error("exception", e);
+            throw new AccesDeniedDeleteContentException("exception", e);
         } catch (Exception e) {
             logger.error("exception", e);
             throw new Exception("exception", e);
@@ -280,6 +297,11 @@ public class ArticleServiceImpl implements ArticleService {
             logger.error("exception", e);
             throw new Exception("exception", e);
         }
+    }
+
+    @Override
+    public ArticleContentDto saveBatchContents(List<ArticleContentDto> articleContentDtos) throws Exception {
+        return null;
     }
 
     /**
@@ -348,14 +370,20 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     /**
-     *
      * @param searchDto
      * @return
      * @throws Exception
      */
     @Override
     public RelatedArticleDto search(SearchDto searchDto) throws Exception {
-        return null;
+        try {
+            logger.info("search related article");
+            Pageable paging = PageRequest.of(searchDto.getPage().intValue(), searchDto.getSize().intValue());
+            return null;
+        } catch (Exception e) {
+            logger.error("exception", e);
+            throw new Exception("exception", e);
+        }
     }
 
     private List<ArticleContentDto> mapToListArticleContentDto(Iterable<ArticleContent> iterable) {

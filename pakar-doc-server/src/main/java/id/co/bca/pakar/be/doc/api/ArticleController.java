@@ -254,9 +254,6 @@ public class ArticleController extends BaseController {
 			logger.info("received token bearer --- {}", authorization);
             searchDto.setUsername(username);
             searchDto.setToken(getTokenFromHeader(authorization));
-
-            Pageable paging = PageRequest.of(searchDto.getPage().intValue(), searchDto.getSize().intValue());
-
             RelatedArticleDto articleDto = articleService.search(searchDto);
 			return createResponse(articleDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
 		} catch (Exception e) {
@@ -283,12 +280,17 @@ public class ArticleController extends BaseController {
 
     @GetMapping(value = "/api/doc/getContentId", produces = {
             MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<RestResponse<Long>> getContentId(@RequestHeader("Authorization") String authorization, @RequestHeader(name = "X-USERNAME") String username) {
+    public ResponseEntity<RestResponse<Long>> getContentId(@RequestHeader("Authorization") String authorization, @RequestHeader(name = "X-USERNAME") String username, @RequestBody BaseDto baseDto) {
         try {
             logger.info("get content id");
             logger.info("received token bearer --- {}", authorization);
-            Long contentId = articleService.getContentId();
+            baseDto.setUsername(username);
+            baseDto.setToken(getTokenFromHeader(authorization));
+            Long contentId = articleService.getContentId(baseDto);
             return createResponse(contentId, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
+        } catch (AccesDeniedDeleteContentException e) {
+            logger.error("exception", e);
+            return createResponse(0L, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("access.denied.delete.content", new Object[]{username}, Locale.ENGLISH));
         } catch (Exception e) {
             logger.error("exception", e);
             return createResponse(0L, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
@@ -308,6 +310,30 @@ public class ArticleController extends BaseController {
         } catch (Exception e) {
             logger.error("exception", e);
             return createResponse(new ArticleContentDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
+        }
+    }
+
+    /**
+     * save all accordeon with all chidren
+     * @param authorization
+     * @param username
+     * @param articleContentDtos
+     * @return
+     */
+    @PostMapping(value = "/api/doc/saveBatchContent", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
+            MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<RestResponse<List<ArticleContentDto>>> saveBatchArticleContent(@RequestHeader("Authorization") String authorization, @RequestHeader(name = "X-USERNAME") String username, @Valid @RequestBody List<ArticleContentDto> articleContentDtos) {
+        try {
+            // TODO implement saveBatchContents
+            logger.info("save batch article content");
+            logger.info("received token bearer --- {}", authorization);
+//            articleContentDto.setUsername(username);
+//            articleContentDto.setToken(getTokenFromHeader(authorization));
+            articleService.saveBatchContents(articleContentDtos);
+            return createResponse(new ArrayList<ArticleContentDto>(), Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
+        } catch (Exception e) {
+            logger.error("exception", e);
+            return createResponse(new ArrayList<ArticleContentDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
         }
     }
 
