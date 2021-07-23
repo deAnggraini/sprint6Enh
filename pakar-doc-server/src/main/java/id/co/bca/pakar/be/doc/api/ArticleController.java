@@ -1,5 +1,6 @@
 package id.co.bca.pakar.be.doc.api;
 
+import id.co.bca.pakar.be.doc.api.validator.MultiArticleContentValidator;
 import id.co.bca.pakar.be.doc.common.Constant;
 import id.co.bca.pakar.be.doc.dto.*;
 import id.co.bca.pakar.be.doc.exception.AccesDeniedDeleteContentException;
@@ -13,15 +14,18 @@ import id.co.bca.pakar.be.doc.util.JSONMapperAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 
 @CrossOrigin
 @RestController
@@ -39,6 +43,9 @@ public class ArticleController extends BaseController {
 
     @Autowired
     private ArticleService articleService;
+
+    @Autowired
+    private MultiArticleContentValidator multiArticleContentValidator;
 
     @GetMapping("/api/v1/doc/theme")
     public ResponseEntity<RestResponse<ThemeDto>> themeLogin() {
@@ -240,27 +247,28 @@ public class ArticleController extends BaseController {
 
     /**
      * search related article
+     *
      * @param authorization
      * @param username
      * @return
      */
-	@PostMapping(value = "/api/doc/searchRelatedArticle", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
-			MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<RestResponse<RelatedArticleDto>> searchRelatedArticle(@RequestHeader("Authorization") String authorization,
-                                                                                  @RequestHeader (name="X-USERNAME") String username,
-                                                                                  @RequestBody SearchDto searchDto) {
-		try {
-			logger.info("search related articles process");
-			logger.info("received token bearer --- {}", authorization);
+    @PostMapping(value = "/api/doc/searchRelatedArticle", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
+            MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<RestResponse<RelatedArticleDto>> searchRelatedArticle(@RequestHeader("Authorization") String authorization,
+                                                                                @RequestHeader(name = "X-USERNAME") String username,
+                                                                                @RequestBody SearchDto searchDto) {
+        try {
+            logger.info("search related articles process");
+            logger.info("received token bearer --- {}", authorization);
             searchDto.setUsername(username);
             searchDto.setToken(getTokenFromHeader(authorization));
             RelatedArticleDto articleDto = articleService.search(searchDto);
-			return createResponse(articleDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
-		} catch (Exception e) {
-			logger.error("exception", e);
-			return createResponse(new RelatedArticleDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
-		}
-	}
+            return createResponse(articleDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
+        } catch (Exception e) {
+            logger.error("exception", e);
+            return createResponse(new RelatedArticleDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
+        }
+    }
 
 //	@PostMapping(value = "/api/doc/saveArticle", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE }, produces = {
 //			MediaType.APPLICATION_JSON_VALUE })
@@ -315,6 +323,7 @@ public class ArticleController extends BaseController {
 
     /**
      * save all accordeon with all chidren
+     *
      * @param authorization
      * @param username
      * @param articleContentDtos
@@ -322,11 +331,23 @@ public class ArticleController extends BaseController {
      */
     @PostMapping(value = "/api/doc/saveBatchContent", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
             MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<RestResponse<List<ArticleContentDto>>> saveBatchArticleContent(@RequestHeader("Authorization") String authorization, @RequestHeader(name = "X-USERNAME") String username, @Valid @RequestBody List<ArticleContentDto> articleContentDtos) {
+    public ResponseEntity<RestResponse<List<ArticleContentDto>>> saveBatchArticleContent(@RequestHeader("Authorization") String authorization, @RequestHeader(name = "X-USERNAME") String username, @RequestBody List<ArticleContentDto> articleContentDtos, BindingResult bindingResult) {
         try {
             // TODO implement saveBatchContents
             logger.info("save batch article content");
             logger.info("received token bearer --- {}", authorization);
+            multiArticleContentValidator.validate(articleContentDtos, bindingResult);
+            if (bindingResult.hasErrors()) {
+                logger.info("binding result " + bindingResult.getAllErrors());
+                String errorMessage = "";
+                for (Object object : bindingResult.getAllErrors()) {
+                    if (object instanceof FieldError) {
+                        FieldError fieldError = (FieldError) object;
+                        errorMessage = messageSource.getMessage(fieldError.getCode(), null, new Locale("en", "US"));
+                    }
+                }
+                return createResponse(new ArrayList<ArticleContentDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], errorMessage);
+            }
 //            articleContentDto.setUsername(username);
 //            articleContentDto.setToken(getTokenFromHeader(authorization));
             articleService.saveBatchContents(articleContentDtos);
