@@ -19,7 +19,7 @@
                     </div>
                     <div class="form-group col-sm-10 col-md-10 col-lg-11 col-xxl-11">
                         <label>Lokasi Artikel <span class="text-danger">*</span></label>
-                        <pakar-combo-box-accordion formControlName="location" (onChange)="changeLocation($event)"
+                        <pakar-combo-box-accordion formControlName="structureId" (onChange)="changeLocation($event)"
                             [options]="locationOptions"
                             placeholder="Pilih lokasi yang tepat untuk artikel yang ingin ditambahkan">
                         </pakar-combo-box-accordion>
@@ -40,7 +40,7 @@
                         <div class="row mt-3">
                             <div class="col template-item" *ngFor="let template of listTemplate">
                                 <label class="d-flex flex-row">
-                                    <input type="radio" [value]="template.id" formControlName="template">
+                                    <input type="radio" [value]="template.id" formControlName="templateId">
                                     <div class="d-flex flex-column pl-1">
                                         <img class="template-thumbnail"
                                             [src]="'/assets/media/images/' + (template.name == 'Empty' ? 'empty_thumb.svg' : 'basic_thumb.svg')">
