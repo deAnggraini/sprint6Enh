@@ -1,4 +1,19 @@
-const { sample } = require("lodash");
+const sample_empty = {
+    id: 100,
+    title: 'Tahapan',
+    desc: '',
+    image: '',
+    video: '',
+    created_at: new Date(),
+    created_by: '',
+    location: 2,
+    contents: [
+    ],
+    references: [], // {id, title, no},
+    related: [],  // {id, title}
+    suggestions: [], // {id, title}
+    isEmptyTemplate: true,
+};
 
 const sample_basic = {
     id: 100,
@@ -41,6 +56,7 @@ const sample_basic = {
     references: [], // {id, title, no},
     related: [],  // {id, title}
     suggestions: [], // {id, title}
+    isEmptyTemplate: false,
 };
 
 const sample_non_basic = {
@@ -318,6 +334,7 @@ const sample_non_basic = {
     references: [],
     related: [],
     suggestions: [],
+    isEmptyTemplate: false,
 };
 
 const articles = [
@@ -899,3 +916,4 @@ module.exports.lastKeyword = lastKeyword;
 module.exports.articles = articles;
 module.exports.sample_basic = sample_basic;
 module.exports.sample_non_basic = sample_non_basic;
+module.exports.sample_empty = sample_empty;

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const categoryArticle = require('../database/category-article');
-const { sample_basic, sample_non_basic, articles, recommendation, news, popular, suggestion, lastKeyword } = require('../database/articles');
+const { sample_empty, sample_basic, sample_non_basic, articles, recommendation, news, popular, suggestion, lastKeyword } = require('../database/articles');
 const theme = require('../database/themes');
 const _ = require('lodash');
 const path = require('path');
@@ -387,14 +387,14 @@ router.post('/searchArticle', (req, res) => {
 router.post('/generateArticle', (req, res) => {
     const { body } = req;
     console.log({ body });
-    res.send({ error: false, msg: "", data: sample_basic });
+    res.send({ error: false, msg: "", data: sample_empty });
 });
 
 router.get('/getArticle', (req, res) => {
     // const { body } = ;
     const { id } = req.query;
-    console.log({ id, sample_basic });
-    res.send({ error: false, msg: "", data: sample_basic });
+    console.log({ id, sample_empty });
+    res.send({ error: false, msg: "", data: sample_non_basic });
 });
 
 router.get('/getContentId', (req, res) => {
