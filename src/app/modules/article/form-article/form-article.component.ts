@@ -26,6 +26,7 @@ const TOOL_TIPS = [
 
 const defaultValue: ArticleDTO = {
   id: 0,
+  isEmptyTemplate: false,
   title: '',
   desc: '',
   location: 0,
@@ -211,27 +212,52 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     this.subscriptions.push(
       this.article.getContentId().subscribe(resp => {
         if (resp) {
-          const maxSort: number = this.findMaxSort(data.children);
-          const listParent: ArticleParentDTO[] = JSON.parse(JSON.stringify(data.listParent));
-          if (data.level >= 2) {
-            listParent.push({ id: 0, no: data.no, title: data.title });
+          console.log({ resp });
+          if (data == null) { // craete new level 1
+            const _contents = this.dataForm.get('contents').value as ArticleContentDTO[];
+            const maxSort: number = this.findMaxSort(_contents);
+            const newNode: ArticleContentDTO = {
+              id: resp,
+              title: '',
+              intro: '',
+              topicContent: '',
+              topicTitle: '',
+              level: 1,
+              parent: 0,
+              sort: maxSort + 1,
+              children: [],
+              expanded: true,
+              listParent: [],
+              no: ''
+            }
+            _contents.push(newNode);
+            // this.dataForm.set('contents', _contents);
+            // data.expanded = true;
+            // data.children.push(newNode);
+          } else { // add childe level > 1
+            const maxSort: number = this.findMaxSort(data.children);
+            const listParent: ArticleParentDTO[] = JSON.parse(JSON.stringify(data.listParent));
+            if (data.level >= 2) {
+              listParent.push({ id: 0, no: data.no, title: data.title });
+            }
+            const newNode: ArticleContentDTO = {
+              id: resp,
+              title: '',
+              intro: '',
+              topicContent: '',
+              topicTitle: '',
+              level: data.level + 1,
+              parent: data.id,
+              sort: maxSort + 1,
+              children: [],
+              expanded: true,
+              listParent,
+              no: `${data.children.length + 1}`
+            }
+            data.expanded = true;
+            data.children.push(newNode);
           }
-          const newNode: ArticleContentDTO = {
-            id: resp,
-            title: '',
-            intro: '',
-            topicContent: '',
-            topicTitle: '',
-            level: data.level + 1,
-            parent: data.id,
-            sort: maxSort + 1,
-            children: [],
-            expanded: true,
-            listParent,
-            no: `${data.children.length + 1}`
-          }
-          data.expanded = true;
-          data.children.push(newNode);
+
           this.addLog(); // log article
           this.cdr.detectChanges();
         }
@@ -356,6 +382,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   private getArticle(id: number) {
     this.subscriptions.push(
       this.article.getById(id).subscribe((resp: ArticleDTO) => {
+        console.log({ resp });
         this.setArticle(resp);
       })
     );
@@ -377,6 +404,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
   private setArticle(article: ArticleDTO) {
+    console.log({ article });
     if (article) {
       const locationSelected = this.struktur.findNodeById(article.location);
       if (locationSelected) {
@@ -416,7 +444,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private goBackToAdd(msg: string) {
     alert(msg);
-    this.router.navigate(['article/add']);
+    // this.router.navigate(['article/add']);
   }
 
   // SK SE Event
@@ -488,6 +516,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
       references: [defaultValue.references],
       related: [defaultValue.related],
       suggestions: [defaultValue.suggestions],
+      isEmptyTemplate: [defaultValue.isEmptyTemplate, Validators.compose([Validators.required])],
     });
     this.accForm = this.fb.group({
       articleId: [0, Validators.compose([Validators.required])],

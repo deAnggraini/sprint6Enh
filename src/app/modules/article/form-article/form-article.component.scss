@@ -176,13 +176,13 @@ $acc-child-margin : 10px;
     &.mat-expansion-panel:last-of-type {
       margin-bottom: 10px;
 
-      .mat-expansion-panel-header {
+      &>.mat-expansion-panel-header {
         background-image: url('../../../../assets/media/images/tree-line.png');
         background-position: 0px 50px;
         background-repeat: repeat-y;
       }
 
-      .mat-expansion-panel-content {
+      &>.mat-expansion-panel-content {
         background-image: none;
       }
     }

@@ -34,6 +34,7 @@ export declare interface ArticleContentDTO {
 
 export declare interface ArticleDTO {
     id: number,
+    isEmptyTemplate: boolean,
     title: string,
     location: number,
     locationOption?: Option,

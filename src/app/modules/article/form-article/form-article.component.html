@@ -65,7 +65,7 @@
         </div>
         <div class="form-group col-sm-11 col-lg-6 col-xl-6 col-xxl-6">
             <label>Video Artikel</label>
-            <input type="url" class="form-control" formControlName="video">
+            <input type="url" class="form-control" formControlName="video" placeholder="Masukan URL myVideo">
         </div>
         <div class="form-group col-sm-12 col-lg-11 col-xl-11 col-xxl-11">
             <label>Content Artikel *</label>
@@ -94,11 +94,15 @@
                         </div>
                     </mat-expansion-panel>
                 </mat-accordion>
-                <button *ngIf="dataForm.get('contents').value.length == 0" type="button"
-                    class="btn btn-blue-outline btn-sm rounded-sm w-100">
+                <button *ngIf="dataForm.get('isEmptyTemplate').value  && (user.roles[0] == 'ADMIN' || user.roles[0] == 'SUPERADMIN')" type="button"
+                    class="btn btn-blue-outline btn-sm rounded-sm w-100" (click)="btnAddClick($event, null)">
                     <!-- <span [inlineSVG]="'./assets/media/svg/bca/icon/plus.svg'" cacheSVG="true"
                         class="svg-icon"></span> -->
                     + Tambah Artikel
+                </button>
+                <button *ngIf="dataForm.get('isEmptyTemplate').value  && !(user.roles[0] == 'ADMIN' || user.roles[0] == 'SUPERADMIN')" type="button"
+                    class="btn btn-danger btn-sm rounded-sm w-100" disabled>
+                    Content Kosong
                 </button>
             </div>
         </div>
