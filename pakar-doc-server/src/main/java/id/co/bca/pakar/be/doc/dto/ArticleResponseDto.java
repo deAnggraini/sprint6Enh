@@ -6,12 +6,12 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MultipartArticleDto extends BaseArticleDto {
+public class ArticleResponseDto extends BaseArticleDto {
     @JsonProperty("desc")
     private String shortDescription;
 
     @JsonProperty("image")
-    private MultipartFile image;
+    private String image;
 
     @JsonProperty("video")
     private String videoLink;
@@ -23,24 +23,24 @@ public class MultipartArticleDto extends BaseArticleDto {
     private List<SkReffDto> skReff = new ArrayList<>();
 
     @JsonProperty("related")
-    private List<MultipartArticleDto> related = new ArrayList<>();
+    private List<BaseArticleDto> related = new ArrayList<>();
 
     @JsonProperty("suggestions")
     private List<SuggestionArticleDto> suggestions = new ArrayList<>();
-
-    public String getShortDescription() {
-        return shortDescription;
-    }
 
     public void setShortDescription(String shortDescription) {
         this.shortDescription = shortDescription;
     }
 
-    public MultipartFile getImage() {
+    public String getShortDescription() {
+        return shortDescription;
+    }
+
+    public String getImage() {
         return image;
     }
 
-    public void setImage(MultipartFile image) {
+    public void setImage(String image) {
         this.image = image;
     }
 
@@ -68,11 +68,11 @@ public class MultipartArticleDto extends BaseArticleDto {
         this.skReff = skReff;
     }
 
-    public List<MultipartArticleDto> getRelated() {
+    public List<BaseArticleDto> getRelated() {
         return related;
     }
 
-    public void setRelated(List<MultipartArticleDto> related) {
+    public void setRelated(List<BaseArticleDto> related) {
         this.related = related;
     }
 

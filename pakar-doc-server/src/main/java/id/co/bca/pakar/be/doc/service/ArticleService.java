@@ -12,7 +12,7 @@ public interface ArticleService {
 
     ArticleDto getArticleById(Long id) throws Exception;
 
-    MultipartArticleDto saveArticle(MultipartArticleDto articleDto) throws Exception;
+    ArticleResponseDto saveArticle(MultipartArticleDto articleDto) throws Exception;
 
     Long getContentId(BaseDto baseDto) throws Exception;
 

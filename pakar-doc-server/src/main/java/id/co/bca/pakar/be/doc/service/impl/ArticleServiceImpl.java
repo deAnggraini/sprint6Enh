@@ -12,6 +12,7 @@ import id.co.bca.pakar.be.doc.util.FileUploadUtil;
 import id.co.bca.pakar.be.doc.util.TreeArticleContents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -234,7 +235,7 @@ public class ArticleServiceImpl implements ArticleService {
      */
     @Override
     @Transactional(rollbackOn = {Exception.class})
-    public MultipartArticleDto saveArticle(MultipartArticleDto articleDto) throws Exception {
+    public ArticleResponseDto saveArticle(MultipartArticleDto articleDto) throws Exception {
         try {
             logger.info("save article process");
             Optional<Article> articleOpt = articleRepository.findById(articleDto.getId());
@@ -306,7 +307,8 @@ public class ArticleServiceImpl implements ArticleService {
                 articleImageRepository.save(am);
             }
 
-            return articleDto;
+            return BeanUtils.copyProperties(articleDto, articleRe).copyProperties();
+            articleDto;
         } catch (Exception e) {
             logger.error("", e);
             throw new Exception("exception", e);
