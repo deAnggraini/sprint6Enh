@@ -44,6 +44,7 @@ export class AddComponent implements OnInit, OnDestroy {
     { id: "2", value: "Internal", text: 'Internal' },
     { id: "3", value: "Nasabah & Internal", text: 'Nasabah & Internal' },
   ];
+  paramKey: string = '';
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -83,7 +84,7 @@ export class AddComponent implements OnInit, OnDestroy {
   save() {
     if (this.dataForm.valid && !this.hasError) {
       this.article.formParam = this.dataForm.value;
-      const params = Object.assign({}, this.dataForm.value, {paramKey: '[Nama Produk]', paramValue: this.dataForm.value.title });
+      const params = Object.assign({}, this.dataForm.value, { paramKey: this.paramKey, paramValue: this.dataForm.value.title });
       this.subscriptions.push(
         this.article.generate(params).subscribe((resp: ArticleDTO) => {
           this.article.formData = resp;
@@ -146,6 +147,7 @@ export class AddComponent implements OnInit, OnDestroy {
       if (d) {
         const found = this.listTemplate.find(r => r.id == parseInt(d));
         if (found) {
+          this.paramKey = found.contents[0]?.params[0] || '';
           this.preview_img = `${this.backend_img}${found.image}`;
           this.cdr.detectChanges();
         }
