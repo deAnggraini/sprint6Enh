@@ -665,6 +665,7 @@ public class ArticleServiceImpl implements ArticleService {
             logger.debug("param key {} ---> param value {}", paramKey, paramValue);
             if (replacedText.contains(paramKey)) {
                 replacedText = replacedText.replace(paramKey, paramValue);
+                logger.debug("replaced text {}", replacedText);
                 break;
             }
             paramKey = key;
