@@ -2,7 +2,6 @@ package id.co.bca.pakar.be.doc.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.persistence.Column;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,6 +18,7 @@ public class ArticleDto extends BaseArticleDto {
 
     @JsonProperty("created_by")
     private String createdBy;
+
     @JsonProperty("created_date")
     private Date createdDate = new Date();
 
@@ -33,6 +33,12 @@ public class ArticleDto extends BaseArticleDto {
 
     @JsonProperty("suggestions")
     private List<SuggestionArticleDto> suggestions = new ArrayList<>();
+
+    @JsonProperty("isEmptyTemplate")
+    private Boolean emptyTemplate = false;
+
+    @JsonProperty("structureId")
+    private Long structureId;
 
     public String getShortDescription() {
         return shortDescription;
@@ -104,5 +110,21 @@ public class ArticleDto extends BaseArticleDto {
 
     public void setSuggestions(List<SuggestionArticleDto> suggestions) {
         this.suggestions = suggestions;
+    }
+
+    public Boolean getEmptyTemplate() {
+        return emptyTemplate;
+    }
+
+    public void setEmptyTemplate(Boolean emptyTemplate) {
+        this.emptyTemplate = emptyTemplate;
+    }
+
+    public Long getStructureId() {
+        return structureId;
+    }
+
+    public void setStructureId(Long structureId) {
+        this.structureId = structureId;
     }
 }
