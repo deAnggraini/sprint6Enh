@@ -2,10 +2,12 @@ package id.co.bca.pakar.be.oauth2.authenticate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -31,6 +33,9 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 	@Autowired
 	private RoleRepository roleRepository;
 
+	@Autowired
+	private MessageSource messageSource;
+
 	@SuppressWarnings({ "deprecation", "deprecation" })
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -54,7 +59,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 					return auth;
 				} else {
 					logger.info("user / password salah ");
-					throw new BadCredentialsException("Wrong userid or password");
+					throw new BadCredentialsException(messageSource.getMessage("userid.password.incorrect.update", null, new Locale("en", "US")));
 				}
 			} else {
 				logger.info("user / password salah ");
