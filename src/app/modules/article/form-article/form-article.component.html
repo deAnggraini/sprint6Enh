@@ -84,12 +84,12 @@
                             <ng-container [ngTemplateOutlet]="rightIcon" [ngTemplateOutletContext]="{ data: content}">
                             </ng-container>
                         </mat-expansion-panel-header>
-                        <div cdkDropListGroup>
+                        <div>
                             <input type="text" class="txt-desc-lvl1" [(ngModel)]="content.intro"
                                 [ngModelOptions]="{standalone: true}"
                                 placeholder="Masukkan kalimat pengantar terkait {{content.title}} disini.">
-                            <ng-container *ngIf="content.children.length" [ngTemplateOutlet]="accordionChild"
-                                [ngTemplateOutletContext]="{ children: content.children, level:2, parents:[]}">
+                            <ng-container [ngTemplateOutlet]="accordionChild"
+                                [ngTemplateOutletContext]="{ children: content.children, level:2, parents:[{id:content.id, no:content.no}]}">
                             </ng-container>
                         </div>
                     </mat-expansion-panel>
@@ -172,8 +172,9 @@
 
 <ng-template #accordionChild let-children="children" let-level="level" let-parents="parents">
     <div style="border-bottom:1px solid #C8C6C4; height: 10px;"></div>
-    <mat-accordion cdkDropList (cdkDropListDropped)="drop($event)" [cdkDropListData]="children"
-        [togglePosition]="'before'" hideToggle="false" multi="true">
+    <mat-accordion cdkDrag cdkDropList (cdkDropListDropped)="drop($event)" [cdkDropListData]="children"
+        [id]="dropListsId(parents)" [cdkDropListConnectedTo]="allIdConnected" [togglePosition]="'before'"
+        hideToggle="false" multi="true">
         <ng-container *ngFor="let content of children; let i = index">
             <div class="input-accordion-separator"></div>
             <mat-expansion-panel [@.disabled]="true" cdkDrag [cdkDragData]="content"
@@ -205,7 +206,7 @@
                                 [disabled]="!content.topicContent">Simpan</button>
                         </div>
                     </div>
-                    <ng-container *ngIf="content.children.length" [ngTemplateOutlet]="accordionChild"
+                    <ng-container [ngTemplateOutlet]="accordionChild"
                         [ngTemplateOutletContext]="{ children: content.children, level : level+1, parents: parents.concat({id:content.id, no:content.no})}">
                     </ng-container>
                 </div>
