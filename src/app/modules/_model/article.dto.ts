@@ -30,6 +30,7 @@ export declare interface ArticleContentDTO {
     children: ArticleContentDTO[],
     listParent?: ArticleParentDTO[],
     expanded?: boolean,
+    isEdit?:boolean
 }
 
 export declare interface ArticleDTO {

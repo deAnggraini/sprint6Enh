@@ -182,9 +182,37 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   // article action button
+  private parseToSingleArray() {
+
+  }
+  private parseToFormObject(data) {
+    let formData = new FormData();
+    for (let key in data) {
+      if (Array.isArray(data[key])) {
+        data[key].forEach((obj, index) => {
+          let keyList = Object.keys(obj);
+          keyList.forEach((keyItem) => {
+            let keyName = [key, "[", index, "]", ".", keyItem].join("");
+            formData.append(keyName, obj[keyItem]);
+          });
+        });
+      } else if (typeof data[key] === "object") {
+        for (let innerKey in data[key]) {
+          formData.append(`${key}.${innerKey}`, data[key][innerKey]);
+        }
+      } else {
+        formData.append(key, data[key]);
+      }
+    }
+    return formData;
+  }
+  onSave(e) {
+
+  }
   onCancel(e) {
     console.log(this.dataForm.valid, this.dataForm);
     console.log(this.dataForm.value.contents);
+    console.log(this.logs);
     this.confirm.open({
       title: `Batal Tambah Artikel`,
       message: `<p>Apakah Kamu yakin ingin keluar dan membatalkan membuat artikel baru?`,
@@ -192,16 +220,21 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
       btnCancelText: 'Batal'
     }).then((confirmed) => {
       if (confirmed === true) {
-        // this.subscriptions.push(
-        //   this.article.deleteArticle(data.id).subscribe(resp => {
-        //     if (resp) this.deleteNode(data);
-        //   })
-        // );
-        this.article.formParam = null;
-        this.article.formData = null;
-        this.router.navigate(['/homepage']);
+        this.subscriptions.push(
+          this.article.cancelArticle(this.dataForm.value.id).subscribe(resp => {
+            if (resp) {
+              this.article.formParam = null;
+              this.article.formData = null;
+              this.router.navigate(['/homepage']);
+            }
+          })
+        );
       }
     });
+    return false;
+  }
+  onSaveAndSend(e) {
+
   }
 
   // Right icon event

@@ -1,11 +1,11 @@
 <div class="top-bar d-flex flex-row justify-content-between">
     <div class="d-flex flex-row align-items-center">
-        <a href="#" class="link text-dark d-flex flex-row">
+        <a href="#" class="link text-dark d-flex flex-row" (click)="onCancel($event)">
             <div [inlineSVG]="'./assets/media/svg/bca/icon/cancel.svg'" cacheSVG="true" class="svg-icon"></div>
             <div>Batal</div>
         </a>
         <div class="separator"></div>
-        <a href="#" class="link text-dark d-flex flex-row">
+        <a class="link text-dark d-flex flex-row">
             <div [inlineSVG]="'./assets/media/svg/bca/icon/comment.svg'" cacheSVG="true" class="svg-icon"></div>
             <div>Komentar</div>
         </a>
@@ -16,19 +16,20 @@
             <div>Preview</div>
         </a>
         <div class="separator"></div>
-        <a href="#" class="btn btn-link link text-dark d-flex flex-row" [ngClass]="{'disabled' : !dataForm.valid}">
+        <a href="#" class="btn btn-link link text-dark d-flex flex-row"
+            [ngClass]="{'disabled' : !dataForm.valid || hasError}">
             <div [inlineSVG]="'./assets/media/svg/bca/icon/save.svg'" cacheSVG="true" class="svg-icon"></div>
             <div>Simpan</div>
         </a>
         <div class="separator"></div>
-        <a href="#" class="link text-dark d-flex flex-row">
+        <a href="#" class="btn btn-link text-dark d-flex flex-row disabled">
             <div [inlineSVG]="'./assets/media/svg/bca/icon/send.svg'" cacheSVG="true" class="svg-icon"></div>
             <div>Simpan & Kirim</div>
         </a>
     </div>
 </div>
 <div *ngIf="!finishRender" class="pakar-container mx-15 p-8" style="padding-top:calc(2rem + 50px) !important">
-    TUNGGU CKEDITOR SELESAI
+    Please Wait...
 </div>
 <div *ngIf="finishRender && dataForm" class="pakar-container mx-15 p-8" style="padding-top:60px !important">
     <span class="pakar-text-header">{{isEdit ? 'Ubah' : 'Tambah'}} Artikel</span>
@@ -94,14 +95,17 @@
                         </div>
                     </mat-expansion-panel>
                 </mat-accordion>
-                <button *ngIf="dataForm.get('isEmptyTemplate').value  && (user.roles[0] == 'ADMIN' || user.roles[0] == 'SUPERADMIN')" type="button"
-                    class="btn btn-blue-outline btn-sm rounded-sm w-100" (click)="btnAddClick($event, null)">
+                <button
+                    *ngIf="dataForm.get('isEmptyTemplate').value  && (user.roles[0] == 'ADMIN' || user.roles[0] == 'SUPERADMIN')"
+                    type="button" class="btn btn-blue-outline btn-sm rounded-sm w-100"
+                    (click)="btnAddClick($event, null)">
                     <!-- <span [inlineSVG]="'./assets/media/svg/bca/icon/plus.svg'" cacheSVG="true"
                         class="svg-icon"></span> -->
                     + Tambah Artikel
                 </button>
-                <button *ngIf="dataForm.get('isEmptyTemplate').value  && !(user.roles[0] == 'ADMIN' || user.roles[0] == 'SUPERADMIN')" type="button"
-                    class="btn btn-danger btn-sm rounded-sm w-100" disabled>
+                <button
+                    *ngIf="dataForm.get('isEmptyTemplate').value  && !(user.roles[0] == 'ADMIN' || user.roles[0] == 'SUPERADMIN')"
+                    type="button" class="btn btn-danger btn-sm rounded-sm w-100" disabled>
                     Content Kosong
                 </button>
             </div>
@@ -134,7 +138,7 @@
             <button type="button" class="btn btn-outline-light btn-sm rounded-xl px-5 ml-3"
                 (click)="onCancel($event)">Batal</button>
             <button type="button" class="btn btn-blue-outline btn-sm px-5 ml-3"
-                [disabled]="!dataForm.valid">Simpan</button>
+                [disabled]="!dataForm.valid || hasError">Simpan</button>
             <button type="button" class="btn btn-outline-dark btn-sm rounded-xl px-5 ml-3" disabled>Simpan &
                 Kirim</button>
         </div>

@@ -99,4 +99,12 @@ export class ArticleService {
     return this.apiService.post(`${this._base_url}/deleteContent`, { id });
   }
 
+  cancelArticle(id: number) {
+    return this.apiService.post(`${this._base_url}/cancelArticle`, { id });
+  }
+
+  saveArticle(article: ArticleDTO) {
+    return this.apiService.post(`${this._base_url}/saveArticle`, article);
+  }
+
 }
