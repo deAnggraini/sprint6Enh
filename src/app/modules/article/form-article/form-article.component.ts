@@ -347,6 +347,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
 
   drop(event: CdkDragDrop<any[]>) {
     console.log({ event });
+    const level = event.container.data[0].level
     if (this.getMaxLevel(event.container.data) + (event.container.data[0].level - 1) + (this.getMaxLevel([event.previousContainer.data[event.previousIndex]]) - 1) > 5) {
       return
     }
@@ -366,6 +367,8 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
       this.recalculateChildren(event.previousContainer.data, event.previousContainer.data.length > 0 ? event.previousContainer.data[0].listParent : []);
       this.recalculateChildren(event.container.data, event.container.data.filter((x, i) => i !== event.currentIndex)[0].listParent);
     }
+    this.recalculateLevelChildren(event.container.data, level)
+    console.log(level)
   }
 
   onHidden(panelId) {
@@ -426,6 +429,14 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
           const { id, title, no } = d;
           this.recalculateChildren(d.children, listParent.concat([{ id, title, no }]));
         }
+      });
+    }
+  }
+  private recalculateLevelChildren(children: ArticleContentDTO[], level: number) {
+    if (children && children.length) {
+      children.forEach((d, i) => {
+        d.level = level
+        this.recalculateLevelChildren(d.children, level + 1)
       });
     }
   }
