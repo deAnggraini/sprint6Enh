@@ -138,6 +138,10 @@ public class ArticleServiceImpl implements ArticleService {
             for (ArticleTemplateContent articleTemplateContent : templateContents) {
                 ArticleContent articleContent = new ArticleContent();
                 articleContent.setCreatedBy(generateArticleDto.getUsername());
+
+                logger.debug("articleTemplateContent.getName() value {}", articleTemplateContent.getName());
+                logger.debug("param key {}", generateArticleDto.getParamKey());
+                logger.debug("param value {}", generateArticleDto.getParamValue());
                 articleContent.setName(replaceTextByParams(articleTemplateContent.getName(), generateArticleDto.getParamKey(), generateArticleDto.getParamValue()));
                 articleContent.setLevel(articleTemplateContent.getLevel());
                 articleContent.setSort(articleTemplateContent.getSort());
