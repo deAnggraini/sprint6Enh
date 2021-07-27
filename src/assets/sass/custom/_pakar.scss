@@ -104,8 +104,9 @@ $bca-color-dark: #0F5EA9;
       cursor: not-allowed;
     }
 
-    &:hover:not(:disabled),
-    &:focus:not(:disabled) {
+    &:hover:not(:disabled)
+    // , &:focus:not(:disabled) 
+    {
       background-color: $bca-color-dark;
 
       i,
