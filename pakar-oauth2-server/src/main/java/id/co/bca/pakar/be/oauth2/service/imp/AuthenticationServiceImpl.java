@@ -185,31 +185,4 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		}
 	}
 
-	/**
-	 * generate new access token
-	 */
-//	@Override
-//	public EaiErrorSchemaLoginResponse loginResponse(String username) throws Exception {
-//		logger.info("--- processing count failed login ---");
-//		AuditLogin auditLogin = userProfileRepository.findFailedLogin(username);
-//		EaiErrorSchemaLoginResponse dto = new EaiErrorSchemaLoginResponse();
-//		Integer sisaLogin = null;
-//		if (auditLogin.getFailed_login() <= 2) {
-//			dto.setErroCode("01");
-//			dto.setFailCount(auditLogin.getFailed_login());
-//			dto.setAlertMessage(null);
-////			dto.setErrorMessage(Constant.ApiResponseCode.INCORRECT_USERNAME_PASSWORD));
-//		} else if (auditLogin.getFailed_login() >2 && auditLogin.getFailed_login() <5){
-//			dto.setErroCode("01");
-//			dto.setFailCount(auditLogin.getFailed_login());
-//			sisaLogin = 5 - auditLogin.getFailed_login();
-//			dto.setAlertMessage("You Have "+ sisaLogin +" remaining attemps to login");
-//		} else {
-//			dto.setErroCode("01");
-//			dto.setFailCount(auditLogin.getFailed_login());
-//			dto.setAlertMessage("user "+ username +" currently locked. Please try again in 29 minutes");
-//		}
-//		return dto;
-//	}
-
 }

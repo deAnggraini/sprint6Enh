@@ -9,5 +9,4 @@ public interface AuthenticationService {
 	LoggedinDto authenticate(CredentialDto dto) throws Exception;
 	Boolean logout(String tokenValue) throws Exception;
 	RefreshTokenResponseDto generateNewAccessToken(String refreshToken) throws Exception;
-//	EaiErrorSchemaLoginResponse loginResponse(String username) throws Exception;
 }
