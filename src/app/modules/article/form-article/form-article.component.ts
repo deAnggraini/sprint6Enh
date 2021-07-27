@@ -1,10 +1,10 @@
-import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy, ChangeDetectorRef, TemplateRef } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy, ChangeDetectorRef, TemplateRef, ViewChildren, QueryList } from '@angular/core';
 import * as CustomEditor from './../../../ckeditor/build/ckeditor';
 import { ArticleService } from '../../_services/article.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ChangeEvent, CKEditorComponent } from '@ckeditor/ckeditor5-angular';
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { BehaviorSubject, Subscription, of } from 'rxjs';
+import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { BehaviorSubject, Subscription, of, asapScheduler } from 'rxjs';
 import { Option } from 'src/app/utils/_model/option';
 import { SkReferenceService } from '../../_services/sk-reference.service';
 import { AuthService, UserModel } from '../../auth';
@@ -149,6 +149,12 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   isAccEdit: boolean = false;
   accForm: FormGroup;
 
+  //cdk drag and drop
+  allIds: Array<string> = []
+  public get allIdConnected(): Array<string> {
+    return this.allIds
+  }
+
   constructor(
     private cdr: ChangeDetectorRef,
     private article: ArticleService,
@@ -164,6 +170,18 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.configModal.backdrop = 'static';
     this.configModal.keyboard = false;
+  }
+
+  //cdk drag and drop
+  dropListsId(item: { id: number, no: string }[]): string {
+    const id = item[item.length - 1].id.toString()
+    this.allIds.some(x => x === id) ? '' : this.allIds.push(id)
+    return id
+  }
+  getMaxLevel(dropList: ArticleContentDTO[]) {
+    return dropList.reduce((depth, child) => {
+      return Math.max(depth, 1 + this.getMaxLevel(child.children));
+    }, 0);
   }
 
   // node calculation
@@ -290,7 +308,6 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
             data.expanded = true;
             data.children.push(newNode);
           }
-
           this.addLog(); // log article
           this.cdr.detectChanges();
         }
@@ -363,9 +380,15 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
 
   drop(event: CdkDragDrop<any[]>) {
     console.log({ event });
+    const level = event.container.data[0].level
+    if (this.getMaxLevel(event.container.data) + (event.container.data[0].level - 1) + (this.getMaxLevel([event.previousContainer.data[event.previousIndex]]) - 1) > 5) {
+      return
+    }
     if (event.previousContainer === event.container) {
       console.log('move dalam satu list');
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      this.recalculateChildren(event.previousContainer.data, event.previousContainer.data.length > 0 ? event.previousContainer.data[0].listParent : []);
+      this.recalculateChildren(event.container.data, event.container.data.filter((x, i) => i !== event.currentIndex)[0].listParent);
     } else {
       console.log('pindah list');
       console.log('dari', event.previousContainer.data);
@@ -374,7 +397,11 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
         event.container.data,
         event.previousIndex,
         event.currentIndex);
+      this.recalculateChildren(event.previousContainer.data, event.previousContainer.data.length > 0 ? event.previousContainer.data[0].listParent : []);
+      this.recalculateChildren(event.container.data, event.container.data.filter((x, i) => i !== event.currentIndex)[0].listParent);
     }
+    this.recalculateLevelChildren(event.container.data, level)
+    console.log(level)
   }
 
   onHidden(panelId) {
@@ -427,12 +454,22 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
         d.listParent = listParent;
         if (d.level == 1) {
           d.no = '';
+          d.sort = 0;
           this.recalculateChildren(d.children, listParent.concat([]));
         } else {
           d.no = `${i + 1}`;
+          d.sort = i + 1;
           const { id, title, no } = d;
           this.recalculateChildren(d.children, listParent.concat([{ id, title, no }]));
         }
+      });
+    }
+  }
+  private recalculateLevelChildren(children: ArticleContentDTO[], level: number) {
+    if (children && children.length) {
+      children.forEach((d, i) => {
+        d.level = level
+        this.recalculateLevelChildren(d.children, level + 1)
       });
     }
   }
