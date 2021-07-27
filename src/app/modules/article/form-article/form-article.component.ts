@@ -29,8 +29,8 @@ const defaultValue: ArticleDTO = {
   isEmptyTemplate: false,
   title: '',
   desc: '',
-  location: 0,
-  locationOption: { id: '', value: '', text: '' },
+  structureId: 0,
+  structureOption: { id: '', value: '', text: '' },
   image: '',
   video: '',
   contents: [],
@@ -228,7 +228,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
 
   }
   onCancel(e) {
-    console.log(this.dataForm.valid, this.dataForm);
+    console.log(this.dataForm.valid, this.dataForm.value);
     console.log(this.dataForm.value.contents);
     console.log(this.logs);
     this.confirm.open({
@@ -476,12 +476,12 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   private setArticle(article: ArticleDTO) {
     console.log({ article });
     if (article) {
-      const locationSelected = this.struktur.findNodeById(article.location);
+      const locationSelected = this.struktur.findNodeById(article.structureId);
       if (locationSelected) {
         const { id, title, listParent } = locationSelected;
         const concatParent = listParent.map(d => d.title);
         concatParent.push(locationSelected.title);
-        article.locationOption = { id: `${id}`, text: title, value: concatParent.join(' > ') };
+        article.structureOption = { id: `${id}`, text: title, value: concatParent.join(' > ') };
       }
 
       // set expanded default value
@@ -578,8 +578,8 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     this.dataForm = this.fb.group({
       id: [0],
       title: [defaultValue.title, Validators.compose([Validators.required, Validators.maxLength(50), alphaNumericValidator])],
-      location: [defaultValue.location, Validators.compose([Validators.required])],
-      locationOption: [defaultValue.locationOption, Validators.compose([Validators.required])],
+      structureId: [defaultValue.structureId, Validators.compose([Validators.required])],
+      structureOption: [defaultValue.structureOption, Validators.compose([Validators.required])],
       image: [defaultValue.image],
       video: [defaultValue.video],
       contents: [defaultValue.contents],
