@@ -236,6 +236,7 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     @Transactional(rollbackOn = {Exception.class})
     public ArticleResponseDto saveArticle(MultipartArticleDto articleDto) throws Exception {
+        ArticleResponseDto articleResponseDto = new ArticleResponseDto();
         try {
             logger.info("save article process");
             Optional<Article> articleOpt = articleRepository.findById(articleDto.getId());
@@ -252,7 +253,7 @@ public class ArticleServiceImpl implements ArticleService {
 
             article = articleRepository.save(article);
 
-            for(SkReffDto skReffDto : articleDto.getSkReff()) {
+            for (SkReffDto skReffDto : articleDto.getSkReff()) {
                 ArticleSkReff articleSkReff = new ArticleSkReff();
                 articleSkReff.setCreatedBy(articleDto.getUsername());
                 articleSkReff.setArticle(article);
@@ -262,12 +263,12 @@ public class ArticleServiceImpl implements ArticleService {
                 articleSkReffRepository.save(articleSkReff);
             }
 
-            for(MultipartArticleDto dto : articleDto.getRelated()) {
+            for (MultipartArticleDto dto : articleDto.getRelated()) {
                 RelatedArticle relatedArticle = new RelatedArticle();
                 relatedArticle.setCreatedBy(articleDto.getUsername());
                 relatedArticle.setSourceArticle(article);
                 Optional<Article> relatedOpt = articleRepository.findById(dto.getId());
-                relatedArticle.setRelatedArticle(relatedOpt.isPresent() ? relatedOpt.get(): null );
+                relatedArticle.setRelatedArticle(relatedOpt.isPresent() ? relatedOpt.get() : null);
 
                 relatedArticleRepository.save(relatedArticle);
             }
@@ -290,6 +291,7 @@ public class ArticleServiceImpl implements ArticleService {
 
                     Path pathLocation = Paths.get(pathCategory + articleDto.getImage().getOriginalFilename());
                     images.setUri(pathLocation.toAbsolutePath().toString());
+                    articleResponseDto.setImage(pathLocation.toAbsolutePath().toString());
                     _images = imageRepository.save(images);
 
                     // save image to folder
@@ -307,8 +309,22 @@ public class ArticleServiceImpl implements ArticleService {
                 articleImageRepository.save(am);
             }
 
-            return BeanUtils.copyProperties(articleDto, articleRe).copyProperties();
-            articleDto;
+            articleResponseDto.setId(article.getId());
+            articleResponseDto.setVideoLink(article.getVideoLink());
+            for (BaseArticleDto dto : articleDto.getRelated()) {
+                articleResponseDto.getRelated().add(dto);
+            }
+
+            for (ArticleContentDto dto : articleDto.getContents()) {
+                articleResponseDto.getContents().add(dto);
+            }
+
+            for (SkReffDto dto : articleDto.getSkReff()) {
+                articleResponseDto.getSkReff().add(dto);
+            }
+
+            articleResponseDto.setJudulArticle(article.getJudulArticle());
+            return articleResponseDto;
         } catch (Exception e) {
             logger.error("", e);
             throw new Exception("exception", e);
