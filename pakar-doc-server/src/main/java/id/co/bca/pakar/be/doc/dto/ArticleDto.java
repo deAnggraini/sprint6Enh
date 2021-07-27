@@ -18,6 +18,7 @@ public class ArticleDto extends BaseArticleDto {
 
     @JsonProperty("created_by")
     private String createdBy;
+
     @JsonProperty("created_date")
     private Date createdDate = new Date();
 
@@ -35,6 +36,9 @@ public class ArticleDto extends BaseArticleDto {
 
     @JsonProperty("isEmptyTemplate")
     private Boolean emptyTemplate = false;
+
+    @JsonProperty("structureId")
+    private Long structureId;
 
     public String getShortDescription() {
         return shortDescription;
@@ -114,5 +118,13 @@ public class ArticleDto extends BaseArticleDto {
 
     public void setEmptyTemplate(Boolean emptyTemplate) {
         this.emptyTemplate = emptyTemplate;
+    }
+
+    public Long getStructureId() {
+        return structureId;
+    }
+
+    public void setStructureId(Long structureId) {
+        this.structureId = structureId;
     }
 }

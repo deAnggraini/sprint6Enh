@@ -181,6 +181,7 @@ public class ArticleServiceImpl implements ArticleService {
             articleDto.setId(article.getId());
             articleDto.setJudulArticle(article.getJudulArticle());
             articleDto.setShortDescription(article.getShortDescription());
+            articleDto.setStructureId(article.getStructure().getId());
             List<ArticleContentDto> articleContentDtos = new TreeArticleContents().menuTree(mapToListArticleContentDto(article.getArticleContents()));
             articleDto.setContents(articleContentDtos);
 
@@ -226,6 +227,7 @@ public class ArticleServiceImpl implements ArticleService {
             Iterable<Article> relatedArticles = articleRefferenceRepository.findByArticleId(article.getId());
             articleDto.setRelated(mapToRelatedArticleDto(relatedArticles));
             articleDto.setEmptyTemplate(article.getUseEmptyTemplate());
+            articleDto.setStructureId(article.getStructure().getId());
             return articleDto;
         } catch (Exception e) {
             logger.error("exception", e);
