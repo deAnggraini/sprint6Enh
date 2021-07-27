@@ -40,6 +40,9 @@ public class ArticleDto extends BaseArticleDto {
     @JsonProperty("structureId")
     private Long structureId;
 
+    @JsonProperty("structureParentList")
+    private List<BreadcumbStructureDto> structureParentList = new ArrayList<>();
+
     public String getShortDescription() {
         return shortDescription;
     }
@@ -126,5 +129,13 @@ public class ArticleDto extends BaseArticleDto {
 
     public void setStructureId(Long structureId) {
         this.structureId = structureId;
+    }
+
+    public List<BreadcumbStructureDto> getStructureParentList() {
+        return structureParentList;
+    }
+
+    public void setStructureParentList(List<BreadcumbStructureDto> structureParentList) {
+        this.structureParentList = structureParentList;
     }
 }

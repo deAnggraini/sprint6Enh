@@ -298,6 +298,14 @@ public class ArticleController extends BaseController {
         }
     }
 
+    /**
+     * get sequence number of id content
+     *
+     * @param authorization
+     * @param username
+     * @param baseDto
+     * @return
+     */
     @GetMapping(value = "/api/doc/getContentId", produces = {
             MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<RestResponse<Long>> getContentId(@RequestHeader("Authorization") String authorization, @RequestHeader(name = "X-USERNAME") String username, @RequestBody BaseDto baseDto) {
