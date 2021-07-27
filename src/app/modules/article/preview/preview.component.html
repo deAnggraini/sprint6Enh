@@ -1,0 +1,212 @@
+<div style="
+background-image: url('./assets/media/images/struktur_bg.svg');
+background-repeat: no-repeat;
+background-position: center;
+background-size: cover;
+height: 184px;
+"></div>
+<div class="top-bar d-flex flex-row justify-content-between">
+    <div class="d-flex flex-row align-items-center">
+        <a href="/article/form/{{id}}" class="link text-dark d-flex flex-row pl-8">
+            <div [inlineSVG]="'./assets/media/svg/bca/icon/edit-document.svg'" cacheSVG="true" class="svg-icon"></div>
+            <div>Kembali ke Halaman Editor</div>
+        </a>
+    </div>
+    <div class="d-flex flex-row align-items-center">
+        <a href="#" class="btn btn-link link text-dark d-flex flex-row">
+            <div [inlineSVG]="'./assets/media/svg/bca/icon/save.svg'" cacheSVG="true" class="svg-icon"></div>
+            <div>Simpan</div>
+        </a>
+        <div class="separator"></div>
+        <a href="#" class="link text-dark d-flex flex-row">
+            <div [inlineSVG]="'./assets/media/svg/bca/icon/send.svg'" cacheSVG="true" class="svg-icon"></div>
+            <div>Simpan & Kirim</div>
+        </a>
+    </div>
+</div>
+<div class="mx-15 mt-n13">
+    <div class="back-panel">
+        <pakar-breadcrumbs [node]="struktur$"></pakar-breadcrumbs>
+    </div>
+    <ng-container>
+        <div class="pakar-container h-100 p-8 d-flex flex-column flex-column-auto flex-grow"
+            style="min-height: initial;">
+            <span class="pakar-text-header">{{title}}</span>
+            <span class="pakar-text-header-desc my-4" style="color: #605E5C;">Terakhir diubah oleh 
+                <!-- <b>Nama Editor</b>  -->
+                <span class="symbol symbol-lg-25 symbol-25 mx-2">
+                    <span class="symbol-label font-size-h7 font-weight-bold rounded-xl px-2 ">{{aliasName}}</span>
+                  </span>
+                  <span class="font-weight-bolder font-size-base d-none d-md-inline mr-2"
+                    style="text-transform: uppercase;">{{fullName}}</span>
+                pada
+                <span class="font-size-sm" style="color: black;">{{ changed_date | date: "dd/MM/yyyy"}}</span>
+            </span>
+            <div class="row d-flex flex-wrap justify-content-between">
+                <div class="col">
+                    <span class="pakar-text-header-desc">Lorem Ipsum is simply dummy text of the printing and
+                        typesetting industry.
+                        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown
+                        printer took a galley of type and scrambled it to make a type specimen book.
+                        It has survived not only five centuries, but also the leap into electronic typesetting,
+                        remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
+                        sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like
+                        Aldus PageMaker including versions of Lorem Ipsum.
+                    </span>
+                    <div class="my-3" *ngIf="!hideTable">
+                        <table class="table table-bordered">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Fasilitas</th>
+                                    <th>Layanan</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                                        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                                        <br><br>
+                                        <a href="">
+                                            <li>Ipsum</li>
+                                        </a>
+                                        <a href="">
+                                            <li>Ipsum</li>
+                                        </a>
+                                        <a href="">
+                                            <li>Ipsum</li>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                                        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                                        <br><br>
+                                        <a href="">
+                                            <li>Ipsum</li>
+                                        </a>
+                                        <a href="">
+                                            <li>Ipsum</li>
+                                        </a>
+                                        <a href="">
+                                            <li>Ipsum</li>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                        <mat-accordion [togglePosition]="'before'" multi="true">
+                            <!-- <mat-expansion-panel *ngFor="let content of dataForm.get('contents').value; let i=index;"
+                                class="acc-level acc-level-1" [(expanded)]="content.expanded"> -->
+                            <mat-expansion-panel class="acc-level acc-level-1">
+                                <mat-expansion-panel-header [@.disabled]="true">
+                                    <mat-panel-title>
+                                        <!-- <span>{{content.title}}</span> -->
+                                        <span>Test Title</span>
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+                                <!-- <div cdkDropListGroup>
+                                    <input type="text" class="txt-desc-lvl1" [(ngModel)]="content.intro"
+                                        [ngModelOptions]="{standalone: true}"
+                                        placeholder="Masukkan kalimat pengantar terkait {{content.title}} disini.">
+                                    <ng-container *ngIf="content.children.length" [ngTemplateOutlet]="accordionChild"
+                                        [ngTemplateOutletContext]="{ children: content.children, level:2, parents:[]}">
+                                    </ng-container>
+                                </div> -->
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                    </div>
+                    <hr>
+                    <div class="faq mt-6">
+                        <div class="d-flex flex-wrap justify-content-between mb-5">
+                            <label class="font-weight-bolder text-dark mb-2">FAQ Tahapan</label>
+                            <div class="d-flex align-items-end mx-2">
+                                <a class="navi-link" href="#">
+                                    <a routerLink="/article/recommendation"
+                                        class="navi-text cursor-pointer font-weight-bold font-size-sm">
+                                        Lihat Semua
+                                    </a>
+                                </a>
+                            </div>
+                        </div>
+                        <!-- <ngx-slick-carousel class="carousel" #slickModal="slick-carousel" [config]="slideConfig">
+                        <div ngxSlickItem *ngFor="let item of slides" class="slide my-3">
+                            <div class="mx-2">
+                                <div class="col rounded-sm"
+                                    style="border: 1px solid #DDD; box-shadow: 0px 4px 8px 0px #0000001A;"
+                                    onmouseover="this.style.border ='1px groove #1995D1';"
+                                    onmouseout="this.style.border ='1px solid #DDD';">
+                                    <div class="row">
+                                        <div class="col-md-auto p-0">
+                                            <img class="img-show rounded-sm" src="{{backend_img}}/articles/{{item.image}}" width="100%" height="130px"
+                                                background-position:center style="object-fit: cover">
+                                        </div>
+                                        <div class="col p-0 px-2">
+                                            <div class="mb-2 my-3">
+                                                <span
+                                                    class="font-size-sm" style="color: #605E5C">{{item.created_date | date: "dd MMMM yyyy"}}</span>
+                                            </div>
+                                            <div class="mb-2 text-ellipsis-1">
+                                                <a class="title text-dark font-weight-bolder font-size-h7"
+                                                    routerLink="/article/recommendation">{{item.title | maxLength: 35}}</a>
+                                            </div>
+                                            <p class="text-desc mb-1 text-ellipsis-2">
+                                                {{item.desc | maxLength: 45}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ngx-slick-carousel> -->
+                    </div>
+                    <hr>
+                    <div class="sk-referensi mt-6">
+                        <label class="font-weight-bolder text-dark mb-2">SK/SE Referensi</label>
+                        <div class="row">
+                            <div class="col">
+                                <ul>
+                                    <li>Tessst</li>
+                                </ul>
+                            </div>
+                            <!-- <div class="col"> - Petunjuk Pelaksanaan Layanan Perbankan melalui Video Bankin (VB) </div> -->
+                        </div>
+                        <a class="navi-link" href="#">
+                            <a routerLink="/article/recommendation"
+                                class="navi-text cursor-pointer font-weight-bold font-size-sm">
+                                Selengkapnya >
+                            </a>
+                        </a>
+                    </div>
+                </div>
+                <div class="col" style="max-width: 350px;">
+                    <!-- right side -->
+                    <div class="mx-4 mb-5" style="text-align: center; min-width: 307px;">
+                        <img class="img-show" src="./assets/media/bg/sc-home1-bg.png" background-position:center
+                            style="object-fit: cover; width: 307px; height: 425px;">
+                        <div class="mt-2">Ini adalah judul dari infografis</div>
+                        <hr>
+                    </div>
+                    <div class="video mx-4 mb-5" style="min-width: 307px;">
+                        <video width="307" height="173" controls>
+                            <source src="" type="video/mp4">
+                            <source src="" type="video/ogg">
+                          </video>
+                        <hr>
+                    </div>
+                    <div class="mx-4 mb-5" style="min-width: 307px;">
+                        <label class="font-weight-bolder text-dark mb-2">Informasi Terkait</label>
+                        <div>
+                            <ul>
+                                <li>Tessst</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </ng-container>
+</div>
