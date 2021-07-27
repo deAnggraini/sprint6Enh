@@ -129,6 +129,9 @@ public class ArticleServiceImpl implements ArticleService {
             Structure structure = structureRepository.findStructure(generateArticleDto.getStructureId());
             article.setStructure(structure);
             article.setArticleState(Constant.ArticleWfState.PRE_DRAFT);
+            if(template.getTemplateName().toLowerCase().equalsIgnoreCase("empty".toLowerCase())) {
+                article.setUseEmptyTemplate(Boolean.TRUE);
+            }
 
             logger.info("populate article contents");
             Iterable<ArticleTemplateContent> templateContents = articleTemplateContentRepository.findByTemplateId(template.getId());
@@ -220,8 +223,9 @@ public class ArticleServiceImpl implements ArticleService {
                 Images image = imageOpt.get();
                 articleDto.setImage(image.getUri());
             }
-            Iterable<Article> realatedArticles = articleRefferenceRepository.findByArticleId(article.getId());
-            articleDto.setRelated(mapToRelatedArticleDto(realatedArticles));
+            Iterable<Article> relatedArticles = articleRefferenceRepository.findByArticleId(article.getId());
+            articleDto.setRelated(mapToRelatedArticleDto(relatedArticles));
+            articleDto.setEmptyTemplate(article.getUseEmptyTemplate());
             return articleDto;
         } catch (Exception e) {
             logger.error("exception", e);

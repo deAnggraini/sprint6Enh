@@ -40,6 +40,9 @@ public class Article extends EntityBase {
 	@OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private List<ArticleContent> articleContents = new ArrayList<>();
 
+	@Column(name = "use_empty_template", columnDefinition = "boolean default false")
+	private Boolean useEmptyTemplate;
+
 	public Long getId() {
 		return id;
 	}
@@ -118,5 +121,14 @@ public class Article extends EntityBase {
 
 	public void setArticleState(String articleState) {
 		this.articleState = articleState;
+	}
+
+
+	public Boolean getUseEmptyTemplate() {
+		return useEmptyTemplate;
+	}
+
+	public void setUseEmptyTemplate(Boolean useEmptyTemplate) {
+		this.useEmptyTemplate = useEmptyTemplate;
 	}
 }

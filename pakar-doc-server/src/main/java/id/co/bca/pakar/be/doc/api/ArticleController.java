@@ -274,22 +274,14 @@ public class ArticleController extends BaseController {
         }
     }
 
-//	@PostMapping(value = "/api/doc/saveArticle", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE }, produces = {
-//			MediaType.APPLICATION_JSON_VALUE })
-//	public ResponseEntity<RestResponse<MultipartArticleDto>> saveArticle(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @ModelAttribute MultipartArticleDto articleDto, BindingResult bindingResult) {
-//		try {
-//			logger.info("save article process");
-//			logger.info("received token bearer --- {}", authorization);
-//			articleDto.setUsername(username);
-//			articleDto.setToken(getTokenFromHeader(authorization));
-//			MultipartArticleDto _articleDto = articleService.saveArticle(articleDto);
-//			return createResponse(_articleDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
-//		} catch (Exception e) {
-//			logger.error("exception", e);
-//			return createResponse(new MultipartArticleDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
-//		}
-//	}
-
+    /**
+     *
+     * @param authorization
+     * @param username
+     * @param articleDto
+     * @param bindingResult
+     * @return
+     */
     @PostMapping(value = "/api/doc/saveArticle", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE }, produces = {
             MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity<RestResponse<ArticleResponseDto>> saveArticle2(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @ModelAttribute MultipartArticleDto articleDto, BindingResult bindingResult) {
