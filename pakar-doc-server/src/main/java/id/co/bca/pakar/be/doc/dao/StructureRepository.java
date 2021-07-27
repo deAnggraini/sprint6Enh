@@ -1,5 +1,6 @@
 package id.co.bca.pakar.be.doc.dao;
 
+import id.co.bca.pakar.be.doc.model.ArticleContent;
 import id.co.bca.pakar.be.doc.model.Structure;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -52,4 +53,16 @@ public interface StructureRepository extends CrudRepository<Structure, Long>{
     @Query(value = "SELECT m FROM Structure m WHERE m.id=:id AND m.deleted IS FALSE ")
     Structure findStructure(@Param("id") Long id);
 
+    @Query(value = "with recursive structure_parent (id, parent_id) AS (" +
+            "  SELECT structure.id, structure.parent, structure.name " +
+            "  FROM r_structure structure " +
+            "  WHERE id = :id " +
+            "  UNION ALL " +
+            "  SELECT structure2.id, structure2.parent, structure2.name " +
+            "  FROM r_structure structure2 INNER JOIN r_structure structure3 " +
+            "  ON structure2.id = structure3.parent " +
+            ") " +
+            "SELECT structp.* FROM structure_parent structp group by structp.id, structp.parent_id, structp.name",
+            nativeQuery = true)
+    List<Structure>  findStructureParentsById(@Param("id") Long id);
 }

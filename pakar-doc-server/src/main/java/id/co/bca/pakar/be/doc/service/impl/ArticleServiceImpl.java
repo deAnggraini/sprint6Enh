@@ -25,10 +25,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static id.co.bca.pakar.be.doc.common.Constant.Headers.BEARER;
 import static id.co.bca.pakar.be.doc.common.Constant.Roles.ROLE_ADMIN;
@@ -108,6 +105,7 @@ public class ArticleServiceImpl implements ArticleService {
     public ArticleDto generateArticle(GenerateArticleDto generateArticleDto) throws Exception {
         try {
             logger.info("generate article process");
+            ArticleDto articleDto = new ArticleDto();
             ArticleTemplateStructure articleTemplateStructure = articleTemplateStructureRepository.findArticleTemplates(generateArticleDto.getTemplateId(), generateArticleDto.getStructureId());
             ArticleTemplate template = null;
             if (articleTemplateStructure == null) {
@@ -180,8 +178,37 @@ public class ArticleServiceImpl implements ArticleService {
                 }
             }
 
+            // get list parent of new structure
+            Long parentId = structure.getParentStructure();
+            boolean parentStatus = Boolean.TRUE;
+            do {
+                Optional<Structure> parentStructure = structureRepository.findById(parentId);
+                if (!parentStructure.isEmpty()) {
+                    Structure _parent = parentStructure.get();
+                    parentId = _parent.getParentStructure();
+                    BreadcumbStructureDto bcDto = new BreadcumbStructureDto();
+                    bcDto.setId(_parent.getId());
+                    bcDto.setName(_parent.getStructureName());
+                    bcDto.setLevel(_parent.getLevel());
+                    articleDto.getStructureParentList().add(bcDto);
+                    if (parentId == null)
+                        parentStatus = Boolean.FALSE;
+                    else if (parentId.longValue() == 0)
+                        parentStatus = Boolean.FALSE;
+                } else {
+                    parentStatus = Boolean.FALSE;
+                }
+            } while (parentStatus);
+
+            // sorting bread crumb
+            Collections.sort(articleDto.getStructureParentList(), new Comparator<BreadcumbStructureDto>() {
+                @Override
+                public int compare(BreadcumbStructureDto o1, BreadcumbStructureDto o2) {
+                    return o1.getLevel().intValue() - o2.getLevel().intValue();
+                }
+            });
+
             logger.info("populate response article");
-            ArticleDto articleDto = new ArticleDto();
             articleDto.setId(article.getId());
             articleDto.setJudulArticle(article.getJudulArticle());
             articleDto.setShortDescription(article.getShortDescription());
@@ -232,6 +259,36 @@ public class ArticleServiceImpl implements ArticleService {
             articleDto.setRelated(mapToRelatedArticleDto(relatedArticles));
             articleDto.setEmptyTemplate(article.getUseEmptyTemplate());
             articleDto.setStructureId(article.getStructure().getId());
+
+            // get list parent of new structure
+            Long parentId = article.getStructure().getParentStructure();
+            boolean parentStatus = Boolean.TRUE;
+            do {
+                Optional<Structure> parentStructure = structureRepository.findById(parentId);
+                if (!parentStructure.isEmpty()) {
+                    Structure _parent = parentStructure.get();
+                    parentId = _parent.getParentStructure();
+                    BreadcumbStructureDto bcDto = new BreadcumbStructureDto();
+                    bcDto.setId(_parent.getId());
+                    bcDto.setName(_parent.getStructureName());
+                    bcDto.setLevel(_parent.getLevel());
+                    articleDto.getStructureParentList().add(bcDto);
+                    if (parentId == null)
+                        parentStatus = Boolean.FALSE;
+                    else if (parentId.longValue() == 0)
+                        parentStatus = Boolean.FALSE;
+                } else {
+                    parentStatus = Boolean.FALSE;
+                }
+            } while (parentStatus);
+
+            // sorting bread crumb
+            Collections.sort(articleDto.getStructureParentList(), new Comparator<BreadcumbStructureDto>() {
+                @Override
+                public int compare(BreadcumbStructureDto o1, BreadcumbStructureDto o2) {
+                    return o1.getLevel().intValue() - o2.getLevel().intValue();
+                }
+            });
             return articleDto;
         } catch (Exception e) {
             logger.error("exception", e);
