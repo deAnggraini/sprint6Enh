@@ -652,12 +652,12 @@ public class ArticleServiceImpl implements ArticleService {
         return listOfDtos;
     }
 
-    private List<ArticleDto> mapToRelatedArticleDto(Iterable<Article> iterable) {
-        List<ArticleDto> listOfDtos = new ArrayList<>();
+    private List<RelatedArticleDto> mapToRelatedArticleDto(Iterable<Article> iterable) {
+        List<RelatedArticleDto> listOfDtos = new ArrayList<>();
         for (Article entity : iterable) {
-            ArticleDto dto = new ArticleDto();
+            RelatedArticleDto dto = new RelatedArticleDto();
             dto.setId(entity.getId());
-            dto.setVideoLink(entity.getVideoLink());
+            dto.setTitle(entity.getJudulArticle());
             listOfDtos.add(dto);
         }
         return listOfDtos;

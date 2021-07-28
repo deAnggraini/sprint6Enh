@@ -29,7 +29,7 @@ public class ArticleDto extends BaseArticleDto {
     private List<SkReffDto> skReff = new ArrayList<>();
 
     @JsonProperty("related")
-    private List<ArticleDto> related = new ArrayList<>();
+    private List<RelatedArticleDto> related = new ArrayList<>();
 
     @JsonProperty("suggestions")
     private List<SuggestionArticleDto> suggestions = new ArrayList<>();
@@ -99,11 +99,11 @@ public class ArticleDto extends BaseArticleDto {
         this.skReff = skReff;
     }
 
-    public List<ArticleDto> getRelated() {
+    public List<RelatedArticleDto> getRelated() {
         return related;
     }
 
-    public void setRelated(List<ArticleDto> related) {
+    public void setRelated(List<RelatedArticleDto> related) {
         this.related = related;
     }
 
