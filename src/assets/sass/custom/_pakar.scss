@@ -222,6 +222,10 @@ $bca-color-dark: #0F5EA9;
   @extend .fs14;
 }
 
+.hide {
+  display: none;
+}
+
 // Custom Components
 pakar-input-drop-down.ng-touched.ng-invalid {
   .combo-box {

@@ -1,160 +1,168 @@
-<div class="top-bar d-flex flex-row justify-content-between">
-    <div class="d-flex flex-row align-items-center">
-        <a href="#" class="link text-dark d-flex flex-row" (click)="onCancel($event)">
-            <div [inlineSVG]="'./assets/media/svg/bca/icon/cancel.svg'" cacheSVG="true" class="svg-icon"></div>
-            <div>Batal</div>
-        </a>
-        <div class="separator"></div>
-        <a class="link text-dark d-flex flex-row">
-            <div [inlineSVG]="'./assets/media/svg/bca/icon/comment.svg'" cacheSVG="true" class="svg-icon"></div>
-            <div>Komentar</div>
-        </a>
+<ng-container *ngIf="!isPreview; else preview">
+    <div class="top-bar d-flex flex-row justify-content-between">
+        <div class="d-flex flex-row align-items-center">
+            <a href="#" class="link text-dark d-flex flex-row" (click)="onCancel($event)">
+                <div [inlineSVG]="'./assets/media/svg/bca/icon/cancel.svg'" cacheSVG="true" class="svg-icon"></div>
+                <div>Batal</div>
+            </a>
+            <div class="separator"></div>
+            <a class="link text-dark d-flex flex-row">
+                <div [inlineSVG]="'./assets/media/svg/bca/icon/comment.svg'" cacheSVG="true" class="svg-icon"></div>
+                <div>Komentar</div>
+            </a>
+        </div>
+        <div class="d-flex flex-row align-items-center">
+            <a href="#" class="link text-dark d-flex flex-row" (click)="onPreview($event)">
+                <div [inlineSVG]="'./assets/media/svg/bca/icon/preview.svg'" cacheSVG="true" class="svg-icon"></div>
+                <div>Preview</div>
+            </a>
+            <div class="separator"></div>
+            <a href="#" class="btn btn-link link text-dark d-flex flex-row"
+                [ngClass]="{'disabled' : !dataForm.valid || hasError}" (click)="onSave($event)">
+                <div [inlineSVG]="'./assets/media/svg/bca/icon/save.svg'" cacheSVG="true" class="svg-icon"></div>
+                <div>Simpan</div>
+            </a>
+            <div class="separator"></div>
+            <a href="#" class="btn btn-link text-dark d-flex flex-row disabled">
+                <div [inlineSVG]="'./assets/media/svg/bca/icon/send.svg'" cacheSVG="true" class="svg-icon"></div>
+                <div>Simpan & Kirim</div>
+            </a>
+        </div>
     </div>
-    <div class="d-flex flex-row align-items-center">
-        <a href="/article/preview" class="link text-dark d-flex flex-row">
-            <div [inlineSVG]="'./assets/media/svg/bca/icon/preview.svg'" cacheSVG="true" class="svg-icon"></div>
-            <div>Preview</div>
-        </a>
-        <div class="separator"></div>
-        <a href="#" class="btn btn-link link text-dark d-flex flex-row"
-            [ngClass]="{'disabled' : !dataForm.valid || hasError}" (click)="onSave($event)">
-            <div [inlineSVG]="'./assets/media/svg/bca/icon/save.svg'" cacheSVG="true" class="svg-icon"></div>
-            <div>Simpan</div>
-        </a>
-        <div class="separator"></div>
-        <a href="#" class="btn btn-link text-dark d-flex flex-row disabled">
-            <div [inlineSVG]="'./assets/media/svg/bca/icon/send.svg'" cacheSVG="true" class="svg-icon"></div>
-            <div>Simpan & Kirim</div>
-        </a>
+    <div *ngIf="!finishRender" class="pakar-container mx-15 p-8" style="padding-top:calc(2rem + 50px) !important">
+        Please Wait...
     </div>
-</div>
-<div *ngIf="!finishRender" class="pakar-container mx-15 p-8" style="padding-top:calc(2rem + 50px) !important">
-    Please Wait...
-</div>
-<div *ngIf="finishRender && dataForm" class="pakar-container mx-15 p-8" style="padding-top:60px !important">
-    <span class="pakar-text-header">{{isEdit ? 'Ubah' : 'Tambah'}} Artikel</span>
-    <form [formGroup]="dataForm" novalidate="novalidate">
-        <div class="form-group col-sm-11 col-lg-6 col-xl-6 col-xxl-6">
-            <label>Judul Artikel *</label>
-            <pakar-input-length placeholder="Masukkan nama artikel disini (maks. 50 karakter)" formControlName="title"
-                maxlength="50" (onChange)="checkUniq($event)" [hasError]="hasError">
-            </pakar-input-length>
-            <ng-container *ngIf="hasError">
-                <div class="fv-plugins-message-container">
-                    <div class="fv-help-block"><span>{{errorMsg}}</span></div>
+    <div *ngIf="finishRender && dataForm" class="pakar-container mx-15 p-8" style="padding-top:60px !important">
+        <span class="pakar-text-header">{{isEdit ? 'Ubah' : 'Tambah'}} Artikel</span>
+        <form [formGroup]="dataForm" novalidate="novalidate">
+            <div class="form-group col-sm-11 col-lg-6 col-xl-6 col-xxl-6">
+                <label>Judul Artikel *</label>
+                <pakar-input-length placeholder="Masukkan nama artikel disini (maks. 50 karakter)"
+                    formControlName="title" maxlength="50" (onChange)="checkUniq($event)" [hasError]="hasError">
+                </pakar-input-length>
+                <ng-container *ngIf="hasError">
+                    <div class="fv-plugins-message-container">
+                        <div class="fv-help-block"><span>{{errorMsg}}</span></div>
+                    </div>
+                </ng-container>
+            </div>
+            <div class="form-group col-sm-11 col-lg-9 col-xl-9 col-xxl-9">
+                <label>Lokasi Artikel *</label>
+                <pakar-combo-box-accordion formControlName="structureOption" [options]="locationOptions"
+                    placeholder="Pilih lokasi yang tepat untuk artikel yang ingin ditambahkan">
+                </pakar-combo-box-accordion>
+            </div>
+            <div class="form-group col-sm-11 col-lg-9 col-xl-9 col-xxl-9">
+                <label>Deskripsi Singkat *</label>
+                <ckeditor #editorDesc [editor]="editor" [config]="config" tagName="textarea" (ready)="onReady($event)"
+                    (change)="onChange($event)"></ckeditor>
+            </div>
+            <div class="form-group col-sm-11 col-lg-6 col-xl-6 col-xxl-6">
+                <label>Gambar Artikel *</label>
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="inputGroupFile04" accept="image/*"
+                        (change)="onImageChange($event)">
+                    <label class="custom-file-label" for="inputGroupFile04">{{ showImageName() }}</label>
                 </div>
-            </ng-container>
-        </div>
-        <div class="form-group col-sm-11 col-lg-9 col-xl-9 col-xxl-9">
-            <label>Lokasi Artikel *</label>
-            <pakar-combo-box-accordion formControlName="structureOption" [options]="locationOptions"
-                placeholder="Pilih lokasi yang tepat untuk artikel yang ingin ditambahkan">
-            </pakar-combo-box-accordion>
-        </div>
-        <div class="form-group col-sm-11 col-lg-9 col-xl-9 col-xxl-9">
-            <label>Deskripsi Singkat *</label>
-            <ckeditor #editorDesc [editor]="editor" [config]="config" tagName="textarea" (ready)="onReady($event)"
-                (change)="onChange($event)"></ckeditor>
-        </div>
-        <div class="form-group col-sm-11 col-lg-6 col-xl-6 col-xxl-6">
-            <label>Gambar Artikel *</label>
-            <div class="custom-file">
-                <input type="file" class="custom-file-input" id="inputGroupFile04" accept="image/*"
-                    (change)="onImageChange($event)">
-                <label class="custom-file-label" for="inputGroupFile04">{{ showImageName() }}</label>
             </div>
-        </div>
-        <div class="form-group col-sm-11 col-lg-6 col-xl-6 col-xxl-6">
-            <label>Video Artikel</label>
-            <input type="url" class="form-control" formControlName="video" placeholder="Masukan URL myVideo">
-        </div>
-        <div class="form-group col-sm-12 col-lg-11 col-xl-11 col-xxl-11">
-            <label>Content Artikel *</label>
-            <div class="border border-light rounded-sm p-3">
-                <mat-accordion [togglePosition]="'before'" multi="true">
-                    <mat-expansion-panel *ngFor="let content of dataForm.get('contents').value; let i=index;"
-                        class="acc-level acc-level-1" [(expanded)]="content.expanded">
-                        <mat-expansion-panel-header [@.disabled]="true">
-                            <mat-panel-title>
-                                <ng-container *ngIf="content.isEdit">
-                                    <input type="text" class="form-control" [(ngModel)]="content.title"
-                                        [ngModelOptions]="{standalone: true}" (change)="content.isEdit=false"
-                                        (keydown.space)="$event.stopPropagation();" (click)="$event.stopPropagation();"
-                                        maxlength="150"
-                                        placeholder="Masukkan title accordion disini (maks. 150 karakter)">
+            <div class="form-group col-sm-11 col-lg-6 col-xl-6 col-xxl-6">
+                <label>Video Artikel</label>
+                <input type="url" class="form-control" formControlName="video" placeholder="Masukan URL myVideo">
+            </div>
+            <div class="form-group col-sm-12 col-lg-11 col-xl-11 col-xxl-11">
+                <label>Content Artikel *</label>
+                <div class="border border-light rounded-sm p-3">
+                    <mat-accordion [togglePosition]="'before'" multi="true">
+                        <mat-expansion-panel *ngFor="let content of dataForm.get('contents').value; let i=index;"
+                            class="acc-level acc-level-1" [(expanded)]="content.expanded">
+                            <mat-expansion-panel-header [@.disabled]="true">
+                                <mat-panel-title>
+                                    <ng-container *ngIf="content.isEdit">
+                                        <input type="text" class="form-control" [(ngModel)]="content.title"
+                                            [ngModelOptions]="{standalone: true}" (change)="content.isEdit=false"
+                                            (keydown.space)="$event.stopPropagation();"
+                                            (click)="$event.stopPropagation();" maxlength="150"
+                                            placeholder="Masukkan title accordion disini (maks. 150 karakter)">
+                                    </ng-container>
+                                    <ng-container *ngIf="!content.isEdit">
+                                        <span>{{content.title}}</span>
+                                        <span [inlineSVG]="'./assets/media/svg/bca/icon/info.svg'" cacheSVG="true"
+                                            class="svg-icon svg-tooltip mx-2" placement="right"
+                                            [ngbTooltip]="tooltips[i]" container="body"
+                                            tooltipClass="my-custom-class fs12">
+                                        </span>
+                                    </ng-container>
+                                </mat-panel-title>
+                                <ng-container [ngTemplateOutlet]="rightIcon"
+                                    [ngTemplateOutletContext]="{ data: content}">
                                 </ng-container>
-                                <ng-container *ngIf="!content.isEdit">
-                                    <span>{{content.title}}</span>
-                                    <span [inlineSVG]="'./assets/media/svg/bca/icon/info.svg'" cacheSVG="true"
-                                        class="svg-icon svg-tooltip mx-2" placement="right" [ngbTooltip]="tooltips[i]"
-                                        container="body" tooltipClass="my-custom-class fs12">
-                                    </span>
-                                </ng-container>
-                            </mat-panel-title>
-                            <ng-container [ngTemplateOutlet]="rightIcon" [ngTemplateOutletContext]="{ data: content}">
-                            </ng-container>
-                        </mat-expansion-panel-header>
-                        <ng-template matExpansionPanelContent>
-                            <div>
-                                <input type="text" class="txt-desc-lvl1" [(ngModel)]="content.intro"
-                                    [ngModelOptions]="{standalone: true}"
-                                    placeholder="Masukkan kalimat pengantar terkait {{content.title}} disini.">
-                                <ng-container [ngTemplateOutlet]="accordionChild"
-                                    [ngTemplateOutletContext]="{ children: content.children, level:2, parents:[{id:content.id, no:content.no}]}">
-                                </ng-container>
-                            </div>
-                        </ng-template>
-                    </mat-expansion-panel>
-                </mat-accordion>
-                <button
-                    *ngIf="dataForm.get('isEmptyTemplate').value  && (user.roles[0] == 'ADMIN' || user.roles[0] == 'SUPERADMIN')"
-                    type="button" class="btn btn-blue-outline btn-sm rounded-sm w-100"
-                    (click)="btnAddClick($event, null)">
-                    <!-- <span [inlineSVG]="'./assets/media/svg/bca/icon/plus.svg'" cacheSVG="true"
+                            </mat-expansion-panel-header>
+                            <ng-template matExpansionPanelContent>
+                                <div>
+                                    <input type="text" class="txt-desc-lvl1" [(ngModel)]="content.intro"
+                                        [ngModelOptions]="{standalone: true}"
+                                        placeholder="Masukkan kalimat pengantar terkait {{content.title}} disini.">
+                                    <ng-container [ngTemplateOutlet]="accordionChild"
+                                        [ngTemplateOutletContext]="{ children: content.children, level:2, parents:[{id:content.id, no:content.no}]}">
+                                    </ng-container>
+                                </div>
+                            </ng-template>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                    <button
+                        *ngIf="dataForm.get('isEmptyTemplate').value  && (user.roles[0] == 'ADMIN' || user.roles[0] == 'SUPERADMIN')"
+                        type="button" class="btn btn-blue-outline btn-sm rounded-sm w-100"
+                        (click)="btnAddClick($event, null)">
+                        <!-- <span [inlineSVG]="'./assets/media/svg/bca/icon/plus.svg'" cacheSVG="true"
                         class="svg-icon"></span> -->
-                    + Tambah Artikel
-                </button>
-                <button
-                    *ngIf="dataForm.get('isEmptyTemplate').value  && !(user.roles[0] == 'ADMIN' || user.roles[0] == 'SUPERADMIN')"
-                    type="button" class="btn btn-danger btn-sm rounded-sm w-100" disabled>
-                    Content Kosong
-                </button>
+                        + Tambah Artikel
+                    </button>
+                    <button
+                        *ngIf="dataForm.get('isEmptyTemplate').value  && !(user.roles[0] == 'ADMIN' || user.roles[0] == 'SUPERADMIN')"
+                        type="button" class="btn btn-danger btn-sm rounded-sm w-100" disabled>
+                        Content Kosong
+                    </button>
+                </div>
             </div>
-        </div>
-        <div class="form-group col-sm-12 col-lg-11 col-xl-11 col-xxl-11">
-            <label>SK/SE Referensi</label>
-            <pakar-multi-select formControlName="references"
-                placeholder="Masukkan Nomor Referensi atau Judul SKSE dari Artikel ini" [dataList]="skReferences"
-                (getData)="getDataSkSeReference($event)">
-            </pakar-multi-select>
-        </div>
-        <div class="form-group col-sm-12 col-lg-11 col-xl-11 col-xxl-11">
-            <label>Artikel Terkait</label>
-            <pakar-multi-select formControlName="related"
-                placeholder="Masukkan Artikel terkait lain yang bersangkutan dengan artikel ini"
-                [dataList]="relatedArticle$" (getData)="getDataRelatedArticle($event)" maxSelected="3">
-            </pakar-multi-select>
-        </div>
-        <div class="form-group col-sm-12 col-lg-11 col-xl-11 col-xxl-11 d-flex flex-row align-items-center">
-            <div class="fs14 fb6 mr-2 pb-2">Suggestion :</div>
-            <div class="flex-grow-1">
-                <pakar-multi-select formControlName="suggestions"
-                    placeholder="Masukkan Nomor Referensi atau Judul SKSE dari Artikel ini"
-                    [dataList]="suggestionArticle$" (getData)="getDataSuggestionArticle($event)" maxSelected="5"
-                    class="border-less">
+            <div class="form-group col-sm-12 col-lg-11 col-xl-11 col-xxl-11">
+                <label>SK/SE Referensi</label>
+                <pakar-multi-select formControlName="references"
+                    placeholder="Masukkan Nomor Referensi atau Judul SKSE dari Artikel ini" [dataList]="skReferences"
+                    (getData)="getDataSkSeReference($event)">
                 </pakar-multi-select>
             </div>
-        </div>
-        <div class="form-group col-sm-12 col-lg-11 col-xl-11 col-xxl-11 d-flex justify-content-end">
-            <button type="button" class="btn btn-outline-light btn-sm rounded-xl px-5 ml-3"
-                (click)="onCancel($event)">Batal</button>
-            <button type="button" class="btn btn-blue-outline btn-sm px-5 ml-3" [disabled]="!dataForm.valid || hasError"
-                (click)="onSave($event)">Simpan</button>
-            <button type="button" class="btn btn-outline-dark btn-sm rounded-xl px-5 ml-3" disabled>Simpan &
-                Kirim</button>
-        </div>
-    </form>
-</div>
+            <div class="form-group col-sm-12 col-lg-11 col-xl-11 col-xxl-11">
+                <label>Artikel Terkait</label>
+                <pakar-multi-select formControlName="related"
+                    placeholder="Masukkan Artikel terkait lain yang bersangkutan dengan artikel ini"
+                    [dataList]="relatedArticle$" (getData)="getDataRelatedArticle($event)" maxSelected="3">
+                </pakar-multi-select>
+            </div>
+            <div class="form-group col-sm-12 col-lg-11 col-xl-11 col-xxl-11 d-flex flex-row align-items-center">
+                <div class="fs14 fb6 mr-2 pb-2">Suggestion :</div>
+                <div class="flex-grow-1">
+                    <pakar-multi-select formControlName="suggestions"
+                        placeholder="Masukkan Nomor Referensi atau Judul SKSE dari Artikel ini"
+                        [dataList]="suggestionArticle$" (getData)="getDataSuggestionArticle($event)" maxSelected="5"
+                        class="border-less">
+                    </pakar-multi-select>
+                </div>
+            </div>
+            <div class="form-group col-sm-12 col-lg-11 col-xl-11 col-xxl-11 d-flex justify-content-end">
+                <button type="button" class="btn btn-outline-light btn-sm rounded-xl px-5 ml-3"
+                    (click)="onCancel($event)">Batal</button>
+                <button type="button" class="btn btn-blue-outline btn-sm px-5 ml-3"
+                    [disabled]="!dataForm.valid || hasError" (click)="onSave($event)">Simpan</button>
+                <button type="button" class="btn btn-outline-dark btn-sm rounded-xl px-5 ml-3" disabled>Simpan &
+                    Kirim</button>
+            </div>
+        </form>
+    </div>
+</ng-container>
+
+<ng-template #preview>
+    <pakar-article-preview (onCancelCallback)="onPreview($event)"></pakar-article-preview>
+</ng-template>
 
 <ng-template #rightIcon let-data="data">
     <div class="right-icon d-flex flex-row align-items-center">

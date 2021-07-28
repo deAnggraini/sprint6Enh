@@ -140,6 +140,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   relatedArticle$: BehaviorSubject<Option[]> = new BehaviorSubject([]);
   suggestionArticle$: BehaviorSubject<Option[]> = new BehaviorSubject([]);
   locationOptions: BehaviorSubject<Option[]> = new BehaviorSubject([]);
+  isPreview: boolean = false;
 
   // accordion
   selectedAccordion: ArticleContentDTO;
@@ -262,8 +263,11 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
 
   }
   onPreview(e) {
-
+    this.article.formData = this.dataForm.value as ArticleDTO;
+    this.isPreview = !this.isPreview;
+    return false;
   }
+
 
   // Right icon event
   btnAddClick(e, data: ArticleContentDTO) {

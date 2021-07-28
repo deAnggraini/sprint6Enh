@@ -1,6 +1,6 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { AuthService, UserModel } from '../../auth';
@@ -8,20 +8,24 @@ import { StrukturDTO } from '../../_model/struktur.dto';
 import { ArticleService } from '../../_services/article.service';
 import { SkReferenceService } from '../../_services/sk-reference.service';
 import { StrukturService } from '../../_services/struktur.service';
+import { ArticleDTO, ArticleContentDTO } from '../../_model/article.dto';
 
 @Component({
-  selector: 'app-preview',
+  selector: 'pakar-article-preview',
   templateUrl: './preview.component.html',
   styleUrls: ['./preview.component.scss']
 })
 export class PreviewComponent implements OnInit {
+
+  @Output() onCancelCallback = new EventEmitter<any>();
+  articleDTO: ArticleDTO;
 
   categoryId: number = 0;
   struktur$: BehaviorSubject<StrukturDTO> = new BehaviorSubject<StrukturDTO>(null);
 
   hideTable: boolean = false;
   hideVideo: boolean = false;
-  title: string = 'Tahapan';
+  // title: string = 'Tahapan';
   dataForm: FormGroup;
   user$: Observable<UserModel>;
   aliasName: string = 'AA';
@@ -52,6 +56,7 @@ export class PreviewComponent implements OnInit {
   };
 
   constructor(
+    private router: Router,
     private route: ActivatedRoute,
     private struktutService: StrukturService,
     private auth: AuthService,
@@ -60,6 +65,15 @@ export class PreviewComponent implements OnInit {
     private skService: SkReferenceService,
   ) {
     this.user$ = this.auth.currentUserSubject.asObservable();
+  }
+
+  onCancel(e) {
+    if (this.onCancelCallback.observers.length) {
+      this.onCancelCallback.emit(false);
+    } else {
+      this.router.navigate([`/article/form/${this.articleDTO.id}`]);
+    }
+    return false;
   }
 
   ngOnInit(): void {
@@ -84,12 +98,25 @@ export class PreviewComponent implements OnInit {
   }
 
   private loadData() {
-    this.route.params.subscribe(params => {
-      this.categoryId = params.category;
-      this.loadData();
-    });
+    if (this.articleService.formData != null) {
+      this.articleDTO = this.articleService.formData;
+      this.categoryId = this.articleDTO.structureId;
+    } else {
+      this.route.params.subscribe(params => {
+        this.categoryId = params.category;
+        // this.loadData();
+      });
+    }
     const node = this.struktutService.findNodeById(this.categoryId);
     this.struktur$.next(node);
+    console.log({ article: this.articleDTO });
+  }
+
+  numberingFormat(data: ArticleContentDTO): string {
+    const listParent = data.listParent;
+    const strNoParent = listParent.map(d => d.no);
+    strNoParent.push(data.no);
+    return strNoParent.join(".");
   }
 
   // SK/SE 

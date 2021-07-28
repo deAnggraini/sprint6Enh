@@ -103,7 +103,7 @@ export class ArticleService {
   }
 
   deleteContent(id: number) {
-    return this.apiService.post(`${this._base_url}/deleteContent`, { id });
+    return this.apiService.post(`${this._base_url}/deleteContent`, { id }, this.apiService.getHeaders(), false);
   }
 
   cancelArticle(id: number) {

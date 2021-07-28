@@ -7,7 +7,7 @@ height: 184px;
 "></div>
 <div class="top-bar d-flex flex-row justify-content-between">
     <div class="d-flex flex-row align-items-center">
-        <a href="/article/form/{{id}}" class="link text-dark d-flex flex-row pl-8">
+        <a href="#" class="link text-dark d-flex flex-row pl-8" (click)="onCancel($event)">
             <div [inlineSVG]="'./assets/media/svg/bca/icon/edit-document.svg'" cacheSVG="true" class="svg-icon"></div>
             <div>Kembali ke Halaman Editor</div>
         </a>
@@ -31,7 +31,7 @@ height: 184px;
     <ng-container>
         <div class="pakar-container h-100 p-8 d-flex flex-column flex-column-auto flex-grow"
             style="min-height: initial;">
-            <span class="pakar-text-header">{{title}}</span>
+            <span class="pakar-text-header">{{articleDTO.title}}</span>
             <span class="pakar-text-header-desc my-4" style="color: #605E5C;">Terakhir diubah oleh
                 <span class="symbol symbol-lg-25 symbol-25 mx-2">
                     <span class="symbol-label font-size-h7 font-weight-bold rounded-xl px-2 ">{{aliasName}}</span>
@@ -98,22 +98,18 @@ height: 184px;
                     </div>
                     <div class="p-3">
                         <mat-accordion [togglePosition]="'before'" multi="true">
-                            <!-- <mat-expansion-panel *ngFor="let content of dataForm.get('contents').value; let i=index;"
-                                class="acc-level acc-level-1" [(expanded)]="content.expanded"> -->
-                            <mat-expansion-panel class="acc-level acc-level-1">
+                            <mat-expansion-panel class="acc-level acc-level-1"
+                                *ngFor="let content of articleDTO.contents">
                                 <mat-expansion-panel-header [@.disabled]="true">
                                     <mat-panel-title>
-                                        <!-- <span>{{content.title}}</span> -->
-                                        <span>Test Title</span>
+                                        <span>{{content.title}}</span>
                                     </mat-panel-title>
                                 </mat-expansion-panel-header>
                                 <div>
-                                    <!-- <input type="text" class="txt-desc-lvl1" [(ngModel)]="content.intro"
-                                        [ngModelOptions]="{standalone: true}"
-                                        placeholder="Masukkan kalimat pengantar terkait {{content.title}} disini.">
+                                    {{content.intro}}
                                     <ng-container *ngIf="content.children.length" [ngTemplateOutlet]="accordionChild"
                                         [ngTemplateOutletContext]="{ children: content.children, level:2, parents:[]}">
-                                    </ng-container> -->
+                                    </ng-container>
                                 </div>
                             </mat-expansion-panel>
                         </mat-accordion>
@@ -203,7 +199,46 @@ height: 184px;
                 </div>
 
             </div>
-            
+
         </div>
     </ng-container>
 </div>
+
+<ng-template #accordionChild let-children="children" let-level="level" let-parents="parents">
+    <div style="border-bottom:1px solid #C8C6C4; height: 10px;"></div>
+    <mat-accordion [togglePosition]="'before'" hideToggle="false" multi="true">
+        <ng-container *ngFor="let content of children; let i = index">
+            <div class="input-accordion-separator"></div>
+            <mat-expansion-panel [@.disabled]="true" class="acc-level acc-level-{{level}}">
+                <div class="drag-placeholder"></div>
+                <mat-expansion-panel-header>
+                    <mat-panel-title class="text-ellipsis-1">
+                        {{numberingFormat(content)}}. {{content.title}}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <ng-template matExpansionPanelContent>
+                    <div class="content">
+                        <div class="p-3">
+                            <div class="form-group">
+                                <label>{{content.topicTitle}}</label>
+                                <!-- <pakar-input-length placeholder="Masukkan judul topik disini (maks. 150 karakter)"
+                                    [(ngModel)]="content.topicTitle" maxlength="150">
+                                </pakar-input-length> -->
+                            </div>
+                            <div class="form-group">
+                                <label>{{content.topicContent}}</label>
+                                <!-- <ckeditor [editor]="editor" [config]="config" tagName="textarea"
+                                    [(ngModel)]="content.topicContent"></ckeditor> -->
+                                <!-- <textarea class="form-control" [(ngModel)]="content.topicContent"
+                                placeholder="Masukkan Isi topik disini"></textarea> -->
+                            </div>
+                        </div>
+                        <ng-container [ngTemplateOutlet]="accordionChild"
+                            [ngTemplateOutletContext]="{ children: content.children, level : level+1, parents: parents.concat({id:content.id, no:content.no})}">
+                        </ng-container>
+                    </div>
+                </ng-template>
+            </mat-expansion-panel>
+        </ng-container>
+    </mat-accordion>
+</ng-template>
