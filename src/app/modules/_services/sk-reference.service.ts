@@ -12,6 +12,6 @@ export class SkReferenceService {
   constructor(private apiService: ApiService) { }
 
   search(keyword: string) {
-    return this.apiService.post(`${this._base_url}/skReference`, { keyword });
+    return this.apiService.post(`${this._base_url}/searchSkRefference`, { keyword });
   }
 }

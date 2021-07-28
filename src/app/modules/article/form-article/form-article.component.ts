@@ -145,7 +145,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   selectedAccordion: ArticleContentDTO;
   tooltips = TOOL_TIPS;
   isAccEdit: boolean = false;
-  accForm: FormGroup;
+  // accForm: FormGroup;
 
   //cdk drag and drop
   allIds: Array<string> = []
@@ -338,7 +338,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
       if (confirmed === true) {
         this.subscriptions.push(
           this.article.deleteContent(data.id).subscribe(resp => {
-            if (resp) this.deleteNode(data);
+            this.deleteNode(data);
           })
         );
       }
@@ -429,7 +429,28 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     strNoParent.push(data.no);
     return strNoParent.join(".");
   }
-  accSaveAddEdit(content) {
+  accSaveAddEdit(content: ArticleContentDTO) {
+    this.subscriptions.push(
+      this.article.saveContent(content).subscribe(resp => {
+        if (resp) {
+          this.addLog(content);
+        }
+      })
+    );
+  }
+  accCancel(content: ArticleContentDTO) {
+    if (this.logs.has(content.id)) {
+      const _values: ArticleContentDTO[] = this.logs.get(content.id);
+      const _value = _values[_values.length - 1];
+      content.title = _value.title;
+      content.topicTitle = _value.topicTitle;
+      content.topicContent = _value.topicContent;
+    } else {
+      content.title = '';
+      content.topicTitle = '';
+      content.topicContent = '';
+    }
+    this.cdr.detectChanges();
   }
 
   private getArticle(id: number) {
@@ -512,9 +533,28 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   onImageChange(e) {
     if (e.target.files && e.target.files.length) {
       const [file] = e.target.files;
+      // const { size, name, type } = file;
       this.dataForm.patchValue({
         image: file
       });
+
+      var reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = function (e) {
+        var image = new Image();
+        image.src = e.target.result as string;
+        image.onload = function (_) {
+          var height = image.height;
+          var width = image.width;
+          console.log({ width, height }, this);
+          // if ((height >= 1024 || height <= 1100) && (width >= 750 || width <= 800)) {
+          //   alert("Height and Width must not exceed 1100*800.");
+          //   return false;
+          // }
+          // alert("Uploaded image has valid Height and Width.");
+          return true;
+        };
+      }
     };
   }
   showImageName() {
@@ -601,13 +641,13 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
       suggestions: [defaultValue.suggestions],
       isEmptyTemplate: [defaultValue.isEmptyTemplate, Validators.compose([Validators.required])],
     });
-    this.accForm = this.fb.group({
-      articleId: [0, Validators.compose([Validators.required])],
-      id: [0, Validators.compose([Validators.required])],
-      title: ['', Validators.compose([Validators.required])],
-      level: [1, Validators.compose([Validators.required])],
-      sort: [1, Validators.compose([Validators.required])],
-    });
+    // this.accForm = this.fb.group({
+    //   articleId: [0, Validators.compose([Validators.required])],
+    //   id: [0, Validators.compose([Validators.required])],
+    //   title: ['', Validators.compose([Validators.required])],
+    //   level: [1, Validators.compose([Validators.required])],
+    //   sort: [1, Validators.compose([Validators.required])],
+    // });
   }
   ngOnInit(): void {
     this.initForm();
