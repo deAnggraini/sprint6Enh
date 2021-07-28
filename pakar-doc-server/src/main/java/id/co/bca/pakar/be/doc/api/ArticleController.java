@@ -436,4 +436,33 @@ public class ArticleController extends BaseController {
             return createResponse(Boolean.FALSE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, Locale.ENGLISH));
         }
     }
+
+    /**
+     * cancel article content make article back to previous content that was saved
+     * @param authorization
+     * @param username
+     * @param deleteContentDto
+     * @return
+     */
+    @PostMapping(value = "/api/doc/cancelContent", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
+            MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<RestResponse<Boolean>> cancelArticleContent(@RequestHeader("Authorization") String authorization, @RequestHeader(name = "X-USERNAME") String username, @Valid @RequestBody DeleteContentDto deleteContentDto) {
+        try {
+            logger.info("save article content");
+            logger.info("received token bearer --- {}", authorization);
+            deleteContentDto.setUsername(username);
+            deleteContentDto.setToken(getTokenFromHeader(authorization));
+            Boolean status = articleService.deleteContent(deleteContentDto);
+            return createResponse(status, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, Locale.ENGLISH));
+        } catch (DataNotFoundException e) {
+            logger.error("exception", e);
+            return createResponse(Boolean.FALSE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, Locale.ENGLISH));
+        } catch (AccesDeniedDeleteContentException e) {
+            logger.error("exception", e);
+            return createResponse(Boolean.FALSE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("access.denied.delete.content", new Object[]{username}, Locale.ENGLISH));
+        } catch (Exception e) {
+            logger.error("exception", e);
+            return createResponse(Boolean.FALSE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, Locale.ENGLISH));
+        }
+    }
 }
