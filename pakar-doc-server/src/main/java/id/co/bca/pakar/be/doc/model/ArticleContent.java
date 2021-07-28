@@ -6,9 +6,9 @@ import javax.persistence.*;
 @Table(name = "t_article_content")
 public class ArticleContent extends CommonArticleContent {
     @Id
-    @SequenceGenerator(name = "articleContentSeqGen", sequenceName = "articleContentSeq", initialValue = 1, allocationSize = 1)
-    @GeneratedValue(generator = "articleContentSeqGen")
-    private Long id;
+//    @SequenceGenerator(name = "articleContentSeqGen", sequenceName = "articleContentSeq", initialValue = 1, allocationSize = 1)
+//    @GeneratedValue(generator = "articleContentSeqGen")
+    private Long id = 0L;
     @Version
     @Column(name = "optlock", columnDefinition = "integer DEFAULT 0", nullable = false)
     private Long version;

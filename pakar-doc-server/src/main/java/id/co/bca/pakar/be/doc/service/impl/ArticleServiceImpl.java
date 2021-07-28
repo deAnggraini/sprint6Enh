@@ -444,8 +444,8 @@ public class ArticleServiceImpl implements ArticleService {
         try {
             logger.info("process save content");
             ArticleContent articleContent = new ArticleContent();
-            articleContent.setCreatedBy(articleContentDto.getUsername());
             articleContent.setId(articleContentDto.getId());
+            articleContent.setCreatedBy(articleContentDto.getUsername());
             articleContent.setName(articleContentDto.getTitle());
             articleContent.setDescription(articleContentDto.getIntroduction());
             articleContent.setTopicCaption(articleContentDto.getTopicTitle());
