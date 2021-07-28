@@ -16,6 +16,8 @@ public interface ArticleService {
 
     Long getContentId(BaseDto baseDto) throws Exception;
 
+    ArticleContentDto getContentById(Long id) throws Exception;
+
     ArticleContentDto saveContent(ArticleContentDto articleContentDto) throws Exception;
 
     List<ArticleContentDto> saveBatchContents(List<ArticleContentDto> articleContentDtos, String username, String token) throws Exception;

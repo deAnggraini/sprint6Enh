@@ -325,6 +325,40 @@ public class ArticleController extends BaseController {
         }
     }
 
+    /**
+     * get article content by content id
+     *
+     * @param authorization
+     * @param username
+     * @param baseDto
+     * @return
+     */
+    @GetMapping(value = "/api/doc/getContentById", produces = {
+            MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<RestResponse<ArticleContentDto>> getContentById(@RequestHeader("Authorization") String authorization, @RequestHeader(name = "X-USERNAME") String username, @RequestBody BaseArticleDto baseDto) {
+        try {
+            logger.info("get content by id");
+            logger.info("received token bearer --- {}", authorization);
+            baseDto.setUsername(username);
+            baseDto.setToken(getTokenFromHeader(authorization));
+            ArticleContentDto articleContentDto = articleService.getContentById(baseDto.getId());
+            return createResponse(articleContentDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, Locale.ENGLISH));
+        } catch (AccesDeniedDeleteContentException e) {
+            logger.error("exception", e);
+            return createResponse(new ArticleContentDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("access.denied.delete.content", new Object[]{username}, Locale.ENGLISH));
+        } catch (Exception e) {
+            logger.error("exception", e);
+            return createResponse(new ArticleContentDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, Locale.ENGLISH));
+        }
+    }
+
+    /**
+     * save content article/accordeon
+     * @param authorization
+     * @param username
+     * @param articleContentDto
+     * @return
+     */
     @PostMapping(value = "/api/doc/saveContent", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
             MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<RestResponse<ArticleContentDto>> saveArticleContent(@RequestHeader("Authorization") String authorization, @RequestHeader(name = "X-USERNAME") String username, @Valid @RequestBody ArticleContentDto articleContentDto) {
@@ -353,7 +387,6 @@ public class ArticleController extends BaseController {
             MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<RestResponse<List<ArticleContentDto>>> saveBatchArticleContent(@RequestHeader("Authorization") String authorization, @RequestHeader(name = "X-USERNAME") String username, @RequestBody List<ArticleContentDto> articleContentDtos, BindingResult bindingResult) {
         try {
-            // TODO implement saveBatchContents
             logger.info("save batch article content");
             logger.info("received token bearer --- {}", authorization);
             multiArticleContentValidator.validate(articleContentDtos, bindingResult);

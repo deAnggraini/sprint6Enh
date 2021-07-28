@@ -127,7 +127,7 @@ public class ArticleServiceImpl implements ArticleService {
             Structure structure = structureRepository.findStructure(generateArticleDto.getStructureId());
             article.setStructure(structure);
             article.setArticleState(Constant.ArticleWfState.PRE_DRAFT);
-            if(template.getTemplateName().trim().toLowerCase().equalsIgnoreCase("empty".toLowerCase())) {
+            if (template.getTemplateName().trim().toLowerCase().equalsIgnoreCase("empty".toLowerCase())) {
                 article.setUseEmptyTemplate(Boolean.TRUE);
             }
 
@@ -217,7 +217,7 @@ public class ArticleServiceImpl implements ArticleService {
 //            articleDto.setContents(articleContentDtos);
 
             articleDto = getArticleById(article.getId());
-            return  articleDto;
+            return articleDto;
         } catch (NotFoundArticleTemplateException e) {
             logger.error("", e);
             throw new Exception("not found article template");
@@ -427,6 +427,31 @@ public class ArticleServiceImpl implements ArticleService {
         } catch (Exception e) {
             logger.error("exception", e);
             throw new Exception("exception", e);
+        }
+    }
+
+    /**
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public ArticleContentDto getContentById(Long id) throws Exception {
+        try {
+            Optional<ArticleContent> articleContentOp = articleContentRepository.findById(id);
+            if (articleContentOp.isEmpty()) {
+                throw new DataNotFoundException("data not found");
+            }
+
+            ArticleContent articleContent = articleContentOp.get();
+            ArticleContentDto articleContentDto = mapToArticleContentDto(articleContent);
+            return articleContentDto;
+        } catch (DataNotFoundException e) {
+            logger.error("exception", e);
+            throw new DataNotFoundException("data not found");
+        } catch (Exception e) {
+            logger.error("exception", e);
+            throw new Exception(e);
         }
     }
 
@@ -641,6 +666,24 @@ public class ArticleServiceImpl implements ArticleService {
             }
         });
         return listOfContents;
+    }
+
+    /**
+     *
+     * @param content
+     * @return
+     */
+    private ArticleContentDto mapToArticleContentDto(ArticleContent content) {
+        ArticleContentDto contentDto = new ArticleContentDto();
+        contentDto.setId(content.getId());
+        contentDto.setLevel(content.getLevel());
+        contentDto.setOrder(content.getSort());
+        contentDto.setTitle(content.getName());
+        if (content.getLevel().intValue() == 1)
+            contentDto.setIntroduction(content.getDescription());
+        contentDto.setParent(content.getParent());
+        contentDto.setArticleId(content.getArticle().getId());
+        return contentDto;
     }
 
     private List<SkReffDto> mapToSkReffDto(Iterable<SkRefference> iterable) {
