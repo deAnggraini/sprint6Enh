@@ -40,8 +40,8 @@ public class Article extends EntityBase {
 	@OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private List<ArticleContent> articleContents = new ArrayList<>();
 
-	@Column(name = "use_empty_template", columnDefinition = "boolean default false")
-	private Boolean useEmptyTemplate;
+	@Column(name = "use_empty_template", columnDefinition = "BOOLEAN DEFAULT FALSE")
+	private Boolean useEmptyTemplate = Boolean.FALSE;
 
 	public Long getId() {
 		return id;

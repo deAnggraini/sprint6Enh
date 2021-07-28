@@ -63,7 +63,7 @@ public class ArticleServiceImpl implements ArticleService {
     private ArticleImageRepository articleImageRepository;
 
     @Autowired
-    private ArticleRefferenceRepository articleRefferenceRepository;
+    private ArticleRelatedRepository articleRelatedRepository;
 
     @Autowired
     private ArticleSkReffRepository articleSkReffRepository;
@@ -127,7 +127,7 @@ public class ArticleServiceImpl implements ArticleService {
             Structure structure = structureRepository.findStructure(generateArticleDto.getStructureId());
             article.setStructure(structure);
             article.setArticleState(Constant.ArticleWfState.PRE_DRAFT);
-            if(template.getTemplateName().toLowerCase().equalsIgnoreCase("empty".toLowerCase())) {
+            if(template.getTemplateName().trim().toLowerCase().equalsIgnoreCase("empty".toLowerCase())) {
                 article.setUseEmptyTemplate(Boolean.TRUE);
             }
 
@@ -178,45 +178,46 @@ public class ArticleServiceImpl implements ArticleService {
                 }
             }
 
-            // get list parent of new structure
-            Long parentId = structure.getParentStructure();
-            boolean parentStatus = Boolean.TRUE;
-            do {
-                Optional<Structure> parentStructure = structureRepository.findById(parentId);
-                if (!parentStructure.isEmpty()) {
-                    Structure _parent = parentStructure.get();
-                    parentId = _parent.getParentStructure();
-                    BreadcumbStructureDto bcDto = new BreadcumbStructureDto();
-                    bcDto.setId(_parent.getId());
-                    bcDto.setName(_parent.getStructureName());
-                    bcDto.setLevel(_parent.getLevel());
-                    articleDto.getStructureParentList().add(bcDto);
-                    if (parentId == null)
-                        parentStatus = Boolean.FALSE;
-                    else if (parentId.longValue() == 0)
-                        parentStatus = Boolean.FALSE;
-                } else {
-                    parentStatus = Boolean.FALSE;
-                }
-            } while (parentStatus);
+//            // get list parent of new structure
+//            Long parentId = structure.getParentStructure();
+//            boolean parentStatus = Boolean.TRUE;
+//            do {
+//                Optional<Structure> parentStructure = structureRepository.findById(parentId);
+//                if (!parentStructure.isEmpty()) {
+//                    Structure _parent = parentStructure.get();
+//                    parentId = _parent.getParentStructure();
+//                    BreadcumbStructureDto bcDto = new BreadcumbStructureDto();
+//                    bcDto.setId(_parent.getId());
+//                    bcDto.setName(_parent.getStructureName());
+//                    bcDto.setLevel(_parent.getLevel());
+//                    articleDto.getStructureParentList().add(bcDto);
+//                    if (parentId == null)
+//                        parentStatus = Boolean.FALSE;
+//                    else if (parentId.longValue() == 0)
+//                        parentStatus = Boolean.FALSE;
+//                } else {
+//                    parentStatus = Boolean.FALSE;
+//                }
+//            } while (parentStatus);
+//
+//            // sorting bread crumb
+//            Collections.sort(articleDto.getStructureParentList(), new Comparator<BreadcumbStructureDto>() {
+//                @Override
+//                public int compare(BreadcumbStructureDto o1, BreadcumbStructureDto o2) {
+//                    return o1.getLevel().intValue() - o2.getLevel().intValue();
+//                }
+//            });
+//
+//            logger.info("populate response article");
+//            articleDto.setId(article.getId());
+//            articleDto.setJudulArticle(article.getJudulArticle());
+//            articleDto.setShortDescription(article.getShortDescription());
+//            articleDto.setStructureId(article.getStructure().getId());
+//            List<ArticleContentDto> articleContentDtos = new TreeArticleContents().menuTree(mapToListArticleContentDto(article.getArticleContents()));
+//            articleDto.setContents(articleContentDtos);
 
-            // sorting bread crumb
-            Collections.sort(articleDto.getStructureParentList(), new Comparator<BreadcumbStructureDto>() {
-                @Override
-                public int compare(BreadcumbStructureDto o1, BreadcumbStructureDto o2) {
-                    return o1.getLevel().intValue() - o2.getLevel().intValue();
-                }
-            });
-
-            logger.info("populate response article");
-            articleDto.setId(article.getId());
-            articleDto.setJudulArticle(article.getJudulArticle());
-            articleDto.setShortDescription(article.getShortDescription());
-            articleDto.setStructureId(article.getStructure().getId());
-            List<ArticleContentDto> articleContentDtos = new TreeArticleContents().menuTree(mapToListArticleContentDto(article.getArticleContents()));
-            articleDto.setContents(articleContentDtos);
-
-            return articleDto;
+            articleDto = getArticleById(article.getId());
+            return  articleDto;
         } catch (NotFoundArticleTemplateException e) {
             logger.error("", e);
             throw new Exception("not found article template");
@@ -255,7 +256,7 @@ public class ArticleServiceImpl implements ArticleService {
                 Images image = imageOpt.get();
                 articleDto.setImage(image.getUri());
             }
-            Iterable<Article> relatedArticles = articleRefferenceRepository.findByArticleId(article.getId());
+            Iterable<Article> relatedArticles = articleRelatedRepository.findByArticleId(article.getId());
             articleDto.setRelated(mapToRelatedArticleDto(relatedArticles));
             articleDto.setEmptyTemplate(article.getUseEmptyTemplate());
             articleDto.setStructureId(article.getStructure().getId());
@@ -629,6 +630,13 @@ public class ArticleServiceImpl implements ArticleService {
             contentDto.setParent(content.getParent());
             listOfContents.add(contentDto);
         }
+        // sorting article content
+        Collections.sort(listOfContents, new Comparator<ArticleContentDto>() {
+            @Override
+            public int compare(ArticleContentDto o1, ArticleContentDto o2) {
+                return o1.getOrder().intValue() - o2.getOrder().intValue();
+            }
+        });
         return listOfContents;
     }
 
