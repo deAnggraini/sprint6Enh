@@ -94,14 +94,16 @@
                             <ng-container [ngTemplateOutlet]="rightIcon" [ngTemplateOutletContext]="{ data: content}">
                             </ng-container>
                         </mat-expansion-panel-header>
-                        <div>
-                            <input type="text" class="txt-desc-lvl1" [(ngModel)]="content.intro"
-                                [ngModelOptions]="{standalone: true}"
-                                placeholder="Masukkan kalimat pengantar terkait {{content.title}} disini.">
-                            <ng-container [ngTemplateOutlet]="accordionChild"
-                                [ngTemplateOutletContext]="{ children: content.children, level:2, parents:[{id:content.id, no:content.no}]}">
-                            </ng-container>
-                        </div>
+                        <ng-template matExpansionPanelContent>
+                            <div>
+                                <input type="text" class="txt-desc-lvl1" [(ngModel)]="content.intro"
+                                    [ngModelOptions]="{standalone: true}"
+                                    placeholder="Masukkan kalimat pengantar terkait {{content.title}} disini.">
+                                <ng-container [ngTemplateOutlet]="accordionChild"
+                                    [ngTemplateOutletContext]="{ children: content.children, level:2, parents:[{id:content.id, no:content.no}]}">
+                                </ng-container>
+                            </div>
+                        </ng-template>
                     </mat-expansion-panel>
                 </mat-accordion>
                 <button
@@ -212,32 +214,34 @@
                     <ng-container [ngTemplateOutlet]="rightIcon" [ngTemplateOutletContext]="{ data: content}">
                     </ng-container>
                 </mat-expansion-panel-header>
-                <div class="content">
-                    <div class="p-3">
-                        <div class="form-group">
-                            <label>Judul Topik *</label>
-                            <pakar-input-length placeholder="Masukkan judul topik disini (maks. 150 karakter)"
-                                [(ngModel)]="content.topicTitle" maxlength="150">
-                            </pakar-input-length>
-                        </div>
-                        <div class="form-group">
-                            <label>Isi Topik *</label>
-                            <ckeditor [editor]="editor" [config]="config" tagName="textarea"
-                                [(ngModel)]="content.topicContent"></ckeditor>
-                            <!-- <textarea class="form-control" [(ngModel)]="content.topicContent"
+                <ng-template matExpansionPanelContent>
+                    <div class="content">
+                        <div class="p-3">
+                            <div class="form-group">
+                                <label>Judul Topik *</label>
+                                <pakar-input-length placeholder="Masukkan judul topik disini (maks. 150 karakter)"
+                                    [(ngModel)]="content.topicTitle" maxlength="150">
+                                </pakar-input-length>
+                            </div>
+                            <div class="form-group">
+                                <label>Isi Topik *</label>
+                                <ckeditor [editor]="editor" [config]="config" tagName="textarea"
+                                    [(ngModel)]="content.topicContent"></ckeditor>
+                                <!-- <textarea class="form-control" [(ngModel)]="content.topicContent"
                                 placeholder="Masukkan Isi topik disini"></textarea> -->
+                            </div>
+                            <div class="text-right">
+                                <button type="button" class="btn btn-outline-light btn-sm rounded-lg px-5"
+                                    (click)="accCancel(content)">Batal</button>
+                                <button type="button" class="btn btn-sm btn-blue rounded-lg px-5 ml-2"
+                                    [disabled]="!content.topicContent" (click)="accSaveAddEdit(content)">Simpan</button>
+                            </div>
                         </div>
-                        <div class="text-right">
-                            <button type="button" class="btn btn-outline-light btn-sm rounded-lg px-5"
-                                (click)="accCancel(content)">Batal</button>
-                            <button type="button" class="btn btn-sm btn-blue rounded-lg px-5 ml-2"
-                                [disabled]="!content.topicContent" (click)="accSaveAddEdit(content)">Simpan</button>
-                        </div>
+                        <ng-container [ngTemplateOutlet]="accordionChild"
+                            [ngTemplateOutletContext]="{ children: content.children, level : level+1, parents: parents.concat({id:content.id, no:content.no})}">
+                        </ng-container>
                     </div>
-                    <ng-container [ngTemplateOutlet]="accordionChild"
-                        [ngTemplateOutletContext]="{ children: content.children, level : level+1, parents: parents.concat({id:content.id, no:content.no})}">
-                    </ng-container>
-                </div>
+                </ng-template>
             </mat-expansion-panel>
         </ng-container>
     </mat-accordion>
