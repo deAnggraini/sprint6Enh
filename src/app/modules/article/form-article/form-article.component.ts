@@ -275,6 +275,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
             const maxSort: number = this.findMaxSort(_contents);
             const newNode: ArticleContentDTO = {
               id: resp,
+              articleId: this.dataForm.value.id,
               title: '',
               intro: '',
               topicContent: '',
@@ -298,6 +299,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
             }
             const newNode: ArticleContentDTO = {
               id: resp,
+              articleId: this.dataForm.value.id,
               title: '',
               intro: '',
               topicContent: '',
