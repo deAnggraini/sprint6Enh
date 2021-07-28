@@ -455,13 +455,16 @@ public class ArticleServiceImpl implements ArticleService {
             articleContent.setSort(articleContentDto.getOrder());
             articleContent.setLevel(articleContentDto.getLevel());
             Optional<ArticleContent> parentOpt = articleContentRepository.findById(articleContentDto.getParent());
-            if (!parentOpt.isEmpty()) {
-                articleContent.setParent(parentOpt.get().getId());
+            if (parentOpt.isEmpty()) {
+                throw new DataNotFoundException("data not found");
             }
+
+            articleContent.setParent(parentOpt.get().getId());
             Optional<Article> articleOpt = articleRepository.findById(articleContentDto.getArticleId());
-            if (!articleOpt.isEmpty()) {
-                articleContent.setArticle(articleOpt.get());
+            if (articleOpt.isEmpty()) {
+                throw new DataNotFoundException("data not found");
             }
+            articleContent.setArticle(articleOpt.get());
             logger.info("save article content to db");
             articleContent = articleContentRepository.save(articleContent);
 
@@ -493,10 +496,15 @@ public class ArticleServiceImpl implements ArticleService {
             Collections.sort(articleContentDto.getBreadcumbArticleContentDtos(), new Comparator<BreadcumbArticleContentDto>() {
                 @Override
                 public int compare(BreadcumbArticleContentDto o1, BreadcumbArticleContentDto o2) {
+                    logger.debug("level 1 {}", o1.getLevel());
+                    logger.debug("level 2 {}", o2.getLevel());
                     return o1.getLevel().intValue() - o2.getLevel().intValue();
                 }
             });
             return articleContentDto;
+        } catch (DataNotFoundException e) {
+            logger.error("exception", e);
+            throw new DataNotFoundException("data not found");
         } catch (Exception e) {
             logger.error("exception", e);
             throw new Exception("exception", e);
