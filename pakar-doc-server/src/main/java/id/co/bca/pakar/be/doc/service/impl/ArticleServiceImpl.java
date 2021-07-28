@@ -139,8 +139,10 @@ public class ArticleServiceImpl implements ArticleService {
             Iterable<ArticleTemplateContent> templateContents = articleTemplateContentRepository.findByTemplateId(template.getId());
             for (ArticleTemplateContent articleTemplateContent : templateContents) {
                 ArticleContent articleContent = new ArticleContent();
+                Long seqContentId = articleContentRepository.getContentId();
+                logger.info("get sequence content id {}",  seqContentId);
+                articleContent.setId(seqContentId);
                 articleContent.setCreatedBy(generateArticleDto.getUsername());
-
                 logger.debug("articleTemplateContent.getName() value {}", articleTemplateContent.getName());
                 logger.debug("param key {}", generateArticleDto.getParamKey());
                 logger.debug("param value {}", generateArticleDto.getParamValue());
