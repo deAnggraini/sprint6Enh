@@ -8,6 +8,10 @@ upload:
     theme: /themes/
     article: /articles/
     user: /users/
+pakar-oauth-service:
+  ribbon:
+    listOfServers: http://192.168.100.83:12081
+    ServerListRefreshInterval: 10000
 spring:
   rest:
     timeout:
