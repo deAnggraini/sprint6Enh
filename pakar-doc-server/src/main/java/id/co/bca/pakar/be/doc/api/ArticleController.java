@@ -303,18 +303,15 @@ public class ArticleController extends BaseController {
      *
      * @param authorization
      * @param username
-     * @param baseDto
      * @return
      */
     @GetMapping(value = "/api/doc/getContentId", produces = {
             MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<RestResponse<Long>> getContentId(@RequestHeader("Authorization") String authorization, @RequestHeader(name = "X-USERNAME") String username, @RequestBody BaseDto baseDto) {
+    public ResponseEntity<RestResponse<Long>> getContentId(@RequestHeader("Authorization") String authorization, @RequestHeader(name = "X-USERNAME") String username) {
         try {
             logger.info("get content id");
             logger.info("received token bearer --- {}", authorization);
-            baseDto.setUsername(username);
-            baseDto.setToken(getTokenFromHeader(authorization));
-            Long contentId = articleService.getContentId(baseDto);
+            Long contentId = articleService.getContentId(username, getTokenFromHeader(authorization));
             return createResponse(contentId, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
         } catch (AccesDeniedDeleteContentException e) {
             logger.error("exception", e);
@@ -333,7 +330,7 @@ public class ArticleController extends BaseController {
      * @param baseDto
      * @return
      */
-    @GetMapping(value = "/api/doc/getContentById", produces = {
+    @PostMapping(value = "/api/doc/getContentById", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
             MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<RestResponse<ArticleContentDto>> getContentById(@RequestHeader("Authorization") String authorization, @RequestHeader(name = "X-USERNAME") String username, @RequestBody BaseArticleDto baseDto) {
         try {
@@ -447,6 +444,7 @@ public class ArticleController extends BaseController {
     @PostMapping(value = "/api/doc/cancelContent", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
             MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<RestResponse<Boolean>> cancelArticleContent(@RequestHeader("Authorization") String authorization, @RequestHeader(name = "X-USERNAME") String username, @Valid @RequestBody DeleteContentDto deleteContentDto) {
+        // TODO implement cancel article
         try {
             logger.info("save article content");
             logger.info("received token bearer --- {}", authorization);

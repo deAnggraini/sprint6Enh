@@ -408,10 +408,10 @@ public class ArticleServiceImpl implements ArticleService {
      * @throws Exception
      */
     @Override
-    public Long getContentId(BaseDto baseDto) throws Exception {
+    public Long getContentId(String username, String token) throws Exception {
         try {
             logger.info("get content id");
-            ResponseEntity<ApiResponseWrapper.RestResponse<List<String>>> restResponse = pakarOauthClient.getRoles(BEARER + baseDto.getToken(), baseDto.getUsername());
+            ResponseEntity<ApiResponseWrapper.RestResponse<List<String>>> restResponse = pakarOauthClient.getRoles(BEARER + token, username);
             logger.debug("response api request {}", restResponse);
             List<String> roles = restResponse.getBody().getData();
             String role = roles.get(0);

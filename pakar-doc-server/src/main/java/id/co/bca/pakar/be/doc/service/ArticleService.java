@@ -14,7 +14,7 @@ public interface ArticleService {
 
     ArticleResponseDto saveArticle(MultipartArticleDto articleDto) throws Exception;
 
-    Long getContentId(BaseDto baseDto) throws Exception;
+    Long getContentId(String username, String token) throws Exception;
 
     ArticleContentDto getContentById(Long id) throws Exception;
 
