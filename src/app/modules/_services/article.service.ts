@@ -62,8 +62,8 @@ export class ArticleService {
   }
 
   // search only article
-  searchArticle(keyword: string, page: number = 1, limit: number = 10) {
-    const params = { keyword, page, limit };
+  searchArticle(keyword: string, exclude: number[] = [], page: number = 1, limit: number = 10) {
+    const params = { keyword, exclude, page, limit };
     return this.apiService.post(`${this._base_url}/searchRelatedArticle`, params);
   }
 

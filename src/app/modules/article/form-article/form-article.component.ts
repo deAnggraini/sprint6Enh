@@ -606,15 +606,15 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   getDataRelatedArticle(keyword: string) {
     this.subscriptions.push(
-      this.article.searchArticle(keyword).subscribe(resp => {
-        if (resp) this.relatedArticle$.next(this.convertArticleToOption(resp));
+      this.article.searchArticle(keyword, [this.dataForm.value.id]).subscribe(resp => {
+        if (resp) this.relatedArticle$.next(this.convertArticleToOption(resp.list));
       })
     );
   }
   getDataSuggestionArticle(keyword: string) {
     this.subscriptions.push(
-      this.article.searchArticle(keyword).subscribe(resp => {
-        if (resp) this.suggestionArticle$.next(this.convertArticleToOption(resp));
+      this.article.searchArticle(keyword, [this.dataForm.value.id]).subscribe(resp => {
+        if (resp) this.suggestionArticle$.next(this.convertArticleToOption(resp.list));
       })
     );
   }
