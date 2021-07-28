@@ -1,42 +1,63 @@
 .img-show {
-    background-size: 307px 425px;
+  background-size: 307px 425px;
 }
 
 ul {
-    padding-inline-start: 18px;
+  padding-inline-start: 18px;
 }
 
 .symbol .symbol-label {
-    color: white;
-    background-color: #4F6BED;
+  color: white;
+  background-color: #4f6bed;
 }
 
 :host ::ng-deep .top-bar {
-    position: fixed;
-    z-index: 2;
-    top: 50px;
-    height: 48px;
-    background: #F3F2F1;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.16);
-    width: 100vw;
-  
-    .link {
-      padding: 0 10px;
-    }
-  
-    .separator {
-      background-color: #C8C6C4;
-      width: 1.5px;
-      height: 20px;
-      margin: 0 10px;
-    }
-  
-    .svg-icon {
-      margin-right: 8px;
-  
-      svg {
-        width: unset;
-        height: unset;
-      }
+  position: fixed;
+  z-index: 2;
+  top: 50px;
+  height: 48px;
+  background: #f3f2f1;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.16);
+  width: 100vw;
+
+  .link {
+    padding: 0 10px;
+  }
+
+  .separator {
+    background-color: #c8c6c4;
+    width: 1.5px;
+    height: 20px;
+    margin: 0 10px;
+  }
+
+  .svg-icon {
+    margin-right: 8px;
+
+    svg {
+      width: unset;
+      height: unset;
     }
   }
+}
+
+//carousel
+:host ::ng-deep .carousel {
+  .control-c {
+    width: 32px;
+    height: 32px;
+  }
+
+  .slick-prev {
+    left: -10px;
+    z-index: 1;
+  }
+
+  .slick-next {
+    right: -10px;
+  }
+
+  .slick-disabled {
+    opacity: 0;
+  }
+}

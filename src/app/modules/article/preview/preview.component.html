@@ -32,17 +32,18 @@ height: 184px;
         <div class="pakar-container h-100 p-8 d-flex flex-column flex-column-auto flex-grow"
             style="min-height: initial;">
             <span class="pakar-text-header">{{title}}</span>
-            <span class="pakar-text-header-desc my-4" style="color: #605E5C;">Terakhir diubah oleh 
-                <!-- <b>Nama Editor</b>  -->
+            <span class="pakar-text-header-desc my-4" style="color: #605E5C;">Terakhir diubah oleh
                 <span class="symbol symbol-lg-25 symbol-25 mx-2">
                     <span class="symbol-label font-size-h7 font-weight-bold rounded-xl px-2 ">{{aliasName}}</span>
-                  </span>
-                  <span class="font-weight-bolder font-size-base d-none d-md-inline mr-2"
+                </span>
+                <span class="font-weight-bolder font-size-base d-none d-md-inline mr-2"
                     style="text-transform: uppercase;">{{fullName}}</span>
                 pada
                 <span class="font-size-sm" style="color: black;">{{ changed_date | date: "dd/MM/yyyy"}}</span>
             </span>
+
             <div class="row d-flex flex-wrap justify-content-between">
+                <!-- left side -->
                 <div class="col">
                     <span class="pakar-text-header-desc">Lorem Ipsum is simply dummy text of the printing and
                         typesetting industry.
@@ -95,7 +96,7 @@ height: 184px;
                             </tbody>
                         </table>
                     </div>
-                    <div>
+                    <div class="p-3">
                         <mat-accordion [togglePosition]="'before'" multi="true">
                             <!-- <mat-expansion-panel *ngFor="let content of dataForm.get('contents').value; let i=index;"
                                 class="acc-level acc-level-1" [(expanded)]="content.expanded"> -->
@@ -106,22 +107,22 @@ height: 184px;
                                         <span>Test Title</span>
                                     </mat-panel-title>
                                 </mat-expansion-panel-header>
-                                <!-- <div cdkDropListGroup>
-                                    <input type="text" class="txt-desc-lvl1" [(ngModel)]="content.intro"
+                                <div>
+                                    <!-- <input type="text" class="txt-desc-lvl1" [(ngModel)]="content.intro"
                                         [ngModelOptions]="{standalone: true}"
                                         placeholder="Masukkan kalimat pengantar terkait {{content.title}} disini.">
                                     <ng-container *ngIf="content.children.length" [ngTemplateOutlet]="accordionChild"
                                         [ngTemplateOutletContext]="{ children: content.children, level:2, parents:[]}">
-                                    </ng-container>
-                                </div> -->
+                                    </ng-container> -->
+                                </div>
                             </mat-expansion-panel>
                         </mat-accordion>
                     </div>
                     <hr>
                     <div class="faq mt-6">
-                        <div class="d-flex flex-wrap justify-content-between mb-5">
+                        <div class="d-flex flex-wrap justify-content-between">
                             <label class="font-weight-bolder text-dark mb-2">FAQ Tahapan</label>
-                            <div class="d-flex align-items-end mx-2">
+                            <div class="d-flex mx-2">
                                 <a class="navi-link" href="#">
                                     <a routerLink="/article/recommendation"
                                         class="navi-text cursor-pointer font-weight-bold font-size-sm">
@@ -130,83 +131,79 @@ height: 184px;
                                 </a>
                             </div>
                         </div>
-                        <!-- <ngx-slick-carousel class="carousel" #slickModal="slick-carousel" [config]="slideConfig">
-                        <div ngxSlickItem *ngFor="let item of slides" class="slide my-3">
-                            <div class="mx-2">
-                                <div class="col rounded-sm"
-                                    style="border: 1px solid #DDD; box-shadow: 0px 4px 8px 0px #0000001A;"
-                                    onmouseover="this.style.border ='1px groove #1995D1';"
-                                    onmouseout="this.style.border ='1px solid #DDD';">
-                                    <div class="row">
-                                        <div class="col-md-auto p-0">
-                                            <img class="img-show rounded-sm" src="{{backend_img}}/articles/{{item.image}}" width="100%" height="130px"
-                                                background-position:center style="object-fit: cover">
-                                        </div>
-                                        <div class="col p-0 px-2">
-                                            <div class="mb-2 my-3">
-                                                <span
-                                                    class="font-size-sm" style="color: #605E5C">{{item.created_date | date: "dd MMMM yyyy"}}</span>
+                        <ngx-slick-carousel class="carousel" #slickModal="slick-carousel" [config]="slideConfig"
+                            style="width: 1185px;">
+                            <div ngxSlickItem *ngFor="let item of slides" class="slide my-3">
+                                <div class="mx-2">
+                                    <div class="col rounded-sm" style="border: 1px solid #DDD; box-shadow: 0px 4px 8px 0px #0000001A; 
+                                    height: 134px; display: flex; align-items: center;"
+                                        onmouseover="this.style.border ='1px groove #1995D1';"
+                                        onmouseout="this.style.border ='1px solid #DDD';">
+                                        <div class="row">
+                                            <div class="col p-0 px-2 m-4">
+                                                <div class="mb-2 text-ellipsis-1">
+                                                    <a class="title text-dark font-weight-bolder font-size-h7"
+                                                        routerLink="/article/recommendation">{{item.title | maxLength:
+                                                        35}}</a>
+                                                </div>
+                                                <p class="text-desc mb-1 text-ellipsis-2">
+                                                    {{item.desc | maxLength: 65}}
+                                                    &nbsp;
+                                                    <a routerLink="/article/recommendation"
+                                                        class="navi-text cursor-pointer font-weight-normal font-size-sm">
+                                                        Selengkapnya >
+                                                    </a>
+                                                </p>
                                             </div>
-                                            <div class="mb-2 text-ellipsis-1">
-                                                <a class="title text-dark font-weight-bolder font-size-h7"
-                                                    routerLink="/article/recommendation">{{item.title | maxLength: 35}}</a>
-                                            </div>
-                                            <p class="text-desc mb-1 text-ellipsis-2">
-                                                {{item.desc | maxLength: 45}}
-                                            </p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </ngx-slick-carousel> -->
+                        </ngx-slick-carousel>
                     </div>
                     <hr>
                     <div class="sk-referensi mt-6">
                         <label class="font-weight-bolder text-dark mb-2">SK/SE Referensi</label>
-                        <div class="row">
-                            <div class="col">
-                                <ul>
-                                    <li>Tessst</li>
-                                </ul>
-                            </div>
-                            <!-- <div class="col"> - Petunjuk Pelaksanaan Layanan Perbankan melalui Video Bankin (VB) </div> -->
+                        <div>
+                            <ul *ngFor="let sk of skReferences">
+                                <li> <u>{{sk.no}}</u> - {{sk.title}}</li>
+                            </ul>
                         </div>
                         <a class="navi-link" href="#">
-                            <a routerLink="/article/recommendation"
-                                class="navi-text cursor-pointer font-weight-bold font-size-sm">
+                            <a routerLink="" class="navi-text cursor-pointer font-weight-bold font-size-sm">
                                 Selengkapnya >
                             </a>
                         </a>
                     </div>
                 </div>
+
+                <!-- right side -->
                 <div class="col" style="max-width: 350px;">
-                    <!-- right side -->
                     <div class="mx-4 mb-5" style="text-align: center; min-width: 307px;">
                         <img class="img-show" src="./assets/media/bg/sc-home1-bg.png" background-position:center
                             style="object-fit: cover; width: 307px; height: 425px;">
                         <div class="mt-2">Ini adalah judul dari infografis</div>
                         <hr>
                     </div>
-                    <div class="video mx-4 mb-5" style="min-width: 307px;">
+                    <div class="video mx-4 mb-5" *ngIf="!hideVideo" style="min-width: 307px;">
                         <video width="307" height="173" controls>
                             <source src="" type="video/mp4">
                             <source src="" type="video/ogg">
-                          </video>
+                        </video>
                         <hr>
                     </div>
                     <div class="mx-4 mb-5" style="min-width: 307px;">
                         <label class="font-weight-bolder text-dark mb-2">Informasi Terkait</label>
                         <div>
-                            <ul>
-                                <li>Tessst</li>
+                            <ul *ngFor="let article of relatedArticle">
+                                <li>{{article.title}}</li>
                             </ul>
                         </div>
                     </div>
                 </div>
+
             </div>
-
-
+            
         </div>
     </ng-container>
 </div>
