@@ -76,11 +76,20 @@
                         class="acc-level acc-level-1" [(expanded)]="content.expanded">
                         <mat-expansion-panel-header [@.disabled]="true">
                             <mat-panel-title>
-                                <span>{{content.title}}</span>
-                                <span [inlineSVG]="'./assets/media/svg/bca/icon/info.svg'" cacheSVG="true"
-                                    class="svg-icon svg-tooltip mx-2" placement="right" [ngbTooltip]="tooltips[i]"
-                                    container="body" tooltipClass="my-custom-class fs12">
-                                </span>
+                                <ng-container *ngIf="content.isEdit">
+                                    <input type="text" class="form-control" [(ngModel)]="content.title"
+                                        [ngModelOptions]="{standalone: true}" (change)="content.isEdit=false"
+                                        (keydown.space)="$event.stopPropagation();" (click)="$event.stopPropagation();"
+                                        maxlength="150"
+                                        placeholder="Masukkan title accordion disini (maks. 150 karakter)">
+                                </ng-container>
+                                <ng-container *ngIf="!content.isEdit">
+                                    <span>{{content.title}}</span>
+                                    <span [inlineSVG]="'./assets/media/svg/bca/icon/info.svg'" cacheSVG="true"
+                                        class="svg-icon svg-tooltip mx-2" placement="right" [ngbTooltip]="tooltips[i]"
+                                        container="body" tooltipClass="my-custom-class fs12">
+                                    </span>
+                                </ng-container>
                             </mat-panel-title>
                             <ng-container [ngTemplateOutlet]="rightIcon" [ngTemplateOutletContext]="{ data: content}">
                             </ng-container>
@@ -189,7 +198,16 @@
                 class="acc-level acc-level-{{level}}" [(expanded)]="content.expanded">
                 <div class="drag-placeholder" *cdkDragPlaceholder></div>
                 <mat-expansion-panel-header>
-                    <mat-panel-title class="text-ellipsis-1">{{numberingFormat(content)}}. {{content.title}}
+                    <mat-panel-title class="text-ellipsis-1">{{numberingFormat(content)}}.
+                        <ng-container *ngIf="content.isEdit">
+                            <input type="text" class="form-control" [(ngModel)]="content.title"
+                                (change)="content.isEdit=false" (keydown.space)="$event.stopPropagation();"
+                                (click)="$event.stopPropagation();" maxlength="150"
+                                placeholder="Masukkan title accordion disini (maks. 150 karakter)">
+                        </ng-container>
+                        <ng-container *ngIf="!content.isEdit">
+                            {{content.title}}
+                        </ng-container>
                     </mat-panel-title>
                     <ng-container [ngTemplateOutlet]="rightIcon" [ngTemplateOutletContext]="{ data: content}">
                     </ng-container>
@@ -199,14 +217,14 @@
                         <div class="form-group">
                             <label>Judul Topik *</label>
                             <pakar-input-length placeholder="Masukkan judul topik disini (maks. 150 karakter)"
-                                [(ngModel)]="content.topicTitle" maxlength="150" (onChange)="content.title = $event">
+                                [(ngModel)]="content.topicTitle" maxlength="150">
                             </pakar-input-length>
                         </div>
                         <div class="form-group">
                             <label>Isi Topik *</label>
-                            <!-- <ckeditor [editor]="editor" [config]="config" tagName="textarea"></ckeditor> -->
-                            <textarea class="form-control" [(ngModel)]="content.topicContent"
-                                placeholder="Masukkan Isi topik disini"></textarea>
+                            <ckeditor [editor]="editor" [config]="config" tagName="textarea"></ckeditor>
+                            <!-- <textarea class="form-control" [(ngModel)]="content.topicContent"
+                                placeholder="Masukkan Isi topik disini"></textarea> -->
                         </div>
                         <div class="text-right">
                             <button type="button" class="btn btn-outline-light btn-sm rounded-lg px-5">Batal</button>

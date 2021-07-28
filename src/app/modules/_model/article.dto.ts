@@ -39,6 +39,7 @@ export declare interface ArticleDTO {
     title: string,
     structureId: number,
     structureOption?: Option,
+    structureParentList?:any[], // {id: number, name: string}
     desc: string,
     image: string,
     video: string,

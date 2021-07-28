@@ -263,7 +263,6 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     this.subscriptions.push(
       this.article.getContentId().subscribe(resp => {
         if (resp) {
-          console.log({ resp });
           if (data == null) { // craete new level 1
             const _contents = this.dataForm.get('contents').value as ArticleContentDTO[];
             const maxSort: number = this.findMaxSort(_contents);
@@ -279,12 +278,10 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
               children: [],
               expanded: true,
               listParent: [],
-              no: ''
+              no: '',
+              isEdit: false,
             }
             _contents.push(newNode);
-            // this.dataForm.set('contents', _contents);
-            // data.expanded = true;
-            // data.children.push(newNode);
           } else { // add childe level > 1
             const maxSort: number = this.findMaxSort(data.children);
             const listParent: ArticleParentDTO[] = JSON.parse(JSON.stringify(data.listParent));
@@ -303,7 +300,8 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
               children: [],
               expanded: true,
               listParent,
-              no: `${data.children.length + 1}`
+              no: `${data.children.length + 1}`,
+              isEdit: false,
             }
             data.expanded = true;
             data.children.push(newNode);
@@ -317,10 +315,12 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     return false;
   }
   btnEditClick(e, data: ArticleContentDTO) {
-    this.selectedAccordion = data;
-    const { id, title, level, sort } = data;
-    this.accForm.reset(Object.assign({}, { articleId: this.dataForm.value.id, id, title, level, sort }));
-    this.open();
+    // this.selectedAccordion = data;
+    // const { id, title, level, sort } = data;
+    // this.accForm.reset(Object.assign({}, { articleId: this.dataForm.value.id, id, title, level, sort }));
+    // this.open();
+    data.isEdit = !data.isEdit;
+    this.cdr.detectChanges();
     e.stopPropagation();
     return false;
   }
@@ -451,6 +451,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     if (children && children.length) {
       children.forEach((d, i) => {
         if (!d.expanded) d.expanded = false;
+        if (!d.isEdit) d.isEdit = false;
         d.listParent = listParent;
         if (d.level == 1) {
           d.no = '';
@@ -476,13 +477,18 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   private setArticle(article: ArticleDTO) {
     console.log({ article });
     if (article) {
-      const locationSelected = this.struktur.findNodeById(article.structureId);
-      if (locationSelected) {
-        const { id, title, listParent } = locationSelected;
-        const concatParent = listParent.map(d => d.title);
-        concatParent.push(locationSelected.title);
-        article.structureOption = { id: `${id}`, text: title, value: concatParent.join(' > ') };
-      }
+      // const locationSelected = this.struktur.findNodeById(article.structureId);
+      // if (locationSelected) {
+      // const { id, title, listParent } = locationSelected;
+      // const concatParent = listParent.map(d => d.title);
+      // concatParent.push(locationSelected.title);
+      const { structureParentList, structureId } = article;
+      article.structureOption = {
+        id: `${structureId}`,
+        text: structureParentList[structureParentList.length - 1].title,
+        value: structureParentList.map(d => d.title).join(' > ')
+      };
+      // }
 
       // set expanded default value
       this.recalculateChildren(article.contents, []);
