@@ -22,6 +22,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatExpansionModule } from "@angular/material/expansion";
 import { PreviewComponent } from './preview/preview.component';
+import { SlickCarouselModule } from 'ngx-slick-carousel';
 
 const routes: Routes = [
   {
@@ -93,6 +94,7 @@ const routes: Routes = [
     // CdkTreeModule,
     MatIconModule,
     MatButtonModule,
+    SlickCarouselModule
   ]
 })
 export class ArticleModule { }

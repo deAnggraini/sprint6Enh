@@ -231,8 +231,8 @@
                                 placeholder="Masukkan Isi topik disini"></textarea> -->
                             </div>
                             <div class="text-right">
-                                <button type="button"
-                                    class="btn btn-outline-light btn-sm rounded-lg px-5">Batal</button>
+                                <button type="button" class="btn btn-outline-light btn-sm rounded-lg px-5"
+                                    (click)="accCancel(content)">Batal</button>
                                 <button type="button" class="btn btn-sm btn-blue rounded-lg px-5 ml-2"
                                     [disabled]="!content.topicContent" (click)="accSaveAddEdit(content)">Simpan</button>
                             </div>
