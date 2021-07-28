@@ -19,6 +19,7 @@ export declare interface ArticleParentDTO {
 
 export declare interface ArticleContentDTO {
     id: number,
+    articleId: number,
     title: string,
     no?: string,
     intro: string,
