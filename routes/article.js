@@ -24,7 +24,7 @@ router.get('/all', (req, res) => {
 router.post('/keyword', (req, res) => {
     res.send({ error: false, msg: "", data: lastKeyword });
 });
-router.post('/searchAll', (req, res) => {
+router.post('/node-search', (req, res) => {
     const { keyword, page, limit } = req.body;
     console.log('search article', { keyword, page });
     // if (!keyword || keyword == 'kosong') {
