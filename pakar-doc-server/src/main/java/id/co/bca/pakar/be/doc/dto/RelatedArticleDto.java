@@ -1,5 +1,6 @@
 package id.co.bca.pakar.be.doc.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Date;
@@ -9,9 +10,9 @@ public class RelatedArticleDto {
     private Long id;
     @JsonProperty("title")
     private String title;
-    @JsonProperty("created_by")
+    @JsonIgnore
     private String createdBy;
-    @JsonProperty("created_date")
+    @JsonIgnore
     private Date createdDate = new Date();
 
     public Long getId() {

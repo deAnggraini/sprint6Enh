@@ -244,6 +244,8 @@ public class ArticleServiceImpl implements ArticleService {
 
             Article article = articleOpt.get();
             ArticleDto articleDto = new ArticleDto();
+            articleDto.setCreatedBy(article.getCreatedBy());
+            articleDto.setCreatedDate(article.getCreatedDate());
             articleDto.setId(article.getId());
             articleDto.setJudulArticle(article.getJudulArticle());
             articleDto.setShortDescription(article.getShortDescription());
@@ -628,6 +630,7 @@ public class ArticleServiceImpl implements ArticleService {
             if (content.getLevel().intValue() == 1)
                 contentDto.setIntroduction(content.getDescription());
             contentDto.setParent(content.getParent());
+            contentDto.setArticleId(content.getArticle().getId());
             listOfContents.add(contentDto);
         }
         // sorting article content
