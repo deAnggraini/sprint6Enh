@@ -62,10 +62,17 @@ export class ArticleService {
   }
 
   // search only article
-  searchArticle(keyword: string, exclude: number[] = [], page: number = 1, limit: number = 10) {
+  searchArticle(keyword: string, exclude: number = 0, page: number = 1, limit: number = 10) {
     const params = { keyword, exclude, page, limit };
     return this.apiService.post(`${this._base_url}/searchRelatedArticle`, params);
   }
+
+  suggestionArticle(keyword: string, exclude: number[] = [], page: number = 1, limit: number = 10) {
+    const params = { keyword, exclude, page, limit };
+    return this.apiService.post(`${this._base_url}/suggestionArticle`, params);
+  }
+
+
 
   news() {
     return this.apiService.post(`${this._base_url}/news`, {});
