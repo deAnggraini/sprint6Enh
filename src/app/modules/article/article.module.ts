@@ -21,6 +21,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatExpansionModule } from "@angular/material/expansion";
+import { PreviewComponent } from './preview/preview.component';
 
 const routes: Routes = [
   {
@@ -47,6 +48,12 @@ const routes: Routes = [
           allowedRoles: ['SUPERADMIN', 'ADMIN', , 'EDITOR']
         }
       },
+      {
+        path: 'preview', component: PreviewComponent,
+        data: {
+          allowedRoles: ['SUPERADMIN', 'ADMIN', , 'EDITOR']
+        }
+      },
       { path: 'search', component: SearchComponent, },
       { path: 'search/:page', component: SearchComponent, },
       { path: 'recommendation', component: RecommendationComponent, },
@@ -66,7 +73,8 @@ const routes: Routes = [
     SearchComponent,
     RecommendationComponent,
     TerbaruComponent,
-    FormArticleComponent
+    FormArticleComponent,
+    PreviewComponent
   ],
   imports: [
     CommonModule,
