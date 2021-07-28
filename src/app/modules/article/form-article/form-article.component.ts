@@ -429,7 +429,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     strNoParent.push(data.no);
     return strNoParent.join(".");
   }
-  accSaveAddEdit() {
+  accSaveAddEdit(content) {
   }
 
   private getArticle(id: number) {
