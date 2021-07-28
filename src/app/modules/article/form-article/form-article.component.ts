@@ -1,10 +1,10 @@
-import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy, ChangeDetectorRef, TemplateRef, ViewChildren, QueryList } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import * as CustomEditor from './../../../ckeditor/build/ckeditor';
 import { ArticleService } from '../../_services/article.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ChangeEvent, CKEditorComponent } from '@ckeditor/ckeditor5-angular';
-import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { BehaviorSubject, Subscription, of, asapScheduler } from 'rxjs';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { BehaviorSubject, Subscription, of } from 'rxjs';
 import { Option } from 'src/app/utils/_model/option';
 import { SkReferenceService } from '../../_services/sk-reference.service';
 import { AuthService, UserModel } from '../../auth';
@@ -12,7 +12,6 @@ import { ArticleDTO, ArticleContentDTO, ArticleParentDTO } from '../../_model/ar
 import { FormGroup, FormBuilder, Validators, FormControl, ValidationErrors } from '@angular/forms';
 import { StrukturService } from '../../_services/struktur.service';
 import { catchError, map } from 'rxjs/operators';
-import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmService } from 'src/app/utils/_services/confirm.service';
 
 const TOOL_TIPS = [
@@ -52,7 +51,6 @@ function alphaNumericValidator(control: FormControl): ValidationErrors | null {
 export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('editorDesc') editorComponent: CKEditorComponent;
-  @ViewChild('formAddEdit') formAddEdit: TemplateRef<any>;
 
   subscriptions: Subscription[] = [];
 
@@ -130,7 +128,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     Time Loan - SME merupakan salah satu produk kredit produktif untuk modal kerja kepada debitur segmen Small dan Medium Enterprises (SME) dalam mata uang rupiah ataupun valas yang penarikannya menggunakan Surat Permohonan Penarikan Fasilitas Kredit/Perpanjangan Pembayaran untuk jangka waktu tertentu.`
   };
 
-  logs: ArticleDTO[] = [];
+  logs: Map<number, ArticleContentDTO[]> = new Map();
   hasError: boolean = false;
   errorMsg: string = '';
   user: UserModel;
@@ -164,12 +162,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private struktur: StrukturService,
-    private modalService: NgbModal,
-    private configModal: NgbModalConfig,
     private confirm: ConfirmService) {
-
-    this.configModal.backdrop = 'static';
-    this.configModal.keyboard = false;
   }
 
   //cdk drag and drop
@@ -225,7 +218,21 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     return formData;
   }
   onSave(e) {
-
+    this.confirm.open({
+      title: `Simpan`,
+      message: `<p>Apakah Kamu yakin ingin menyimpan halaman ini? Halaman akan tersimpan kedalam draft Kamu`,
+      btnOkText: 'Simpan',
+      btnCancelText: 'Batal'
+    }).then((confirmed) => {
+      if (confirmed === true) {
+        // this.subscriptions.push(
+        //   this.article.deleteContent(data.id).subscribe(resp => {
+        //     if (resp) this.deleteNode(data);
+        //   })
+        // );
+      }
+    });
+    return false;
   }
   onCancel(e) {
     console.log(this.dataForm.valid, this.dataForm.value);
@@ -254,11 +261,11 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   onSaveAndSend(e) {
 
   }
+  onPreview(e) {
+
+  }
 
   // Right icon event
-  private open() {
-    this.modalService.open(this.formAddEdit);
-  }
   btnAddClick(e, data: ArticleContentDTO) {
     this.subscriptions.push(
       this.article.getContentId().subscribe(resp => {
@@ -282,6 +289,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
               isEdit: false,
             }
             _contents.push(newNode);
+            this.addLog(newNode);
           } else { // add childe level > 1
             const maxSort: number = this.findMaxSort(data.children);
             const listParent: ArticleParentDTO[] = JSON.parse(JSON.stringify(data.listParent));
@@ -305,8 +313,8 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
             }
             data.expanded = true;
             data.children.push(newNode);
+            this.addLog(newNode);
           }
-          this.addLog(); // log article
           this.cdr.detectChanges();
         }
       })
@@ -315,10 +323,6 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     return false;
   }
   btnEditClick(e, data: ArticleContentDTO) {
-    // this.selectedAccordion = data;
-    // const { id, title, level, sort } = data;
-    // this.accForm.reset(Object.assign({}, { articleId: this.dataForm.value.id, id, title, level, sort }));
-    // this.open();
     data.isEdit = !data.isEdit;
     this.cdr.detectChanges();
     e.stopPropagation();
@@ -352,7 +356,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     this.recalculateChildren(_contents, []);
     this.dataForm.get('contents').setValue(_contents);
-    this.addLog();
+    this.removeLog(data);
     this.cdr.detectChanges();
   }
 
@@ -426,17 +430,6 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     return strNoParent.join(".");
   }
   accSaveAddEdit() {
-    this.subscriptions.push(
-      this.article.saveContent(this.accForm.value).subscribe(resp => {
-        if (resp) {
-          this.selectedAccordion.title = this.accForm.value.title;
-          this.selectedAccordion.topicTitle = this.accForm.value.title;
-          this.addLog();
-          this.cdr.detectChanges();
-          this.modalService.dismissAll();
-        }
-      })
-    );
   }
 
   private getArticle(id: number) {
@@ -477,30 +470,44 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   private setArticle(article: ArticleDTO) {
     console.log({ article });
     if (article) {
-      // const locationSelected = this.struktur.findNodeById(article.structureId);
-      // if (locationSelected) {
-      // const { id, title, listParent } = locationSelected;
-      // const concatParent = listParent.map(d => d.title);
-      // concatParent.push(locationSelected.title);
       const { structureParentList, structureId } = article;
       article.structureOption = {
         id: `${structureId}`,
         text: structureParentList[structureParentList.length - 1].title,
         value: structureParentList.map(d => d.title).join(' > ')
       };
-      // }
 
       // set expanded default value
       this.recalculateChildren(article.contents, []);
 
       this.dataForm.reset(article);
+      this.addLogs(article.contents);
       this.cdr.detectChanges();
     } else {
       this.goBackToAdd('Data article tidak valid');
     }
   }
-  private addLog() {
-    this.logs.push(JSON.parse(JSON.stringify(this.dataForm.value)));
+  private addLogs(values: ArticleContentDTO[] = null) {
+    if (values == null) return;
+    values.forEach(d => {
+      this.addLog(d);
+      this.addLogs(d.children);
+    });
+  }
+  private addLog(v: ArticleContentDTO) {
+    if (v) { // add all
+      const { id } = v;
+      const _newData: ArticleContentDTO = Object.assign({}, v, {
+        children: [], listParent: v.listParent
+      });
+      if (this.logs.has(id)) {
+        this.logs.get(id).push(_newData);
+      } else {
+        this.logs.set(id, [_newData]);
+      }
+    }
+  }
+  private removeLog(value: ArticleContentDTO) {
   }
   onImageChange(e) {
     if (e.target.files && e.target.files.length) {

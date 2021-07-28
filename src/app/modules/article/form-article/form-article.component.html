@@ -17,7 +17,7 @@
         </a>
         <div class="separator"></div>
         <a href="#" class="btn btn-link link text-dark d-flex flex-row"
-            [ngClass]="{'disabled' : !dataForm.valid || hasError}">
+            [ngClass]="{'disabled' : !dataForm.valid || hasError}" (click)="onSave($event)">
             <div [inlineSVG]="'./assets/media/svg/bca/icon/save.svg'" cacheSVG="true" class="svg-icon"></div>
             <div>Simpan</div>
         </a>
@@ -146,8 +146,8 @@
         <div class="form-group col-sm-12 col-lg-11 col-xl-11 col-xxl-11 d-flex justify-content-end">
             <button type="button" class="btn btn-outline-light btn-sm rounded-xl px-5 ml-3"
                 (click)="onCancel($event)">Batal</button>
-            <button type="button" class="btn btn-blue-outline btn-sm px-5 ml-3"
-                [disabled]="!dataForm.valid || hasError">Simpan</button>
+            <button type="button" class="btn btn-blue-outline btn-sm px-5 ml-3" [disabled]="!dataForm.valid || hasError"
+                (click)="onSave($event)">Simpan</button>
             <button type="button" class="btn btn-outline-dark btn-sm rounded-xl px-5 ml-3" disabled>Simpan &
                 Kirim</button>
         </div>
@@ -222,14 +222,15 @@
                         </div>
                         <div class="form-group">
                             <label>Isi Topik *</label>
-                            <ckeditor [editor]="editor" [config]="config" tagName="textarea"></ckeditor>
+                            <ckeditor [editor]="editor" [config]="config" tagName="textarea"
+                                [(ngModel)]="content.topicContent"></ckeditor>
                             <!-- <textarea class="form-control" [(ngModel)]="content.topicContent"
                                 placeholder="Masukkan Isi topik disini"></textarea> -->
                         </div>
                         <div class="text-right">
                             <button type="button" class="btn btn-outline-light btn-sm rounded-lg px-5">Batal</button>
                             <button type="button" class="btn btn-sm btn-blue rounded-lg px-5 ml-2"
-                                [disabled]="!content.topicContent">Simpan</button>
+                                [disabled]="!content.topicContent" (click)="accSaveAddEdit(content)">Simpan</button>
                         </div>
                     </div>
                     <ng-container [ngTemplateOutlet]="accordionChild"
@@ -241,7 +242,7 @@
     </mat-accordion>
 </ng-template>
 
-<ng-template #formAddEdit let-c="close" let-d="dismiss">
+<!-- <ng-template #formAddEdit let-c="close" let-d="dismiss">
     <div class="modal-header">
         <h4 class="modal-title" id="modal-basic-title">Ubah Accordion</h4>
         <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
@@ -262,7 +263,7 @@
         <button type="button" class="btn btn-sm btn-blue rounded-lg px-5" (click)="accSaveAddEdit()"
             [disabled]="accForm.invalid">Tambah</button>
     </div>
-</ng-template>
+</ng-template> -->
 
 <ng-template #formError let-control="control">
     <ng-container *ngIf="control.errors && control.dirty">
