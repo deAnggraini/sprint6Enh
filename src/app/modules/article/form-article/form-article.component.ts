@@ -391,8 +391,6 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     if (event.previousContainer === event.container) {
       console.log('move dalam satu list');
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-      this.recalculateChildren(event.previousContainer.data, event.previousContainer.data.length > 0 ? event.previousContainer.data[0].listParent : []);
-      this.recalculateChildren(event.container.data, event.container.data.filter((x, i) => i !== event.currentIndex)[0].listParent);
     } else {
       console.log('pindah list');
       console.log('dari', event.previousContainer.data);
@@ -401,9 +399,9 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
         event.container.data,
         event.previousIndex,
         event.currentIndex);
-      this.recalculateChildren(event.previousContainer.data, event.previousContainer.data.length > 0 ? event.previousContainer.data[0].listParent : []);
-      this.recalculateChildren(event.container.data, event.container.data.filter((x, i) => i !== event.currentIndex)[0].listParent);
     }
+    this.recalculateChildren(event.previousContainer.data, event.previousContainer.data.length > 0 ? event.previousContainer.data[0].listParent : []);
+    this.recalculateChildren(event.container.data, event.container.data.filter((x, i) => i !== event.currentIndex)[0].listParent);
     this.recalculateLevelChildren(event.container.data, level)
     console.log(level)
   }
