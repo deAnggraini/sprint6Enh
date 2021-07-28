@@ -362,25 +362,33 @@ router.post('/checkUnique', (req, res) => {
     }
 });
 
-router.post('/skReference', (req, res) => {
+router.post('/searchSkRefference', (req, res) => {
     res.send({ error: false, msg: "", data: sk_reference });
 })
 
-router.post('/searchArticle', (req, res) => {
+router.post('/searchRelatedArticle', (req, res) => {
     const { keyword, page, limit } = req.body;
     console.log('search article', { keyword, page });
-    // if (!keyword || keyword == 'kosong') {
-    //     res.send({
-    //         error: false, msg: "", data: {
-    //             result: {
-    //                 total: 0, length: 0, data: []
-    //             }
-    //         }
-    //     });
-    //     return;
-    // }
     const _articles = articles.filter(d => d.type == 'article');
-    const data = _articles.slice(0, limit);
+    const data = {
+        currentPage: 1,
+        list: _articles.slice(0, limit),
+        totalElements: 100,
+        totalPages: 10
+    };
+    res.send({ error: false, msg: "", data });
+});
+
+router.post('/suggestionArticle', (req, res) => {
+    const { keyword, page, limit } = req.body;
+    console.log('search article', { keyword, page });
+    const _articles = articles.filter(d => d.type == 'article');
+    const data = {
+        currentPage: 1,
+        list: _articles.slice(0, limit),
+        totalElements: 100,
+        totalPages: 10
+    };
     res.send({ error: false, msg: "", data });
 });
 
@@ -394,7 +402,7 @@ router.get('/getArticle', (req, res) => {
     // const { body } = ;
     const { id } = req.query;
     console.log({ id, sample_empty });
-    res.send({ error: false, msg: "", data: sample_basic });
+    res.send({ error: false, msg: "", data: sample_non_basic });
 });
 
 router.get('/getContentId', (req, res) => {
