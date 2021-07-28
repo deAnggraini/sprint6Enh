@@ -11,6 +11,10 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import java.util.List;
 
 @FeignClient(name = "pakar-auth-server", url = "${spring.security.oauth2.resourceserver.auth-server}")
+//Enabling feign
+//@FeignClient(name="pakar-oauth-service")
+//enabling ribbon
+//@RibbonClient(name="pakar-oauth-service")
 public interface PakarOauthClient {
     @PostMapping(value="/api/auth/getRoles", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
             MediaType.APPLICATION_JSON_VALUE})
