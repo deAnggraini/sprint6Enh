@@ -6,7 +6,12 @@ const sample_empty = {
     video: '',
     created_at: new Date(),
     created_by: '',
-    location: 2,
+    structureId: 2,
+    structureParentList: [
+        { id: 100, title: 'Produk Untuk Nasabah' },
+        { id: 120, title: 'Produk Investasi & Asuransi' },
+        { id: 126, title: 'Sertifikat Berharga BI' },
+    ],
     contents: [
     ],
     references: [], // {id, title, no},
@@ -23,7 +28,11 @@ const sample_basic = {
     video: '',
     created_at: new Date(),
     created_by: '',
-    location: 2,
+    structureId: 2,
+    structureParentList: [
+        { id: 100, title: 'Produk Untuk Nasabah' },
+        { id: 110, title: 'Produk Dana' },
+    ],
     contents: [
         {
             id: 1,
@@ -62,12 +71,17 @@ const sample_basic = {
 const sample_non_basic = {
     id: 101,
     title: 'Tahapan 2',
-    location: 2,
+    structureId: 2,
     desc: '',
     image: '',
     video: '',
     created_at: new Date(),
     created_by: '',
+    location: 2,
+    structureParentList: [
+        { id: 100, title: 'Produk Untuk Nasabah' },
+        { id: 110, title: 'Produk Dana' },
+    ],
     contents: [
         {
             id: 1,

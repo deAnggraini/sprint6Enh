@@ -394,7 +394,7 @@ router.get('/getArticle', (req, res) => {
     // const { body } = ;
     const { id } = req.query;
     console.log({ id, sample_empty });
-    res.send({ error: false, msg: "", data: sample_non_basic });
+    res.send({ error: false, msg: "", data: sample_basic });
 });
 
 router.get('/getContentId', (req, res) => {
@@ -407,6 +407,10 @@ router.post('/saveContent', (req, res) => {
 });
 
 router.post('/deleteContent', (req, res) => {
+    res.send({ error: false, msg: "", data: true });
+});
+
+router.post('/cancelArticle', (req, res) => {
     res.send({ error: false, msg: "", data: true });
 });
 
