@@ -27,6 +27,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
+import static id.co.bca.pakar.be.doc.common.Constant.ArticleWfState.PRE_DRAFT;
 import static id.co.bca.pakar.be.doc.common.Constant.Headers.BEARER;
 import static id.co.bca.pakar.be.doc.common.Constant.Roles.ROLE_ADMIN;
 import static id.co.bca.pakar.be.doc.common.Constant.Roles.ROLE_READER;
@@ -75,6 +76,9 @@ public class ArticleServiceImpl implements ArticleService {
     private ImageRepository imageRepository;
 
     @Autowired
+    private ArticleHistoryRepository articleHistoryRepository;
+
+    @Autowired
     private PakarOauthClient pakarOauthClient;
 
     @Value("${upload.path.category}")
@@ -101,7 +105,7 @@ public class ArticleServiceImpl implements ArticleService {
      * @return
      */
     @Override
-    @Transactional(rollbackOn = {Exception.class})
+    @Transactional(rollbackOn = {Exception.class, NotFoundArticleTemplateException.class})
     public ArticleDto generateArticle(GenerateArticleDto generateArticleDto) throws Exception {
         try {
             logger.info("generate article process");
@@ -126,7 +130,7 @@ public class ArticleServiceImpl implements ArticleService {
             article.setArticleUsedBy(generateArticleDto.getUsedBy());
             Structure structure = structureRepository.findStructure(generateArticleDto.getStructureId());
             article.setStructure(structure);
-            article.setArticleState(Constant.ArticleWfState.PRE_DRAFT);
+            article.setArticleState(PRE_DRAFT);
             if (template.getTemplateName().trim().toLowerCase().equalsIgnoreCase("empty".toLowerCase())) {
                 article.setUseEmptyTemplate(Boolean.TRUE);
             }
@@ -178,44 +182,6 @@ public class ArticleServiceImpl implements ArticleService {
                 }
             }
 
-//            // get list parent of new structure
-//            Long parentId = structure.getParentStructure();
-//            boolean parentStatus = Boolean.TRUE;
-//            do {
-//                Optional<Structure> parentStructure = structureRepository.findById(parentId);
-//                if (!parentStructure.isEmpty()) {
-//                    Structure _parent = parentStructure.get();
-//                    parentId = _parent.getParentStructure();
-//                    BreadcumbStructureDto bcDto = new BreadcumbStructureDto();
-//                    bcDto.setId(_parent.getId());
-//                    bcDto.setName(_parent.getStructureName());
-//                    bcDto.setLevel(_parent.getLevel());
-//                    articleDto.getStructureParentList().add(bcDto);
-//                    if (parentId == null)
-//                        parentStatus = Boolean.FALSE;
-//                    else if (parentId.longValue() == 0)
-//                        parentStatus = Boolean.FALSE;
-//                } else {
-//                    parentStatus = Boolean.FALSE;
-//                }
-//            } while (parentStatus);
-//
-//            // sorting bread crumb
-//            Collections.sort(articleDto.getStructureParentList(), new Comparator<BreadcumbStructureDto>() {
-//                @Override
-//                public int compare(BreadcumbStructureDto o1, BreadcumbStructureDto o2) {
-//                    return o1.getLevel().intValue() - o2.getLevel().intValue();
-//                }
-//            });
-//
-//            logger.info("populate response article");
-//            articleDto.setId(article.getId());
-//            articleDto.setJudulArticle(article.getJudulArticle());
-//            articleDto.setShortDescription(article.getShortDescription());
-//            articleDto.setStructureId(article.getStructure().getId());
-//            List<ArticleContentDto> articleContentDtos = new TreeArticleContents().menuTree(mapToListArticleContentDto(article.getArticleContents()));
-//            articleDto.setContents(articleContentDtos);
-
             articleDto = getArticleById(article.getId());
             return articleDto;
         } catch (NotFoundArticleTemplateException e) {
@@ -263,6 +229,18 @@ public class ArticleServiceImpl implements ArticleService {
             articleDto.setEmptyTemplate(article.getUseEmptyTemplate());
             articleDto.setStructureId(article.getStructure().getId());
 
+            // get current structure
+            Optional<Structure> currStructOpt = structureRepository.findById(article.getStructure().getId());
+            if(currStructOpt.isEmpty()) {
+                throw new DataNotFoundException("not found article with id --> " + article.getStructure().getId());
+            }
+            Structure currStruct = currStructOpt.get();
+            BreadcumbStructureDto bcDto = new BreadcumbStructureDto();
+            bcDto.setId(currStruct.getId());
+            bcDto.setName(currStruct.getStructureName());
+            bcDto.setLevel(currStruct.getLevel());
+            articleDto.getStructureParentList().add(bcDto);
+
             // get list parent of new structure
             Long parentId = article.getStructure().getParentStructure();
             boolean parentStatus = Boolean.TRUE;
@@ -271,7 +249,7 @@ public class ArticleServiceImpl implements ArticleService {
                 if (!parentStructure.isEmpty()) {
                     Structure _parent = parentStructure.get();
                     parentId = _parent.getParentStructure();
-                    BreadcumbStructureDto bcDto = new BreadcumbStructureDto();
+                    bcDto = new BreadcumbStructureDto();
                     bcDto.setId(_parent.getId());
                     bcDto.setName(_parent.getStructureName());
                     bcDto.setLevel(_parent.getLevel());
@@ -461,6 +439,7 @@ public class ArticleServiceImpl implements ArticleService {
      * @throws Exception
      */
     @Override
+    @Transactional(rollbackOn = {Exception.class})
     public ArticleContentDto saveContent(ArticleContentDto articleContentDto) throws Exception {
         try {
             logger.info("process save content");
@@ -486,8 +465,35 @@ public class ArticleServiceImpl implements ArticleService {
 
             // reset list parent
             logger.info("get breadcumb article content");
-            List<ArticleContent> parentArticleContents = articleContentRepository.findArticleContentParent(articleContent.getId());
-            articleContentDto.setBreadcumbArticleContentDtos(mapToListParentArticleContentDto(parentArticleContents));
+            // get list parent of articleContent
+            Long parentId = articleContent.getParent();
+            boolean parentStatus = Boolean.TRUE;
+            do {
+                Optional<ArticleContent> parentContent = articleContentRepository.findById(parentId);
+                if (!parentContent.isEmpty()) {
+                    ArticleContent _parent = parentContent.get();
+                    parentId = _parent.getParent();
+                    BreadcumbArticleContentDto bcDto = new BreadcumbArticleContentDto();
+                    bcDto.setId(_parent.getId());
+                    bcDto.setName(_parent.getName());
+                    bcDto.setLevel(_parent.getLevel());
+                    articleContentDto.getBreadcumbArticleContentDtos().add(bcDto);
+                    if (parentId == null)
+                        parentStatus = Boolean.FALSE;
+                    else if (parentId.longValue() == 0)
+                        parentStatus = Boolean.FALSE;
+                } else {
+                    parentStatus = Boolean.FALSE;
+                }
+            } while (parentStatus);
+
+            // sorting bread crumb
+            Collections.sort(articleContentDto.getBreadcumbArticleContentDtos(), new Comparator<BreadcumbArticleContentDto>() {
+                @Override
+                public int compare(BreadcumbArticleContentDto o1, BreadcumbArticleContentDto o2) {
+                    return o1.getLevel().intValue() - o2.getLevel().intValue();
+                }
+            });
             return articleContentDto;
         } catch (Exception e) {
             logger.error("exception", e);
@@ -576,6 +582,7 @@ public class ArticleServiceImpl implements ArticleService {
      * @throws Exception
      */
     @Override
+    @Transactional(rollbackOn = {Exception.class, DataNotFoundException.class, AccesDeniedDeleteContentException.class})
     public Boolean deleteContent(DeleteContentDto deleteContentDto) throws Exception {
         try {
             logger.info("delete content with id {}", deleteContentDto.getContentId());
@@ -601,6 +608,14 @@ public class ArticleServiceImpl implements ArticleService {
             }
 
             logger.debug("username {} ---> has roles {}", deleteContentDto.getUsername(), roles);
+
+            // cek if article content have article with state <> PREDRAFT
+            Optional<Article> articleOpt = articleRepository.findById(articleContent.getId());
+            if(articleOpt.isEmpty()) {
+                logger.info("not found article from content with id {}", deleteContentDto.getContentId());
+                throw new DataNotFoundException("data not found");
+            }
+
             articleContent.setDeleted(Boolean.TRUE);
             articleContent.setModifyDate(new Date());
             articleContent.setModifyBy(deleteContentDto.getUsername());
@@ -614,10 +629,22 @@ public class ArticleServiceImpl implements ArticleService {
                 articleContentRepository.save(content);
             }
             logger.info("delete article content set deleted value to true");
+            Article _article = articleOpt.get();
+            if(!_article.getArticleState().toLowerCase().equalsIgnoreCase(PRE_DRAFT)) {
+                // save to history
+                // TODO save data to json
+                logger.info("save to history");
+                ArticleHistory articleHistory = new ArticleHistory();
+                articleHistory.setCreatedBy(deleteContentDto.getUsername());
+                articleHistoryRepository.save(articleHistory);
+            }
             return Boolean.TRUE;
         } catch (AccesDeniedDeleteContentException e) {
             logger.error("exception", e);
             throw new AccesDeniedDeleteContentException("has no authorize delete content level 1");
+        } catch (DataNotFoundException e) {
+            logger.error("exception", e);
+            throw new DataNotFoundException("data not found for content id "+deleteContentDto.getContentId());
         } catch (Exception e) {
             logger.error("exception", e);
             throw new Exception("exception", e);
@@ -644,6 +671,9 @@ public class ArticleServiceImpl implements ArticleService {
         }
     }
 
+    /*
+    HELPER METHOD
+     */
     private List<ArticleContentDto> mapToListArticleContentDto(Iterable<ArticleContent> iterable) {
         List<ArticleContentDto> listOfContents = new ArrayList<>();
         for (ArticleContent content : iterable) {

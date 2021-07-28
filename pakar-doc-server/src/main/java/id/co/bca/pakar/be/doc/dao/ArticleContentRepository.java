@@ -28,7 +28,7 @@ public interface ArticleContentRepository extends CrudRepository<ArticleContent,
     @Query(value = "with recursive tac_parent (id, parent_id) AS (" +
             "  SELECT tac.id, tac.parent, tac.name " +
             "  FROM t_article_content tac " +
-            "  WHERE id = :id " +
+            "  WHERE tac.id = :id " +
             "  UNION ALL " +
             "  SELECT tac2.id, tac2.parent, tac2.name " +
             "  FROM t_article_content tac2 INNER JOIN t_article_content tac3 " +
@@ -36,7 +36,7 @@ public interface ArticleContentRepository extends CrudRepository<ArticleContent,
             ") " +
             "SELECT tacp.* FROM tac_parent tacp group by tacp.id, tacp.parent_id, tacp.name",
             nativeQuery = true)
-    List<ArticleContent>  findArticleContentParent(@Param("id") Long id);
+    List<ArticleContent> findArticleContentParent(@Param("id") Long id);
 
     @Query(value = "SELECT m FROM ArticleContent m " +
             "WHERE m.deleted IS FALSE " +
