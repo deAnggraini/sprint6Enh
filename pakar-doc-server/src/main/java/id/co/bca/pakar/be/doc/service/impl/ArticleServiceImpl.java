@@ -688,6 +688,8 @@ public class ArticleServiceImpl implements ArticleService {
                 contentDto.setIntroduction(content.getDescription());
             contentDto.setParent(content.getParent());
             contentDto.setArticleId(content.getArticle().getId());
+            contentDto.setTopicTitle(content.getTopicCaption());
+            contentDto.setTopicContent(content.getTopicContent());
             listOfContents.add(contentDto);
         }
         // sorting article content
