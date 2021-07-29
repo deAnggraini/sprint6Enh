@@ -28,6 +28,7 @@ import java.nio.file.Paths;
 import java.util.*;
 
 import static id.co.bca.pakar.be.doc.common.Constant.ArticleWfState.PRE_DRAFT;
+import static id.co.bca.pakar.be.doc.common.Constant.ArticleWfState.PUBLISHED;
 import static id.co.bca.pakar.be.doc.common.Constant.Headers.BEARER;
 import static id.co.bca.pakar.be.doc.common.Constant.Roles.ROLE_ADMIN;
 import static id.co.bca.pakar.be.doc.common.Constant.Roles.ROLE_READER;
@@ -476,9 +477,15 @@ public class ArticleServiceImpl implements ArticleService {
             if (articleOpt.isEmpty()) {
                 throw new DataNotFoundException("data not found");
             }
-            articleContent.setArticle(articleOpt.get());
+            Article article = articleOpt.get();
+            articleContent.setArticle(article);
             logger.info("save article content to db");
             articleContent = articleContentRepository.save(articleContent);
+
+            if(!article.getArticleState().equalsIgnoreCase(PRE_DRAFT)) {
+                // save to history
+                new ArticleHistoryHelper().populateArticleHistory();
+            }
 
             // reset list parent
             logger.info("get list parent article content");
@@ -508,12 +515,6 @@ public class ArticleServiceImpl implements ArticleService {
                     parentStatus = Boolean.FALSE;
                 }
             } while (parentStatus);
-
-//            for(BreadcumbArticleContentDto breadcumbArticleContentDto : articleContentDto.getBreadcumbArticleContentDtos()) {
-//                logger.debug("breadcumb id:name ---> {}:{} has level value {}", new Object[] {breadcumbArticleContentDto.getId(),
-//                        breadcumbArticleContentDto.getName(),
-//                        breadcumbArticleContentDto.getLevel()});
-//            }
 
             logger.debug("sorted list parent content");
             // sorting bread crumb
@@ -643,7 +644,7 @@ public class ArticleServiceImpl implements ArticleService {
 
             logger.debug("username {} ---> has roles {}", deleteContentDto.getUsername(), roles);
 
-            // cek if article content have article with state <> PREDRAFT
+            // get article
             Optional<Article> articleOpt = articleRepository.findById(articleContent.getArticle().getId());
             if(articleOpt.isEmpty()) {
                 logger.info("not found article from content with id {}", deleteContentDto.getContentId());
@@ -651,11 +652,7 @@ public class ArticleServiceImpl implements ArticleService {
             }
 
             Article _article = articleOpt.get();
-            if(!_article.getArticleState().toLowerCase().equalsIgnoreCase(PRE_DRAFT)) {
-//                articleContent.setDeleted(Boolean.TRUE);
-//                articleContent.setModifyDate(new Date());
-//                articleContent.setModifyBy(deleteContentDto.getUsername());
-//                articleContentRepository.save(articleContent);
+            if(_article.getArticleState().toLowerCase().equalsIgnoreCase(PUBLISHED)) {
                 List<ArticleContent> children = articleContentRepository.findContentChildrenAndOwnRowByParentId(articleContent.getId());
                 for (ArticleContent content : children) {
                     logger.debug("content level {} and title {}", content.getLevel(), content.getName());
@@ -665,7 +662,6 @@ public class ArticleServiceImpl implements ArticleService {
                     articleContentRepository.save(content);
                 }
                 // save to history
-                // TODO save data to json
                 logger.info("save to history");
                 ArticleHistory articleHistory = new ArticleHistory();
                 articleHistory.setCreatedBy(deleteContentDto.getUsername());
@@ -908,6 +904,16 @@ public class ArticleServiceImpl implements ArticleService {
         } catch (Exception e) {
             logger.error("exception", e);
             throw new Exception("exception", e);
+        }
+    }
+
+    private class ArticleHistoryHelper {
+        public ArticleHistory populateArticleHistory() {
+            return new ArticleHistory();
+        }
+
+        public ArticleContentHistory populateArticleContentHistory() {
+            return new ArticleContentHistory();
         }
     }
 }
