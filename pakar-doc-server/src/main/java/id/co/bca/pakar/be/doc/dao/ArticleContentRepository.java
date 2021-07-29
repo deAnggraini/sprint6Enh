@@ -23,7 +23,22 @@ public interface ArticleContentRepository extends CrudRepository<ArticleContent,
             "GROUP BY tac.id, tac2.id  " +
             "ORDER BY tac.id, tac.parent, tac.level ASC ",
             nativeQuery = true)
-    List<ArticleContent> findArticleContent(@Param("parentId") Long parentId);
+    List<ArticleContent> findArticleContentChildrenByParentId(@Param("parentId") Long parentId);
+
+    @Query(value = "SELECT tac.* FROM ( " +
+            "SELECT tac.*  " +
+            "            FROM t_article_content AS tac  " +
+            "            INNER JOIN  " +
+            "              (SELECT tac.id FROM t_article_content tac WHERE tac.parent=:parentId) AS tac2  " +
+            "              ON tac2.id = tac.parent OR tac.parent = :parentId  " +
+            "            GROUP BY tac.id, tac2.id   " +
+            "UNION  " +
+            "SELECT tac.* FROM t_article_content AS tac  " +
+            "WHERE tac.id = :parentId " +
+            ") tac " +
+            "ORDER BY tac.id, tac.parent, tac.level ASC",
+            nativeQuery = true)
+    List<ArticleContent> findContentChildrenAndOwnRowByParentId(@Param("parentId") Long parentId);
 
     @Query(value = "with recursive tac_parent (id, parent_id) AS (" +
             "  SELECT tac.id, tac.parent, tac.name " +

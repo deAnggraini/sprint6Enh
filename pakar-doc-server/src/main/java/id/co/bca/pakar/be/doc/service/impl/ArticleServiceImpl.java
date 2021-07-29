@@ -650,27 +650,34 @@ public class ArticleServiceImpl implements ArticleService {
                 throw new DataNotFoundException("data not found");
             }
 
-            articleContent.setDeleted(Boolean.TRUE);
-            articleContent.setModifyDate(new Date());
-            articleContent.setModifyBy(deleteContentDto.getUsername());
-            articleContentRepository.save(articleContent);
-            List<ArticleContent> children = articleContentRepository.findArticleContent(articleContent.getId());
-            for (ArticleContent content : children) {
-                logger.debug("content level {} and title {}", content.getLevel(), content.getName());
-                content.setModifyBy(deleteContentDto.getUsername());
-                content.setModifyDate(new Date());
-                content.setDeleted(Boolean.TRUE);
-                articleContentRepository.save(content);
-            }
-            logger.info("delete article content set deleted value to true");
             Article _article = articleOpt.get();
             if(!_article.getArticleState().toLowerCase().equalsIgnoreCase(PRE_DRAFT)) {
+//                articleContent.setDeleted(Boolean.TRUE);
+//                articleContent.setModifyDate(new Date());
+//                articleContent.setModifyBy(deleteContentDto.getUsername());
+//                articleContentRepository.save(articleContent);
+                List<ArticleContent> children = articleContentRepository.findContentChildrenAndOwnRowByParentId(articleContent.getId());
+                for (ArticleContent content : children) {
+                    logger.debug("content level {} and title {}", content.getLevel(), content.getName());
+                    content.setModifyBy(deleteContentDto.getUsername());
+                    content.setModifyDate(new Date());
+                    content.setDeleted(Boolean.TRUE);
+                    articleContentRepository.save(content);
+                }
                 // save to history
                 // TODO save data to json
                 logger.info("save to history");
                 ArticleHistory articleHistory = new ArticleHistory();
                 articleHistory.setCreatedBy(deleteContentDto.getUsername());
                 articleHistoryRepository.save(articleHistory);
+            } else {
+                // delete from row in db
+                logger.debug("delete from db current id and children");
+                List<ArticleContent> children = articleContentRepository.findContentChildrenAndOwnRowByParentId(articleContent.getId());
+                for (ArticleContent content : children) {
+                    logger.debug("delete content title ---> id {}", content.getName(), content.getId());
+                    articleContentRepository.delete(content);
+                }
             }
             return Boolean.TRUE;
         } catch (AccesDeniedDeleteContentException e) {

@@ -38,4 +38,9 @@ public interface ArticleRepository extends CrudRepository<Article, Long> {
     )
     List<FaqDto> findFAQ(@Param("id") Long id);
 
+    @Query("SELECT CASE WHEN COUNT(m) > 0 THEN TRUE ELSE FALSE END FROM Article m " +
+            "WHERE m.articleState = 'PREDRAFT'" +
+            "AND m.deleted IS FALSE " +
+            "AND m.id=:id")
+    Boolean isPreDraftArticle(@Param("id") Long id);
 }
