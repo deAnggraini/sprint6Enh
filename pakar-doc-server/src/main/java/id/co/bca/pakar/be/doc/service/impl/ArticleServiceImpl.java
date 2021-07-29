@@ -210,7 +210,7 @@ public class ArticleServiceImpl implements ArticleService {
             Optional<Article> articleOpt = articleRepository.findById(id);
 
             if (articleOpt.isEmpty()) {
-                throw new DataNotFoundException("not found article with id --> " + id);
+                throw new ArticleNotFoundException("not found article with id --> " + id);
             }
 
             Article article = articleOpt.get();
@@ -238,7 +238,7 @@ public class ArticleServiceImpl implements ArticleService {
             // get current structure
             Optional<Structure> currStructOpt = structureRepository.findById(article.getStructure().getId());
             if(currStructOpt.isEmpty()) {
-                throw new DataNotFoundException("not found article with id --> " + article.getStructure().getId());
+                throw new StructureNotFoundException("not found structure id ---> " + article.getStructure().getId());
             }
             Structure currStruct = currStructOpt.get();
             BreadcumbStructureDto bcDto = new BreadcumbStructureDto();
@@ -277,6 +277,12 @@ public class ArticleServiceImpl implements ArticleService {
                 }
             });
             return articleDto;
+        } catch (StructureNotFoundException e) {
+            logger.error("exception", e);
+            throw new StructureNotFoundException("not found structure");
+        } catch (ArticleNotFoundException e) {
+            logger.error("exception", e);
+            throw new ArticleNotFoundException("not found article id "+id);
         } catch (Exception e) {
             logger.error("exception", e);
             throw new Exception("get article failed");
