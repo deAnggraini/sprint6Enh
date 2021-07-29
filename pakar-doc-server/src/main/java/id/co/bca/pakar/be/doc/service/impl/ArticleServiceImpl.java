@@ -445,6 +445,7 @@ public class ArticleServiceImpl implements ArticleService {
     public ArticleContentDto saveContent(ArticleContentDto articleContentDto) throws Exception {
         try {
             logger.info("process save content");
+            articleContentDto.getBreadcumbArticleContentDtos().clear();
             ArticleContent articleContent = new ArticleContent();
             articleContent.setId(articleContentDto.getId());
             articleContent.setCreatedBy(articleContentDto.getUsername());
@@ -469,11 +470,12 @@ public class ArticleServiceImpl implements ArticleService {
             articleContent = articleContentRepository.save(articleContent);
 
             // reset list parent
-            logger.info("get breadcumb article content");
+            logger.info("get list parent article content");
             // get list parent of articleContent
             Long parentId = articleContent.getParent();
             boolean parentStatus = Boolean.TRUE;
             do {
+                logger.debug("find article content with parent id {}", parentId);
                 Optional<ArticleContent> parentContent = articleContentRepository.findById(parentId);
                 if (!parentContent.isEmpty()) {
                     ArticleContent _parent = parentContent.get();
@@ -483,15 +485,26 @@ public class ArticleServiceImpl implements ArticleService {
                     bcDto.setName(_parent.getName());
                     bcDto.setLevel(_parent.getLevel());
                     articleContentDto.getBreadcumbArticleContentDtos().add(bcDto);
+                    logger.debug("copy list parent object id:name ---> {}:{} has level value {}", new Object[] {bcDto.getId()
+                            ,bcDto.getName(),
+                            bcDto.getLevel()});
                     if (parentId == null)
                         parentStatus = Boolean.FALSE;
                     else if (parentId.longValue() == 0)
                         parentStatus = Boolean.FALSE;
                 } else {
+                    logger.debug("article content with parent id {} not found, break loop", parentId);
                     parentStatus = Boolean.FALSE;
                 }
             } while (parentStatus);
 
+            for(BreadcumbArticleContentDto breadcumbArticleContentDto : articleContentDto.getBreadcumbArticleContentDtos()) {
+                logger.debug("breadcumb id:name ---> {}:{} has level value {}", new Object[] {breadcumbArticleContentDto.getId(),
+                        breadcumbArticleContentDto.getName(),
+                        breadcumbArticleContentDto.getLevel()});
+            }
+
+            logger.debug("sorted list parent content");
             // sorting bread crumb
             Collections.sort(articleContentDto.getBreadcumbArticleContentDtos(), new Comparator<BreadcumbArticleContentDto>() {
                 @Override
