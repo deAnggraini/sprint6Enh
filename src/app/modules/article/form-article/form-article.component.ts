@@ -13,6 +13,7 @@ import { FormGroup, FormBuilder, Validators, FormControl, ValidationErrors } fro
 import { StrukturService } from '../../_services/struktur.service';
 import { catchError, map } from 'rxjs/operators';
 import { ConfirmService } from 'src/app/utils/_services/confirm.service';
+import { ToastService } from 'src/app/utils/_services/toast.service';
 
 const TOOL_TIPS = [
   'Berisi aturan/kaidah/ketetapan/syarat/kriteria atas produk/aplikasi yang harus dipahami pembaca sebelum melakukan prosedur atas produk/aplikasi tersebut; dapat dituangkan dalam bentuk kalimat ataupun tabel.',
@@ -163,7 +164,8 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private struktur: StrukturService,
-    private confirm: ConfirmService) {
+    private confirm: ConfirmService,
+    private toast : ToastService) {
   }
 
   //cdk drag and drop
@@ -345,6 +347,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
         this.subscriptions.push(
           this.article.deleteContent(data.id).subscribe(resp => {
             this.deleteNode(data);
+            this.toast.showSuccess('Hapus Data Accordion Berhasil');
           })
         );
       }
@@ -437,6 +440,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     this.subscriptions.push(
       this.article.saveContent(content).subscribe(resp => {
         if (resp) {
+          this.toast.showSuccess('Simpan Data Accordion Berhasil');
           this.addLog(content);
         }
       })
