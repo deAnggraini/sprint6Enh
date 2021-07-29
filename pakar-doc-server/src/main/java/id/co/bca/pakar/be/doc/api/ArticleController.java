@@ -464,7 +464,7 @@ public class ArticleController extends BaseController {
         }
     }
 
-
+//
 //    /**
 //     * find FAQ for preview article
 //     * @param requestFAQDto
@@ -477,10 +477,10 @@ public class ArticleController extends BaseController {
 //        try {
 //            logger.info("find FAQ");
 //            List<FaqDto> listFaq = articleService.findFaq(requestFAQDto.getId());
-//            return createResponse(null, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, Locale.ENGLISH));
+//            return createResponse(listFaq, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, Locale.ENGLISH));
 //        } catch (DataNotFoundException e) {
 //            logger.error("exception", e);
-//            return createResponse(Boolean.FALSE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, Locale.ENGLISH));
+//            return createResponse(new ArrayList<FaqDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, Locale.ENGLISH));
 //        }
 //    }
 }

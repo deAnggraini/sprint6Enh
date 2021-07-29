@@ -882,10 +882,10 @@ public class ArticleServiceImpl implements ArticleService {
      * @throws Exception
      */
     @Override
-    public List<FaqDto> findFaq(RequestFAQDto requestFAQDto) throws Exception {
+    public List<FaqDto> findFaq(Long requestFAQDto) throws Exception {
         try {
             logger.info("search faq");
-            List<FaqDto> searchResult = articleRepository.findFAQ(requestFAQDto.getId());
+            List<FaqDto> searchResult = articleRepository.findFAQ(requestFAQDto);
             return searchResult;
         } catch (Exception e) {
             logger.error("exception", e);
