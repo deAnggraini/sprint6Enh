@@ -509,11 +509,11 @@ public class ArticleServiceImpl implements ArticleService {
                 }
             } while (parentStatus);
 
-            for(BreadcumbArticleContentDto breadcumbArticleContentDto : articleContentDto.getBreadcumbArticleContentDtos()) {
-                logger.debug("breadcumb id:name ---> {}:{} has level value {}", new Object[] {breadcumbArticleContentDto.getId(),
-                        breadcumbArticleContentDto.getName(),
-                        breadcumbArticleContentDto.getLevel()});
-            }
+//            for(BreadcumbArticleContentDto breadcumbArticleContentDto : articleContentDto.getBreadcumbArticleContentDtos()) {
+//                logger.debug("breadcumb id:name ---> {}:{} has level value {}", new Object[] {breadcumbArticleContentDto.getId(),
+//                        breadcumbArticleContentDto.getName(),
+//                        breadcumbArticleContentDto.getLevel()});
+//            }
 
             logger.debug("sorted list parent content");
             // sorting bread crumb
