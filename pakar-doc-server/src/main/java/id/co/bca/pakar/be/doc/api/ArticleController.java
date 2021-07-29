@@ -15,6 +15,7 @@ import id.co.bca.pakar.be.doc.util.JSONMapperAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.logging.logback.LogbackLoggingSystem;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -379,10 +380,39 @@ public class ArticleController extends BaseController {
             articleContentDto.setUsername(username);
             articleContentDto.setToken(getTokenFromHeader(authorization));
             articleContentDto = articleService.saveContent(articleContentDto);
-            return createResponse(articleContentDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
+            return createResponse(articleContentDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, Locale.ENGLISH));
+        } catch (DataNotFoundException e) {
+            logger.error("exception", e);
+            return createResponse(new ArticleContentDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, Locale.ENGLISH));
         } catch (Exception e) {
             logger.error("exception", e);
-            return createResponse(new ArticleContentDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
+            return createResponse(new ArticleContentDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, Locale.ENGLISH));
+        }
+    }
+
+    /**
+     *
+     * @param authorization
+     * @param username
+     * @param articleContentDto
+     * @return
+     */
+    @PostMapping(value = "/api/doc/createContentLevel1", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
+            MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<RestResponse<ArticleContentDto>> saveContentLevel1(@RequestHeader("Authorization") String authorization, @RequestHeader(name = "X-USERNAME") String username, @Valid @RequestBody ArticleContentDto articleContentDto) {
+        try {
+            logger.info("save article content");
+            logger.info("received token bearer --- {}", authorization);
+            articleContentDto.setUsername(username);
+            articleContentDto.setToken(getTokenFromHeader(authorization));
+            articleContentDto = articleService.saveContent(articleContentDto);
+            return createResponse(articleContentDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, Locale.ENGLISH));
+        } catch (DataNotFoundException e) {
+            logger.error("exception", e);
+            return createResponse(new ArticleContentDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, Locale.ENGLISH));
+        } catch (Exception e) {
+            logger.error("exception", e);
+            return createResponse(new ArticleContentDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, Locale.ENGLISH));
         }
     }
 

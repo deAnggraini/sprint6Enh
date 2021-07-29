@@ -62,4 +62,9 @@ public interface ArticleContentRepository extends CrudRepository<ArticleContent,
             "WHERE m.deleted IS FALSE " +
             "AND m.id=:id ")
     boolean existsById(@Param("id") Long id);
+
+    @Query(value = "SELECT m FROM ArticleContent m " +
+            "WHERE m.article.id=:articleId " +
+            "AND m.deleted IS FALSE ")
+    Iterable<ArticleContent> findByArticleId(@Param("articleId") Long articleId);
 }

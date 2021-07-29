@@ -217,7 +217,8 @@ public class ArticleServiceImpl implements ArticleService {
             articleDto.setId(article.getId());
             articleDto.setJudulArticle(article.getJudulArticle());
             articleDto.setShortDescription(article.getShortDescription());
-            List<ArticleContentDto> articleContentDtos = new TreeArticleContents().menuTree(mapToListArticleContentDto(article.getArticleContents()));
+            Iterable<ArticleContent> articleContents = articleContentRepository.findByArticleId(article.getId());
+            List<ArticleContentDto> articleContentDtos = new TreeArticleContents().menuTree(mapToListArticleContentDto(articleContents));
             articleDto.setContents(articleContentDtos);
             Iterable<SkRefference> skRefferenceList = skReffRepository.findByArticleId(id);
             articleDto.setSkReff(mapToSkReffDto(skRefferenceList));
@@ -491,6 +492,11 @@ public class ArticleServiceImpl implements ArticleService {
     @Transactional(rollbackOn = {Exception.class})
     public ArticleContentDto saveContent(ArticleContentDto articleContentDto) throws Exception {
         try {
+            /*
+            cek level first, if level == 1 then get content id, this content id will use to set content id
+             */
+            if(articleContentDto.getLevel().longValue() == 1)
+                articleContentDto.setId(articleContentRepository.getContentId());
             logger.info("process save and update content with id {}", articleContentDto.getId());
             articleContentDto.getBreadcumbArticleContentDtos().clear();
             Optional<ArticleContent> articleContentOpt = articleContentRepository.findById(articleContentDto.getId());
