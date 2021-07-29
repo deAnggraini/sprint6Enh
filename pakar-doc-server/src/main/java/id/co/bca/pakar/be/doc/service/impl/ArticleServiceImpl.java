@@ -444,11 +444,22 @@ public class ArticleServiceImpl implements ArticleService {
     @Transactional(rollbackOn = {Exception.class})
     public ArticleContentDto saveContent(ArticleContentDto articleContentDto) throws Exception {
         try {
-            logger.info("process save content");
+            logger.info("process save and update content with id {}", articleContentDto.getId());
             articleContentDto.getBreadcumbArticleContentDtos().clear();
-            ArticleContent articleContent = new ArticleContent();
-            articleContent.setId(articleContentDto.getId());
-            articleContent.setCreatedBy(articleContentDto.getUsername());
+            Optional<ArticleContent> articleContentOpt = articleContentRepository.findById(articleContentDto.getId());
+            ArticleContent articleContent = null;
+            if(articleContentOpt.isEmpty()) {
+                logger.debug("not found article content with id {}, create new entity", articleContentDto.getId());
+                articleContent = new ArticleContent();
+                articleContent.setId(articleContentDto.getId());
+                articleContent.setCreatedBy(articleContentDto.getUsername());
+            } else {
+                logger.debug("article content with id {} has found, update entity", articleContentDto.getId());
+                articleContent = articleContentOpt.get();
+                articleContent.setModifyBy(articleContentDto.getUsername());
+                articleContent.setModifyDate(new Date());
+            }
+
             articleContent.setName(articleContentDto.getTitle());
             articleContent.setDescription(articleContentDto.getIntroduction());
             articleContent.setTopicCaption(articleContentDto.getTopicTitle());
