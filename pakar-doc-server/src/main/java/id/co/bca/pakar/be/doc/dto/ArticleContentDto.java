@@ -2,6 +2,9 @@ package id.co.bca.pakar.be.doc.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,8 +15,13 @@ public class ArticleContentDto extends BaseDto {
     private String title;
     @JsonProperty("intro")
     private String introduction;
+    @NotNull(message = "sort value is required")
+    @Min(value = 1, message = "sort minimum value is 1")
     @JsonProperty("sort")
     private Long order;
+    @NotNull(message = "level is required")
+    @Min(value = 1, message = "minimum value is 1")
+    @Max(value = 5, message = "maximum value is 5")
     @JsonProperty("level")
     private Long level;
     @JsonProperty("topicTitle")
@@ -22,8 +30,12 @@ public class ArticleContentDto extends BaseDto {
     private String topicContent;
     @JsonProperty("children")
     private List<ArticleContentDto> childs;
+    @NotNull(message = "minimum parent value is required")
+    @Min(value = 0, message = "minimum value is 0")
     @JsonProperty("parent")
     private Long parent = 0L;
+    @NotNull(message = "minimum article value is required")
+    @Min(value = 0, message = "minimum article value is 0")
     @JsonProperty("articleId")
     private Long articleId;
     @JsonProperty("listParent")
