@@ -486,7 +486,7 @@ public class ArticleController extends BaseController {
     @PostMapping(value = "/api/doc/findFAQ", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
             MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<RestResponse<List<FaqDto>>> findFAQ(@RequestHeader("Authorization") String authorization, @RequestHeader(name = "X-USERNAME") String username, @Valid @RequestBody RequestFAQDto requestFAQDto) {
-        // TODO implement find FAQ
+
         try {
             logger.info("find FAQ");
             List<FaqDto> listFaq = articleService.findFaq(requestFAQDto.getId());
@@ -497,6 +497,34 @@ public class ArticleController extends BaseController {
         } catch (Exception e) {
             logger.error("exception", e);
             return createResponse(new ArrayList<FaqDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, Locale.ENGLISH));
+        }
+    }
+
+    /**
+     * find Suggestion Article for preview article
+     * @param searchDto
+     * @return
+     */
+    @PostMapping(value = "/api/doc/suggestionArticle", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
+            MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<RestResponse<Map<String, Object>>> findSuggestionArticle(@RequestHeader("Authorization") String authorization,
+                                                                            @RequestHeader(name = "X-USERNAME") String username,
+                                                                            @RequestBody SearchDto searchDto) {
+        try {
+            logger.info("search related articles process");
+            logger.info("received token bearer --- {}", authorization);
+            searchDto.setUsername(username);
+            searchDto.setToken(getTokenFromHeader(authorization));
+            Page<SuggestionArticleDto> pageArticleDto = articleService.searchSuggestion(searchDto);
+            Map<String, Object> maps = new HashMap<String, Object>();
+            maps.put("list", pageArticleDto.getContent());
+            maps.put("totalElements", pageArticleDto.getTotalElements());
+            maps.put("totalPages", pageArticleDto.getTotalPages());
+            maps.put("currentPage", searchDto.getPage());
+            return createResponse(maps, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
+        } catch (Exception e) {
+            logger.error("exception", e);
+            return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
         }
     }
 }

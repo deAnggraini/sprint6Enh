@@ -36,4 +36,14 @@ public interface ArticleRepository extends CrudRepository<Article, Long> {
             "AND m.deleted IS FALSE " +
             "AND m.id=:id")
     Boolean isPreDraftArticle(@Param("id") Long id);
+
+    @Query(value = "SELECT m.* FROM t_article m " +
+            "    WHERE m.deleted IS FALSE " +
+            "    AND m.state = 'PUBLISHED' " +
+            "    AND m.id <> :id " +
+            "    AND (lower(m.title) LIKE lower(concat('%', :keyword,'%')))",
+            nativeQuery = true
+    )
+    Page<Article> findSuggestionArticle(@Param("id") Long id, @Param("keyword") String keyword, Pageable pageable);
+
 }
