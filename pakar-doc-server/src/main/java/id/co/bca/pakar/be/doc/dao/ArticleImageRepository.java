@@ -17,4 +17,11 @@ public interface ArticleImageRepository extends CrudRepository<ArticleImage, Lon
             "AND m.article.deleted IS FALSE " +
             "AND m.deleted IS FALSE ")
     Optional<Images> findByArticleId(@Param("articleId") Long articleId);
+
+    @Query("SELECT m FROM ArticleImage m " +
+            "WHERE m.article.id=:articleId " +
+            "AND m.image.deleted IS FALSE " +
+            "AND m.article.deleted IS FALSE " +
+            "AND m.deleted IS FALSE ")
+    Iterable<ArticleImage> findArticleImagesByArticleId(@Param("articleId") Long articleId);
 }

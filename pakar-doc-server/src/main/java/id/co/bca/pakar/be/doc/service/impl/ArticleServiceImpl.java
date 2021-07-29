@@ -12,7 +12,6 @@ import id.co.bca.pakar.be.doc.util.FileUploadUtil;
 import id.co.bca.pakar.be.doc.util.TreeArticleContents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -379,6 +378,53 @@ public class ArticleServiceImpl implements ArticleService {
         } catch (Exception e) {
             logger.error("", e);
             throw new Exception("exception", e);
+        }
+    }
+
+    /**
+     *
+     * @param id
+     * @param username
+     * @param token
+     * @return
+     * @throws Exception
+     */
+    @Override
+    @Transactional(rollbackOn = {Exception.class, DataNotFoundException.class})
+    public Boolean cancelArticle(Long id, String username, String token) throws Exception {
+        try {
+            logger.info("cancel article with id {}", id);
+            Optional<Article> articleOpt = articleRepository.findById(id);
+            if(articleOpt.isEmpty()) {
+                logger.info("not article with id {}", id);
+                throw new DataNotFoundException("not found article with id "+id);
+            }
+
+            Article article = articleOpt.get();
+            if(!article.getArticleState().equalsIgnoreCase(PUBLISHED)) {
+                logger.info("delete related article");
+                Iterable<RelatedArticle> relatedArticles = articleRelatedRepository.findRelatedArticleByArticleId(article.getId());
+                relatedArticleRepository.deleteAll(relatedArticles);
+
+                logger.info("delete article sk refference");
+                Iterable<ArticleSkReff> articleSkReffs = articleSkReffRepository.findByArticleId(article.getId());
+                articleSkReffRepository.deleteAll(articleSkReffs);
+
+                logger.info("delete article image");
+                Iterable<ArticleImage> articleImages = articleImageRepository.findArticleImagesByArticleId(article.getId());
+                articleImageRepository.deleteAll(articleImages);
+
+                logger.info("delete unpublished article");
+
+                articleRepository.delete(article);
+            }
+            return Boolean.TRUE;
+        } catch (DataNotFoundException e) {
+            logger.error("fail to cancel article", e);
+            throw new DataNotFoundException("", e);
+        } catch (Exception e) {
+            logger.error("fail to cancel article", e);
+            throw new Exception(e);
         }
     }
 

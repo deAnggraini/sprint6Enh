@@ -123,7 +123,6 @@ public class Article extends EntityBase {
 		this.articleState = articleState;
 	}
 
-
 	public Boolean getUseEmptyTemplate() {
 		return useEmptyTemplate;
 	}

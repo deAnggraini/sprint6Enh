@@ -298,6 +298,20 @@ public class ArticleController extends BaseController {
         }
     }
 
+    @PostMapping(value = "/api/doc/cancelArticle", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
+            MediaType.APPLICATION_JSON_VALUE })
+    public ResponseEntity<RestResponse<Boolean>> cancelArticle(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @RequestBody CancelDto cancelDto) {
+        try {
+            logger.info("save article process");
+            logger.info("received token bearer --- {}", authorization);
+            Boolean status = articleService.cancelArticle(cancelDto.getId(), username, getTokenFromHeader(authorization));
+            return createResponse(status, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, Locale.ENGLISH));
+        } catch (Exception e) {
+            logger.error("exception", e);
+            return createResponse(Boolean.TRUE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, Locale.ENGLISH));
+        }
+    }
+
     /**
      * get sequence number of id content
      *

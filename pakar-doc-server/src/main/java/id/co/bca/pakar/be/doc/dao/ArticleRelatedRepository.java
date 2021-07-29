@@ -14,6 +14,14 @@ public interface ArticleRelatedRepository extends CrudRepository<RelatedArticle,
             "AND m.deleted IS FALSE " +
             "AND m.relatedArticle.deleted IS FALSE " +
             "AND m.sourceArticle.deleted IS FALSE " +
-            "ORDER BY m.relatedArticle.id ASC ")
+            "ORDER BY m.id ASC ")
     Iterable<Article> findByArticleId(@Param("articleId") Long articleId);
+
+    @Query("SELECT m FROM RelatedArticle m " +
+            "WHERE m.sourceArticle.id=:articleId " +
+            "AND m.deleted IS FALSE " +
+            "AND m.relatedArticle.deleted IS FALSE " +
+            "AND m.sourceArticle.deleted IS FALSE " +
+            "ORDER BY m.relatedArticle.id ASC ")
+    Iterable<RelatedArticle> findRelatedArticleByArticleId(@Param("articleId") Long articleId);
 }
