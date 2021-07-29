@@ -47,6 +47,10 @@ public class ArticleController extends BaseController {
     @Autowired
     private MultiArticleContentValidator multiArticleContentValidator;
 
+    /**
+     *
+     * @return
+     */
     @GetMapping("/api/v1/doc/theme")
     public ResponseEntity<RestResponse<ThemeDto>> themeLogin() {
         logger.info("theme process");
@@ -67,6 +71,12 @@ public class ArticleController extends BaseController {
 
     }
 
+    /**
+     * 
+     * @param authorization
+     * @param username
+     * @return
+     */
     @GetMapping("/api/doc/theme")
     public ResponseEntity<RestResponse<ThemeDto>> theme(@RequestHeader(name = "Authorization") String authorization, @RequestHeader(name = "X-USERNAME") String username) {
         logger.info("theme process");
