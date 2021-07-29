@@ -813,6 +813,11 @@ public class ArticleServiceImpl implements ArticleService {
         return contentDto;
     }
 
+    /**
+     *
+     * @param iterable
+     * @return
+     */
     private List<SkReffDto> mapToSkReffDto(Iterable<SkRefference> iterable) {
         List<SkReffDto> listOfDtos = new ArrayList<>();
         for (SkRefference entity : iterable) {
@@ -825,6 +830,11 @@ public class ArticleServiceImpl implements ArticleService {
         return listOfDtos;
     }
 
+    /**
+     *
+     * @param iterable
+     * @return
+     */
     private List<RelatedArticleDto> mapToRelatedArticleDto(Iterable<Article> iterable) {
         List<RelatedArticleDto> listOfDtos = new ArrayList<>();
         for (Article entity : iterable) {
@@ -836,6 +846,11 @@ public class ArticleServiceImpl implements ArticleService {
         return listOfDtos;
     }
 
+    /**
+     *
+     * @param iterable
+     * @return
+     */
     private List<BreadcumbArticleContentDto> mapToListParentArticleContentDto(Iterable<ArticleContent> iterable) {
         List<BreadcumbArticleContentDto> listOfContents = new ArrayList<>();
         for (ArticleContent content : iterable) {
@@ -912,6 +927,9 @@ public class ArticleServiceImpl implements ArticleService {
         return replacedText;
     }
 
+    /**
+     * 
+     */
     private class ToDoMapper {
         public List<RelatedArticleDto> mapEntitiesIntoDTOs(Iterable<Article> entities) {
             List<RelatedArticleDto> dtos = new ArrayList<>();

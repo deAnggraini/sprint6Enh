@@ -72,7 +72,7 @@ public class ArticleController extends BaseController {
     }
 
     /**
-     * 
+     *
      * @param authorization
      * @param username
      * @return
