@@ -928,7 +928,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     /**
-     * 
+     *
      */
     private class ToDoMapper {
         public List<RelatedArticleDto> mapEntitiesIntoDTOs(Iterable<Article> entities) {
