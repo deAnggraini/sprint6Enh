@@ -86,7 +86,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       .subscribe(
         (user: UserModel) => {
           if (user) {
-            this.router.navigate([this.returnUrl]);
+            this.router.navigate([this.returnUrl], { replaceUrl: true });
           } else {
             this.hasError = true;
           }
