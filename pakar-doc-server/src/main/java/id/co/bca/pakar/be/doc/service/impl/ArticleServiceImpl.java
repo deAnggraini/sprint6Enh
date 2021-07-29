@@ -886,4 +886,21 @@ public class ArticleServiceImpl implements ArticleService {
             return new PageImpl<>(dtos, pageRequest, source.getTotalElements());
         }
     }
+
+    /**
+     * @param requestFAQDto
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public List<FaqDto> findFaq(Long requestFAQDto) throws Exception {
+        try {
+            logger.info("search faq");
+            List<FaqDto> searchResult = articleRepository.findFAQ(requestFAQDto);
+            return searchResult;
+        } catch (Exception e) {
+            logger.error("exception", e);
+            throw new Exception("exception", e);
+        }
+    }
 }

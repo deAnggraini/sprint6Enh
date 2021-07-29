@@ -1,5 +1,6 @@
 package id.co.bca.pakar.be.doc.dao;
 
+import id.co.bca.pakar.be.doc.dto.FaqDto;
 import id.co.bca.pakar.be.doc.model.Article;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
+import java.util.List;
 
 @Repository
 public interface ArticleRepository extends CrudRepository<Article, Long> {
@@ -28,4 +30,12 @@ public interface ArticleRepository extends CrudRepository<Article, Long> {
             nativeQuery = true
     )
     Page<Article> findRelatedArticles(@Param("id") Long id, @Param("keyword") String keyword, Pageable pageable);
+
+    @Query(value = "SELECT m.* FROM t_article_faq m " +
+            "    WHERE m.deleted IS FALSE " +
+            "    AND m.id =:id ",
+            nativeQuery = true
+    )
+    List<FaqDto> findFAQ(@Param("id") Long id);
+
 }
