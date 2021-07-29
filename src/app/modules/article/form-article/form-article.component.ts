@@ -270,7 +270,6 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     return false;
   }
 
-
   // Right icon event
   btnAddClick(e, data: ArticleContentDTO) {
     if (data == null) {
@@ -704,6 +703,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
       title: [defaultValue.title, Validators.compose([Validators.required, Validators.maxLength(50), alphaNumericValidator])],
       structureId: [defaultValue.structureId, Validators.compose([Validators.required])],
       structureOption: [defaultValue.structureOption, Validators.compose([Validators.required])],
+      desc: [defaultValue.desc],
       image: [defaultValue.image],
       video: [defaultValue.video],
       contents: [defaultValue.contents],

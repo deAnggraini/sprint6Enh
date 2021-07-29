@@ -55,7 +55,7 @@
             <div class="form-group col-sm-11 col-lg-9 col-xl-9 col-xxl-9">
                 <label>Deskripsi Singkat *</label>
                 <ckeditor #editorDesc [editor]="editor" [config]="config" tagName="textarea" (ready)="onReady($event)"
-                    (change)="onChange($event)"></ckeditor>
+                    (change)="onChange($event)" formControlName="desc"></ckeditor>
             </div>
             <div class="form-group col-sm-11 col-lg-6 col-xl-6 col-xxl-6">
                 <label>Gambar Artikel *</label>
