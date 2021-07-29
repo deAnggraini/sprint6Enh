@@ -157,7 +157,7 @@ height: 184px;
                                 <li> <u>{{sk.value}}</u> - {{sk.text.split(" - ")[1]}}</li>
                             </ul>
                         </div>
-                        <a class="navi-link" href="#">
+                        <a class="navi-link">
                             <a routerLink="" class="navi-text cursor-pointer font-weight-bold font-size-sm">
                                 Selengkapnya >
                             </a>
@@ -174,13 +174,13 @@ height: 184px;
                         <hr>
                     </div>
                     <div class="video mx-4 mb-5" *ngIf="!hideVideo" style="min-width: 307px;">
-                        <video src="{{videoUrl}}" width="307" height="173" controls>
-                            <!-- <source src="https://myvideo.bca.co.id/viewerportal/bcavideo/video.vp?programId=esc_program%3A55071&contentAssocId=association%3A183713"> -->
-                        </video>
-                        <!-- <iframe seamless frameborder=0 allowfullscreen webkitallowfullscreen mozallowfullscreen
+                        <!-- <video src="{{videoUrl}}" width="307" height="173" controls>
+                            <source src="https://myvideo.bca.co.id/viewerportal/bcavideo/video.vp?programId=esc_program%3A55071&contentAssocId=association%3A183713">
+                        </video> -->
+                        <iframe seamless frameborder=0 allowfullscreen webkitallowfullscreen mozallowfullscreen
                             src="{{videoUrl}}"
                             width="307" height="173">
-                        </iframe> -->
+                        </iframe>
                         <hr>
                     </div>
                     <div class="mx-4 mb-5" style="min-width: 307px;">

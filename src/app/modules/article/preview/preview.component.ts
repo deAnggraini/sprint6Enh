@@ -37,7 +37,6 @@ export class PreviewComponent implements OnInit {
   changed_date: Date = new Date();
   skReferences = [];
   relatedArticle = [];
-  id: number;
 
   //faq carousel
   backend_img: string = environment.backend_img;
@@ -62,7 +61,7 @@ export class PreviewComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private struktutService: StrukturService,
+    private strukturService: StrukturService,
     private auth: AuthService,
     private articleService: ArticleService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -83,7 +82,6 @@ export class PreviewComponent implements OnInit {
   ngOnInit(): void {
     this.loadData();
     console.log("Article DTO >>> ", this.articleDTO);
-    this.id = this.articleDTO.id;
     this.skReferences = this.articleDTO.references;
     this.relatedArticle = this.articleDTO.related;
     this.getImage(this.articleDTO.image);
@@ -115,7 +113,7 @@ export class PreviewComponent implements OnInit {
         // this.loadData();
       });
     }
-    const node = this.struktutService.findNodeById(this.categoryId);
+    const node = this.strukturService.findNodeById(this.categoryId);
     this.struktur$.next(node);
     console.log({ article: this.articleDTO });
   }
