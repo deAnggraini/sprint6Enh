@@ -266,7 +266,7 @@ public class ArticleController extends BaseController {
             maps.put("list", pageArticleDto.getContent());
             maps.put("totalElements", pageArticleDto.getTotalElements());
             maps.put("totalPages", pageArticleDto.getTotalPages());
-            maps.put("currentPage", searchDto.getPage() + 1);
+            maps.put("currentPage", searchDto.getPage());
             return createResponse(maps, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
         } catch (Exception e) {
             logger.error("exception", e);
