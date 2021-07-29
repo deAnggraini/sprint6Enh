@@ -24,6 +24,7 @@ export class PreviewComponent implements OnInit {
   struktur$: BehaviorSubject<StrukturDTO> = new BehaviorSubject<StrukturDTO>(null);
 
   hideTable: boolean = true;
+  hideFAQ: boolean = true;
   hideVideo: boolean = true;
   videoUrl: string;
   hideImage: boolean = true;
