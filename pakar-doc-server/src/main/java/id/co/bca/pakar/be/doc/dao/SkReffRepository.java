@@ -19,7 +19,7 @@ public interface SkReffRepository extends CrudRepository<SkRefference, Long> {
     Iterable<SkRefference> findByArticleId(@Param("articleId") Long articleId);
 
     @Query("SELECT m FROM SkRefference m " +
-            "WHERE (m.title LIKE %:keyword% OR m.skNumber LIKE %:keyword%)" +
+            "WHERE (lower(m.title) LIKE lower(concat('%', :keyword,'%')) OR lower(m.skNumber) LIKE lower(concat('%', :keyword,'%')))" +
             "AND m.deleted IS FALSE "+
             "ORDER BY m.skNumber DESC ")
     Iterable<SkRefference> searchSkReffLike(@Param("keyword") String keyword);
