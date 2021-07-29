@@ -444,11 +444,22 @@ public class ArticleServiceImpl implements ArticleService {
     @Transactional(rollbackOn = {Exception.class})
     public ArticleContentDto saveContent(ArticleContentDto articleContentDto) throws Exception {
         try {
-            logger.info("process save content");
+            logger.info("process save and update content with id {}", articleContentDto.getId());
             articleContentDto.getBreadcumbArticleContentDtos().clear();
-            ArticleContent articleContent = new ArticleContent();
-            articleContent.setId(articleContentDto.getId());
-            articleContent.setCreatedBy(articleContentDto.getUsername());
+            Optional<ArticleContent> articleContentOpt = articleContentRepository.findById(articleContentDto.getId());
+            ArticleContent articleContent = null;
+            if(articleContentOpt.isEmpty()) {
+                logger.debug("not found article content with id {}, create new entity", articleContentDto.getId());
+                articleContent = new ArticleContent();
+                articleContent.setId(articleContentDto.getId());
+                articleContent.setCreatedBy(articleContentDto.getUsername());
+            } else {
+                logger.debug("article content with id {} has found, update entity", articleContentDto.getId());
+                articleContent = articleContentOpt.get();
+                articleContent.setModifyBy(articleContentDto.getUsername());
+                articleContent.setModifyDate(new Date());
+            }
+
             articleContent.setName(articleContentDto.getTitle());
             articleContent.setDescription(articleContentDto.getIntroduction());
             articleContent.setTopicCaption(articleContentDto.getTopicTitle());
@@ -498,11 +509,11 @@ public class ArticleServiceImpl implements ArticleService {
                 }
             } while (parentStatus);
 
-            for(BreadcumbArticleContentDto breadcumbArticleContentDto : articleContentDto.getBreadcumbArticleContentDtos()) {
-                logger.debug("breadcumb id:name ---> {}:{} has level value {}", new Object[] {breadcumbArticleContentDto.getId(),
-                        breadcumbArticleContentDto.getName(),
-                        breadcumbArticleContentDto.getLevel()});
-            }
+//            for(BreadcumbArticleContentDto breadcumbArticleContentDto : articleContentDto.getBreadcumbArticleContentDtos()) {
+//                logger.debug("breadcumb id:name ---> {}:{} has level value {}", new Object[] {breadcumbArticleContentDto.getId(),
+//                        breadcumbArticleContentDto.getName(),
+//                        breadcumbArticleContentDto.getLevel()});
+//            }
 
             logger.debug("sorted list parent content");
             // sorting bread crumb
@@ -633,7 +644,7 @@ public class ArticleServiceImpl implements ArticleService {
             logger.debug("username {} ---> has roles {}", deleteContentDto.getUsername(), roles);
 
             // cek if article content have article with state <> PREDRAFT
-            Optional<Article> articleOpt = articleRepository.findById(articleContent.getId());
+            Optional<Article> articleOpt = articleRepository.findById(articleContent.getArticle().getId());
             if(articleOpt.isEmpty()) {
                 logger.info("not found article from content with id {}", deleteContentDto.getContentId());
                 throw new DataNotFoundException("data not found");
