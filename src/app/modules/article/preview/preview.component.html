@@ -45,15 +45,7 @@ height: 184px;
             <div class="row d-flex flex-wrap justify-content-between">
                 <!-- left side -->
                 <div class="col">
-                    <span class="pakar-text-header-desc">Lorem Ipsum is simply dummy text of the printing and
-                        typesetting industry.
-                        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown
-                        printer took a galley of type and scrambled it to make a type specimen book.
-                        It has survived not only five centuries, but also the leap into electronic typesetting,
-                        remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
-                        sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like
-                        Aldus PageMaker including versions of Lorem Ipsum.
-                    </span>
+                    <span class="pakar-text-header-desc">{{articleDTO.desc}}</span>
                     <div class="my-3" *ngIf="!hideTable">
                         <table class="table table-bordered">
                             <thead class="thead-light">
@@ -115,7 +107,7 @@ height: 184px;
                         </mat-accordion>
                     </div>
                     <hr>
-                    <div class="faq mt-6">
+                    <div class="faq mt-6" *ngIf="!hideFAQ">
                         <div class="d-flex flex-wrap justify-content-between">
                             <label class="font-weight-bolder text-dark mb-2">FAQ Tahapan</label>
                             <div class="d-flex mx-2">
@@ -142,7 +134,7 @@ height: 184px;
                                                         routerLink="/article/recommendation">{{item.title | maxLength:
                                                         35}}</a>
                                                 </div>
-                                                <p class="text-desc mb-1 text-ellipsis-2">
+                                                <p class="text-desc mb-1 text-ellipsis-2" style="word-wrap: break-word;">
                                                     {{item.desc | maxLength: 65}}
                                                     &nbsp;
                                                     <a routerLink="/article/recommendation"
@@ -162,7 +154,7 @@ height: 184px;
                         <label class="font-weight-bolder text-dark mb-2">SK/SE Referensi</label>
                         <div>
                             <ul *ngFor="let sk of skReferences">
-                                <li> <u>{{sk.no}}</u> - {{sk.title}}</li>
+                                <li> <u>{{sk.value}}</u> - {{sk.text.split(" - ")[1]}}</li>
                             </ul>
                         </div>
                         <a class="navi-link" href="#">
@@ -175,24 +167,27 @@ height: 184px;
 
                 <!-- right side -->
                 <div class="col" style="max-width: 350px;">
-                    <div class="mx-4 mb-5" style="text-align: center; min-width: 307px;">
+                    <div class="mx-4 mb-5" *ngIf="!hideImage" style="text-align: center; min-width: 307px;">
                         <img class="img-show" src="./assets/media/bg/sc-home1-bg.png" background-position:center
                             style="object-fit: cover; width: 307px; height: 425px;">
-                        <div class="mt-2">Ini adalah judul dari infografis</div>
+                        <div class="mt-2">{{ imageName }}</div>
                         <hr>
                     </div>
                     <div class="video mx-4 mb-5" *ngIf="!hideVideo" style="min-width: 307px;">
-                        <video width="307" height="173" controls>
-                            <source src="" type="video/mp4">
-                            <source src="" type="video/ogg">
+                        <video src="{{videoUrl}}" width="307" height="173" controls>
+                            <!-- <source src="https://myvideo.bca.co.id/viewerportal/bcavideo/video.vp?programId=esc_program%3A55071&contentAssocId=association%3A183713"> -->
                         </video>
+                        <!-- <iframe seamless frameborder=0 allowfullscreen webkitallowfullscreen mozallowfullscreen
+                            src="{{videoUrl}}"
+                            width="307" height="173">
+                        </iframe> -->
                         <hr>
                     </div>
                     <div class="mx-4 mb-5" style="min-width: 307px;">
                         <label class="font-weight-bolder text-dark mb-2">Informasi Terkait</label>
                         <div>
                             <ul *ngFor="let article of relatedArticle">
-                                <li>{{article.title}}</li>
+                                <li>{{article.text}}</li>
                             </ul>
                         </div>
                     </div>
