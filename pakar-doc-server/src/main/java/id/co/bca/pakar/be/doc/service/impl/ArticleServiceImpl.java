@@ -644,7 +644,7 @@ public class ArticleServiceImpl implements ArticleService {
             logger.debug("username {} ---> has roles {}", deleteContentDto.getUsername(), roles);
 
             // cek if article content have article with state <> PREDRAFT
-            Optional<Article> articleOpt = articleRepository.findById(articleContent.getId());
+            Optional<Article> articleOpt = articleRepository.findById(articleContent.getArticle().getId());
             if(articleOpt.isEmpty()) {
                 logger.info("not found article from content with id {}", deleteContentDto.getContentId());
                 throw new DataNotFoundException("data not found");
