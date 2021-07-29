@@ -45,7 +45,7 @@ height: 184px;
             <div class="row d-flex flex-wrap justify-content-between">
                 <!-- left side -->
                 <div class="col">
-                    <span class="pakar-text-header-desc">{{articleDTO.desc}}</span>
+                    <span class="pakar-text-header-desc" [innerHTML]="articleDTO.desc">&nbsp;</span>
                     <div class="my-3" *ngIf="!hideTable">
                         <table class="table table-bordered">
                             <thead class="thead-light">

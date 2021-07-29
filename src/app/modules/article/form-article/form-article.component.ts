@@ -165,7 +165,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     private fb: FormBuilder,
     private struktur: StrukturService,
     private confirm: ConfirmService,
-    private toast : ToastService) {
+    private toast: ToastService) {
   }
 
   //cdk drag and drop
@@ -253,7 +253,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
             if (resp) {
               this.article.formParam = null;
               this.article.formData = null;
-              this.router.navigate(['/homepage']);
+              this.router.navigate(['/homepage'], { replaceUrl: true });
             }
           })
         );
@@ -270,34 +270,42 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     return false;
   }
 
-
   // Right icon event
   btnAddClick(e, data: ArticleContentDTO) {
-    this.subscriptions.push(
-      this.article.getContentId().subscribe(resp => {
-        if (resp) {
-          if (data == null) { // craete new level 1
-            const _contents = this.dataForm.get('contents').value as ArticleContentDTO[];
-            const maxSort: number = this.findMaxSort(_contents);
-            const newNode: ArticleContentDTO = {
-              id: resp,
-              articleId: this.dataForm.value.id,
-              title: '',
-              intro: '',
-              topicContent: '',
-              topicTitle: '',
-              level: 1,
-              parent: 0,
-              sort: maxSort + 1,
-              children: [],
-              expanded: true,
-              listParent: [],
-              no: '',
-              isEdit: false,
-            }
+    if (data == null) {
+      const _contents = this.dataForm.get('contents').value as ArticleContentDTO[];
+      const maxSort: number = this.findMaxSort(_contents);
+      const newNode: ArticleContentDTO = {
+        id: 0,
+        articleId: this.dataForm.value.id,
+        title: '',
+        intro: '',
+        topicContent: '',
+        topicTitle: '',
+        level: 1,
+        parent: 0,
+        sort: maxSort + 1,
+        children: [],
+        expanded: true,
+        listParent: [],
+        no: '',
+        isEdit: false,
+      }
+      this.subscriptions.push(
+        this.article.saveContent(newNode).subscribe(resp => {
+          if (resp) {
+            newNode.id = resp.id;
+            console.log('level 1', { newNode });
             _contents.push(newNode);
             this.addLog(newNode);
-          } else { // add childe level > 1
+            this.cdr.detectChanges();
+          }
+        })
+      );
+    } else {
+      this.subscriptions.push(
+        this.article.getContentId().subscribe(resp => {
+          if (resp) {
             const maxSort: number = this.findMaxSort(data.children);
             const listParent: ArticleParentDTO[] = JSON.parse(JSON.stringify(data.listParent));
             if (data.level >= 2) {
@@ -322,11 +330,65 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
             data.expanded = true;
             data.children.push(newNode);
             this.addLog(newNode);
+            this.cdr.detectChanges();
           }
-          this.cdr.detectChanges();
-        }
-      })
-    );
+        })
+      );
+    }
+    // this.subscriptions.push(
+    //   this.article.getContentId().subscribe(resp => {
+    //     if (resp) {
+    //       if (data == null) { // craete new level 1
+    //         const _contents = this.dataForm.get('contents').value as ArticleContentDTO[];
+    //         const maxSort: number = this.findMaxSort(_contents);
+    //         const newNode: ArticleContentDTO = {
+    //           id: resp,
+    //           articleId: this.dataForm.value.id,
+    //           title: '',
+    //           intro: '',
+    //           topicContent: '',
+    //           topicTitle: '',
+    //           level: 1,
+    //           parent: 0,
+    //           sort: maxSort + 1,
+    //           children: [],
+    //           expanded: true,
+    //           listParent: [],
+    //           no: '',
+    //           isEdit: false,
+    //         }
+    //         _contents.push(newNode);
+    //         this.addLog(newNode);
+    //       } else { // add childe level > 1
+    //         const maxSort: number = this.findMaxSort(data.children);
+    //         const listParent: ArticleParentDTO[] = JSON.parse(JSON.stringify(data.listParent));
+    //         if (data.level >= 2) {
+    //           listParent.push({ id: 0, no: data.no, title: data.title });
+    //         }
+    //         const newNode: ArticleContentDTO = {
+    //           id: resp,
+    //           articleId: this.dataForm.value.id,
+    //           title: '',
+    //           intro: '',
+    //           topicContent: '',
+    //           topicTitle: '',
+    //           level: data.level + 1,
+    //           parent: data.id,
+    //           sort: maxSort + 1,
+    //           children: [],
+    //           expanded: true,
+    //           listParent,
+    //           no: `${data.children.length + 1}`,
+    //           isEdit: false,
+    //         }
+    //         data.expanded = true;
+    //         data.children.push(newNode);
+    //         this.addLog(newNode);
+    //       }
+    //       this.cdr.detectChanges();
+    //     }
+    //   })
+    // );
     e.stopPropagation();
     return false;
   }
@@ -641,6 +703,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
       title: [defaultValue.title, Validators.compose([Validators.required, Validators.maxLength(50), alphaNumericValidator])],
       structureId: [defaultValue.structureId, Validators.compose([Validators.required])],
       structureOption: [defaultValue.structureOption, Validators.compose([Validators.required])],
+      desc: [defaultValue.desc],
       image: [defaultValue.image],
       video: [defaultValue.video],
       contents: [defaultValue.contents],
