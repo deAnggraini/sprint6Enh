@@ -43,6 +43,9 @@ public class ArticleServiceImpl implements ArticleService {
     private ArticleRepository articleRepository;
 
     @Autowired
+    private ArticleFaqRepository articleFaqRepository;
+
+    @Autowired
     private ArticleTemplateRepository articleTemplateRepository;
 
     @Autowired
@@ -945,8 +948,17 @@ public class ArticleServiceImpl implements ArticleService {
     public List<FaqDto> findFaq(Long requestFAQDto) throws Exception {
         try {
             logger.info("search faq");
-            List<FaqDto> searchResult = articleRepository.findFAQ(requestFAQDto);
-            return searchResult;
+            List<FaqDto> listOfDtos = new ArrayList<>();
+            List<FAQ> searchResult = articleFaqRepository.findFAQ(requestFAQDto);
+            logger.info("search result = " + searchResult);
+            for (FAQ entity : searchResult) {
+                FaqDto dto = new FaqDto();
+                dto.setId(entity.getId());
+                dto.setAnswer(entity.getAnswer());
+                dto.setQuestion(entity.getQuestion());
+                listOfDtos.add(dto);
+            }
+            return listOfDtos;
         } catch (Exception e) {
             logger.error("exception", e);
             throw new Exception("exception", e);
