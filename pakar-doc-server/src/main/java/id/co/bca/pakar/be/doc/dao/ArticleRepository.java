@@ -32,8 +32,8 @@ public interface ArticleRepository extends CrudRepository<Article, Long> {
     Page<Article> findRelatedArticles(@Param("id") Long id, @Param("keyword") String keyword, Pageable pageable);
 
     @Query(value = "SELECT m.* FROM t_article_faq m " +
-            "    WHERE m.deleted IS FALSE " +
-            "    AND m.id =:id ",
+            "    WHERE m.deleted IS FALSE ",
+//            "    AND m.article.id =:id ",
             nativeQuery = true
     )
     List<FaqDto> findFAQ(@Param("id") Long id);
