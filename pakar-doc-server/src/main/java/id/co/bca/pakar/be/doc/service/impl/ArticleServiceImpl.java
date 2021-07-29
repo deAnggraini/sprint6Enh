@@ -43,6 +43,9 @@ public class ArticleServiceImpl implements ArticleService {
     private ArticleRepository articleRepository;
 
     @Autowired
+    private ArticleFaqRepository articleFaqRepository;
+
+    @Autowired
     private ArticleTemplateRepository articleTemplateRepository;
 
     @Autowired
@@ -940,6 +943,7 @@ public class ArticleServiceImpl implements ArticleService {
             List<RelatedArticleDto> dtos = mapEntitiesIntoDTOs(source.getContent());
             return new PageImpl<>(dtos, pageRequest, source.getTotalElements());
         }
+
     }
 
     /**
@@ -951,8 +955,17 @@ public class ArticleServiceImpl implements ArticleService {
     public List<FaqDto> findFaq(Long requestFAQDto) throws Exception {
         try {
             logger.info("search faq");
-            List<FaqDto> searchResult = articleRepository.findFAQ(requestFAQDto);
-            return searchResult;
+            List<FaqDto> listOfDtos = new ArrayList<>();
+            List<FAQ> searchResult = articleFaqRepository.findFAQ(requestFAQDto);
+            logger.info("search result = " + searchResult);
+            for (FAQ entity : searchResult) {
+                FaqDto dto = new FaqDto();
+                dto.setId(entity.getId());
+                dto.setAnswer(entity.getAnswer());
+                dto.setQuestion(entity.getQuestion());
+                listOfDtos.add(dto);
+            }
+            return listOfDtos;
         } catch (Exception e) {
             logger.error("exception", e);
             throw new Exception("exception", e);
@@ -966,6 +979,30 @@ public class ArticleServiceImpl implements ArticleService {
 
         public ArticleContentHistory populateArticleContentHistory() {
             return new ArticleContentHistory();
+        }
+    }
+
+    /**
+     * @param searchDto
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public Page<SuggestionArticleDto> searchSuggestion(SearchDto searchDto) throws Exception {
+        try {
+            logger.info("search related article");
+            if(searchDto.getPage() == null) {
+                searchDto.setPage(0L);
+            }
+            Pageable pageable = PageRequest.of(searchDto.getPage().intValue() - 1, searchDto.getSize().intValue());
+            Page<Article> searchResultPage = articleRepository.findSuggestionArticle(searchDto.getExclude(), searchDto.getKeyword(), pageable);
+            logger.debug("total items {}", searchResultPage.getTotalElements());
+            logger.debug("total contents {}", searchResultPage.getContent().size());
+//            return new ToDoMapper().mapEntityPageIntoDTOPage(pageable, searchResultPage);
+            return null;
+        } catch (Exception e) {
+            logger.error("exception", e);
+            throw new Exception("exception", e);
         }
     }
 }

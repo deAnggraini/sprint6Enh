@@ -29,4 +29,6 @@ public interface ArticleService {
     Page<RelatedArticleDto> search(SearchDto searchDto) throws Exception;
 
     List<FaqDto> findFaq(Long requestFAQDto) throws Exception;
+
+    Page<SuggestionArticleDto> searchSuggestion(SearchDto searchDto) throws Exception;
 }

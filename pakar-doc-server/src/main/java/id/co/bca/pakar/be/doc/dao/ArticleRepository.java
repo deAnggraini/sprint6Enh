@@ -31,16 +31,19 @@ public interface ArticleRepository extends CrudRepository<Article, Long> {
     )
     Page<Article> findRelatedArticles(@Param("id") Long id, @Param("keyword") String keyword, Pageable pageable);
 
-    @Query(value = "SELECT m.* FROM t_article_faq m " +
-            "    WHERE m.deleted IS FALSE ",
-//            "    AND m.article.id =:id ",
-            nativeQuery = true
-    )
-    List<FaqDto> findFAQ(@Param("id") Long id);
-
     @Query("SELECT CASE WHEN COUNT(m) > 0 THEN TRUE ELSE FALSE END FROM Article m " +
             "WHERE m.articleState = 'PREDRAFT'" +
             "AND m.deleted IS FALSE " +
             "AND m.id=:id")
     Boolean isPreDraftArticle(@Param("id") Long id);
+
+    @Query(value = "SELECT m.* FROM t_article m " +
+            "    WHERE m.deleted IS FALSE " +
+            "    AND m.state = 'PUBLISHED' " +
+            "    AND m.id <> :id " +
+            "    AND (lower(m.title) LIKE lower(concat('%', :keyword,'%')))",
+            nativeQuery = true
+    )
+    Page<Article> findSuggestionArticle(@Param("id") Long id, @Param("keyword") String keyword, Pageable pageable);
+
 }
