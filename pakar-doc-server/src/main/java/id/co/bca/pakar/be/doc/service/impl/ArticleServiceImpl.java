@@ -522,12 +522,18 @@ public class ArticleServiceImpl implements ArticleService {
             articleContent.setTopicContent(articleContentDto.getTopicContent());
             articleContent.setSort(articleContentDto.getOrder());
             articleContent.setLevel(articleContentDto.getLevel());
-            Optional<ArticleContent> parentOpt = articleContentRepository.findById(articleContentDto.getParent());
-            if (parentOpt.isEmpty()) {
-                throw new DataNotFoundException("data not found");
+
+            if(articleContentDto.getLevel().longValue() == 1) {
+                Optional<ArticleContent> parentOpt = articleContentRepository.findById(articleContentDto.getParent());
+                if (parentOpt.isEmpty()) {
+                    throw new DataNotFoundException("data not found");
+                }
+
+                articleContent.setParent(parentOpt.get().getId());
+            } else {
+                articleContent.setParent(articleContentDto.getParent());
             }
 
-            articleContent.setParent(parentOpt.get().getId());
             Optional<Article> articleOpt = articleRepository.findById(articleContentDto.getArticleId());
             if (articleOpt.isEmpty()) {
                 throw new DataNotFoundException("data not found");
