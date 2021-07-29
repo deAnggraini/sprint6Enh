@@ -3,7 +3,7 @@ import { ApiService } from 'src/app/utils/_services/api-service.service';
 import { environment } from 'src/environments/environment';
 import { of, BehaviorSubject, Observable } from 'rxjs';
 import * as moment from 'moment';
-import { ArticleDTO } from '../_model/article.dto';
+import { ArticleDTO, ArticleContentDTO } from '../_model/article.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -96,6 +96,10 @@ export class ArticleService {
 
   getContentId() {
     return this.apiService.get(`${this._base_url}/getContentId`);
+  }
+
+  saveContentLevel1(params: ArticleContentDTO) {
+    return this.apiService.post(`${this._base_url}/createContentLevel1`, params);
   }
 
   saveContent(params: any) {
