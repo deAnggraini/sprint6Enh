@@ -683,7 +683,10 @@ public class ArticleServiceImpl implements ArticleService {
     public Page<RelatedArticleDto> search(SearchDto searchDto) throws Exception {
         try {
             logger.info("search related article");
-            Pageable pageable = PageRequest.of(searchDto.getPage().intValue(), searchDto.getSize().intValue());
+            if(searchDto.getPage() == null) {
+                searchDto.setPage(0L);
+            }
+            Pageable pageable = PageRequest.of(searchDto.getPage().intValue() - 1, searchDto.getSize().intValue());
             Page<Article> searchResultPage = articleRepository.findRelatedArticles(searchDto.getExclude(), searchDto.getKeyword(), pageable);
             logger.debug("total items {}", searchResultPage.getTotalElements());
             logger.debug("total contents {}", searchResultPage.getContent().size());
