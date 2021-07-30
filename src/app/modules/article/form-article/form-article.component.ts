@@ -129,9 +129,13 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     Time Loan - SME merupakan salah satu produk kredit produktif untuk modal kerja kepada debitur segmen Small dan Medium Enterprises (SME) dalam mata uang rupiah ataupun valas yang penarikannya menggunakan Surat Permohonan Penarikan Fasilitas Kredit/Perpanjangan Pembayaran untuk jangka waktu tertentu.`
   };
 
-  logs: Map<number, ArticleContentDTO[]> = new Map();
+  // error manual
   hasError: boolean = false;
   errorMsg: string = '';
+  hasImageError: boolean = false;
+  errorImageMsg: string = '';
+
+  logs: Map<number, ArticleContentDTO[]> = new Map();
   user: UserModel;
   isEdit: boolean = false;
   dataForm: FormGroup;
@@ -233,6 +237,8 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
         //     if (resp) this.deleteNode(data);
         //   })
         // );
+        this.onPreview(e);
+        this.cdr.detectChanges();
       }
     });
     return false;
@@ -607,6 +613,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
       this.dataForm.patchValue({
         image: file
       });
+      const $this = this;
 
       var reader = new FileReader();
       reader.readAsDataURL(file);
@@ -616,12 +623,16 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
         image.onload = function (_) {
           var height = image.height;
           var width = image.width;
-          console.log({ width, height }, this);
-          // if ((height >= 1024 || height <= 1100) && (width >= 750 || width <= 800)) {
-          //   alert("Height and Width must not exceed 1100*800.");
-          //   return false;
-          // }
-          // alert("Uploaded image has valid Height and Width.");
+          console.log({ width, height });
+          if (width != 307 || height != 425) {
+            $this.hasImageError = true;
+            $this.errorImageMsg = 'Ukuran Gambar adalah 307x425px';
+            $this.cdr.detectChanges();
+            return false;
+          }
+          $this.hasImageError = false;
+          $this.errorImageMsg = '';
+          $this.cdr.detectChanges();
           return true;
         };
       }

@@ -31,7 +31,7 @@ export declare interface ArticleContentDTO {
     children: ArticleContentDTO[],
     listParent?: ArticleParentDTO[],
     expanded?: boolean,
-    isEdit?:boolean
+    isEdit?: boolean
 }
 
 export declare interface ArticleDTO {
@@ -40,9 +40,9 @@ export declare interface ArticleDTO {
     title: string,
     structureId: number,
     structureOption?: Option,
-    structureParentList?:any[], // {id: number, name: string}
+    structureParentList?: any[], // {id: number, name: string}
     desc: string,
-    image: string,
+    image: any,
     video: string,
     created_at?: Date,
     created_by?: string,

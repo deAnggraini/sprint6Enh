@@ -41,6 +41,10 @@ $acc-child-margin : 10px;
   .input-accordion-separator.empty {
     background-image: none;
   }
+
+  .custom-file-label.hasError {
+    border: 1px solid red
+  }
 }
 
 :host ::ng-deep .mat-accordion .mat-expansion-panel.acc-level {
