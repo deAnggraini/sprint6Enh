@@ -88,7 +88,7 @@ height: 184px;
                             </tbody>
                         </table>
                     </div>
-                    <div class="p-3">
+                    <div>
                         <mat-accordion [togglePosition]="'before'" multi="true">
                             <mat-expansion-panel class="acc-level acc-level-1"
                                 *ngFor="let content of articleDTO.contents">
@@ -97,8 +97,10 @@ height: 184px;
                                         <span>{{content.title}}</span>
                                     </mat-panel-title>
                                 </mat-expansion-panel-header>
-                                <div>
-                                    {{content.intro}}
+                                <div style="padding-top: 1rem;">
+                                    <span style="padding: 1rem;">
+                                        {{content.intro}}
+                                    </span>
                                     <ng-container *ngIf="content.children.length" [ngTemplateOutlet]="accordionChild"
                                         [ngTemplateOutletContext]="{ children: content.children, level:2, parents:[]}">
                                     </ng-container>
@@ -148,8 +150,8 @@ height: 184px;
                                 </div>
                             </div>
                         </ngx-slick-carousel>
+                        <hr>
                     </div>
-                    <hr>
                     <div class="sk-referensi mt-6">
                         <label class="font-weight-bolder text-dark mb-2">SK/SE Referensi</label>
                         <div>
@@ -157,7 +159,7 @@ height: 184px;
                                 <li> <u>{{sk.value}}</u> - {{sk.text.split(" - ")[1]}}</li>
                             </ul>
                         </div>
-                        <a class="navi-link" href="#">
+                        <a class="navi-link">
                             <a routerLink="" class="navi-text cursor-pointer font-weight-bold font-size-sm">
                                 Selengkapnya >
                             </a>
@@ -174,13 +176,13 @@ height: 184px;
                         <hr>
                     </div>
                     <div class="video mx-4 mb-5" *ngIf="!hideVideo" style="min-width: 307px;">
-                        <video src="{{videoUrl}}" width="307" height="173" controls>
-                            <!-- <source src="https://myvideo.bca.co.id/viewerportal/bcavideo/video.vp?programId=esc_program%3A55071&contentAssocId=association%3A183713"> -->
-                        </video>
-                        <!-- <iframe seamless frameborder=0 allowfullscreen webkitallowfullscreen mozallowfullscreen
+                        <!-- <video src="{{videoUrl}}" width="307" height="173" controls>
+                            <source src="https://myvideo.bca.co.id/viewerportal/bcavideo/video.vp?programId=esc_program%3A55071&contentAssocId=association%3A183713">
+                        </video> -->
+                        <iframe seamless frameborder=0 allowfullscreen webkitallowfullscreen mozallowfullscreen
                             src="{{videoUrl}}"
                             width="307" height="173">
-                        </iframe> -->
+                        </iframe>
                         <hr>
                     </div>
                     <div class="mx-4 mb-5" style="min-width: 307px;">
@@ -205,7 +207,7 @@ height: 184px;
         <ng-container *ngFor="let content of children; let i = index">
             <div class="input-accordion-separator"></div>
             <mat-expansion-panel [@.disabled]="true" class="acc-level acc-level-{{level}}">
-                <div class="drag-placeholder"></div>
+                <!-- <div class="drag-placeholder"></div> -->
                 <mat-expansion-panel-header>
                     <mat-panel-title class="text-ellipsis-1">
                         {{numberingFormat(content)}}. {{content.title}}
@@ -214,18 +216,12 @@ height: 184px;
                 <ng-template matExpansionPanelContent>
                     <div class="content">
                         <div class="p-3">
-                            <div class="form-group">
-                                <label>{{content.topicTitle}}</label>
-                                <!-- <pakar-input-length placeholder="Masukkan judul topik disini (maks. 150 karakter)"
-                                    [(ngModel)]="content.topicTitle" maxlength="150">
-                                </pakar-input-length> -->
+                            <div>
+                                <label><b>{{content.topicTitle}}</b></label>
                             </div>
-                            <div class="form-group">
-                                <label>{{content.topicContent}}</label>
-                                <!-- <ckeditor [editor]="editor" [config]="config" tagName="textarea"
-                                    [(ngModel)]="content.topicContent"></ckeditor> -->
-                                <!-- <textarea class="form-control" [(ngModel)]="content.topicContent"
-                                placeholder="Masukkan Isi topik disini"></textarea> -->
+                            <div>
+                                <!-- <label>{{content.topicContent}}</label> -->
+                                <span [innerHTML]="content.topicContent">&nbsp;</span>
                             </div>
                         </div>
                         <ng-container [ngTemplateOutlet]="accordionChild"
