@@ -390,9 +390,12 @@ public class ArticleController extends BaseController {
             articleContentDto.setToken(getTokenFromHeader(authorization));
             articleContentDto = articleService.saveContent(articleContentDto);
             return createResponse(articleContentDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, Locale.ENGLISH));
-        } catch (DataNotFoundException e) {
+        } catch (ParentContentNotFoundException e) {
             logger.error("exception", e);
-            return createResponse(new ArticleContentDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, Locale.ENGLISH));
+            return createResponse(new ArticleContentDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("content.parent.not.found", null, Locale.ENGLISH));
+        } catch (ArticleNotFoundException e) {
+            logger.error("exception", e);
+            return createResponse(new ArticleContentDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("article.not.found", null, Locale.ENGLISH));
         } catch (Exception e) {
             logger.error("exception", e);
             return createResponse(new ArticleContentDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, Locale.ENGLISH));
@@ -547,8 +550,8 @@ public class ArticleController extends BaseController {
     @PostMapping(value = "/api/doc/suggestionArticle", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
             MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<RestResponse<Map<String, Object>>> findSuggestionArticle(@RequestHeader("Authorization") String authorization,
-                                                                            @RequestHeader(name = "X-USERNAME") String username,
-                                                                            @RequestBody SearchDto searchDto) {
+                                                                                   @RequestHeader(name = "X-USERNAME") String username,
+                                                                                   @RequestBody SearchSuggestionDto searchDto) {
         try {
             logger.info("search related articles process");
             logger.info("received token bearer --- {}", authorization);
