@@ -9,6 +9,8 @@ import { ArticleService } from '../../_services/article.service';
 import { SkReferenceService } from '../../_services/sk-reference.service';
 import { StrukturService } from '../../_services/struktur.service';
 import { ArticleDTO, ArticleContentDTO } from '../../_model/article.dto';
+import { resolve } from '@angular/compiler-cli/src/ngtsc/file_system';
+import { rejects } from 'assert';
 
 @Component({
   selector: 'pakar-article-preview',
@@ -29,6 +31,7 @@ export class PreviewComponent implements OnInit {
   videoUrl: string;
   hideImage: boolean = true;
   imageName: string;
+  imageTitle: string;
   imageSrc: string;
   dataForm: FormGroup;
   user$: Observable<UserModel>;
@@ -37,6 +40,8 @@ export class PreviewComponent implements OnInit {
   changed_date: Date = new Date();
   skReferences = [];
   relatedArticle = [];
+  imageFile: string;
+  sourceImg: string;
 
   //faq carousel
   backend_img: string = environment.backend_img;
@@ -143,7 +148,8 @@ export class PreviewComponent implements OnInit {
   //image 
   getImage(event) {
     if (event) {
-      this.imageName = event.name.split(".")[0];
+      this.imageName = event.name;
+      this.imageTitle = event.name.split(".")[0];
       this.hideImage = false;
     } else {
       this.hideImage = true;
@@ -157,6 +163,28 @@ export class PreviewComponent implements OnInit {
     } else {
       this.hideVideo = true;
     }
+  }
+
+  async onImageChange(imgFile) {
+    console.log('event image preview *** > ', imgFile);
+
+    var reader = new FileReader();
+    let result = '';
+
+    reader.onload = function (e) {
+      var image = new Image();
+      image.src = e.target.result as string;
+      result = image.src;
+      console.log('result onload ** > ', result);
+    };
+
+    //NOTE: await doen't work
+    await reader.readAsText(imgFile);
+
+    console.log('reader ** > ', reader);
+    console.log('result ** > ', result);
+
+    return result;
   }
 
   // SK/SE 
