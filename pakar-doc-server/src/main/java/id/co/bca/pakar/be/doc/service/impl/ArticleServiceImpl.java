@@ -442,7 +442,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     /**
-     * get content id
+     * get sequence number of content when fe will create new content
      *
      * @return
      * @throws Exception
