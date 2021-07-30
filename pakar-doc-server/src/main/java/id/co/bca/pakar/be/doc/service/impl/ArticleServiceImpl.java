@@ -686,14 +686,17 @@ public class ArticleServiceImpl implements ArticleService {
      * @throws Exception
      */
     @Override
-    @Transactional(rollbackOn = {Exception.class, DataNotFoundException.class, AccesDeniedDeleteContentException.class})
+    @Transactional(rollbackOn = {Exception.class
+            , DataNotFoundException.class
+            , AccesDeniedDeleteContentException.class
+            , ArticleContentNotFoundException.class})
     public Boolean deleteContent(DeleteContentDto deleteContentDto) throws Exception {
         try {
             logger.info("delete content with id {}", deleteContentDto.getContentId());
             Optional<ArticleContent> articleContentOpt = articleContentRepository.findById(deleteContentDto.getContentId());
             if (articleContentOpt.isEmpty()) {
                 logger.info("not found article content with id {}", deleteContentDto.getContentId());
-                throw new DataNotFoundException("data not found");
+                throw new ArticleContentNotFoundException(String.format("article content with id %d not found", deleteContentDto.getContentId()));
             }
             logger.debug("call get roles api with token {}", deleteContentDto.getContentId());
             ResponseEntity<ApiResponseWrapper.RestResponse<List<String>>> restResponse = pakarOauthClient.getRoles(BEARER + deleteContentDto.getToken(), deleteContentDto.getUsername());
@@ -748,6 +751,9 @@ public class ArticleServiceImpl implements ArticleService {
         } catch (AccesDeniedDeleteContentException e) {
             logger.error("exception", e);
             throw new AccesDeniedDeleteContentException("has no authorize delete content level 1");
+        } catch (ArticleContentNotFoundException e) {
+            logger.error("exception", e);
+            throw new ArticleContentNotFoundException("has no authorize delete content level 1");
         } catch (DataNotFoundException e) {
             logger.error("exception", e);
             throw new DataNotFoundException("data not found for content id "+deleteContentDto.getContentId());

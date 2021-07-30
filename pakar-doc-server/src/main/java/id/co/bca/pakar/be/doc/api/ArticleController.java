@@ -481,6 +481,9 @@ public class ArticleController extends BaseController {
         } catch (DataNotFoundException e) {
             logger.error("exception", e);
             return createResponse(Boolean.FALSE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, Locale.ENGLISH));
+        } catch (ArticleContentNotFoundException e) {
+            logger.error("exception", e);
+            return createResponse(Boolean.FALSE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("article.content.not.found", new Object[] {deleteContentDto.getContentId()}, Locale.ENGLISH));
         } catch (AccesDeniedDeleteContentException e) {
             logger.error("exception", e);
             return createResponse(Boolean.FALSE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("access.denied.delete.content", new Object[]{username}, Locale.ENGLISH));
