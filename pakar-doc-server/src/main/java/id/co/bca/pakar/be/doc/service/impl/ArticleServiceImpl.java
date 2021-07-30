@@ -1029,14 +1029,14 @@ public class ArticleServiceImpl implements ArticleService {
      * @throws Exception
      */
     @Override
-    public Page<SuggestionArticleDto> searchSuggestion(SearchSuggestionDto searchDto) throws Exception {
+    public Page<SuggestionArticleDto> searchSuggestion(SearchDto searchDto) throws Exception {
         try {
             logger.info("search related article");
             if(searchDto.getPage() == null) {
                 searchDto.setPage(0L);
             }
             Pageable pageable = PageRequest.of(searchDto.getPage().intValue() - 1, searchDto.getSize().intValue());
-            Page<Article> searchResultPage = suggestionArticleRepository.findSuggestionArticle(searchDto.getExclude(), searchDto.getKeyword(), searchDto.getStructureId(), pageable);
+            Page<Article> searchResultPage = suggestionArticleRepository.findSuggestionArticle(searchDto.getExclude(), searchDto.getKeyword(), pageable);
 //            Page<Article> searchResultPage = articleSuggestionRepository.findSuggestionArticle(searchDto.getExclude(), searchDto.getKeyword(), pageable);
             logger.debug("total items {}", searchResultPage.getTotalElements());
             logger.debug("total contents {}", searchResultPage.getContent().size());
