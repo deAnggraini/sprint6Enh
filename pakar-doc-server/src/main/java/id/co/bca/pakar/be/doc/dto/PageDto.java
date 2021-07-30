@@ -2,9 +2,16 @@ package id.co.bca.pakar.be.doc.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
 public abstract class PageDto extends BaseDto {
+    @NotNull
+    @Min(value = 1, message = "minimum page value 1")
     @JsonProperty("page")
     protected Long page = 0L;
+    @NotNull
+    @Min(value = 1, message = "minimum limit value 1")
     @JsonProperty("limit")
     protected Long size = 10L;
 
