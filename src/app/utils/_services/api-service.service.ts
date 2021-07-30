@@ -61,7 +61,7 @@ export class ApiService {
         console.error('ApiService', err);
         if (showError) setTimeout(() => {
           const error = JSON.parse(err.message);
-          this.toast.showDanger(err.message || err.msg);
+          this.toast.showDanger(error.message || error.msg);
         }, 0);
         throw err;
       }),

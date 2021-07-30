@@ -28,6 +28,10 @@ export class ToastService {
     this.show(msg, { classname: 'bg-danger text-light', delay: 3000 });
   }
 
+  showWarning(msg: string) {
+    this.show(msg, { classname: 'bg-warning text-light', delay: 3000 });
+  }
+
   clear() {
     this.toasts = [];
     this.toasts$.next(this.toasts);

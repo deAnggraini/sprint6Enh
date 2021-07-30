@@ -23,9 +23,13 @@ export class PreviewComponent implements OnInit {
   categoryId: number = 0;
   struktur$: BehaviorSubject<StrukturDTO> = new BehaviorSubject<StrukturDTO>(null);
 
-  hideTable: boolean = false;
-  hideVideo: boolean = false;
-  // title: string = 'Tahapan';
+  hideTable: boolean = true;
+  hideFAQ: boolean = true;
+  hideVideo: boolean = true;
+  videoUrl: string;
+  hideImage: boolean = true;
+  imageName: string;
+  imageSrc: string;
   dataForm: FormGroup;
   user$: Observable<UserModel>;
   aliasName: string = 'AA';
@@ -33,7 +37,6 @@ export class PreviewComponent implements OnInit {
   changed_date: Date = new Date();
   skReferences = [];
   relatedArticle = [];
-  id = 100; //hardcode
 
   //faq carousel
   backend_img: string = environment.backend_img;
@@ -58,7 +61,7 @@ export class PreviewComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private struktutService: StrukturService,
+    private strukturService: StrukturService,
     private auth: AuthService,
     private articleService: ArticleService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -78,6 +81,12 @@ export class PreviewComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadData();
+    console.log("Article DTO >>> ", this.articleDTO);
+    this.skReferences = this.articleDTO.references;
+    this.relatedArticle = this.articleDTO.related;
+    this.getImage(this.articleDTO.image);
+    this.getVideo(this.articleDTO.video);
+
 
     //user
     this.user$.subscribe(u => {
@@ -92,9 +101,6 @@ export class PreviewComponent implements OnInit {
       this.slides = resp.slice(0, 6);
       setTimeout(() => this.changeDetectorRef.detectChanges(), 0);
     });
-
-    this.getDataSkSeReference("aaa");
-    this.getDataRelatedArticle("aaa");
   }
 
   private loadData() {
@@ -107,7 +113,7 @@ export class PreviewComponent implements OnInit {
         // this.loadData();
       });
     }
-    const node = this.struktutService.findNodeById(this.categoryId);
+    const node = this.strukturService.findNodeById(this.categoryId);
     this.struktur$.next(node);
     console.log({ article: this.articleDTO });
   }
@@ -119,21 +125,41 @@ export class PreviewComponent implements OnInit {
     return strNoParent.join(".");
   }
 
-  // SK/SE 
-  getDataSkSeReference(keyword: string) {
-    this.skService.search(keyword).subscribe(resp => {
-      if (resp) {
-        this.skReferences = [...resp];
-      }
-    })
+  //image 
+  getImage(event) {
+    if (event) {
+      this.imageName = event.name.split(".")[0];
+      this.hideImage = false;
+    } else {
+      this.hideImage = true;
+    }
   }
 
-  //Artikel Terkait
-  getDataRelatedArticle(keyword: string) {
-    this.articleService.searchArticle(keyword).subscribe(resp => {
-      if (resp) {
-        this.relatedArticle = [...resp];
-      }
-    })
+  getVideo(event) {
+    if (event) {
+      this.videoUrl = event
+      this.hideVideo = false;
+    } else {
+      this.hideVideo = true;
+    }
   }
+
+  // SK/SE 
+  // getDataSkSeReference(keyword: string) {
+  //   this.skService.search(keyword).subscribe(resp => {
+  //     if (resp) {
+  //       this.skReferences = [...resp];
+  //     }
+  //   })
+  // }
+
+  //Artikel Terkait
+  // getDataRelatedArticle(keyword: string) {
+  //   this.articleService.searchArticle(keyword).subscribe(resp => {
+  //     if (resp) {
+  //       this.relatedArticle = [...resp];
+  //     }
+  //   })
+  // }
+
 }

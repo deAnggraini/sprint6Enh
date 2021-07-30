@@ -15,7 +15,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   defaultAuth = {
     username: '',
     password: '',
-    remember: true,
+    remember: false,
   };
   loginForm: FormGroup;
   hasError: boolean;
