@@ -2,11 +2,13 @@ package id.co.bca.pakar.be.doc.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.List;
+
 public class SearchSuggestionDto extends PageDto {
     @JsonProperty("keyword")
     private String keyword;
     @JsonProperty("exclude")
-    private Long exclude;
+    private List<Long> exclude;
     @JsonProperty("structureId")
     private Long structureId;
 
@@ -18,11 +20,11 @@ public class SearchSuggestionDto extends PageDto {
         this.keyword = keyword;
     }
 
-    public Long getExclude() {
+    public List<Long> getExclude() {
         return exclude;
     }
 
-    public void setExclude(Long exclude) {
+    public void setExclude(List<Long> exclude) {
         this.exclude = exclude;
     }
 

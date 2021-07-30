@@ -1029,23 +1029,17 @@ public class ArticleServiceImpl implements ArticleService {
      * @throws Exception
      */
     @Override
-    public Page<SuggestionArticleDto> searchSuggestion(SearchDto searchDto) throws Exception {
-        Page<Article> searchResultPage = null;
+    public Page<SuggestionArticleDto> searchSuggestion(SearchSuggestionDto searchDto) throws Exception {
         try {
             logger.info("search related article");
             if(searchDto.getPage() == null) {
                 searchDto.setPage(0L);
             }
             Pageable pageable = PageRequest.of(searchDto.getPage().intValue() - 1, searchDto.getSize().intValue());
-            if (searchDto.getKeyword() == null || searchDto.getKeyword() == "") {
-                searchResultPage = suggestionArticleRepository.findSuggestionArticleWithoutKey(searchDto.getExclude(), pageable);
-            } else {
-                searchResultPage = suggestionArticleRepository.findSuggestionArticle(searchDto.getExclude(), searchDto.getKeyword(), pageable);
+            Page<Article> searchResultPage = suggestionArticleRepository.findSuggestionArticles(searchDto.getExclude(), searchDto.getKeyword(), pageable);
 //            Page<Article> searchResultPage = articleSuggestionRepository.findSuggestionArticle(searchDto.getExclude(), searchDto.getKeyword(), pageable);
-                logger.debug("total items {}", searchResultPage.getTotalElements());
-                logger.debug("total contents {}", searchResultPage.getContent().size());
-
-            }
+            logger.debug("total items {}", searchResultPage.getTotalElements());
+            logger.debug("total contents {}", searchResultPage.getContent().size());
             return new ToDoMapperSuggestion().mapEntityPageIntoDTOPage(pageable, searchResultPage);
 
         } catch (Exception e) {

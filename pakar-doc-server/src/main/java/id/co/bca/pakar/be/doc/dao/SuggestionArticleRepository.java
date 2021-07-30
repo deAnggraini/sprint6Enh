@@ -10,6 +10,8 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface SuggestionArticleRepository extends CrudRepository<Article, Long> {
 //    @Query(value = "select tsa.*, ta.title from t_article ta " +
@@ -31,10 +33,9 @@ public interface SuggestionArticleRepository extends CrudRepository<Article, Lon
     Page<Article> findSuggestionArticle(@Param("id") Long id, @Param("keyword") String keyword, Pageable pageable);
 
     @Query("select tsa.article from SuggestionArticle tsa " +
-            "where tsa.article.id <> :id " +
-            "and tsa.article.articleState = 'PUBLISHED' order by tsa.hit_count"
+            "where tsa.article.id NOT IN (:ids) " +
+            "and lower(tsa.article.judulArticle) like lower(concat('%', :keyword,'%')) " +
+            "and tsa.article.articleState = 'PUBLISHED' order by  tsa.article.judulArticle, tsa.hit_count"
     )
-    Page<Article> findSuggestionArticleWithoutKey(@Param("id") Long id, Pageable pageable);
-
-
+    Page<Article> findSuggestionArticles(@Param("id") List<Long> ids, @Param("keyword") String keyword, Pageable pageable);
 }
