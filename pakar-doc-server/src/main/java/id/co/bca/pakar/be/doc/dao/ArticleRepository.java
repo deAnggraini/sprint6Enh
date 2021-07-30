@@ -41,7 +41,8 @@ public interface ArticleRepository extends CrudRepository<Article, Long> {
             "    WHERE m.deleted IS FALSE " +
             "    AND m.state = 'PUBLISHED' " +
             "    AND m.id <> :id " +
-            "    AND (lower(m.title) LIKE lower(concat('%', :keyword,'%')))",
+            "    AND (lower(m.title) LIKE lower(concat('%', :keyword,'%')))" +
+            "    ORDER BY m.title asc",
             nativeQuery = true
     )
     Page<Article> findSuggestionArticle(@Param("id") Long id, @Param("keyword") String keyword, Pageable pageable);
