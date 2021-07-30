@@ -30,6 +30,11 @@ public interface SuggestionArticleRepository extends CrudRepository<Article, Lon
     )
     Page<Article> findSuggestionArticle(@Param("id") Long id, @Param("keyword") String keyword, Pageable pageable);
 
+    @Query("select tsa.article from SuggestionArticle tsa " +
+            "where tsa.article.id <> :id " +
+            "and tsa.article.articleState = 'PUBLISHED' order by tsa.hit_count"
+    )
+    Page<Article> findSuggestionArticleWithoutKey(@Param("id") Long id, Pageable pageable);
 
 
 }

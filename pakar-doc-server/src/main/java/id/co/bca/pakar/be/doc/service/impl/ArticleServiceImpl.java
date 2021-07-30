@@ -1030,16 +1030,22 @@ public class ArticleServiceImpl implements ArticleService {
      */
     @Override
     public Page<SuggestionArticleDto> searchSuggestion(SearchDto searchDto) throws Exception {
+        Page<Article> searchResultPage = null;
         try {
             logger.info("search related article");
             if(searchDto.getPage() == null) {
                 searchDto.setPage(0L);
             }
             Pageable pageable = PageRequest.of(searchDto.getPage().intValue() - 1, searchDto.getSize().intValue());
-            Page<Article> searchResultPage = suggestionArticleRepository.findSuggestionArticle(searchDto.getExclude(), searchDto.getKeyword(), pageable);
+            if (searchDto.getKeyword() == null || searchDto.getKeyword() == "") {
+                searchResultPage = suggestionArticleRepository.findSuggestionArticleWithoutKey(searchDto.getExclude(), pageable);
+            } else {
+                searchResultPage = suggestionArticleRepository.findSuggestionArticle(searchDto.getExclude(), searchDto.getKeyword(), pageable);
 //            Page<Article> searchResultPage = articleSuggestionRepository.findSuggestionArticle(searchDto.getExclude(), searchDto.getKeyword(), pageable);
-            logger.debug("total items {}", searchResultPage.getTotalElements());
-            logger.debug("total contents {}", searchResultPage.getContent().size());
+                logger.debug("total items {}", searchResultPage.getTotalElements());
+                logger.debug("total contents {}", searchResultPage.getContent().size());
+
+            }
             return new ToDoMapperSuggestion().mapEntityPageIntoDTOPage(pageable, searchResultPage);
 
         } catch (Exception e) {
