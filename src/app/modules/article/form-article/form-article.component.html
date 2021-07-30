@@ -199,15 +199,15 @@
 
 <ng-template #accordionChild let-children="children" let-level="level" let-parents="parents">
     <div style="border-bottom:1px solid #C8C6C4; height: 10px;"></div>
-    <mat-accordion cdkDrag cdkDropList (cdkDropListDropped)="drop($event)" [cdkDropListData]="children"
+    <mat-accordion cdkDropList (cdkDropListDropped)="drop($event)" [cdkDropListData]="children"
         [id]="dropListsId(parents)" [cdkDropListConnectedTo]="allIdConnected" [togglePosition]="'before'"
         hideToggle="false" multi="true">
         <ng-container *ngFor="let content of children; let i = index">
             <div class="input-accordion-separator"></div>
-            <mat-expansion-panel [@.disabled]="true" cdkDrag [cdkDragData]="content"
-                class="acc-level acc-level-{{level}}" [(expanded)]="content.expanded">
+            <mat-expansion-panel [@.disabled]="true" class="acc-level acc-level-{{level}}" cdkDrag
+                [cdkDragData]="content" [(expanded)]="content.expanded">
                 <div class="drag-placeholder" *cdkDragPlaceholder></div>
-                <mat-expansion-panel-header>
+                <mat-expansion-panel-header cdkDragHandle>
                     <mat-panel-title class="text-ellipsis-1">{{numberingFormat(content)}}.
                         <ng-container *ngIf="content.isEdit">
                             <input type="text" class="form-control" [(ngModel)]="content.title"
