@@ -18,7 +18,7 @@
             </a>
             <div class="separator"></div>
             <a href="#" class="btn btn-link link text-dark d-flex flex-row"
-                [ngClass]="{'disabled' : !dataForm.valid || hasError}" (click)="onSave($event)">
+                [ngClass]="{'disabled' : !dataForm.valid || hasError || hasImageError}" (click)="onSave($event)">
                 <div [inlineSVG]="'./assets/media/svg/bca/icon/save.svg'" cacheSVG="true" class="svg-icon"></div>
                 <div>Simpan</div>
             </a>
@@ -62,8 +62,14 @@
                 <div class="custom-file">
                     <input type="file" class="custom-file-input" id="inputGroupFile04" accept="image/*"
                         (change)="onImageChange($event)">
-                    <label class="custom-file-label" for="inputGroupFile04">{{ showImageName() }}</label>
+                    <label class="custom-file-label" [ngClass]="{'hasError' : hasImageError}"
+                        for="inputGroupFile04">{{ showImageName() }}</label>
                 </div>
+                <ng-container *ngIf="hasImageError">
+                    <div class="fv-plugins-message-container">
+                        <div class="fv-help-block"><span>{{errorImageMsg}}</span></div>
+                    </div>
+                </ng-container>
             </div>
             <div class="form-group col-sm-11 col-lg-6 col-xl-6 col-xxl-6">
                 <label>Video Artikel</label>
@@ -152,7 +158,7 @@
                 <button type="button" class="btn btn-outline-light btn-sm rounded-xl px-5 ml-3"
                     (click)="onCancel($event)">Batal</button>
                 <button type="button" class="btn btn-blue-outline btn-sm px-5 ml-3"
-                    [disabled]="!dataForm.valid || hasError" (click)="onSave($event)">Simpan</button>
+                    [disabled]="!dataForm.valid || hasError || hasImageError" (click)="onSave($event)">Simpan</button>
                 <button type="button" class="btn btn-outline-dark btn-sm rounded-xl px-5 ml-3" disabled>Simpan &
                     Kirim</button>
             </div>
