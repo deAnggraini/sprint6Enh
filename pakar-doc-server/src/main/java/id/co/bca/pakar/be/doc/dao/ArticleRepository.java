@@ -1,8 +1,6 @@
 package id.co.bca.pakar.be.doc.dao;
 
-import id.co.bca.pakar.be.doc.dto.FaqDto;
 import id.co.bca.pakar.be.doc.model.Article;
-import id.co.bca.pakar.be.doc.model.SuggestionArticle;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -11,7 +9,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
-import java.util.List;
 
 @Repository
 public interface ArticleRepository extends CrudRepository<Article, Long> {

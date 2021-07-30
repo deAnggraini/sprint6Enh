@@ -554,7 +554,7 @@ public class ArticleController extends BaseController {
             MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<RestResponse<Map<String, Object>>> findSuggestionArticle(@RequestHeader("Authorization") String authorization,
                                                                                    @RequestHeader(name = "X-USERNAME") String username,
-                                                                                   @RequestBody SearchSuggestionDto searchDto) {
+                                                                                   @Valid @RequestBody SearchSuggestionDto searchDto) {
         try {
             logger.info("search related articles process");
             logger.info("received token bearer --- {}", authorization);

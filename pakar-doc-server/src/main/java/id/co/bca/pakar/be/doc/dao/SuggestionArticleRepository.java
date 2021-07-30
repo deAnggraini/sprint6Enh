@@ -37,5 +37,5 @@ public interface SuggestionArticleRepository extends CrudRepository<Article, Lon
             "and lower(tsa.article.judulArticle) like lower(concat('%', :keyword,'%')) " +
             "and tsa.article.articleState = 'PUBLISHED' order by  tsa.article.judulArticle, tsa.hit_count"
     )
-    Page<Article> findSuggestionArticles(@Param("id") List<Long> ids, @Param("keyword") String keyword, Pageable pageable);
+    Page<Article> findSuggestionArticles(@Param("ids") List<Long> ids, @Param("keyword") String keyword, Pageable pageable);
 }

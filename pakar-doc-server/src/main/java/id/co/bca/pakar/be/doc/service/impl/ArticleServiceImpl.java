@@ -1035,6 +1035,10 @@ public class ArticleServiceImpl implements ArticleService {
             if(searchDto.getPage() == null) {
                 searchDto.setPage(0L);
             }
+
+            if(searchDto.getPage() == 0) {
+                searchDto.setPage(0L);
+            }
             Pageable pageable = PageRequest.of(searchDto.getPage().intValue() - 1, searchDto.getSize().intValue());
             Page<Article> searchResultPage = suggestionArticleRepository.findSuggestionArticles(searchDto.getExclude(), searchDto.getKeyword(), pageable);
 //            Page<Article> searchResultPage = articleSuggestionRepository.findSuggestionArticle(searchDto.getExclude(), searchDto.getKeyword(), pageable);
