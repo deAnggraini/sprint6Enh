@@ -61,7 +61,7 @@ router.post('/node-search', (req, res) => {
     res.send({ error: false, msg: "", data });
 });
 
-router.post('/suggestion', (req, res) => {
+router.post('/node-suggestion', (req, res) => {
     res.send({ error: false, msg: "", data: suggestion });
 });
 
@@ -409,8 +409,13 @@ router.get('/getContentId', (req, res) => {
     res.send({ error: false, msg: "", data: Math.ceil(Math.random(10) * 100 + 10) });
 });
 
+router.get('/createContentLevel1', (req, res) => {
+    res.send({ error: false, msg: "", data: { id: Math.ceil(Math.random(10) * 100 + 10) } });
+});
+
 router.post('/saveContent', (req, res) => {
     const { body } = req;
+    if (!body.id) body.id = Math.ceil(Math.random(10) * 100 + 10);
     res.send({ error: false, msg: "", data: body });
 });
 
