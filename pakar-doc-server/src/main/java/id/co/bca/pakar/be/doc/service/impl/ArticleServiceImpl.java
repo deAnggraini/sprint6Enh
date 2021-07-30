@@ -58,6 +58,9 @@ public class ArticleServiceImpl implements ArticleService {
     private ArticleContentRepository articleContentRepository;
 
     @Autowired
+    private SuggestionArticleRepository suggestionArticleRepository;
+
+    @Autowired
     private StructureRepository structureRepository;
 
     @Autowired
@@ -1033,7 +1036,8 @@ public class ArticleServiceImpl implements ArticleService {
                 searchDto.setPage(0L);
             }
             Pageable pageable = PageRequest.of(searchDto.getPage().intValue() - 1, searchDto.getSize().intValue());
-            Page<Article> searchResultPage = articleRepository.findSuggestionArticle(searchDto.getExclude(), searchDto.getKeyword(), pageable);
+            Page<Article> searchResultPage = suggestionArticleRepository.findSuggestionArticle(searchDto.getExclude(), searchDto.getKeyword(), searchDto.getStructureId(), pageable);
+//            Page<Article> searchResultPage = articleSuggestionRepository.findSuggestionArticle(searchDto.getExclude(), searchDto.getKeyword(), pageable);
             logger.debug("total items {}", searchResultPage.getTotalElements());
             logger.debug("total contents {}", searchResultPage.getContent().size());
             return new ToDoMapperSuggestion().mapEntityPageIntoDTOPage(pageable, searchResultPage);
@@ -1060,10 +1064,10 @@ public class ArticleServiceImpl implements ArticleService {
         public SuggestionArticleDto mapEntityIntoDTO(Article entity) {
             SuggestionArticleDto dto = new SuggestionArticleDto();
 
-            dto.setCreatedBy(entity.getCreatedBy());
-            dto.setCreatedDate(entity.getCreatedDate());
+//            dto.setCreatedBy(entity.getCreatedBy());
+//            dto.setCreatedDate(entity.getCreatedDate());
             dto.setId(entity.getId());
-            dto.setTitle(entity.getJudulArticle());
+            dto.setJudulArticle(entity.getJudulArticle());
             return dto;
         }
 
