@@ -107,6 +107,21 @@ export class PreviewComponent implements OnInit {
     if (this.articleService.formData != null) {
       this.articleDTO = this.articleService.formData;
       this.categoryId = this.articleDTO.structureId;
+
+      // HQ tampilkan gambar disini
+      const { image } = this.articleDTO;
+      console.log({ image });
+      if (image) {
+        if (typeof (image) == "string") { // image string artinya sudah diupload
+          this.imageSrc = image;
+        } else { // image bukan string, kemungkinan object file
+          const reader = new FileReader();
+          reader.readAsDataURL(image);
+          reader.onload = () => {
+            this.imageSrc = reader.result as string;
+          };
+        }
+      }
     } else {
       this.route.params.subscribe(params => {
         this.categoryId = params.category;
