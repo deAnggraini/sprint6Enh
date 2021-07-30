@@ -95,3 +95,24 @@ VALUES(nextval('public.article_sk_reff_seq'), 'system', now()::DATE, false, NULL
 INSERT INTO public.t_article_sk_reff
 (id, created_by, created_date, deleted, modify_by, modify_date, article_id, sk_reff_id)
 VALUES(nextval('public.article_sk_reff_seq'), 'system', now()::DATE, false, NULL, NULL, 32, 2);
+
+
+-- Mapping article ke suggestion article
+INSERT INTO public.t_suggestion_article
+(id, created_by, created_date, deleted, modify_by, modify_date, article_id, structure_id, hit_count)
+VALUES(nextval('public.suggestion_article_seq'), 'system', now()::DATE, false, NULL, NULL, 55, 110, 5);
+INSERT INTO public.t_suggestion_article
+(id, created_by, created_date, deleted, modify_by, modify_date, article_id, structure_id, hit_count)
+VALUES(nextval('public.suggestion_article_seq'), 'system', now()::DATE, false, NULL, NULL, 86, 220, 10);
+INSERT INTO public.t_suggestion_article
+(id, created_by, created_date, deleted, modify_by, modify_date, article_id, structure_id, hit_count)
+VALUES(nextval('public.suggestion_article_seq'), 'system', now()::DATE, false, NULL, NULL, 87, 110, 12);
+INSERT INTO public.t_suggestion_article
+(id, created_by, created_date, deleted, modify_by, modify_date, article_id, structure_id, hit_count)
+VALUES(nextval('public.suggestion_article_seq'), 'system', now()::DATE, false, NULL, NULL, 73, 126, 12);
+INSERT INTO public.t_suggestion_article
+(id, created_by, created_date, deleted, modify_by, modify_date, article_id, structure_id, hit_count)
+VALUES(nextval('public.suggestion_article_seq'), 'system', now()::DATE, false, NULL, NULL, 65, 482, 12);
+INSERT INTO public.t_suggestion_article
+(id, created_by, created_date, deleted, modify_by, modify_date, article_id, structure_id, hit_count)
+VALUES(nextval('public.suggestion_article_seq'), 'system', now()::DATE, false, NULL, NULL, 64, 482, 13);
