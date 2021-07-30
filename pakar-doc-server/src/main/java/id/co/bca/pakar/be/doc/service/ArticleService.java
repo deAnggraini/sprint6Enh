@@ -30,5 +30,5 @@ public interface ArticleService {
 
     List<FaqDto> findFaq(Long requestFAQDto) throws Exception;
 
-    Page<SuggestionArticleDto> searchSuggestion(SearchDto searchDto) throws Exception;
+    Page<SuggestionArticleDto> searchSuggestion(SearchSuggestionDto searchDto) throws Exception;
 }

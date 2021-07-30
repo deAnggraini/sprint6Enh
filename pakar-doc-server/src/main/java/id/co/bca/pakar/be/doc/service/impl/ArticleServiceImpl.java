@@ -498,7 +498,7 @@ public class ArticleServiceImpl implements ArticleService {
      * @throws Exception
      */
     @Override
-    @Transactional(rollbackOn = {Exception.class})
+    @Transactional(rollbackOn = {Exception.class, DataNotFoundException.class, ParentContentNotFoundException.class, ArticleNotFoundException.class})
     public ArticleContentDto saveContent(ArticleContentDto articleContentDto) throws Exception {
         try {
             /*
@@ -532,7 +532,7 @@ public class ArticleServiceImpl implements ArticleService {
             if(articleContentDto.getLevel().longValue() != 1) {
                 Optional<ArticleContent> parentOpt = articleContentRepository.findById(articleContentDto.getParent());
                 if (parentOpt.isEmpty()) {
-                    throw new DataNotFoundException("data not found");
+                    throw new ParentContentNotFoundException("parent article content not found");
                 }
                 articleContent.setParent(parentOpt.get().getId());
             } else {
@@ -541,7 +541,7 @@ public class ArticleServiceImpl implements ArticleService {
 
             Optional<Article> articleOpt = articleRepository.findById(articleContentDto.getArticleId());
             if (articleOpt.isEmpty()) {
-                throw new DataNotFoundException("data not found");
+                throw new ArticleNotFoundException("data not found");
             }
             Article article = articleOpt.get();
             articleContent.setArticle(article);
@@ -593,9 +593,12 @@ public class ArticleServiceImpl implements ArticleService {
                 }
             });
             return articleContentDto;
-        } catch (DataNotFoundException e) {
+        } catch (ParentContentNotFoundException e) {
             logger.error("exception", e);
-            throw new DataNotFoundException("data not found");
+            throw new ParentContentNotFoundException("parent content not found");
+        } catch (ArticleNotFoundException e) {
+            logger.error("exception", e);
+            throw new ArticleNotFoundException("article data not found");
         } catch (Exception e) {
             logger.error("exception", e);
             throw new Exception("exception", e);
@@ -1017,7 +1020,7 @@ public class ArticleServiceImpl implements ArticleService {
      * @throws Exception
      */
     @Override
-    public Page<SuggestionArticleDto> searchSuggestion(SearchDto searchDto) throws Exception {
+    public Page<SuggestionArticleDto> searchSuggestion(SearchSuggestionDto searchDto) throws Exception {
         try {
             logger.info("search related article");
             if(searchDto.getPage() == null) {
