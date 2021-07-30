@@ -1027,11 +1027,49 @@ public class ArticleServiceImpl implements ArticleService {
             Page<Article> searchResultPage = articleRepository.findSuggestionArticle(searchDto.getExclude(), searchDto.getKeyword(), pageable);
             logger.debug("total items {}", searchResultPage.getTotalElements());
             logger.debug("total contents {}", searchResultPage.getContent().size());
-//            return new ToDoMapper().mapEntityPageIntoDTOPage(pageable, searchResultPage);
-            return null;
+            return new ToDoMapperSuggestion().mapEntityPageIntoDTOPage(pageable, searchResultPage);
+
         } catch (Exception e) {
             logger.error("exception", e);
             throw new Exception("exception", e);
         }
     }
+
+    /**
+     *
+     */
+    private class ToDoMapperSuggestion {
+        public List<SuggestionArticleDto> mapEntitiesIntoDTOs(Iterable<Article> entities) {
+            List<SuggestionArticleDto> dtos = new ArrayList<>();
+            entities.forEach(e -> dtos.add(mapEntityIntoDTO(e)));
+            return dtos;
+        }
+
+        /*
+
+         */
+        public SuggestionArticleDto mapEntityIntoDTO(Article entity) {
+            SuggestionArticleDto dto = new SuggestionArticleDto();
+
+            dto.setCreatedBy(entity.getCreatedBy());
+            dto.setCreatedDate(entity.getCreatedDate());
+            dto.setId(entity.getId());
+            dto.setTitle(entity.getJudulArticle());
+            return dto;
+        }
+
+        /**
+         * Transforms {@code Page<ENTITY>} objects into {@code Page<DTO>} objects.
+         *
+         * @param pageRequest The information of the requested page.
+         * @param source      The {@code Page<ENTITY>} object.
+         * @return The created {@code Page<DTO>} object.
+         */
+        public Page<SuggestionArticleDto> mapEntityPageIntoDTOPage(Pageable pageRequest, Page<Article> source) {
+            List<SuggestionArticleDto> dtos = mapEntitiesIntoDTOs(source.getContent());
+            return new PageImpl<>(dtos, pageRequest, source.getTotalElements());
+        }
+
+    }
+
 }
