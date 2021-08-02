@@ -3,7 +3,7 @@ import * as CustomEditor from './../../../ckeditor/build/ckeditor';
 import { ArticleService } from '../../_services/article.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ChangeEvent, CKEditorComponent } from '@ckeditor/ckeditor5-angular';
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, CdkDragEnter, CdkDragExit, CdkDragMove, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { BehaviorSubject, Subscription, of } from 'rxjs';
 import { Option } from 'src/app/utils/_model/option';
 import { SkReferenceService } from '../../_services/sk-reference.service';
@@ -459,10 +459,10 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     this.subscriptions.push(checkUniqSubrcr);
   }
 
-  drop(event: CdkDragDrop<any[]>) {
+  drop(event: CdkDragDrop<any[]>, levelParent: number, parent) {
     console.log({ event });
-    const level = event.container.data[0].level
-    if (this.getMaxLevel(event.container.data) + (event.container.data[0].level - 1) + (this.getMaxLevel([event.previousContainer.data[event.previousIndex]]) - 1) > 5) {
+    const level = event.container.data.length === 0 ? levelParent : event.container.data[0].level
+    if ((level - 1) + this.getMaxLevel([event.previousContainer.data[event.previousIndex]]) > 5) {
       return
     }
     if (event.previousContainer === event.container) {
@@ -478,9 +478,8 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
         event.currentIndex);
     }
     this.recalculateChildren(event.previousContainer.data, event.previousContainer.data.length > 0 ? event.previousContainer.data[0].listParent : []);
-    this.recalculateChildren(event.container.data, event.container.data.filter((x, i) => i !== event.currentIndex)[0].listParent);
+    this.recalculateChildren(event.container.data, event.container.data.filter((x, i) => i !== event.currentIndex)[0] === undefined ? parent : event.container.data.filter((x, i) => i !== event.currentIndex)[0].listParent);
     this.recalculateLevelChildren(event.container.data, level)
-    console.log(level)
   }
 
   onHidden(panelId) {

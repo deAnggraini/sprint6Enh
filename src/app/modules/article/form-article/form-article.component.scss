@@ -1,11 +1,11 @@
-$acc-child-margin : 10px;
+$acc-child-margin: 10px;
 
 :host ::ng-deep .top-bar {
   position: fixed;
   z-index: 2;
   top: 50px;
   height: 48px;
-  background: #F3F2F1;
+  background: #f3f2f1;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.16);
   width: 100vw;
 
@@ -14,7 +14,7 @@ $acc-child-margin : 10px;
   }
 
   .separator {
-    background-color: #C8C6C4;
+    background-color: #c8c6c4;
     width: 1.5px;
     height: 20px;
     margin: 0 10px;
@@ -34,7 +34,7 @@ $acc-child-margin : 10px;
   .input-accordion-separator {
     height: $acc-child-margin;
     width: 100%;
-    background-image: url('../../../../assets/media/images/tree-line-2.png');
+    background-image: url("../../../../assets/media/images/tree-line-2.png");
     background-repeat: repeat-y;
   }
 
@@ -43,27 +43,27 @@ $acc-child-margin : 10px;
   }
 
   .custom-file-label.hasError {
-    border: 1px solid red
+    border: 1px solid red;
   }
 }
 
 :host ::ng-deep .mat-accordion .mat-expansion-panel.acc-level {
   margin-bottom: 16px;
   border-radius: 4px !important;
-  border: 1px solid #C8C6C4;
+  border: 1px solid #c8c6c4;
   box-shadow: none;
 
   .mat-expansion-panel-header {
     padding: 0.5rem 1rem;
     height: 35px;
-    border-color: #C8C6C4;
+    border-color: #c8c6c4;
 
     &.mat-expanded {
-      background-color: #F3F2F1 !important;
+      background-color: #f3f2f1 !important;
       // border-bottom-width: 0;
       border-bottom-left-radius: 0;
       border-bottom-right-radius: 0;
-      border-bottom: 1px solid #C8C6C4;
+      border-bottom: 1px solid #c8c6c4;
 
       &.mat-expansion-toggle-indicator-before .mat-expansion-indicator {
         transform: rotate(0deg) !important;
@@ -82,7 +82,7 @@ $acc-child-margin : 10px;
       display: flex;
 
       &:after {
-        color: #0F5EA9;
+        color: #0f5ea9;
       }
     }
   }
@@ -114,20 +114,19 @@ $acc-child-margin : 10px;
     padding-right: $acc-child-margin;
 
     .mat-expansion-panel-header {
-
       padding: 0;
       padding-left: 30px;
       border-color: transparent;
       height: 37px;
       align-items: start;
-      background-image: url('../../../../assets/media/images/tree-line.png');
+      background-image: url("../../../../assets/media/images/tree-line.png");
       background-position: 0px -25px;
       background-repeat: repeat-y;
 
       .mat-content {
         padding-left: 25px;
         border-radius: 4px;
-        border: 1px solid #C8C6C4;
+        border: 1px solid #c8c6c4;
 
         .mat-expansion-panel-header-title {
           align-items: center;
@@ -145,55 +144,53 @@ $acc-child-margin : 10px;
         background-color: transparent;
 
         .mat-content {
-          background-color: #F3F2F1 !important;
+          background-color: #f3f2f1 !important;
         }
       }
     }
 
     .mat-expansion-panel-header.mat-expanded {
-
       background-color: transparent !important;
       padding-bottom: 0;
 
       span.mat-content {
         border-bottom-left-radius: 0 !important;
         border-bottom-right-radius: 0 !important;
-        background-color: #F3F2F1 !important;
+        background-color: #f3f2f1 !important;
       }
-
     }
 
     .mat-expansion-panel-content {
       padding-left: 30px;
 
-      background-image: url('../../../../assets/media/images/tree-line-2.png');
+      background-image: url("../../../../assets/media/images/tree-line-2.png");
       background-repeat: repeat-y;
 
       .content {
         border-top-width: 0 !important;
         border-bottom-left-radius: 4px !important;
         border-bottom-right-radius: 4px !important;
-        border: 1px solid #C8C6C4;
+        border: 1px solid #c8c6c4;
       }
     }
 
     &.mat-expansion-panel:last-of-type {
       margin-bottom: 10px;
 
-      &>.mat-expansion-panel-header {
-        background-image: url('../../../../assets/media/images/tree-line.png');
+      & > .mat-expansion-panel-header {
+        background-image: url("../../../../assets/media/images/tree-line.png");
         background-position: 0px 50px;
         background-repeat: repeat-y;
       }
 
-      &>.mat-expansion-panel-content {
+      & > .mat-expansion-panel-content {
         background-image: none;
       }
     }
   }
 
   .drag-placeholder {
-    background: #EFEFEF;
+    background: #efefef;
     border: dotted 2px #999;
     min-height: 50px;
     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
@@ -204,8 +201,22 @@ $acc-child-margin : 10px;
 
     .btn-link:hover {
       svg path {
-        fill: #0F5EA9;
+        fill: #0f5ea9;
       }
     }
+  }
+
+  .drop-area {
+    height: 10px;
+    visibility: hidden;
+    width: 100%;
+  }
+
+  .border-bottom-separator {
+    border-bottom: 1px solid #c8c6c4;
+    &.hide-border {
+      border-bottom: none;
+    }
+    height: 10px;
   }
 }
