@@ -1,7 +1,6 @@
 package id.co.bca.pakar.be.doc.api;
 
 import id.co.bca.pakar.be.doc.api.validator.MultiArticleContentValidator;
-import id.co.bca.pakar.be.doc.api.validator.PagingArticleValidator;
 import id.co.bca.pakar.be.doc.common.Constant;
 import id.co.bca.pakar.be.doc.dto.*;
 import id.co.bca.pakar.be.doc.exception.*;
@@ -43,9 +42,6 @@ public class ArticleController extends BaseController {
 
     @Autowired
     private MultiArticleContentValidator multiArticleContentValidator;
-
-    @Autowired
-    private PagingArticleValidator pagingArticleValidator;
 
     /**
      *
