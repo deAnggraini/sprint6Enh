@@ -18,7 +18,7 @@
             </a>
             <div class="separator"></div>
             <a href="#" class="btn btn-link link text-dark d-flex flex-row"
-                [ngClass]="{'disabled' : !isAllPass()}" (click)="onSave($event)">
+                [ngClass]="{'disabled' : !dataForm.valid || hasError || hasImageError}" (click)="onSave($event)">
                 <div [inlineSVG]="'./assets/media/svg/bca/icon/save.svg'" cacheSVG="true" class="svg-icon"></div>
                 <div>Simpan</div>
             </a>
@@ -36,12 +36,10 @@
         <span class="pakar-text-header">{{isEdit ? 'Ubah' : 'Tambah'}} Artikel</span>
         <form [formGroup]="dataForm" novalidate="novalidate">
             <div class="form-group col-sm-11 col-lg-6 col-xl-6 col-xxl-6">
-                <label>Judul Artikel <span class="text-danger">*</span></label>
+                <label>Judul Artikel *</label>
                 <pakar-input-length placeholder="Masukkan nama artikel disini (maks. 50 karakter)"
                     formControlName="title" maxlength="50" (onChange)="checkUniq($event)" [hasError]="hasError">
                 </pakar-input-length>
-                <pakar-control-error [control]="dataForm.controls['title']" alias="Judul Artikel">
-                </pakar-control-error>
                 <ng-container *ngIf="hasError">
                     <div class="fv-plugins-message-container">
                         <div class="fv-help-block"><span>{{errorMsg}}</span></div>
@@ -49,23 +47,23 @@
                 </ng-container>
             </div>
             <div class="form-group col-sm-11 col-lg-9 col-xl-9 col-xxl-9">
-                <label>Lokasi Artikel <span class="text-danger">*</span></label>
+                <label>Lokasi Artikel *</label>
                 <pakar-combo-box-accordion formControlName="structureOption" [options]="locationOptions"
                     placeholder="Pilih lokasi yang tepat untuk artikel yang ingin ditambahkan">
                 </pakar-combo-box-accordion>
             </div>
             <div class="form-group col-sm-11 col-lg-9 col-xl-9 col-xxl-9">
-                <label>Deskripsi Singkat <span class="text-danger">*</span></label>
+                <label>Deskripsi Singkat *</label>
                 <ckeditor #editorDesc [editor]="editor" [config]="config" tagName="textarea" (ready)="onReady($event)"
                     (change)="onChange($event)" formControlName="desc"></ckeditor>
             </div>
             <div class="form-group col-sm-11 col-lg-6 col-xl-6 col-xxl-6">
-                <label>Gambar Artikel <span class="text-danger">*</span></label>
+                <label>Gambar Artikel *</label>
                 <div class="custom-file">
                     <input type="file" class="custom-file-input" id="inputGroupFile04" accept="image/*"
                         (change)="onImageChange($event)">
-                    <label class="custom-file-label" [ngClass]="{'hasError' : hasImageError}"
-                        for="inputGroupFile04">{{ showImageName() }}</label>
+                    <label class="custom-file-label" [ngClass]="{'hasError' : hasImageError}" for="inputGroupFile04">{{
+                        showImageName() }}</label>
                 </div>
                 <ng-container *ngIf="hasImageError">
                     <div class="fv-plugins-message-container">
@@ -78,7 +76,7 @@
                 <input type="url" class="form-control" formControlName="video" placeholder="Masukan URL myVideo">
             </div>
             <div class="form-group col-sm-12 col-lg-11 col-xl-11 col-xxl-11">
-                <label>Content Artikel <span class="text-danger">*</span></label>
+                <label>Content Artikel *</label>
                 <div class="border border-light rounded-sm p-3">
                     <mat-accordion [togglePosition]="'before'" multi="true">
                         <mat-expansion-panel *ngFor="let content of dataForm.get('contents').value; let i=index;"
@@ -206,62 +204,96 @@
 </ng-template>
 
 <ng-template #accordionChild let-children="children" let-level="level" let-parents="parents">
-    <div style="border-bottom:1px solid #C8C6C4; height: 10px;"></div>
-    <mat-accordion cdkDropList (cdkDropListDropped)="drop($event)" [cdkDropListData]="children"
+    <div class="border-bottom-separator" [class.hide-border]="children.length===0"
+        [class.child-many]="children.length>0"></div>
+    <mat-accordion cdkDropList (cdkDropListDropped)="drop($event,level,parents)" [cdkDropListData]="children"
         [id]="dropListsId(parents)" [cdkDropListConnectedTo]="allIdConnected" [togglePosition]="'before'"
         hideToggle="false" multi="true">
-        <ng-container *ngFor="let content of children; let i = index">
-            <div class="input-accordion-separator"></div>
-            <mat-expansion-panel [@.disabled]="true" class="acc-level acc-level-{{level}}" cdkDrag
-                [cdkDragData]="content" [(expanded)]="content.expanded">
-                <div class="drag-placeholder" *cdkDragPlaceholder></div>
-                <mat-expansion-panel-header cdkDragHandle>
-                    <mat-panel-title class="text-ellipsis-1">{{numberingFormat(content)}}.
-                        <ng-container *ngIf="content.isEdit">
-                            <input type="text" class="form-control" [(ngModel)]="content.title"
-                                (change)="content.isEdit=false" (keydown.space)="$event.stopPropagation();"
-                                (click)="$event.stopPropagation();" maxlength="150"
-                                placeholder="Masukkan title accordion disini (maks. 150 karakter)">
+        <div *ngIf="children.length===0">
+            <div class="drop-area"></div>
+        </div>
+        <div *ngIf="children.length>0">
+            <ng-container *ngFor="let content of children; let i = index">
+                <div class="input-accordion-separator"></div>
+                <mat-expansion-panel [@.disabled]="true" class="acc-level acc-level-{{level}}" cdkDrag
+                    [cdkDragData]="content" [(expanded)]="content.expanded">
+                    <div class="drag-placeholder" *cdkDragPlaceholder></div>
+                    <mat-expansion-panel-header cdkDragHandle>
+                        <mat-panel-title class="text-ellipsis-1">{{numberingFormat(content)}}.
+                            <ng-container *ngIf="content.isEdit">
+                                <input type="text" class="form-control" [(ngModel)]="content.title"
+                                    (change)="content.isEdit=false" (keydown.space)="$event.stopPropagation();"
+                                    (click)="$event.stopPropagation();" maxlength="150"
+                                    placeholder="Masukkan title accordion disini (maks. 150 karakter)">
+                            </ng-container>
+                            <ng-container *ngIf="!content.isEdit">
+                                {{content.title}}
+                            </ng-container>
+                        </mat-panel-title>
+                        <ng-container [ngTemplateOutlet]="rightIcon" [ngTemplateOutletContext]="{ data: content}">
                         </ng-container>
-                        <ng-container *ngIf="!content.isEdit">
-                            {{content.title}}
-                        </ng-container>
-                    </mat-panel-title>
-                    <ng-container [ngTemplateOutlet]="rightIcon" [ngTemplateOutletContext]="{ data: content}">
-                    </ng-container>
-                </mat-expansion-panel-header>
-                <ng-template matExpansionPanelContent>
-                    <div class="content">
-                        <div class="p-3">
-                            <div class="form-group">
-                                <label>Judul Topik <span class="text-danger">*</span></label>
-                                <pakar-input-length placeholder="Masukkan judul topik disini (maks. 150 karakter)"
-                                    [(ngModel)]="content.topicTitle" maxlength="150">
-                                </pakar-input-length>
-                            </div>
-                            <div class="form-group">
-                                <label>Isi Topik <span class="text-danger">*</span></label>
-                                <ckeditor [editor]="editor" [config]="config" tagName="textarea"
-                                    [(ngModel)]="content.topicContent"></ckeditor>
-                                <!-- <textarea class="form-control" [(ngModel)]="content.topicContent"
-                                placeholder="Masukkan Isi topik disini"></textarea> -->
-                            </div>
-                            <div class="text-right">
-                                <button type="button" class="btn btn-outline-light btn-sm rounded-lg px-5"
-                                    (click)="accCancel(content)">Batal</button>
-                                <button type="button" class="btn btn-sm btn-blue rounded-lg px-5 ml-2"
-                                    [disabled]="!content.topicContent" (click)="accSaveAddEdit(content)">Simpan</button>
-                            </div>
-                        </div>
-                        <ng-container [ngTemplateOutlet]="accordionChild"
-                            [ngTemplateOutletContext]="{ children: content.children, level : level+1, parents: parents.concat({id:content.id, no:content.no})}">
+                    </mat-expansion-panel-header>
+                    <div class="preview-drag" *cdkDragPreview>{{numberingFormat(content)}}. {{content.title}}
+                        <ng-container [ngTemplateOutlet]="rightIcon" [ngTemplateOutletContext]="{ data: content}">
                         </ng-container>
                     </div>
-                </ng-template>
-            </mat-expansion-panel>
-        </ng-container>
+                    <ng-template matExpansionPanelContent>
+                        <div class="content">
+                            <div class="p-3" style="padding-bottom: 0px !important;">
+                                <div class="form-group">
+                                    <label>Judul Topik <span class="text-danger">*</span></label>
+                                    <pakar-input-length placeholder="Masukkan judul topik disini (maks. 150 karakter)"
+                                        [(ngModel)]="content.topicTitle" maxlength="150">
+                                    </pakar-input-length>
+                                </div>
+                                <div class="form-group">
+                                    <label>Isi Topik <span class="text-danger">*</span></label>
+                                    <ckeditor [editor]="editor" [config]="config" tagName="textarea"
+                                        [(ngModel)]="content.topicContent"></ckeditor>
+                                    <!-- <textarea class="form-control" [(ngModel)]="content.topicContent"
+                                placeholder="Masukkan Isi topik disini"></textarea> -->
+                                </div>
+                                <div class="text-right">
+                                    <button type="button" class="btn btn-outline-light btn-sm button-cancel"
+                                        (click)="accCancel(content)">Batal</button>
+                                    <button type="button" class="btn btn-sm btn-blue button-simpan"
+                                        [disabled]="!content.topicContent"
+                                        (click)="accSaveAddEdit(content)">Simpan</button>
+                                </div>
+                            </div>
+                            <ng-container [ngTemplateOutlet]="accordionChild"
+                                [ngTemplateOutletContext]="{ children: content.children, level : level+1, parents: parents.concat({id:content.id, no:content.no})}">
+                            </ng-container>
+                        </div>
+                    </ng-template>
+                </mat-expansion-panel>
+            </ng-container>
+        </div>
     </mat-accordion>
 </ng-template>
+
+<!-- <ng-template #formAddEdit let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Ubah Accordion</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <i aria-hidden="true">&times;</i>
+        </button>
+    </div>
+    <div class="modal-body pt-0">
+        <form class="form" [formGroup]="accForm" novalidate="novalidate" (ngSubmit)="accSaveAddEdit()">
+            <div class="form-group">
+                <label>Title <span class="text-danger">*</span></label>
+                <input class="form-control" type="text" maxlength="50" placeholder="Masukkan nama menu" required
+                    formControlName="title" autocomplete="off">
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-light btn-sm rounded-lg px-5" (click)="c('Batal')">Batal</button>
+        <button type="button" class="btn btn-sm btn-blue rounded-lg px-5" (click)="accSaveAddEdit()"
+            [disabled]="accForm.invalid">Tambah</button>
+    </div>
+</ng-template> -->
 
 <ng-template #formError let-control="control">
     <ng-container *ngIf="control.errors && control.dirty">
