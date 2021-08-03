@@ -45,7 +45,7 @@ export class ArticleService {
     if (keyword === "") {
       return of(this.empty_search);
     }
-    return this.apiService.post(`${this._base_url}/suggestion`, { keyword });
+    return this.apiService.post(`${this._base_url}/node-suggestion`, { keyword });
   }
 
   generate(params: any) {

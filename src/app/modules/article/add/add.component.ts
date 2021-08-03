@@ -11,10 +11,10 @@ import { ArticleService } from '../../_services/article.service';
 import { catchError, map } from 'rxjs/operators';
 import { ArticleDTO } from './../../_model/article.dto';
 
-function alphaNumericValidator(control: FormControl): ValidationErrors | null {
-  const ALPHA_NUMERIC_REGEX = /^(?:[a-zA-Z0-9\s\-\/]+)?$/;
-  return ALPHA_NUMERIC_REGEX.test(control.value) ? null : { alphaNumericError: 'Hanya angka dan huruf yang diperbolehkan' };
-}
+// function alphaNumericValidator(control: FormControl): ValidationErrors | null {
+//   const ALPHA_NUMERIC_REGEX = /^(?:[a-zA-Z0-9\s\-\/]+)?$/;
+//   return ALPHA_NUMERIC_REGEX.test(control.value) ? null : { alphaNumericError: 'Hanya angka dan huruf yang diperbolehkan' };
+// }
 
 @Component({
   selector: 'app-add',
@@ -59,7 +59,9 @@ export class AddComponent implements OnInit, OnDestroy {
     return this.dataForm.controls;
   }
 
-  checkUniq(value) {
+  checkUniq(value: string) {
+    console.log('checkUniq', { value, title: this.dataForm.get('title').value });
+    this.hasError = false;
     const checkUniqSubrcr = this.article.checkUniq(value.trim())
       .pipe(
         catchError((err) => {
@@ -98,6 +100,7 @@ export class AddComponent implements OnInit, OnDestroy {
 
   reset() {
     this.location.back();
+    // this.router.navigate(['/homepage']);
   }
 
   changeLocation(item) {
@@ -132,7 +135,7 @@ export class AddComponent implements OnInit, OnDestroy {
   private initForm() {
     this.dataForm = this.fb.group({
       id: [0],
-      title: [this.defaultValue.title, Validators.compose([Validators.required, Validators.maxLength(50), alphaNumericValidator])],
+      title: [this.defaultValue.title, Validators.compose([Validators.required, Validators.maxLength(50)])],
       structureId: [this.defaultValue.structureId, Validators.compose([Validators.required])],
       usedBy: [{ value: this.defaultValue.usedBy, disabled: true }, Validators.compose([Validators.required])],
       templateId: [this.defaultValue.templateId, Validators.compose([Validators.required])]

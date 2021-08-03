@@ -58,7 +58,7 @@ export class ApiService {
         return of(data);
       }),
       catchError((err) => {
-        console.error('ApiService', err);
+        // console.error('ApiService', err);
         if (showError) setTimeout(() => {
           const error = JSON.parse(err.message);
           this.toast.showDanger(error.message || error.msg);
@@ -84,7 +84,7 @@ export class ApiService {
       concatMap((res: CommonHttpResponse) => {
         if (res.error && res.error !== '00') throw Error(res.msg);
         if (res.status && res.status.code !== '00' && res.status.code !== 'OO') {
-          console.error('error', res.status);
+          // console.error('error', res.status);
           throw Error(res.status.message);
         }
         const { data, paging } = res;
@@ -92,7 +92,7 @@ export class ApiService {
         return of(data);
       }),
       catchError((err) => {
-        console.error('ApiService', err);
+        // console.error('ApiService', err);
         return of(undefined);
       }),
     );
