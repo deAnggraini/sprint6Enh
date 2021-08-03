@@ -1,6 +1,7 @@
 package id.co.bca.pakar.be.doc.api;
 
 import id.co.bca.pakar.be.doc.api.validator.MultiArticleContentValidator;
+import id.co.bca.pakar.be.doc.api.validator.PagingArticleValidator;
 import id.co.bca.pakar.be.doc.common.Constant;
 import id.co.bca.pakar.be.doc.dto.*;
 import id.co.bca.pakar.be.doc.exception.*;
@@ -42,6 +43,9 @@ public class ArticleController extends BaseController {
 
     @Autowired
     private MultiArticleContentValidator multiArticleContentValidator;
+
+    @Autowired
+    private PagingArticleValidator pagingArticleValidator;
 
     /**
      *
@@ -278,6 +282,9 @@ public class ArticleController extends BaseController {
             maps.put("totalPages", pageArticleDto.getTotalPages());
             maps.put("currentPage", searchDto.getPage());
             return createResponse(maps, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
+        } catch (DataNotFoundException e) {
+            logger.error("exception", e);
+            return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, new Locale("en", "US")));
         } catch (Exception e) {
             logger.error("exception", e);
             return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
@@ -556,7 +563,7 @@ public class ArticleController extends BaseController {
                                                                                    @RequestHeader(name = "X-USERNAME") String username,
                                                                                    @Valid @RequestBody SearchSuggestionDto searchDto) {
         try {
-            logger.info("search related articles process");
+            logger.info("search suggestion articles process");
             logger.info("received token bearer --- {}", authorization);
             searchDto.setUsername(username);
             searchDto.setToken(getTokenFromHeader(authorization));
@@ -567,7 +574,10 @@ public class ArticleController extends BaseController {
             maps.put("totalPages", pageArticleDto.getTotalPages());
             maps.put("currentPage", searchDto.getPage());
             return createResponse(maps, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
-        } catch (Exception e) {
+        } catch (DataNotFoundException e) {
+            logger.error("exception", e);
+            return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, new Locale("en", "US")));
+        } catch(Exception e) {
             logger.error("exception", e);
             return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
         }

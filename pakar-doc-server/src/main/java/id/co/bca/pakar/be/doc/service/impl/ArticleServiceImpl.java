@@ -1031,6 +1031,7 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public Page<SuggestionArticleDto> searchSuggestion(SearchSuggestionDto searchDto) throws Exception {
         try {
+            Page<Article> searchResultPage = null;
             logger.info("search related article");
             if(searchDto.getPage() == null) {
                 searchDto.setPage(0L);
@@ -1040,8 +1041,11 @@ public class ArticleServiceImpl implements ArticleService {
                 searchDto.setPage(0L);
             }
             Pageable pageable = PageRequest.of(searchDto.getPage().intValue() - 1, searchDto.getSize().intValue());
-            Page<Article> searchResultPage = suggestionArticleRepository.findSuggestionArticles(searchDto.getExclude(), searchDto.getKeyword(), pageable);
-//            Page<Article> searchResultPage = articleSuggestionRepository.findSuggestionArticle(searchDto.getExclude(), searchDto.getKeyword(), pageable);
+            if (searchDto.getKeyword() == null || searchDto.getKeyword() == "") {
+                searchResultPage = suggestionArticleRepository.findSuggestionArticleWithoutKey(searchDto.getExclude(), pageable);
+            } else {
+                searchResultPage = suggestionArticleRepository.findSuggestionArticles(searchDto.getExclude(), searchDto.getKeyword(), pageable);
+            }
             logger.debug("total items {}", searchResultPage.getTotalElements());
             logger.debug("total contents {}", searchResultPage.getContent().size());
             return new ToDoMapperSuggestion().mapEntityPageIntoDTOPage(pageable, searchResultPage);
