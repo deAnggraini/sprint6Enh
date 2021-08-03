@@ -171,7 +171,6 @@ height: 184px;
                 <!-- right side -->
                 <div class="col" style="max-width: 350px;">
                     <div class="mx-4 mb-5" *ngIf="!hideImage" style="text-align: center; min-width: 307px;">
-                        <!-- <img class="img-show" src="{{ onImageChange(articleDTO.image) }}" background-position:center -->
                         <img class="img-show" [src]="imageSrc" background-position:center
                             style="object-fit: cover; width: 307px; height: 425px;">
                         <div class="mt-2">{{ imageTitle }}</div>
