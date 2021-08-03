@@ -18,7 +18,7 @@
             </a>
             <div class="separator"></div>
             <a href="#" class="btn btn-link link text-dark d-flex flex-row"
-                [ngClass]="{'disabled' : !dataForm.valid || hasError || hasImageError}" (click)="onSave($event)">
+                [ngClass]="{'disabled' : !isAllPass()}" (click)="onSave($event)">
                 <div [inlineSVG]="'./assets/media/svg/bca/icon/save.svg'" cacheSVG="true" class="svg-icon"></div>
                 <div>Simpan</div>
             </a>
@@ -36,10 +36,12 @@
         <span class="pakar-text-header">{{isEdit ? 'Ubah' : 'Tambah'}} Artikel</span>
         <form [formGroup]="dataForm" novalidate="novalidate">
             <div class="form-group col-sm-11 col-lg-6 col-xl-6 col-xxl-6">
-                <label>Judul Artikel *</label>
+                <label>Judul Artikel <span class="text-danger">*</span></label>
                 <pakar-input-length placeholder="Masukkan nama artikel disini (maks. 50 karakter)"
                     formControlName="title" maxlength="50" (onChange)="checkUniq($event)" [hasError]="hasError">
                 </pakar-input-length>
+                <pakar-control-error [control]="dataForm.controls['title']" alias="Judul Artikel">
+                </pakar-control-error>
                 <ng-container *ngIf="hasError">
                     <div class="fv-plugins-message-container">
                         <div class="fv-help-block"><span>{{errorMsg}}</span></div>
@@ -47,18 +49,18 @@
                 </ng-container>
             </div>
             <div class="form-group col-sm-11 col-lg-9 col-xl-9 col-xxl-9">
-                <label>Lokasi Artikel *</label>
+                <label>Lokasi Artikel <span class="text-danger">*</span></label>
                 <pakar-combo-box-accordion formControlName="structureOption" [options]="locationOptions"
                     placeholder="Pilih lokasi yang tepat untuk artikel yang ingin ditambahkan">
                 </pakar-combo-box-accordion>
             </div>
             <div class="form-group col-sm-11 col-lg-9 col-xl-9 col-xxl-9">
-                <label>Deskripsi Singkat *</label>
+                <label>Deskripsi Singkat <span class="text-danger">*</span></label>
                 <ckeditor #editorDesc [editor]="editor" [config]="config" tagName="textarea" (ready)="onReady($event)"
                     (change)="onChange($event)" formControlName="desc"></ckeditor>
             </div>
             <div class="form-group col-sm-11 col-lg-6 col-xl-6 col-xxl-6">
-                <label>Gambar Artikel *</label>
+                <label>Gambar Artikel <span class="text-danger">*</span></label>
                 <div class="custom-file">
                     <input type="file" class="custom-file-input" id="inputGroupFile04" accept="image/*"
                         (change)="onImageChange($event)">
@@ -76,7 +78,7 @@
                 <input type="url" class="form-control" formControlName="video" placeholder="Masukan URL myVideo">
             </div>
             <div class="form-group col-sm-12 col-lg-11 col-xl-11 col-xxl-11">
-                <label>Content Artikel *</label>
+                <label>Content Artikel <span class="text-danger">*</span></label>
                 <div class="border border-light rounded-sm p-3">
                     <mat-accordion [togglePosition]="'before'" multi="true">
                         <mat-expansion-panel *ngFor="let content of dataForm.get('contents').value; let i=index;"
@@ -232,13 +234,13 @@
                     <div class="content">
                         <div class="p-3">
                             <div class="form-group">
-                                <label>Judul Topik *</label>
+                                <label>Judul Topik <span class="text-danger">*</span></label>
                                 <pakar-input-length placeholder="Masukkan judul topik disini (maks. 150 karakter)"
                                     [(ngModel)]="content.topicTitle" maxlength="150">
                                 </pakar-input-length>
                             </div>
                             <div class="form-group">
-                                <label>Isi Topik *</label>
+                                <label>Isi Topik <span class="text-danger">*</span></label>
                                 <ckeditor [editor]="editor" [config]="config" tagName="textarea"
                                     [(ngModel)]="content.topicContent"></ckeditor>
                                 <!-- <textarea class="form-control" [(ngModel)]="content.topicContent"
@@ -260,29 +262,6 @@
         </ng-container>
     </mat-accordion>
 </ng-template>
-
-<!-- <ng-template #formAddEdit let-c="close" let-d="dismiss">
-    <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Ubah Accordion</h4>
-        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-            <i aria-hidden="true">&times;</i>
-        </button>
-    </div>
-    <div class="modal-body pt-0">
-        <form class="form" [formGroup]="accForm" novalidate="novalidate" (ngSubmit)="accSaveAddEdit()">
-            <div class="form-group">
-                <label>Title <span class="text-danger">*</span></label>
-                <input class="form-control" type="text" maxlength="50" placeholder="Masukkan nama menu" required
-                    formControlName="title" autocomplete="off">
-            </div>
-        </form>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-outline-light btn-sm rounded-lg px-5" (click)="c('Batal')">Batal</button>
-        <button type="button" class="btn btn-sm btn-blue rounded-lg px-5" (click)="accSaveAddEdit()"
-            [disabled]="accForm.invalid">Tambah</button>
-    </div>
-</ng-template> -->
 
 <ng-template #formError let-control="control">
     <ng-container *ngIf="control.errors && control.dirty">

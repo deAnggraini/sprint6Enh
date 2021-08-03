@@ -9,8 +9,8 @@
                         <pakar-input-length placeholder="Masukkan nama artikel disini (maks. 50 karakter)"
                             formControlName="title" maxlength="50" (onChange)="checkUniq($event)" [hasError]="hasError">
                         </pakar-input-length>
-                        <ng-container [ngTemplateOutlet]="formError"
-                            [ngTemplateOutletContext]="{ control: dataForm.controls['title']}"></ng-container>
+                        <pakar-control-error [control]="dataForm.controls['title']" alias="Judul Artikel">
+                        </pakar-control-error>
                         <ng-container *ngIf="hasError">
                             <div class="fv-plugins-message-container">
                                 <div class="fv-help-block"><span>{{errorMsg}}</span></div>
@@ -29,8 +29,6 @@
                         <pakar-input-drop-down formControlName="usedBy" [options]="usedByOptions"
                             placeholder="Pilih pengguna aplikasi/mesin">
                         </pakar-input-drop-down>
-                        <ng-container [ngTemplateOutlet]="formError"
-                            [ngTemplateOutletContext]="{ control: dataForm.controls['usedBy']}"></ng-container>
                     </div>
 
                     <div class="form-group col-11" *ngIf="!disabledUsedBy">
@@ -70,22 +68,3 @@
         </div>
     </form>
 </div>
-
-<ng-template #formError let-control="control">
-    <ng-container *ngIf="control.errors && control.dirty">
-        <div class="fv-plugins-message-container">
-            <div class="fv-help-block">
-                <!-- {{control.errors | json}} -->
-                <ng-container *ngIf="control.errors.required"><span>Field harus disi</span></ng-container>
-                <ng-container *ngIf="control.errors.minlength"><span>Panjang minimal
-                        {{control.errors.minlength.requiredLength}}</span></ng-container>
-                <ng-container *ngIf="control.errors.maxlength"><span>Panjang maximal
-                        {{control.errors.maxlength.requiredLength}}</span></ng-container>
-                <ng-container *ngIf="control.errors.pattern"><span>Pola tidak diperbolehkan</span></ng-container>
-                <ng-container *ngIf="control.errors.alphaNumericError">
-                    <span>{{control.errors.alphaNumericError}}</span>
-                </ng-container>
-            </div>
-        </div>
-    </ng-container>
-</ng-template>

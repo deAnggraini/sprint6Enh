@@ -16,6 +16,7 @@ import { ComboBoxComponent } from './_components/combo-box/combo-box.component';
 import { InputDropDownComponent } from './_components/input-drop-down/input-drop-down.component';
 import { InputWithLengthComponent } from './_components/input-with-length/input-with-length.component';
 import { MultiSelectComponent } from './_components/multi-select/multi-select.component';
+import { ControlErrorComponent } from './_components/control-error/control-error.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { MultiSelectComponent } from './_components/multi-select/multi-select.co
     InputDropDownComponent,
     InputWithLengthComponent,
     MultiSelectComponent,
+    ControlErrorComponent,
   ],
   imports: [
     CommonModule,
@@ -50,7 +52,8 @@ import { MultiSelectComponent } from './_components/multi-select/multi-select.co
     ComboBoxComponent,
     InputDropDownComponent,
     InputWithLengthComponent,
-    MultiSelectComponent
+    MultiSelectComponent,
+    ControlErrorComponent
   ]
 })
 export class UtilsModule {

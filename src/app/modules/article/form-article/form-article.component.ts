@@ -39,10 +39,10 @@ const defaultValue: ArticleDTO = {
   suggestions: [],
 }
 
-function alphaNumericValidator(control: FormControl): ValidationErrors | null {
-  const ALPHA_NUMERIC_REGEX = /^(?:[a-zA-Z0-9\s\-\/]+)?$/;
-  return ALPHA_NUMERIC_REGEX.test(control.value) ? null : { alphaNumericError: 'Hanya angka dan huruf yang diperbolehkan' };
-}
+// function alphaNumericValidator(control: FormControl): ValidationErrors | null {
+//   const ALPHA_NUMERIC_REGEX = /^(?:[a-zA-Z0-9\s\-\/]+)?$/;
+//   return ALPHA_NUMERIC_REGEX.test(control.value) ? null : { alphaNumericError: 'Hanya angka dan huruf yang diperbolehkan' };
+// }
 
 @Component({
   selector: 'app-form-article',
@@ -130,6 +130,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   };
 
   // error manual
+  allPass: boolean = false;
   hasError: boolean = false;
   errorMsg: string = '';
   hasImageError: boolean = false;
@@ -170,6 +171,13 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     private struktur: StrukturService,
     private confirm: ConfirmService,
     private toast: ToastService) {
+  }
+
+  // validation
+  isAllPass(): boolean {
+    const result = this.dataForm.valid && this.hasError === false && this.hasImageError === false;
+    console.log({ result });
+    return result;
   }
 
   //cdk drag and drop
@@ -244,9 +252,9 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     return false;
   }
   onCancel(e) {
-    console.log(this.dataForm.valid, this.dataForm.value);
-    console.log(this.dataForm.value.contents);
-    console.log(this.logs);
+    // console.log(this.dataForm.valid, this.dataForm.value);
+    // console.log(this.dataForm.value.contents);
+    // console.log(this.logs);
     this.confirm.open({
       title: `Batal Tambah Artikel`,
       message: `<p>Apakah Kamu yakin ingin keluar dan membatalkan membuat artikel baru?`,
@@ -301,7 +309,6 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
         this.article.saveContent(newNode).subscribe(resp => {
           if (resp) {
             newNode.id = resp.id;
-            console.log('level 1', { newNode });
             _contents.push(newNode);
             this.addLog(newNode);
             this.cdr.detectChanges();
@@ -341,60 +348,6 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
         })
       );
     }
-    // this.subscriptions.push(
-    //   this.article.getContentId().subscribe(resp => {
-    //     if (resp) {
-    //       if (data == null) { // craete new level 1
-    //         const _contents = this.dataForm.get('contents').value as ArticleContentDTO[];
-    //         const maxSort: number = this.findMaxSort(_contents);
-    //         const newNode: ArticleContentDTO = {
-    //           id: resp,
-    //           articleId: this.dataForm.value.id,
-    //           title: '',
-    //           intro: '',
-    //           topicContent: '',
-    //           topicTitle: '',
-    //           level: 1,
-    //           parent: 0,
-    //           sort: maxSort + 1,
-    //           children: [],
-    //           expanded: true,
-    //           listParent: [],
-    //           no: '',
-    //           isEdit: false,
-    //         }
-    //         _contents.push(newNode);
-    //         this.addLog(newNode);
-    //       } else { // add childe level > 1
-    //         const maxSort: number = this.findMaxSort(data.children);
-    //         const listParent: ArticleParentDTO[] = JSON.parse(JSON.stringify(data.listParent));
-    //         if (data.level >= 2) {
-    //           listParent.push({ id: 0, no: data.no, title: data.title });
-    //         }
-    //         const newNode: ArticleContentDTO = {
-    //           id: resp,
-    //           articleId: this.dataForm.value.id,
-    //           title: '',
-    //           intro: '',
-    //           topicContent: '',
-    //           topicTitle: '',
-    //           level: data.level + 1,
-    //           parent: data.id,
-    //           sort: maxSort + 1,
-    //           children: [],
-    //           expanded: true,
-    //           listParent,
-    //           no: `${data.children.length + 1}`,
-    //           isEdit: false,
-    //         }
-    //         data.expanded = true;
-    //         data.children.push(newNode);
-    //         this.addLog(newNode);
-    //       }
-    //       this.cdr.detectChanges();
-    //     }
-    //   })
-    // );
     e.stopPropagation();
     return false;
   }
@@ -438,6 +391,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   checkUniq(value) {
+    this.hasError = false;
     const checkUniqSubrcr = this.article.checkUniq(value.trim())
       .pipe(
         catchError((err) => {
@@ -532,7 +486,6 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   private getArticle(id: number) {
     this.subscriptions.push(
       this.article.getById(id).subscribe((resp: ArticleDTO) => {
-        console.log({ resp });
         this.setArticle(resp);
       })
     );
@@ -621,15 +574,22 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
         var image = new Image();
         image.src = e.target.result as string;
         image.onload = function (_) {
-          var height = image.height;
-          var width = image.width;
-          console.log({ width, height });
-          if (width != 307 || height != 425) {
+          const { width, height } = image;
+          const { size } = file;
+          console.log({ width, height, size });
+          if (width < 307 || height < 425) {
             $this.hasImageError = true;
-            $this.errorImageMsg = 'Ukuran Gambar adalah 307x425px';
+            $this.errorImageMsg = 'Resolusi gambar minimal 307x425 px';
             $this.cdr.detectChanges();
             return false;
           }
+          if (size > 700000) {
+            $this.hasImageError = true;
+            $this.errorImageMsg = 'Ukuran gambar maksimal 700kb';
+            $this.cdr.detectChanges();
+            return false;
+          }
+
           $this.hasImageError = false;
           $this.errorImageMsg = '';
           $this.cdr.detectChanges();
@@ -692,7 +652,8 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   getDataSuggestionArticle(keyword: string) {
     this.subscriptions.push(
-      this.article.suggestionArticle(keyword, [this.dataForm.value.id]).subscribe(resp => {
+      this.article.searchArticle(keyword, this.dataForm.value.id).subscribe(resp => {
+        // this.article.suggestionArticle(keyword, [this.dataForm.value.id]).subscribe(resp => {
         if (resp) this.suggestionArticle$.next(this.convertArticleToOption(resp.list));
       })
     );
@@ -701,23 +662,21 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   // CKEDITOR5 function
   public onReady(editor) {
     this.finishRender = true;
-    console.log('ckeditor onReady');
   }
   public onChange({ editor }: ChangeEvent) {
-    console.log('onChange', { editor });
   }
 
   // Angular
   private initForm() {
     this.dataForm = this.fb.group({
       id: [0],
-      title: [defaultValue.title, Validators.compose([Validators.required, Validators.maxLength(50), alphaNumericValidator])],
+      title: [defaultValue.title, Validators.compose([Validators.required, Validators.maxLength(50)])],
       structureId: [defaultValue.structureId, Validators.compose([Validators.required])],
       structureOption: [defaultValue.structureOption, Validators.compose([Validators.required])],
       desc: [defaultValue.desc],
       image: [defaultValue.image],
       video: [defaultValue.video],
-      contents: [defaultValue.contents],
+      contents: [defaultValue.contents, Validators.compose([Validators.required])],
       references: [defaultValue.references],
       related: [defaultValue.related],
       suggestions: [defaultValue.suggestions],
