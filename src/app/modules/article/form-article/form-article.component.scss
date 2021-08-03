@@ -205,18 +205,60 @@ $acc-child-margin: 10px;
       }
     }
   }
+}
 
-  .drop-area {
-    height: 10px;
-    visibility: hidden;
-    width: 100%;
-  }
+.drop-area {
+  height: 10px;
+  visibility: hidden;
+  width: 100%;
+}
 
-  .border-bottom-separator {
-    border-bottom: 1px solid #c8c6c4;
-    &.hide-border {
-      border-bottom: none;
-    }
-    height: 10px;
+.border-bottom-separator {
+  border-bottom: 1px solid #c8c6c4;
+  &.hide-border {
+    border-bottom: none;
   }
+  height: 10px;
+  &.child-many {
+    height: 1.75rem;
+  }
+}
+
+.button-cancel {
+  border-radius: 20px;
+  font-family: Segoe UI;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  width: 90px;
+  height: 32px;
+  color: #201f1e;
+  margin-right: 6px;
+  padding: 0px;
+}
+
+.button-simpan {
+  border-radius: 20px;
+  font-family: Segoe UI;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  width: 90px;
+  height: 32px;
+  margin-left: 6px;
+  padding: 0px;
+}
+
+.preview-drag {
+  padding: 0.5rem 1rem;
+  width: 1032px;
+  height: 35px;
+  border: 1px solid #c8c6c4;
+  box-sizing: border-box;
+  background-color: white;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+  justify-content: space-between;
 }

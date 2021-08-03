@@ -204,7 +204,8 @@
 </ng-template>
 
 <ng-template #accordionChild let-children="children" let-level="level" let-parents="parents">
-    <div class="border-bottom-separator" [class.hide-border]="children.length===0"></div>
+    <div class="border-bottom-separator" [class.hide-border]="children.length===0"
+        [class.child-many]="children.length>0"></div>
     <mat-accordion cdkDropList (cdkDropListDropped)="drop($event,level,parents)" [cdkDropListData]="children"
         [id]="dropListsId(parents)" [cdkDropListConnectedTo]="allIdConnected" [togglePosition]="'before'"
         hideToggle="false" multi="true">
@@ -232,6 +233,10 @@
                         <ng-container [ngTemplateOutlet]="rightIcon" [ngTemplateOutletContext]="{ data: content}">
                         </ng-container>
                     </mat-expansion-panel-header>
+                    <div class="preview-drag" *cdkDragPreview>{{numberingFormat(content)}}. {{content.title}}
+                        <ng-container [ngTemplateOutlet]="rightIcon" [ngTemplateOutletContext]="{ data: content}">
+                        </ng-container>
+                    </div>
                     <ng-template matExpansionPanelContent>
                         <div class="content">
                             <div class="p-3" style="padding-bottom: 0px !important;">
@@ -249,9 +254,9 @@
                                 placeholder="Masukkan Isi topik disini"></textarea> -->
                                 </div>
                                 <div class="text-right">
-                                    <button type="button" class="btn btn-outline-light btn-sm rounded-lg px-5"
+                                    <button type="button" class="btn btn-outline-light btn-sm button-cancel"
                                         (click)="accCancel(content)">Batal</button>
-                                    <button type="button" class="btn btn-sm btn-blue rounded-lg px-5 ml-2"
+                                    <button type="button" class="btn btn-sm btn-blue button-simpan"
                                         [disabled]="!content.topicContent"
                                         (click)="accSaveAddEdit(content)">Simpan</button>
                                 </div>
