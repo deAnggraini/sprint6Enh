@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment';
 import { of, BehaviorSubject, Observable } from 'rxjs';
 import * as moment from 'moment';
 import { ArticleDTO, ArticleContentDTO } from '../_model/article.dto';
+import { toFormData, jsonToFormData } from './../../utils/_helper/parser';
 
 @Injectable({
   providedIn: 'root'
@@ -114,8 +115,56 @@ export class ArticleService {
     return this.apiService.post(`${this._base_url}/cancelArticle`, { id });
   }
 
+  private parseToArray(content: ArticleContentDTO): ArticleContentDTO[] {
+    let result: ArticleContentDTO[] = [];
+    if (content) {
+      const _c: ArticleContentDTO = JSON.parse(JSON.stringify(Object.assign({}, content, { children: [] })))
+      result.push(_c);
+      content.children.forEach(d => {
+        result = result.concat(this.parseToArray(d));
+      })
+    }
+    return result;
+  }
+  private parseToSingleArray(contents: ArticleContentDTO[]): ArticleContentDTO[] {
+    const result: ArticleContentDTO[] = [];
+    console.log({ contents });
+    if (contents.length) {
+      contents.forEach(item => {
+        this.parseToArray(item).forEach(d => result.push(d));
+      })
+    }
+    return result;
+  }
+  public parseToFormObject(data): FormData {
+    let formData = new FormData();
+    for (let key in data) {
+      if (Array.isArray(data[key])) {
+        data[key].forEach((obj, index) => {
+          let keyList = Object.keys(obj);
+          keyList.forEach((keyItem) => {
+            let keyName = [key, "[", index, "]", ".", keyItem].join("");
+            formData.append(keyName, obj[keyItem]);
+          });
+        });
+      } else if (typeof data[key] === "object") {
+        for (let innerKey in data[key]) {
+          formData.append(`${key}.${innerKey}`, data[key][innerKey]);
+        }
+      } else {
+        formData.append(key, data[key]);
+      }
+    }
+    return formData;
+  }
   saveArticle(article: ArticleDTO) {
-    return this.apiService.post(`${this._base_url}/saveArticle`, article);
+    const _contents = this.parseToSingleArray(article.contents);
+    console.log({ _contents });
+    const _dataForm = Object.assign({}, article, { contents: _contents });
+    // const formData = this.parseToFormObject(_dataForm);
+    const formData = jsonToFormData(_dataForm);
+    console.log({ _dataForm, formData });
+    return this.apiService.post(`${this._base_url}/saveArticle`, formData, this.apiService.getHeaders(false));
   }
 
 }

@@ -9,11 +9,12 @@ import { Option } from 'src/app/utils/_model/option';
 import { SkReferenceService } from '../../_services/sk-reference.service';
 import { AuthService, UserModel } from '../../auth';
 import { ArticleDTO, ArticleContentDTO, ArticleParentDTO } from '../../_model/article.dto';
-import { FormGroup, FormBuilder, Validators, FormControl, ValidationErrors } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl, ValidationErrors, FormArray } from '@angular/forms';
 import { StrukturService } from '../../_services/struktur.service';
 import { catchError, map } from 'rxjs/operators';
 import { ConfirmService } from 'src/app/utils/_services/confirm.service';
 import { ToastService } from 'src/app/utils/_services/toast.service';
+import { Content } from '@angular/compiler/src/render3/r3_ast';
 
 const TOOL_TIPS = [
   'Berisi aturan/kaidah/ketetapan/syarat/kriteria atas produk/aplikasi yang harus dipahami pembaca sebelum melakukan prosedur atas produk/aplikasi tersebut; dapat dituangkan dalam bentuk kalimat ataupun tabel.',
@@ -135,6 +136,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   errorMsg: string = '';
   hasImageError: boolean = false;
   errorImageMsg: string = '';
+  // controls: FormArray;
 
   logs: Map<number, ArticleContentDTO[]> = new Map();
   user: UserModel;
@@ -175,8 +177,12 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // validation
   isAllPass(): boolean {
-    const result = this.dataForm.valid && this.hasError === false && this.hasImageError === false;
-    console.log({ result });
+    let result = this.dataForm.valid && this.hasError === false && this.hasImageError === false;
+    const contents: ArticleContentDTO[] = this.dataForm.get('contents').value;
+    const len = contents.length;
+    if (len < 1) {
+      result = false;
+    }
     return result;
   }
 
@@ -208,30 +214,6 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   // article action button
-  private parseToSingleArray() {
-
-  }
-  private parseToFormObject(data) {
-    let formData = new FormData();
-    for (let key in data) {
-      if (Array.isArray(data[key])) {
-        data[key].forEach((obj, index) => {
-          let keyList = Object.keys(obj);
-          keyList.forEach((keyItem) => {
-            let keyName = [key, "[", index, "]", ".", keyItem].join("");
-            formData.append(keyName, obj[keyItem]);
-          });
-        });
-      } else if (typeof data[key] === "object") {
-        for (let innerKey in data[key]) {
-          formData.append(`${key}.${innerKey}`, data[key][innerKey]);
-        }
-      } else {
-        formData.append(key, data[key]);
-      }
-    }
-    return formData;
-  }
   onSave(e) {
     this.confirm.open({
       title: `Simpan`,
@@ -240,13 +222,14 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
       btnCancelText: 'Batal'
     }).then((confirmed) => {
       if (confirmed === true) {
-        // this.subscriptions.push(
-        //   this.article.deleteContent(data.id).subscribe(resp => {
-        //     if (resp) this.deleteNode(data);
-        //   })
-        // );
-        this.onPreview(e);
-        this.cdr.detectChanges();
+        this.subscriptions.push(
+          this.article.saveArticle(this.dataForm.value).subscribe(resp => {
+            if (resp) {
+              this.onPreview(e);
+              this.cdr.detectChanges();
+            }
+          })
+        );
       }
     });
     return false;
@@ -676,11 +659,23 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
       image: [defaultValue.image],
       video: [defaultValue.video],
       contents: [defaultValue.contents, Validators.compose([Validators.required])],
+      // contents: this.fb.array([
+      // this.fb.group({
+      //   articleId: [0, Validators.compose([Validators.required])],
+      //   id: [0, Validators.compose([Validators.required])],
+      //   title: ['', Validators.compose([Validators.required])],
+      //   topicTitle: ['', Validators.compose([Validators.required])],
+      //   topicContent: ['', Validators.compose([Validators.required])],
+      //   level: [1, Validators.compose([Validators.required])],
+      //   sort: [1, Validators.compose([Validators.required])],
+      // })
+      // ]),
       references: [defaultValue.references],
       related: [defaultValue.related],
       suggestions: [defaultValue.suggestions],
       isEmptyTemplate: [defaultValue.isEmptyTemplate, Validators.compose([Validators.required])],
     });
+    // this.controls = <FormArray>this.dataForm.controls['contents'];
     // this.accForm = this.fb.group({
     //   articleId: [0, Validators.compose([Validators.required])],
     //   id: [0, Validators.compose([Validators.required])],

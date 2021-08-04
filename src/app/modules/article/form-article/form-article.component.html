@@ -18,7 +18,7 @@
             </a>
             <div class="separator"></div>
             <a href="#" class="btn btn-link link text-dark d-flex flex-row"
-                [ngClass]="{'disabled' : !dataForm.valid || hasError || hasImageError}" (click)="onSave($event)">
+                [ngClass]="{'disabled' : !isAllPass()}" (click)="onSave($event)">
                 <div [inlineSVG]="'./assets/media/svg/bca/icon/save.svg'" cacheSVG="true" class="svg-icon"></div>
                 <div>Simpan</div>
             </a>
@@ -36,10 +36,12 @@
         <span class="pakar-text-header">{{isEdit ? 'Ubah' : 'Tambah'}} Artikel</span>
         <form [formGroup]="dataForm" novalidate="novalidate">
             <div class="form-group col-sm-11 col-lg-6 col-xl-6 col-xxl-6">
-                <label>Judul Artikel *</label>
+                <label>Judul Artikel <span class="text-danger">*</span></label>
                 <pakar-input-length placeholder="Masukkan nama artikel disini (maks. 50 karakter)"
                     formControlName="title" maxlength="50" (onChange)="checkUniq($event)" [hasError]="hasError">
                 </pakar-input-length>
+                <pakar-control-error [control]="dataForm.controls['title']" alias="Judul Artikel">
+                </pakar-control-error>
                 <ng-container *ngIf="hasError">
                     <div class="fv-plugins-message-container">
                         <div class="fv-help-block"><span>{{errorMsg}}</span></div>
@@ -47,7 +49,7 @@
                 </ng-container>
             </div>
             <div class="form-group col-sm-11 col-lg-9 col-xl-9 col-xxl-9">
-                <label>Lokasi Artikel *</label>
+                <label>Lokasi Artikel <span class="text-danger">*</span></label>
                 <pakar-combo-box-accordion formControlName="structureOption" [options]="locationOptions"
                     placeholder="Pilih lokasi yang tepat untuk artikel yang ingin ditambahkan">
                 </pakar-combo-box-accordion>
