@@ -14,22 +14,22 @@
     <div class="card card-custom p-10" style="overflow-x: hidden;">
         <div>
             <div class="font-weight-bolder text-dark font-size-xl my-2">Rekomendasi Untuk Kamu</div>
-            <div class="font-weight-base font-size-lg mb-7">Informasi PAKAR yang direkomendasikan sesuai <i>jobdesk</i>
+            <div class="font-weight-base font-size-lg mb-7">Informasi PAKAR yang direkomendasikan sesuai <i class="font-size-lg">jobdesk</i>
                 Kamu</div>
         </div>
 
-        <div class="pr-0">
+        <div class="" style="padding-right: 250px">
             <div class="row m-0 p-0">
-                <div class="col-lg-4 col-xxl-4" *ngFor="let item of dataList">
-                    <div class="card-article mr-7 mb-7 rounded-lg cursor-pointer"
+                <div class="col-lg-4 col-xxl-4 pl-0" *ngFor="let item of dataList">
+                    <div class="row card-article mr-7 mb-7 rounded-lg cursor-pointer"
                         onmouseover="this.style.border ='1px groove #1995D1';"
                         onmouseout="this.style.border ='1px solid #DDD';">
-                        <div class="p-0">
+                        <div class="col-md-auto p-0" style="width: 100%;">
                             <img class="img-show" src="{{backend_img}}/articles/{{item.image}}" width="100%"
                                 height="112px" style="background-position:center;">
                         </div>
-                        <div class="p-4">
-                            <div class="mb-2">
+                        <div class="col py-0 px-4">
+                            <div class="my-3">
                                 <span class="font-size-sm">{{item.created_date | date: "dd MMMM yyyy"}}</span>
                             </div>
                             <div class="mb-2">
@@ -46,7 +46,7 @@
             </div>
 
             <div class="d-flex justify-content-center align-items-center flex-wrap mt-5">
-                <app-pagination></app-pagination>
+                <app-pagination [paging]="paging"></app-pagination>
             </div>
 
         </div>
