@@ -118,7 +118,12 @@ export class ArticleService {
   private parseToArray(content: ArticleContentDTO): ArticleContentDTO[] {
     let result: ArticleContentDTO[] = [];
     if (content) {
-      const _c: ArticleContentDTO = JSON.parse(JSON.stringify(Object.assign({}, content, { children: [] })))
+      
+      const _c: ArticleContentDTO = JSON.parse(JSON.stringify(Object.assign({}, content, { children: [] })));
+      delete _c.expanded;
+      delete _c.isEdit;
+      delete _c.no;
+
       result.push(_c);
       content.children.forEach(d => {
         result = result.concat(this.parseToArray(d));
@@ -163,7 +168,9 @@ export class ArticleService {
     const _dataForm = Object.assign({}, article, { contents: _contents });
     // const formData = this.parseToFormObject(_dataForm);
     const formData = jsonToFormData(_dataForm);
-    console.log({ _dataForm, formData });
+    const image = formData.get('image');
+    if (typeof (image) == "string") formData.delete('image');
+    console.log({ _dataForm, image });
     return this.apiService.post(`${this._base_url}/saveArticle`, formData, this.apiService.getHeaders(false));
   }
 

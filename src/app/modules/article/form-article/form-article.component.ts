@@ -214,6 +214,20 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   // article action button
+  private convertToFormData(_c: ArticleContentDTO[]): ArticleContentDTO[] {
+    let result: ArticleContentDTO[] = [];
+    if (_c && _c.length) {
+      const _clone: ArticleContentDTO[] = JSON.parse(JSON.stringify(_c));
+      _clone.forEach(d => {
+        delete d.expanded;
+        delete d.isEdit;
+        delete d.no;
+        result.push(d);
+        result = result.concat(this.convertToFormData(d.children));
+      });
+    }
+    return result;
+  }
   onSave(e) {
     this.confirm.open({
       title: `Simpan`,
@@ -222,6 +236,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
       btnCancelText: 'Batal'
     }).then((confirmed) => {
       if (confirmed === true) {
+        const _dataForm = this.dataForm.value;
         this.subscriptions.push(
           this.article.saveArticle(this.dataForm.value).subscribe(resp => {
             if (resp) {
