@@ -143,11 +143,11 @@ public class ArticleContentDto extends BaseDto {
         this.expanded = expanded;
     }
 
-    public Boolean getEdit() {
+    public Boolean getIsEdit() {
         return isEdit;
     }
 
-    public void setEdit(Boolean edit) {
+    public void setIsEdit(Boolean edit) {
         isEdit = edit;
     }
 
