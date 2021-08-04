@@ -1,6 +1,8 @@
 package id.co.bca.pakar.be.doc.api.validator;
 
+import id.co.bca.pakar.be.doc.dto.ArticleContentDto;
 import id.co.bca.pakar.be.doc.dto.MultipartArticleDto;
+import id.co.bca.pakar.be.doc.model.ArticleContent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,7 +10,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import java.util.List;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 @Component
 public class MultipartArticleValidator implements Validator {
@@ -20,8 +24,11 @@ public class MultipartArticleValidator implements Validator {
     @Value("${spring.article.height-article-image}")
     private String heightImage = "425"; // px
 
-    @Value("${spring.multipart.file-type}")
+    @Value("${spring.article.file-type}")
     private String fileType;
+
+    @Value("${spring.article.max-size}")
+    private String maxFileSize = "700000";
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -30,72 +37,83 @@ public class MultipartArticleValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        List<MultipartArticleDto> multiDto = (List<MultipartArticleDto>) target;
+        MultipartArticleDto dto = (MultipartArticleDto) target;
 
         try {
-            int index = 0;
-            for (MultipartArticleDto dto : multiDto) {
-                if (dto.getImage().isEmpty()) {
-                    errors.rejectValue("name", "name.required", "name is required");
+            if (dto.getJudulArticle().isEmpty()) {
+                errors.rejectValue("judulArticle", "judul.article.required", "judul article is required");
+                return;
+            }
+
+            if (dto.getShortDescription() != null) {
+                if (dto.getShortDescription().length() > 1000) {
+                    errors.rejectValue("shortDescription", "shortDescription.article.maximum.length", "maximum length 1000 characters");
                     return;
                 }
-//                if (dto.getName().length() > 50) {
-//                    errors.rejectValue("name", "name.maximum.length","maximum length 50 characters");
-//                    return;
-//                }
-//
-//                if (dto.getDesc().isEmpty()) {
-//                    errors.rejectValue("desc", "description.required","description is required");
-//                    return;
-//                }
-//
-//                if (dto.getDesc().length() > 200) {
-//                    errors.rejectValue("desc", "description.maximum.length","maximum length description 200 characters");
-//                    return;
-//                }
-//
-//                if (dto.getSort().longValue() < 1) {
-//                    errors.rejectValue("sort", "sort.minimum","minimum sort value is 1");
-//                    return;
-//                }
-//
-//                if (dto.getLevel() < 1) {
-//                    errors.rejectValue("level", "level.minimum.invalid","minimum level value 1");
-//                    return;
-//                }
-//
-//                if (dto.getLevel() > 4) {
-//                    logger.info("level value exceeded");
-//                    errors.rejectValue("level", "level.maximum.invalid","maximum value 4");
-//                    return;
-//                }
-//
-//                if (dto.getParent() < 0) {
-//                    errors.rejectValue("parent", "parent.parent.invalid","minimum parent value is 0");
-//                    return;
-//                }
+            }
 
-                boolean validFileType = false;
-                if (dto.getImage() != null) {
-                    if (!dto.getImage().isEmpty()) {
-                        String[] fileTypes = fileType.split("\\,");
-                        for (String str : fileTypes) {
-                            if (dto.getImage().getContentType().equals(str)) {
-                                validFileType = true;
-                                break;
-                            }
+            boolean validFileType = false;
+            if (dto.getImage() != null) {
+                if (!dto.getImage().isEmpty()) {
+                    String[] fileTypes = fileType.split("\\,");
+                    for (String str : fileTypes) {
+                        if (dto.getImage().getContentType().equals(str)) {
+                            validFileType = true;
+                            break;
                         }
+                    }
 
-                        if (!validFileType) {
-                            errors.rejectValue("image", "icon.file.type.invalid", "invalid image file type");
+                    if (!validFileType) {
+                        errors.rejectValue("image", "article.image.file.type.invalid", "uploaded file type .png, .jpeg, jpeg");
+                        return;
+                    }
+
+                    if (dto.getImage().getSize() > Long.parseLong(maxFileSize)) {
+                        errors.rejectValue("image", "article.image.file.size.exceeded", "exceeded file size");
+                        return;
+                    }
+
+                    BufferedImage image;
+                    try {
+                        image = ImageIO.read(dto.getImage().getInputStream());
+                        int width = image.getWidth();
+                        int heigth = image.getHeight();
+                        if (width > Long.parseLong(widthImage)) {
+                            errors.rejectValue("image", "article.image.file.width.invalid", "width image size invalid");
                             return;
                         }
 
-//                        if (dto.getImage().getSize() > Long.parseLong(maxFileSize)) {
-//                            errors.rejectValue("image", "image.file.size.exceeded","exceeded file size");
-//                            return;
-//                        }
+                        if (heigth > Long.parseLong(heightImage)) {
+                            errors.rejectValue("image", "article.image.file.height.invalid", "height image size invalid");
+                            return;
+                        }
+                    } catch (IOException e) {
+                        return;
                     }
+                }
+            }
+
+            if (dto.getVideoLink() != null) {
+                String regex = "(https?)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
+                if (!dto.getVideoLink().matches(regex)) {
+                    errors.rejectValue("videoLink", "article.videoLink.url.invalid", "video link url invalid");
+                    return;
+                }
+            }
+
+            // validate content
+            for (ArticleContentDto contentDto : dto.getContents()) {
+                int index = 0;
+
+                if (contentDto.getLevel() > 5) {
+                    errors.rejectValue("level", "maximum.topic.level.reached", new Object[]{5}, "topic title level maximum 5");
+                    return;
+                }
+
+                if (!contentDto.getTopicTitle().isEmpty()) {
+                    if (contentDto.getTopicTitle().length() > 150)
+                        errors.rejectValue("topicTitle", "maximum.topic.title.reached", new Object[]{150}, "topic title maximum 150 characters");
+                    return;
                 }
             }
         } catch (Exception e) {

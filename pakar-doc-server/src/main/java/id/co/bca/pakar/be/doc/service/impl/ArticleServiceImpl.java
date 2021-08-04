@@ -14,14 +14,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
@@ -35,6 +36,9 @@ import static id.co.bca.pakar.be.doc.common.Constant.Roles.ROLE_READER;
 @Service
 public class ArticleServiceImpl implements ArticleService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @Autowired
+    private MessageSource messageSource;
 
     @Value("${spring.article.param-tag:[]}")
     private String paramtTag;
@@ -111,7 +115,7 @@ public class ArticleServiceImpl implements ArticleService {
      * @return
      */
     @Override
-    @Transactional(rollbackOn = {Exception.class, NotFoundArticleTemplateException.class})
+    @Transactional(rollbackFor = {Exception.class, NotFoundArticleTemplateException.class})
     public ArticleDto generateArticle(GenerateArticleDto generateArticleDto) throws Exception {
         try {
             logger.info("generate article process");
@@ -297,7 +301,7 @@ public class ArticleServiceImpl implements ArticleService {
      * @return
      */
     @Override
-    @Transactional(rollbackOn = {Exception.class})
+    @Transactional(rollbackFor = {Exception.class, DataNotFoundException.class})
     public ArticleResponseDto saveArticle(MultipartArticleDto articleDto) throws Exception {
         ArticleResponseDto articleResponseDto = new ArticleResponseDto();
         try {
@@ -305,7 +309,7 @@ public class ArticleServiceImpl implements ArticleService {
             Optional<Article> articleOpt = articleRepository.findById(articleDto.getId());
             if (articleOpt.isEmpty()) {
                 logger.info("not found article data with id {}", articleDto.getId());
-                throw new DataNotFoundException("data not found");
+                throw new DataNotFoundException("data not found ");
             }
 
             Article article = articleOpt.get();
@@ -388,6 +392,9 @@ public class ArticleServiceImpl implements ArticleService {
 
             articleResponseDto.setJudulArticle(article.getJudulArticle());
             return articleResponseDto;
+        } catch (DataNotFoundException e) {
+            logger.error("", e);
+            throw new DataNotFoundException("exception", e);
         } catch (Exception e) {
             logger.error("", e);
             throw new Exception("exception", e);
@@ -403,7 +410,7 @@ public class ArticleServiceImpl implements ArticleService {
      * @throws Exception
      */
     @Override
-    @Transactional(rollbackOn = {Exception.class, DataNotFoundException.class})
+    @Transactional(rollbackFor = {Exception.class, DataNotFoundException.class})
     public Boolean cancelArticle(Long id, String username, String token) throws Exception {
         try {
             logger.info("cancel article with id {}", id);
@@ -501,7 +508,7 @@ public class ArticleServiceImpl implements ArticleService {
      * @throws Exception
      */
     @Override
-    @Transactional(rollbackOn = {Exception.class, DataNotFoundException.class, ParentContentNotFoundException.class, ArticleNotFoundException.class})
+    @Transactional(rollbackFor = {Exception.class, DataNotFoundException.class, ParentContentNotFoundException.class, ArticleNotFoundException.class})
     public ArticleContentDto saveContent(ArticleContentDto articleContentDto) throws Exception {
         try {
             /*
@@ -614,7 +621,7 @@ public class ArticleServiceImpl implements ArticleService {
      * @throws Exception
      */
     @Override
-    @Transactional(rollbackOn = {Exception.class, DataNotFoundException.class})
+    @Transactional(rollbackFor = {Exception.class, DataNotFoundException.class})
     public List<ArticleContentDto> saveBatchContents(List<ArticleContentDto> articleContentDtos, String username, String token) throws Exception {
         try {
             logger.info("save batch contents");
@@ -689,7 +696,7 @@ public class ArticleServiceImpl implements ArticleService {
      * @throws Exception
      */
     @Override
-    @Transactional(rollbackOn = {Exception.class
+    @Transactional(rollbackFor = {Exception.class
             , DataNotFoundException.class
             , AccesDeniedDeleteContentException.class
             , ArticleContentNotFoundException.class})

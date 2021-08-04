@@ -1,6 +1,7 @@
 package id.co.bca.pakar.be.doc.api;
 
 import id.co.bca.pakar.be.doc.api.validator.MultiArticleContentValidator;
+import id.co.bca.pakar.be.doc.api.validator.MultipartArticleValidator;
 import id.co.bca.pakar.be.doc.common.Constant;
 import id.co.bca.pakar.be.doc.dto.*;
 import id.co.bca.pakar.be.doc.exception.*;
@@ -42,6 +43,9 @@ public class ArticleController extends BaseController {
 
     @Autowired
     private MultiArticleContentValidator multiArticleContentValidator;
+
+    @Autowired
+    private MultipartArticleValidator multipartArticleValidator;
 
     /**
      *
@@ -294,17 +298,32 @@ public class ArticleController extends BaseController {
      */
     @PostMapping(value = "/api/doc/saveArticle", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE }, produces = {
             MediaType.APPLICATION_JSON_VALUE })
-    public ResponseEntity<RestResponse<ArticleResponseDto>> saveArticle2(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @ModelAttribute MultipartArticleDto articleDto, BindingResult bindingResult) {
+    public ResponseEntity<RestResponse<ArticleResponseDto>> saveArticle(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @ModelAttribute MultipartArticleDto articleDto, BindingResult bindingResult) {
         try {
             logger.info("save article process");
             logger.info("received token bearer --- {}", authorization);
+            multipartArticleValidator.validate(articleDto, bindingResult);
+            if (bindingResult.hasErrors()) {
+                logger.info("binding result " + bindingResult.getAllErrors());
+                String errorMessage = "";
+                for (Object object : bindingResult.getAllErrors()) {
+                    if(object instanceof FieldError) {
+                        FieldError fieldError = (FieldError) object;
+                        errorMessage = messageSource.getMessage(fieldError.getCode(),null, Locale.ENGLISH);
+                    }
+                }
+                return createResponse(new ArticleResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], errorMessage);
+            }
             articleDto.setUsername(username);
             articleDto.setToken(getTokenFromHeader(authorization));
             ArticleResponseDto _articleDto = articleService.saveArticle(articleDto);
-            return createResponse(_articleDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
+            return createResponse(_articleDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, Locale.ENGLISH));
+        } catch (DataNotFoundException e) {
+            logger.error("exception", e);
+            return createResponse(new ArticleResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("article.not.found", null, Locale.ENGLISH));
         } catch (Exception e) {
             logger.error("exception", e);
-            return createResponse(new ArticleResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
+            return createResponse(new ArticleResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, Locale.ENGLISH));
         }
     }
 
@@ -401,32 +420,6 @@ public class ArticleController extends BaseController {
             return createResponse(new ArticleContentDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, Locale.ENGLISH));
         }
     }
-
-//    /**
-//     *
-//     * @param authorization
-//     * @param username
-//     * @param articleContentDto
-//     * @return
-//     */
-//    @PostMapping(value = "/api/doc/createContentLevel1", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
-//            MediaType.APPLICATION_JSON_VALUE})
-//    public ResponseEntity<RestResponse<ArticleContentDto>> saveContentLevel1(@RequestHeader("Authorization") String authorization, @RequestHeader(name = "X-USERNAME") String username, @Valid @RequestBody ArticleContentDto articleContentDto) {
-//        try {
-//            logger.info("save article content");
-//            logger.info("received token bearer --- {}", authorization);
-//            articleContentDto.setUsername(username);
-//            articleContentDto.setToken(getTokenFromHeader(authorization));
-//            articleContentDto = articleService.saveContent(articleContentDto);
-//            return createResponse(articleContentDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, Locale.ENGLISH));
-//        } catch (DataNotFoundException e) {
-//            logger.error("exception", e);
-//            return createResponse(new ArticleContentDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, Locale.ENGLISH));
-//        } catch (Exception e) {
-//            logger.error("exception", e);
-//            return createResponse(new ArticleContentDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, Locale.ENGLISH));
-//        }
-//    }
 
     /**
      * save all accordeon with all chidren
