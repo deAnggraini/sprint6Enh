@@ -3,8 +3,8 @@ package id.co.bca.pakar.be.doc.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "t_article_content")
-public class ArticleContent extends CommonArticleContent {
+@Table(name = "t_article_content_tmp")
+public class ArticleContentTmp extends CommonArticleContent {
     @Id
     private Long id = 0L;
     @Version
@@ -37,5 +37,4 @@ public class ArticleContent extends CommonArticleContent {
     public void setVersion(Long version) {
         this.version = version;
     }
-
 }

@@ -1097,7 +1097,5 @@ public class ArticleServiceImpl implements ArticleService {
             List<SuggestionArticleDto> dtos = mapEntitiesIntoDTOs(source.getContent());
             return new PageImpl<>(dtos, pageRequest, source.getTotalElements());
         }
-
     }
-
 }
