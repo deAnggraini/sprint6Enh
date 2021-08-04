@@ -14,21 +14,23 @@
     <div class="card card-custom p-10" style="overflow-x: hidden;">
         <div>
             <div class="font-weight-bolder text-dark font-size-xl my-2">PAKAR Terbaru</div>
-            <div class="font-weight-base font-size-lg mb-7">Kumpulan informasi <b>PAKAR</b> yang baru di-<i>update</i>
+            <div class="font-weight-base font-size-lg mb-7">Kumpulan informasi <b>PAKAR</b> yang baru di-<i class="font-size-lg">update</i>
             </div>
         </div>
 
-        <div class="pr-10">
-
+        <div class="" style="padding-right: 250px">
             <div class="row m-0 p-0">
-                <div class="col-3 card-article mr-7 mb-7 rounded-lg" *ngFor="let item of dataList">
-                    <div class="row">
-                        <div class="col-md-auto p-0">
-                            <img class="img-show" src="{{backend_img}}/articles/{{item.image}}" width="100%"
-                                height="130px" style="background-position:center;">
+                <!-- <div class="col-3 card-article mr-7 mb-7 rounded-lg" *ngFor="let item of dataList"> -->
+                <div class="col-lg-4 col-xxl-4" *ngFor="let item of dataList">
+                    <div class="row card-article mr-7 mb-4 rounded-lg cursor-pointer"
+                        onmouseover="this.style.border ='1px groove #1995D1';"
+                        onmouseout="this.style.border ='1px solid #DDD';">
+                        <div class="col-md-auto p-0" style="width: 100%;">
+                            <img class="d-flex img-show bgi-position-x-center" src="{{backend_img}}/articles/{{item.image}}" width="100%"
+                                height="112px" style="background-position:center; object-fit: cover;">
                         </div>
-                        <div class="col p-0 px-2">
-                            <div class="my-2">
+                        <div class="col py-0 px-4">
+                            <div class="my-3">
                                 <span
                                     class="text-muted font-weight-bold font-size-sm">{{item.created_date | date: "dd MMMM yyyy"}}</span>
                             </div>
@@ -45,7 +47,7 @@
             </div>
 
             <div class="d-flex justify-content-center align-items-center flex-wrap mt-5">
-                <app-pagination></app-pagination>
+                <app-pagination [paging]="paging"></app-pagination>
             </div>
 
         </div>

@@ -1,7 +1,7 @@
 <!-- [ngStyle]="showAside ? {'box-shadow': '0px 4px 8px 0px #0202027b'} : {'box-shadow': '-2px 4px 8px 0px #0000001A'};" -->
 <!-- style="background: {{headerBackground}}; box-shadow: {{showAside ? '0px 4px 8px 0px #0202027b' : '-2px 4px 8px 0px #0000001A'}}" -->
 <div class="brand flex-column-auto" id="kt_brand" [ngClass]="brandClasses"
-  [ngStyle]="{'background': headerBackground, 'box-shadow': showAside() == false ? '0px 4px 8px 0px #0202027b' : '-2px 4px 8px 0px #0000001A'}">
+  [ngStyle]="{'background': headerBackground, 'box-shadow': showAside() == false ? '0px 4px 8px -5px #0202027b' : '-2px 4px 8px 0px #0000001A'}">
   <!-- routerLink="/"  -->
   <!-- *ngIf="showAside"  -->
   <a class="brand-logo" routerLink="/homepage">

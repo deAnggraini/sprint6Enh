@@ -6,11 +6,8 @@ import { environment } from 'src/environments/environment';
 import { AuthService, UserModel } from '../../auth';
 import { StrukturDTO } from '../../_model/struktur.dto';
 import { ArticleService } from '../../_services/article.service';
-import { SkReferenceService } from '../../_services/sk-reference.service';
 import { StrukturService } from '../../_services/struktur.service';
 import { ArticleDTO, ArticleContentDTO } from '../../_model/article.dto';
-import { resolve } from '@angular/compiler-cli/src/ngtsc/file_system';
-import { rejects } from 'assert';
 
 @Component({
   selector: 'pakar-article-preview',
@@ -30,7 +27,6 @@ export class PreviewComponent implements OnInit {
   hideVideo: boolean = true;
   videoUrl: string;
   hideImage: boolean = true;
-  imageName: string;
   imageTitle: string;
   imageSrc: string;
   dataForm: FormGroup;
@@ -70,7 +66,6 @@ export class PreviewComponent implements OnInit {
     private auth: AuthService,
     private articleService: ArticleService,
     private changeDetectorRef: ChangeDetectorRef,
-    private skService: SkReferenceService,
   ) {
     this.user$ = this.auth.currentUserSubject.asObservable();
   }
@@ -89,13 +84,11 @@ export class PreviewComponent implements OnInit {
     console.log("Article DTO >>> ", this.articleDTO);
     this.skReferences = this.articleDTO.references;
     this.relatedArticle = this.articleDTO.related;
-    this.getImage(this.articleDTO.image);
     this.getVideo(this.articleDTO.video);
 
 
     //user
     this.user$.subscribe(u => {
-      console.log("user$$$ >>", u);
       const aliasNameArr: string[] = [u.firstname, u.lastname];
       this.aliasName = aliasNameArr.map(d => d ? d[0] : '').join('');
       this.fullName = u.fullname;
@@ -126,10 +119,13 @@ export class PreviewComponent implements OnInit {
             this.imageSrc = reader.result as string;
           };
         }
+        this.imageTitle = image.name.split(".")[0];
+        this.hideImage = false;
       }
+
     } else {
       this.route.params.subscribe(params => {
-        this.categoryId = params.category;
+        this.categoryId = params.category;       
         // this.loadData();
       });
     }
@@ -145,17 +141,6 @@ export class PreviewComponent implements OnInit {
     return strNoParent.join(".");
   }
 
-  //image 
-  getImage(event) {
-    if (event) {
-      this.imageName = event.name;
-      this.imageTitle = event.name.split(".")[0];
-      this.hideImage = false;
-    } else {
-      this.hideImage = true;
-    }
-  }
-
   getVideo(event) {
     if (event) {
       this.videoUrl = event
@@ -164,45 +149,5 @@ export class PreviewComponent implements OnInit {
       this.hideVideo = true;
     }
   }
-
-  async onImageChange(imgFile) {
-    console.log('event image preview *** > ', imgFile);
-
-    var reader = new FileReader();
-    let result = '';
-
-    reader.onload = function (e) {
-      var image = new Image();
-      image.src = e.target.result as string;
-      result = image.src;
-      console.log('result onload ** > ', result);
-    };
-
-    //NOTE: await doen't work
-    await reader.readAsText(imgFile);
-
-    console.log('reader ** > ', reader);
-    console.log('result ** > ', result);
-
-    return result;
-  }
-
-  // SK/SE 
-  // getDataSkSeReference(keyword: string) {
-  //   this.skService.search(keyword).subscribe(resp => {
-  //     if (resp) {
-  //       this.skReferences = [...resp];
-  //     }
-  //   })
-  // }
-
-  //Artikel Terkait
-  // getDataRelatedArticle(keyword: string) {
-  //   this.articleService.searchArticle(keyword).subscribe(resp => {
-  //     if (resp) {
-  //       this.relatedArticle = [...resp];
-  //     }
-  //   })
-  // }
 
 }
