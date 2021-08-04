@@ -533,7 +533,7 @@ public class ArticleServiceImpl implements ArticleService {
             }
 
             articleContent.setName(articleContentDto.getTitle());
-            articleContent.setDescription(articleContentDto.getIntroduction());
+            articleContent.setDescription(articleContentDto.getIntro());
             articleContent.setTopicCaption(articleContentDto.getTopicTitle());
             articleContent.setTopicContent(articleContentDto.getTopicContent());
             articleContent.setSort(articleContentDto.getOrder());
@@ -808,7 +808,7 @@ public class ArticleServiceImpl implements ArticleService {
             contentDto.setOrder(content.getSort());
             contentDto.setTitle(content.getName());
             if (content.getLevel().intValue() == 1)
-                contentDto.setIntroduction(content.getDescription());
+                contentDto.setIntro(content.getDescription());
             contentDto.setParent(content.getParent());
             contentDto.setArticleId(content.getArticle().getId());
             contentDto.setTopicTitle(content.getTopicCaption());
@@ -837,7 +837,7 @@ public class ArticleServiceImpl implements ArticleService {
         contentDto.setOrder(content.getSort());
         contentDto.setTitle(content.getName());
         if (content.getLevel().intValue() == 1)
-            contentDto.setIntroduction(content.getDescription());
+            contentDto.setIntro(content.getDescription());
         contentDto.setParent(content.getParent());
         contentDto.setArticleId(content.getArticle().getId());
         return contentDto;

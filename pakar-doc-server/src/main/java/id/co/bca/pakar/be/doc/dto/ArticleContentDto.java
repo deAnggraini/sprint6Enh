@@ -14,7 +14,7 @@ public class ArticleContentDto extends BaseDto {
     @JsonProperty("title")
     private String title;
     @JsonProperty("intro")
-    private String introduction;
+    private String intro;
     @NotNull(message = "sort value is required")
     @Min(value = 1, message = "sort minimum value is 1")
     @JsonProperty("sort")
@@ -40,6 +40,12 @@ public class ArticleContentDto extends BaseDto {
     private Long articleId;
     @JsonProperty("listParent")
     private List<BreadcumbArticleContentDto> breadcumbArticleContentDtos = new ArrayList<>();
+    @JsonProperty("expanded")
+    private Boolean expanded = Boolean.FALSE;
+    @JsonProperty("isEdit")
+    private Boolean isEdit = Boolean.FALSE;
+    @JsonProperty("no")
+    private Long no = 0L;
 
     public Long getId() {
         return id;
@@ -57,12 +63,12 @@ public class ArticleContentDto extends BaseDto {
         this.title = title;
     }
 
-    public String getIntroduction() {
-        return introduction;
+    public String getIntro() {
+        return intro;
     }
 
-    public void setIntroduction(String introduction) {
-        this.introduction = introduction;
+    public void setIntro(String intro) {
+        this.intro = intro;
     }
 
     public String getTopicTitle() {
@@ -129,12 +135,36 @@ public class ArticleContentDto extends BaseDto {
         this.breadcumbArticleContentDtos = breadcumbArticleContentDtos;
     }
 
+    public Boolean getExpanded() {
+        return expanded;
+    }
+
+    public void setExpanded(Boolean expanded) {
+        this.expanded = expanded;
+    }
+
+    public Boolean getEdit() {
+        return isEdit;
+    }
+
+    public void setEdit(Boolean edit) {
+        isEdit = edit;
+    }
+
+    public Long getNo() {
+        return no;
+    }
+
+    public void setNo(Long no) {
+        this.no = no;
+    }
+
     @Override
     public String toString() {
         return "ArticleContentDto{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
-                ", introduction='" + introduction + '\'' +
+                ", intro='" + intro + '\'' +
                 ", order=" + order +
                 ", level=" + level +
                 ", topicTitle='" + topicTitle + '\'' +
@@ -143,6 +173,9 @@ public class ArticleContentDto extends BaseDto {
                 ", parent=" + parent +
                 ", articleId=" + articleId +
                 ", breadcumbArticleContentDtos=" + breadcumbArticleContentDtos +
+                ", expanded=" + expanded +
+                ", isEdit=" + isEdit +
+                ", no=" + no +
                 '}';
     }
 }
