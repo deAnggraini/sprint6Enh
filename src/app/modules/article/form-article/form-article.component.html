@@ -17,8 +17,8 @@
                 <div>Preview</div>
             </a>
             <div class="separator"></div>
-            <a href="#" class="btn btn-link link text-dark d-flex flex-row"
-                [ngClass]="{'disabled' : !isAllPass()}" (click)="onSave($event)">
+            <a href="#" class="btn btn-link link text-dark d-flex flex-row" [ngClass]="{'disabled' : !isAllPass()}"
+                (click)="onSave($event)">
                 <div [inlineSVG]="'./assets/media/svg/bca/icon/save.svg'" cacheSVG="true" class="svg-icon"></div>
                 <div>Simpan</div>
             </a>
@@ -34,9 +34,10 @@
     </div>
     <div *ngIf="finishRender && dataForm" class="pakar-container mx-15 p-8" style="padding-top:60px !important">
         <span class="pakar-text-header">{{isEdit ? 'Ubah' : 'Tambah'}} Artikel</span>
-        <form [formGroup]="dataForm" novalidate="novalidate">
+        <form #articleForm [formGroup]="dataForm" novalidate="novalidate">
             <div class="form-group col-sm-11 col-lg-6 col-xl-6 col-xxl-6">
                 <label>Judul Artikel <span class="text-danger">*</span></label>
+                <input type="hidden" name="title" formControlName="title">
                 <pakar-input-length placeholder="Masukkan nama artikel disini (maks. 50 karakter)"
                     formControlName="title" maxlength="50" (onChange)="checkUniq($event)" [hasError]="hasError">
                 </pakar-input-length>

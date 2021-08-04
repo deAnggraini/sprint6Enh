@@ -1,5 +1,4 @@
 export function toFormData(val, formData = new FormData, namespace = '') {
-    console.log({ val });
     if ((typeof val !== 'undefined') && val !== null) {
         if (val instanceof Date) {
             formData.append(namespace, val.toISOString());
@@ -10,7 +9,7 @@ export function toFormData(val, formData = new FormData, namespace = '') {
         } else if (typeof val === 'object' && !(val instanceof File)) {
             for (let propertyName in val) {
                 if (val.hasOwnProperty(propertyName)) {
-                    toFormData(val[propertyName], formData, namespace ? `${namespace}[${propertyName}]` : propertyName);
+                    toFormData(val[propertyName], formData, namespace ? `${namespace}.${propertyName}` : propertyName);
                 }
             }
         } else if (val instanceof File) {
@@ -36,6 +35,27 @@ function buildFormData(formData, data, parentKey) {
 
 export function jsonToFormData(data) {
     const formData = new FormData();
-    buildFormData(formData, data, '');
+    getFormData(formData, data, '');
     return formData;
+}
+
+export function getFormData(formData, data, previousKey) {
+    if (data instanceof Object) {
+        Object.keys(data).forEach(key => {
+            const value = data[key];
+            if (value instanceof Object && !Array.isArray(value)) {
+                return getFormData(formData, value, key);
+            }
+            if (previousKey) {
+                key = `${previousKey}[${key}]`;
+            }
+            if (Array.isArray(value)) {
+                value.forEach(val => {
+                    formData.append(`${key}`, val);
+                });
+            } else {
+                formData.append(key, value);
+            }
+        });
+    }
 }

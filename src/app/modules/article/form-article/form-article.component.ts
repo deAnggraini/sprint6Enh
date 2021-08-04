@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy, ChangeDetectorRef, ElementRef } from '@angular/core';
 import * as CustomEditor from './../../../ckeditor/build/ckeditor';
 import { ArticleService } from '../../_services/article.service';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -53,6 +53,7 @@ const defaultValue: ArticleDTO = {
 export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('editorDesc') editorComponent: CKEditorComponent;
+  @ViewChild('articleForm') formArticle: ElementRef<HTMLFormElement>;
 
   subscriptions: Subscription[] = [];
 
@@ -237,8 +238,9 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     }).then((confirmed) => {
       if (confirmed === true) {
         const _dataForm = this.dataForm.value;
+        const formData = new FormData(this.formArticle.nativeElement);
         this.subscriptions.push(
-          this.article.saveArticle(this.dataForm.value).subscribe(resp => {
+          this.article.saveArticle(this.dataForm.value, formData).subscribe(resp => {
             if (resp) {
               this.onPreview(e);
               this.cdr.detectChanges();

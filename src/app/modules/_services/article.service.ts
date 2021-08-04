@@ -4,7 +4,7 @@ import { environment } from 'src/environments/environment';
 import { of, BehaviorSubject, Observable } from 'rxjs';
 import * as moment from 'moment';
 import { ArticleDTO, ArticleContentDTO } from '../_model/article.dto';
-import { toFormData, jsonToFormData } from './../../utils/_helper/parser';
+import { jsonToFormData, toFormData } from './../../utils/_helper/parser';
 
 @Injectable({
   providedIn: 'root'
@@ -118,7 +118,7 @@ export class ArticleService {
   private parseToArray(content: ArticleContentDTO): ArticleContentDTO[] {
     let result: ArticleContentDTO[] = [];
     if (content) {
-      
+
       const _c: ArticleContentDTO = JSON.parse(JSON.stringify(Object.assign({}, content, { children: [] })));
       delete _c.expanded;
       delete _c.isEdit;
@@ -162,12 +162,12 @@ export class ArticleService {
     }
     return formData;
   }
-  saveArticle(article: ArticleDTO) {
+  saveArticle(article: ArticleDTO, form = null) {
     const _contents = this.parseToSingleArray(article.contents);
     console.log({ _contents });
     const _dataForm = Object.assign({}, article, { contents: _contents });
     // const formData = this.parseToFormObject(_dataForm);
-    const formData = jsonToFormData(_dataForm);
+    const formData = toFormData(_dataForm);
     const image = formData.get('image');
     if (typeof (image) == "string") formData.delete('image');
     console.log({ _dataForm, image });
