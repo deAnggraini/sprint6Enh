@@ -2,7 +2,6 @@ package id.co.bca.pakar.be.doc.api.validator;
 
 import id.co.bca.pakar.be.doc.dto.ArticleContentDto;
 import id.co.bca.pakar.be.doc.dto.MultipartArticleDto;
-import id.co.bca.pakar.be.doc.model.ArticleContent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
