@@ -375,6 +375,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
 
   checkUniq(value) {
     this.hasError = false;
+    if (!value) return;
     const checkUniqSubrcr = this.article.checkUniq(value.trim())
       .pipe(
         catchError((err) => {

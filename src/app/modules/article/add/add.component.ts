@@ -60,8 +60,8 @@ export class AddComponent implements OnInit, OnDestroy {
   }
 
   checkUniq(value: string) {
-    console.log('checkUniq', { value, title: this.dataForm.get('title').value });
     this.hasError = false;
+    if (!value) return;
     const checkUniqSubrcr = this.article.checkUniq(value.trim())
       .pipe(
         catchError((err) => {
