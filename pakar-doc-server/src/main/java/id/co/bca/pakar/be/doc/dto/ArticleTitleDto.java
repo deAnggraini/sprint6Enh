@@ -7,8 +7,8 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 public class ArticleTitleDto extends BaseDto {
-    @NotEmpty(message = "name is required")
-    @Size(max = 50, message = "maximum length 50 characters")
+    @NotEmpty(message = "{judul.article.required}")
+    @Size(max = 50, message = "Maximum judul topik adalah {0} karakter")
     @Pattern(regexp="[0-9a-zA-Z\\/\\s\\-\\(\\)]*$", message = "title must alpha or numeric, whitespace, - , /, ()")
     @JsonProperty("title")
     protected String judulArticle;
