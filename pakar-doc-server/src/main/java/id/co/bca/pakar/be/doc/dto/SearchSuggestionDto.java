@@ -9,8 +9,6 @@ public class SearchSuggestionDto extends PageDto {
     private String keyword;
     @JsonProperty("exclude")
     private List<Long> exclude;
-    @JsonProperty("structureId")
-    private Long structureId;
 
     public String getKeyword() {
         return keyword;
@@ -28,11 +26,4 @@ public class SearchSuggestionDto extends PageDto {
         this.exclude = exclude;
     }
 
-    public Long getStructureId() {
-        return structureId;
-    }
-
-    public void setStructureId(Long structureId) {
-        this.structureId = structureId;
-    }
 }
