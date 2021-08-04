@@ -336,7 +336,7 @@ const sample_non_basic = {
             ],
         },
         {
-            id: 3,
+            id: 31,
             title: 'Formulir Tahapan 2',
             intro: '',
             parent: 0,

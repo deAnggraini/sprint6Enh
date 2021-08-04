@@ -399,9 +399,7 @@ router.post('/generateArticle', (req, res) => {
 });
 
 router.get('/getArticle', (req, res) => {
-    // const { body } = ;
     const { id } = req.query;
-    console.log({ id, sample_empty });
     res.send({ error: false, msg: "", data: sample_non_basic });
 });
 
@@ -424,6 +422,12 @@ router.post('/deleteContent', (req, res) => {
 });
 
 router.post('/cancelArticle', (req, res) => {
+    res.send({ error: false, msg: "", data: true });
+});
+
+router.post('/saveArticle', (req, res) => {
+    const { body, files } = req;
+    console.log({ body, files });
     res.send({ error: false, msg: "", data: true });
 });
 
