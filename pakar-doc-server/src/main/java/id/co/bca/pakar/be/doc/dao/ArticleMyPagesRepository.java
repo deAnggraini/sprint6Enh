@@ -7,12 +7,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface ArticleMyPagesRepository extends CrudRepository<Article, Long> {
-    @Query("select tsa.article from SuggestionArticle tsa " +
-            "where tsa.article.id <> :id " +
-            "and lower(tsa.article.judulArticle) like lower(concat('%', :keyword,'%')) " +
-            "and tsa.article.articleState = 'PUBLISHED' order by  tsa.article.judulArticle, tsa.hit_count"
+    @Query("SELECT m FROM Article m"
     )
-    Page<Article> findMyPagesDraft(@Param("id") Long id, @Param("keyword") String keyword, Pageable pageable);
+    List<Article> findMyPagesDraft();
 
 }

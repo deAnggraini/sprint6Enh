@@ -2,6 +2,8 @@ package id.co.bca.pakar.be.doc.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Date;
+
 public class ResponseMyPages extends BaseDto{
     @JsonProperty("type")
     private String tipe;
@@ -9,8 +11,10 @@ public class ResponseMyPages extends BaseDto{
     private String judul;
     @JsonProperty("lokasi")
     private String lokasi;
+    @JsonProperty("isNew")
+    private Boolean isNew;
     @JsonProperty("modifikasi_date")
-    private String modifikasi_date;
+    private Date modifikasi_date;
     @JsonProperty("modifikasi_by")
     private String modifikasi_by;
     @JsonProperty("reviewed_by")
@@ -40,11 +44,19 @@ public class ResponseMyPages extends BaseDto{
         this.lokasi = lokasi;
     }
 
-    public String getModifikasi_date() {
+    public Boolean getNew() {
+        return isNew;
+    }
+
+    public void setNew(Boolean aNew) {
+        isNew = aNew;
+    }
+
+    public Date getModifikasi_date() {
         return modifikasi_date;
     }
 
-    public void setModifikasi_date(String modifikasi_date) {
+    public void setModifikasi_date(Date modifikasi_date) {
         this.modifikasi_date = modifikasi_date;
     }
 

@@ -1024,18 +1024,31 @@ public class ArticleServiceImpl implements ArticleService {
         }
     }
 
+    /**
+     * Search My Pages in Article
+     * @param requestMyPages
+     * @return
+     * @throws Exception
+     */
     @Override
     public List<ResponseMyPages> searchMyPages(RequestMyPages requestMyPages) throws Exception {
         try {
             logger.info("search faq");
             List<ResponseMyPages> listOfDtos = new ArrayList<>();
-//            Page<Article> searchResult = articleMyPagesRepository.findMyPagesDraft(requestMyPages);
+            List<Article> searchResult = new ArrayList<>();
+//            List<Article> searchResult = articleMyPagesRepository.findMyPagesDraft(requestMyPages);
 //            logger.info("search result = " + searchResult);
-//            for (Article entity : searchResult) {
-//                ResponseMyPages dto = new ResponseMyPages();
-//
-//                listOfDtos.add(dto);
-//            }
+            for (Article entity : searchResult) {
+                ResponseMyPages dto = new ResponseMyPages();
+                dto.setJudul(entity.getJudulArticle());
+                Structure structureArticle = entity.getStructure();
+                logger.info("structure child ", structureArticle);
+//                dto.setLokasi(structureArticle);
+                dto.setModifikasi_by(entity.getModifyBy());
+                dto.setModifikasi_date(entity.getModifyDate());
+
+                listOfDtos.add(dto);
+            }
             return listOfDtos;
         } catch (Exception e) {
             logger.error("exception", e);
