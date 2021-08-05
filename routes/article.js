@@ -428,7 +428,7 @@ router.post('/cancelArticle', (req, res) => {
 router.post('/saveArticle', (req, res) => {
     const { body, files } = req;
     console.log({ body, files });
-    res.send({ error: false, msg: "", data: true });
+    res.send({ error: false, msg: "", data: body });
 });
 
 module.exports = router;
