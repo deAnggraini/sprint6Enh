@@ -123,6 +123,7 @@ export class ArticleService {
       delete _c.expanded;
       delete _c.isEdit;
       delete _c.no;
+      delete _c.listParent;
 
       result.push(_c);
       content.children.forEach(d => {

@@ -8,6 +8,7 @@ import { StrukturDTO } from '../../_model/struktur.dto';
 import { ArticleService } from '../../_services/article.service';
 import { StrukturService } from '../../_services/struktur.service';
 import { ArticleDTO, ArticleContentDTO } from '../../_model/article.dto';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'pakar-article-preview',
@@ -25,7 +26,7 @@ export class PreviewComponent implements OnInit {
   hideTable: boolean = true;
   hideFAQ: boolean = true;
   hideVideo: boolean = true;
-  videoUrl: string;
+  videoUrl: SafeResourceUrl;
   hideImage: boolean = true;
   imageTitle: string;
   imageSrc: string;
@@ -66,6 +67,7 @@ export class PreviewComponent implements OnInit {
     private auth: AuthService,
     private articleService: ArticleService,
     private changeDetectorRef: ChangeDetectorRef,
+    private _sanitizer: DomSanitizer
   ) {
     this.user$ = this.auth.currentUserSubject.asObservable();
   }
@@ -125,7 +127,7 @@ export class PreviewComponent implements OnInit {
 
     } else {
       this.route.params.subscribe(params => {
-        this.categoryId = params.category;       
+        this.categoryId = params.category;
         // this.loadData();
       });
     }
@@ -142,8 +144,10 @@ export class PreviewComponent implements OnInit {
   }
 
   getVideo(event) {
+    console.log({ event });
     if (event) {
-      this.videoUrl = event
+      // this.videoUrl = event;
+      this.videoUrl = this._sanitizer.bypassSecurityTrustResourceUrl(event);
       this.hideVideo = false;
     } else {
       this.hideVideo = true;
