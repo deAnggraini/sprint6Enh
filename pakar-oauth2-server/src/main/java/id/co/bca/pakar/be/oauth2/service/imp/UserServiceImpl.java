@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import id.co.bca.pakar.be.oauth2.dto.SearchDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -130,5 +131,15 @@ public class UserServiceImpl implements UserService {
 			roles.add(ur.getRole().getId());
 		}
 		return roles;
+	}
+
+	@Override
+	public List<String> findUserNotReader(SearchDto searchDto) {
+		List<UserProfile> uRoles = userProfileRepository.findUserNotReader(searchDto.getKeyword());
+		List<String> user = new ArrayList<>();
+		for(UserProfile ur : uRoles) {
+			user.add(ur.getFullname());
+		}
+		return user;
 	}
 }

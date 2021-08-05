@@ -2,6 +2,7 @@ package id.co.bca.pakar.be.oauth2.api;
 
 import id.co.bca.pakar.be.oauth2.common.Constant;
 import id.co.bca.pakar.be.oauth2.dto.LoggedinDto;
+import id.co.bca.pakar.be.oauth2.dto.SearchDto;
 import id.co.bca.pakar.be.oauth2.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,10 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -79,6 +77,20 @@ public class UserController extends BaseController {
 			logger.info("get role by username {}", username);
 			List<String> roles = userService.findRolesByUser(username);
 			return createResponse(roles, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
+		} catch (Exception e) {
+			logger.error("exception", e);
+			return this.createResponse(new ArrayList<String>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
+		}
+	}
+
+	@PostMapping(value = "/api/auth/searchUserNotReader", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
+			MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<RestResponse<List<String>>> searchUserNotReader(@RequestHeader (name="Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username,
+																		  @RequestBody SearchDto searchDto) {
+		try {
+			logger.info("load username {}", searchDto);
+			List<String> user = userService.findUserNotReader(searchDto);
+			return createResponse(user, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
 		} catch (Exception e) {
 			logger.error("exception", e);
 			return this.createResponse(new ArrayList<String>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
