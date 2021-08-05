@@ -9,5 +9,5 @@ public interface UserService {
 	LoggedinDto findUserByToken(String token);
 	LoggedinDto findUserByToken(String token, String username);
 	List<String> findRolesByUser(String username);
-	List<String> findUserNotReader(SearchDto searchDto);
+	List<String> findUserNotReader(String username, SearchDto searchDto);
 }

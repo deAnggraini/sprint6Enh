@@ -22,8 +22,9 @@ public interface UserProfileRepository extends CrudRepository<UserProfile, Long>
 
 	@Query(value ="select rup.* from r_user_profile rup join r_user ru on rup.username = ru.username " +
 			"join r_user_role rur on ru.username = rur.username " +
-			"WHERE (lower(rup.firstname) like lower(concat('%','ed','%')) or lower(rup.lastname) like lower(concat('%', 'ed','%')) " +
-			"or lower(rup.email) like lower(concat('%', 'ed','%')) or lower(rup.fullname) like lower(concat('%', 'ed','%'))) AND rur.role_id != 'READER'",
+			"WHERE (lower(rup.firstname) like lower(concat('%',:keyword,'%')) or lower(rup.lastname) like lower(concat('%', :keyword,'%')) " +
+			"or lower(rup.email) like lower(concat('%', :keyword,'%')) or lower(rup.fullname) like lower(concat('%', :keyword,'%'))) AND rur.role_id != 'READER' " +
+			"and lower(rup.username) not like lower(concat('%', :username,'%'))",
 			nativeQuery = true)
-	List<UserProfile> findUserNotReader(@Param("keyword") String keyword);
+	List<UserProfile> findUserNotReader(@Param("username") String username, @Param("keyword") String keyword);
 }

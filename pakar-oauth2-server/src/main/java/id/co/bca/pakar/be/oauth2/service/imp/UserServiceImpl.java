@@ -134,8 +134,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<String> findUserNotReader(SearchDto searchDto) {
-		List<UserProfile> uRoles = userProfileRepository.findUserNotReader(searchDto.getKeyword());
+	public List<String> findUserNotReader(String username, SearchDto searchDto) {
+		List<UserProfile> uRoles = userProfileRepository.findUserNotReader(username, searchDto.getKeyword());
 		List<String> user = new ArrayList<>();
 		for(UserProfile ur : uRoles) {
 			user.add(ur.getFullname());

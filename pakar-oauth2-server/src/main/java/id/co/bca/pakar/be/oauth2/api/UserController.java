@@ -89,7 +89,7 @@ public class UserController extends BaseController {
 																		  @RequestBody SearchDto searchDto) {
 		try {
 			logger.info("load username {}", searchDto);
-			List<String> user = userService.findUserNotReader(searchDto);
+			List<String> user = userService.findUserNotReader(username, searchDto);
 			return createResponse(user, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
 		} catch (Exception e) {
 			logger.error("exception", e);
