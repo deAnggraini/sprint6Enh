@@ -89,6 +89,10 @@ public class ArticleServiceImpl implements ArticleService {
     private ArticleHistoryRepository articleHistoryRepository;
 
     @Autowired
+    private ArticleMyPagesRepository articleMyPagesRepository;
+
+
+    @Autowired
     private PakarOauthClient pakarOauthClient;
 
     @Value("${upload.path.category}")
@@ -1011,6 +1015,38 @@ public class ArticleServiceImpl implements ArticleService {
                 dto.setId(entity.getId());
                 dto.setAnswer(entity.getAnswer());
                 dto.setQuestion(entity.getQuestion());
+                listOfDtos.add(dto);
+            }
+            return listOfDtos;
+        } catch (Exception e) {
+            logger.error("exception", e);
+            throw new Exception("exception", e);
+        }
+    }
+
+    /**
+     * Search My Pages in Article
+     * @param requestMyPages
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public List<ResponseMyPages> searchMyPages(RequestMyPages requestMyPages) throws Exception {
+        try {
+            logger.info("search faq");
+            List<ResponseMyPages> listOfDtos = new ArrayList<>();
+            List<Article> searchResult = new ArrayList<>();
+//            List<Article> searchResult = articleMyPagesRepository.findMyPagesDraft(requestMyPages);
+//            logger.info("search result = " + searchResult);
+            for (Article entity : searchResult) {
+                ResponseMyPages dto = new ResponseMyPages();
+                dto.setJudul(entity.getJudulArticle());
+                Structure structureArticle = entity.getStructure();
+                logger.info("structure child ", structureArticle);
+//                dto.setLokasi(structureArticle);
+                dto.setModifikasi_by(entity.getModifyBy());
+                dto.setModifikasi_date(entity.getModifyDate());
+
                 listOfDtos.add(dto);
             }
             return listOfDtos;
