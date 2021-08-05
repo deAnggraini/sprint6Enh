@@ -14,9 +14,6 @@ public class SuggestionArticle extends EntityBase{
     @JoinColumn(name = "article_id", nullable = false)
     private Article article;
 
-    @ManyToOne
-    @JoinColumn(name = "structure_id", nullable = false)
-    private Structure structure;
 
     @Column(name = "hit_count")
     private Long hit_count;
@@ -35,14 +32,6 @@ public class SuggestionArticle extends EntityBase{
 
     public void setArticle(Article article) {
         this.article = article;
-    }
-
-    public Structure getStructure() {
-        return structure;
-    }
-
-    public void setStructure(Structure structure) {
-        this.structure = structure;
     }
 
     public Long getHit_count() {

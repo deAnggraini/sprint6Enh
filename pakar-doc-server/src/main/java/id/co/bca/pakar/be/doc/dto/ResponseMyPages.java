@@ -44,12 +44,12 @@ public class ResponseMyPages extends BaseDto{
         this.lokasi = lokasi;
     }
 
-    public Boolean getNew() {
+    public Boolean getIsNew() {
         return isNew;
     }
 
-    public void setNew(Boolean aNew) {
-        isNew = aNew;
+    public void setIsNew(Boolean isNew) {
+        isNew = isNew;
     }
 
     public Date getModifikasi_date() {

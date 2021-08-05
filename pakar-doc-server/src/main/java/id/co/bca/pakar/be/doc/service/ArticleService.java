@@ -32,5 +32,5 @@ public interface ArticleService {
 
     Page<SuggestionArticleDto> searchSuggestion(SearchSuggestionDto searchDto) throws Exception;
 
-    List<ResponseMyPages> searchMyPages(RequestMyPages searchDto) throws Exception;
+    MyPagesDto searchMyPages(String searchDto) throws Exception;
 }

@@ -577,28 +577,27 @@ public class ArticleController extends BaseController {
 
     /**
      * find myPages
-     * @param searchDto
+//     * @param searchDto
      * @return
      */
     @PostMapping(value = "/api/doc/searchMyPages", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
             MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<RestResponse<Map<String, Object>>> searchMyPages(@RequestHeader("Authorization") String authorization,
-                                                                                   @RequestHeader(name = "X-USERNAME") String username,
-                                                                                   @Valid @RequestBody RequestMyPages searchDto) {
+    public ResponseEntity<RestResponse<MyPagesDto>> searchMyPages(@RequestHeader("Authorization") String authorization,
+                                                                                   @RequestHeader(name = "X-USERNAME") String username
+                                                                                   ) {
         try {
             logger.info("search suggestion articles process");
             logger.info("received token bearer --- {}", authorization);
-            searchDto.setUsername(username);
-            searchDto.setToken(getTokenFromHeader(authorization));
-//            Page<SuggestionArticleDto> pageArticleDto = articleService.searchSuggestion(searchDto);
-            return null;
-//            return createResponse(new HashMap<>(), Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
-//        } catch (DataNotFoundException e) {
-//            logger.error("exception", e);
-//            return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, new Locale("en", "US")));
+//            searchDto.setUsername(username);
+//            searchDto.setToken(getTokenFromHeader(authorization));
+            MyPagesDto pageArticleDto = articleService.searchMyPages(username);
+            return createResponse(pageArticleDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
+        } catch (DataNotFoundException e) {
+            logger.error("exception", e);
+            return createResponse(new MyPagesDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, new Locale("en", "US")));
         } catch(Exception e) {
             logger.error("exception", e);
-            return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
+            return createResponse(new MyPagesDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
         }
     }
 }

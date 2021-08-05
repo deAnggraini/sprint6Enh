@@ -1031,25 +1031,128 @@ public class ArticleServiceImpl implements ArticleService {
      * @throws Exception
      */
     @Override
-    public List<ResponseMyPages> searchMyPages(RequestMyPages requestMyPages) throws Exception {
+    public MyPagesDto searchMyPages(String requestMyPages) throws Exception {
         try {
             logger.info("search faq");
-            List<ResponseMyPages> listOfDtos = new ArrayList<>();
-            List<Article> searchResult = new ArrayList<>();
-//            List<Article> searchResult = articleMyPagesRepository.findMyPagesDraft(requestMyPages);
-//            logger.info("search result = " + searchResult);
-            for (Article entity : searchResult) {
+            List<ResponseMyPages> listOfDtosDraft = new ArrayList<>();
+            List<ResponseMyPages> listOfDtosPending = new ArrayList<>();
+            MyPagesDto listDto = new MyPagesDto();
+            // DRAFT //
+            List<Article> searchResultArticle = articleMyPagesRepository.findMyPagesArticle(requestMyPages);
+            List<Formulir> searchResultFormulir = articleMyPagesRepository.findMyPagesFormulir(requestMyPages);
+            List<VirtualPages> searchResultVirtualPages = articleMyPagesRepository.findMyPagesVirtualPages(requestMyPages);
+
+
+            for (Article entity : searchResultArticle) {
                 ResponseMyPages dto = new ResponseMyPages();
+                dto.setTipe(Constant.JenisHalaman.Artikel);
                 dto.setJudul(entity.getJudulArticle());
                 Structure structureArticle = entity.getStructure();
                 logger.info("structure child ", structureArticle);
 //                dto.setLokasi(structureArticle);
-                dto.setModifikasi_by(entity.getModifyBy());
-                dto.setModifikasi_date(entity.getModifyDate());
+                if (entity.getModifyBy() != null) {
+                    dto.setIsNew(false);
+                    dto.setModifikasi_by(entity.getModifyBy());
+                    dto.setModifikasi_date(entity.getModifyDate());
+                } else {
+                    dto.setIsNew(true);
+                }
 
-                listOfDtos.add(dto);
+
+                listOfDtosDraft.add(dto);
             }
-            return listOfDtos;
+
+            for (Formulir enFormulir: searchResultFormulir) {
+                ResponseMyPages dto = new ResponseMyPages();
+                dto.setTipe(Constant.JenisHalaman.Formulir);
+                dto.setJudul(enFormulir.getTitle());
+
+                if (enFormulir.getModifyBy() != null) {
+                    dto.setIsNew(false);
+                    dto.setModifikasi_date(enFormulir.getModifyDate());
+                    dto.setModifikasi_by(enFormulir.getModifyBy());
+                }else {
+                    dto.setIsNew(true);
+                }
+
+                listOfDtosDraft.add(dto);
+            }
+
+            for (VirtualPages enVirtualPages: searchResultVirtualPages) {
+                ResponseMyPages dto = new ResponseMyPages();
+                dto.setTipe(Constant.JenisHalaman.Virtual_Pages);
+                dto.setJudul(enVirtualPages.getTitle());
+
+                if (enVirtualPages.getModifyBy() != null) {
+                    dto.setIsNew(false);
+                    dto.setModifikasi_date(enVirtualPages.getModifyDate());
+                    dto.setModifikasi_by(enVirtualPages.getModifyBy());
+                } else {
+                    dto.setIsNew(true);
+                }
+
+                listOfDtosDraft.add(dto);
+            }
+
+            // PENDING //
+            List<Article> searchResultArticlePending = articleMyPagesRepository.findMyPagesArticlePending(requestMyPages);
+            List<Formulir> searchResultFormulirPending = articleMyPagesRepository.findMyPagesFormulirPending(requestMyPages);
+            List<VirtualPages> searchResultVirtualPagesPending = articleMyPagesRepository.findMyPagesVirtualPagesPending(requestMyPages);
+
+
+            for (Article entity : searchResultArticlePending) {
+                ResponseMyPages dto = new ResponseMyPages();
+                dto.setTipe(Constant.JenisHalaman.Artikel);
+                dto.setJudul(entity.getJudulArticle());
+                Structure structureArticle = entity.getStructure();
+                logger.info("structure child ", structureArticle);
+//                dto.setLokasi(structureArticle);
+                if (entity.getModifyBy() != null) {
+                    dto.setIsNew(false);
+                    dto.setModifikasi_by(entity.getModifyBy());
+                    dto.setModifikasi_date(entity.getModifyDate());
+                } else {
+                    dto.setIsNew(true);
+                }
+
+
+                listOfDtosPending.add(dto);
+            }
+
+            for (Formulir enFormulir: searchResultFormulirPending) {
+                ResponseMyPages dto = new ResponseMyPages();
+                dto.setTipe(Constant.JenisHalaman.Formulir);
+                dto.setJudul(enFormulir.getTitle());
+
+                if (enFormulir.getModifyBy() != null) {
+                    dto.setIsNew(false);
+                    dto.setModifikasi_date(enFormulir.getModifyDate());
+                    dto.setModifikasi_by(enFormulir.getModifyBy());
+                } else {
+                    dto.setIsNew(true);
+                }
+
+                listOfDtosPending.add(dto);
+            }
+
+            for (VirtualPages enVirtualPages: searchResultVirtualPagesPending) {
+                ResponseMyPages dto = new ResponseMyPages();
+                dto.setTipe(Constant.JenisHalaman.Virtual_Pages);
+                dto.setJudul(enVirtualPages.getTitle());
+
+                if (enVirtualPages.getModifyBy() != null) {
+                    dto.setIsNew(false);
+                    dto.setModifikasi_date(enVirtualPages.getModifyDate());
+                    dto.setModifikasi_by(enVirtualPages.getModifyBy());
+                } else {
+                    dto.setIsNew(true);
+                }
+
+                listOfDtosPending.add(dto);
+            }
+            listDto.setDraft(listOfDtosDraft);
+            listDto.setPending(listOfDtosPending);
+            return listDto;
         } catch (Exception e) {
             logger.error("exception", e);
             throw new Exception("exception", e);
