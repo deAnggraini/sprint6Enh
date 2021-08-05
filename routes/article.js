@@ -61,7 +61,7 @@ router.post('/node-search', (req, res) => {
     res.send({ error: false, msg: "", data });
 });
 
-router.post('/suggestion', (req, res) => {
+router.post('/node-suggestion', (req, res) => {
     res.send({ error: false, msg: "", data: suggestion });
 });
 
@@ -399,9 +399,7 @@ router.post('/generateArticle', (req, res) => {
 });
 
 router.get('/getArticle', (req, res) => {
-    // const { body } = ;
     const { id } = req.query;
-    console.log({ id, sample_empty });
     res.send({ error: false, msg: "", data: sample_non_basic });
 });
 
@@ -409,8 +407,13 @@ router.get('/getContentId', (req, res) => {
     res.send({ error: false, msg: "", data: Math.ceil(Math.random(10) * 100 + 10) });
 });
 
+router.get('/createContentLevel1', (req, res) => {
+    res.send({ error: false, msg: "", data: { id: Math.ceil(Math.random(10) * 100 + 10) } });
+});
+
 router.post('/saveContent', (req, res) => {
     const { body } = req;
+    if (!body.id) body.id = Math.ceil(Math.random(10) * 100 + 10);
     res.send({ error: false, msg: "", data: body });
 });
 
@@ -420,6 +423,12 @@ router.post('/deleteContent', (req, res) => {
 
 router.post('/cancelArticle', (req, res) => {
     res.send({ error: false, msg: "", data: true });
+});
+
+router.post('/saveArticle', (req, res) => {
+    const { body, files } = req;
+    console.log({ body, files });
+    res.send({ error: false, msg: "", data: body });
 });
 
 module.exports = router;
