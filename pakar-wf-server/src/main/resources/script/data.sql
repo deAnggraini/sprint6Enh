@@ -1,0 +1,12 @@
+INSERT INTO "public"."r_workflow"(id, created_by, created_date, deleted, modify_by, modify_date, optlock, name) VALUES ('ARTICLE','system',now()::date, 'f', NULL, NULL, 0, 'ARTICLE WOKFLOW PROCESS NAME');
+
+INSERT INTO "public"."r_workflow_state"(code, created_by, created_date, deleted, modify_by, modify_date, name, workflow_id, optlock) VALUES ('START', 'SYSTEM', now()::DATE, 'f', NULL, NULL, 'STATE FOR STARTING ARTICLE CREATION', 'ARTICLE', 0);
+INSERT INTO "public"."r_workflow_state"(code, created_by, created_date, deleted, modify_by, modify_date, name, workflow_id, optlock) VALUES ('DRAFT', 'SYSTEM', now()::DATE, 'f', NULL, NULL, 'STATE ARTICLE IN DRAFT CONDITION', 'ARTICLE', 0);
+INSERT INTO "public"."r_workflow_state"(code, created_by, created_date, deleted, modify_by, modify_date, name, workflow_id, optlock) VALUES ('PENDING', 'SYSTEM', now()::DATE, 'f', NULL, NULL, 'STATE ARTICLE IN PENDING CONDITION', 'ARTICLE', 0);
+INSERT INTO "public"."r_workflow_state"(code, created_by, created_date, deleted, modify_by, modify_date, name, workflow_id, optlock) VALUES ('PUBLISHED', 'SYSTEM', now()::DATE, 'f', NULL, NULL, 'STATE ARTICLE IN PUBLISHED CONDITION', 'ARTICLE', 0);
+INSERT INTO "public"."r_workflow_state"(code, created_by, created_date, deleted, modify_by, modify_date, name, workflow_id, optlock) VALUES ('REJECTED', 'SYSTEM', now()::DATE, 'f', NULL, NULL, 'STATE ARTICLE IN REJECTED CONDITION', 'ARTICLE', 0);
+INSERT INTO "public"."r_workflow_state"(code, created_by, created_date, deleted, modify_by, modify_date, name, workflow_id, optlock) VALUES ('CANCELLED', 'SYSTEM', now()::DATE, 'f', NULL, NULL, 'STATE ARTICLE IN CANCELLED CONDITION', 'ARTICLE', 0);
+
+INSERT INTO "public"."r_workflow_state_transition"(id, created_by, created_date, deleted, modify_by, modify_date, optlock, transition_name, start_state_id, next_state_id) VALUES (1, 'system', now()::date, 'f', NULL, NULL, 0, 'CREATE DRAFT ARTICLE', 'START', 'DRAFT');
+INSERT INTO "public"."r_workflow_state_transition"(id, created_by, created_date, deleted, modify_by, modify_date, optlock, transition_name, start_state_id, next_state_id) VALUES (2, 'system', now()::date, 'f', NULL, NULL, 0, 'WAITING REVIEW', 'DRAFT', 'PENDING');
+INSERT INTO "public"."r_workflow_state_transition"(id, created_by, created_date, deleted, modify_by, modify_date, optlock, transition_name, start_state_id, next_state_id) VALUES (3, 'system', now()::date, 'f', NULL, NULL, 0, 'APPROVE ARTICLE', 'PENDING', 'PUBLISHED');

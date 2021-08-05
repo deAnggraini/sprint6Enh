@@ -19,9 +19,9 @@ public class MyController extends BaseController {
         return "test resource server";
     }
 
-    @PostMapping(value = "/api/wf/getRoles", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
-            MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<ApiResponseWrapper.RestResponse<List<String>>> getRoles(@RequestHeader("Authorization") String authorization, @RequestHeader("X-USERNAME") String username) {
-        return pakarOauthClient.getRoles(authorization, username);
-    }
+//    @PostMapping(value = "/api/wf/getRoles", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
+//            MediaType.APPLICATION_JSON_VALUE})
+//    public ResponseEntity<ApiResponseWrapper.RestResponse<List<String>>> getRoles(@RequestHeader("Authorization") String authorization, @RequestHeader("X-USERNAME") String username) {
+//        return pakarOauthClient.getRoles(authorization, username);
+//    }
 }
