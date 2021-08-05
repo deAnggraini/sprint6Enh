@@ -170,19 +170,21 @@ height: 184px;
 
                 <!-- right side -->
                 <div class="col" style="max-width: 350px;">
-                    <div class="mx-4 mb-5" *ngIf="!hideImage" style="text-align: center; min-width: 307px;">
+                    <div class="mx-4 mb-5" style="text-align: center; min-width: 307px;">
                         <img class="img-show" [src]="imageSrc" background-position:center
                             style="object-fit: cover; width: 307px; height: 425px;">
                         <div class="mt-2">{{ imageTitle }}</div>
                         <hr>
                     </div>
-                    <div class="video mx-4 mb-5" *ngIf="!hideVideo" style="min-width: 307px;">
+                    <div class="video mx-4 mb-5" style="min-width: 307px;">
                         <!-- <video src="{{videoUrl}}" width="307" height="173" controls>
                             <source src="https://myvideo.bca.co.id/viewerportal/bcavideo/video.vp?programId=esc_program%3A55071&contentAssocId=association%3A183713">
                         </video> -->
-                        <iframe seamless frameborder=0 allowfullscreen webkitallowfullscreen mozallowfullscreen
+                        <iframe seamless frameborder=0 allowfullscreen webkitallowfullscreen mozallowfullscreen *ngIf="showVideo" 
                             [src]="videoUrl" width="307" height="173">
                         </iframe>
+                        <img class="img-show" *ngIf="!showVideo"  [src]="noVideoPreview" background-position:center
+                            style="object-fit: cover; width: 307px; height: 173px;">
                         <hr>
                     </div>
                     <div class="mx-4 mb-5" style="min-width: 307px;">
