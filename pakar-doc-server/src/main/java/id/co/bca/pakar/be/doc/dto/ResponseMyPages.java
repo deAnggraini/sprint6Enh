@@ -49,7 +49,7 @@ public class ResponseMyPages extends BaseDto{
     }
 
     public void setIsNew(Boolean isNew) {
-        isNew = isNew;
+        this.isNew = isNew;
     }
 
     public Date getModifikasi_date() {
