@@ -45,11 +45,11 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<dependency>
-			<groupId>org.flowable</groupId>
-			<artifactId>flowable-spring-boot-starter</artifactId>
-			<version>6.4.2</version>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>org.flowable</groupId>-->
+<!--			<artifactId>flowable-spring-boot-starter</artifactId>-->
+<!--			<version>6.4.2</version>-->
+<!--		</dependency>-->
 		<!-- log4j2 logger -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

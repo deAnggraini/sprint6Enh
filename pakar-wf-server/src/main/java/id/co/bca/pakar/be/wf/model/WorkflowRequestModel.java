@@ -1,5 +1,7 @@
 package id.co.bca.pakar.be.wf.model;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -7,8 +9,9 @@ import java.util.Date;
 @Table(name = "t_wf_request")
 public class WorkflowRequestModel extends EntityBase {
     @Id
-    @SequenceGenerator(name = "wfRequestSeqGen", sequenceName = "wfRequestSeq", initialValue = 1, allocationSize = 1)
-    @GeneratedValue(generator = "wfRequestSeqGen")
+    @GenericGenerator(name = "UUID",  strategy = "org.hibernate.id.UUIDGenerator")
+    @GeneratedValue(generator = "UUID")
+    @Column(name = "id")
     private String id;
     @ManyToOne
     @JoinColumn(name = "process_id")
@@ -17,12 +20,13 @@ public class WorkflowRequestModel extends EntityBase {
     private String title;
     @Column(name = "request_date", nullable = false)
     private Date requestDate;
-    @Column(name =" current_state_id")
-    private Long currentState;
+    @ManyToOne
+    @JoinColumn(name =" current_state")
+    private WorkflowStateModel currentState;
     @Column(name = "userid", nullable = false)
     private String userid;
-    @Column(name = "username", nullable = false)
-    private String username;
+//    @Column(name = "username", nullable = false)
+//    private String username;
 
     public String getId() {
         return id;
@@ -56,11 +60,11 @@ public class WorkflowRequestModel extends EntityBase {
         this.requestDate = requestDate;
     }
 
-    public Long getCurrentState() {
+    public WorkflowStateModel getCurrentState() {
         return currentState;
     }
 
-    public void setCurrentState(Long currentState) {
+    public void setCurrentState(WorkflowStateModel currentState) {
         this.currentState = currentState;
     }
 
@@ -72,11 +76,11 @@ public class WorkflowRequestModel extends EntityBase {
         this.userid = userid;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
+//    public String getUsername() {
+//        return username;
+//    }
+//
+//    public void setUsername(String username) {
+//        this.username = username;
+//    }
 }

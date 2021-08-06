@@ -6,8 +6,7 @@ import javax.persistence.*;
 @Table(name = "r_wf_process")
 public class WorkflowProcessModel extends EntityBase {
     @Id
-    @SequenceGenerator(name = "wfProcessSeqGen", sequenceName = "wfProcessSeq", initialValue = 1, allocationSize = 1)
-    @GeneratedValue(generator = "wfProcessSeqGen")
+    @Column(name = "id", unique = true)
     private String id;
     @Column(name = "name")
     private String name;

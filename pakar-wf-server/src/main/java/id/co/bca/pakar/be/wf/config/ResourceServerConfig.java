@@ -33,15 +33,19 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 			// -- swagger ui
 			"/swagger-resources",
 			"/swagger-resources/**",
-			"/swagger-ui.html"
+			"/swagger-ui.html",
+			"/api/wf/submit**",
+			"/api/wf/tasks",
+			"/api/wf/review",
+			"/api/wf/draft"
 			// other public endpoints of your API may be appended to this array
 	};
 
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
-				.antMatchers(AUTH_WHITELIST).permitAll()
-				.antMatchers("/api/wf/**").authenticated();
+				.antMatchers(AUTH_WHITELIST).permitAll();
+				//.antMatchers("/api/wf/**").authenticated();
 	}
 
 	@Override

@@ -6,7 +6,7 @@ import javax.persistence.*;
  *
  */
 @Entity
-@Table(name = "r_workflow_state")
+@Table(name = "r_wf_state")
 public class WorkflowStateModel extends EntityBase {
     @Id
     @Column(name = "code", nullable = false, length = 50)
@@ -17,8 +17,8 @@ public class WorkflowStateModel extends EntityBase {
     @Column(name = "name", nullable = true, length = 255)
     private String name;
     @ManyToOne
-    @JoinColumn(name = "workflow_id", nullable = false, referencedColumnName = "id")
-    private WorkflowModel workflowModel;
+    @JoinColumn(name = "process_id", nullable = false, referencedColumnName = "id")
+    private WorkflowProcessModel workflowProcessModel;
 
     public String getCode() {
         return code;
@@ -44,11 +44,11 @@ public class WorkflowStateModel extends EntityBase {
         this.name = name;
     }
 
-    public WorkflowModel getWorkflowModel() {
-        return workflowModel;
+    public WorkflowProcessModel getWorkflowProcessModel() {
+        return workflowProcessModel;
     }
 
-    public void setWorkflowModel(WorkflowModel workflowModel) {
-        this.workflowModel = workflowModel;
+    public void setWorkflowProcessModel(WorkflowProcessModel workflowProcessModel) {
+        this.workflowProcessModel = workflowProcessModel;
     }
 }
