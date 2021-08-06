@@ -7,7 +7,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import id.co.bca.pakar.be.oauth2.dto.ResponseUser;
 import id.co.bca.pakar.be.oauth2.dto.SearchDto;
+import id.co.bca.pakar.be.oauth2.dto.UserDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -134,11 +136,15 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<String> findUserNotReader(String username, SearchDto searchDto) {
+	public List<ResponseUser> findUserNotReader(String username, SearchDto searchDto) {
 		List<UserProfile> uRoles = userProfileRepository.findUserNotReader(username, searchDto.getKeyword());
-		List<String> user = new ArrayList<>();
+		List<ResponseUser> user = new ArrayList<ResponseUser>();
 		for(UserProfile ur : uRoles) {
-			user.add(ur.getFullname());
+			ResponseUser userTemp = new ResponseUser();
+			userTemp.setFullname(ur.getFullname());
+			userTemp.setUsername(ur.getUser().getUsername());
+			userTemp.setEmail(ur.getEmail());
+			user.add(userTemp);
 		}
 		return user;
 	}

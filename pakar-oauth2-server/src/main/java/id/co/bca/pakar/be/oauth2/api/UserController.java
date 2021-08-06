@@ -2,7 +2,9 @@ package id.co.bca.pakar.be.oauth2.api;
 
 import id.co.bca.pakar.be.oauth2.common.Constant;
 import id.co.bca.pakar.be.oauth2.dto.LoggedinDto;
+import id.co.bca.pakar.be.oauth2.dto.ResponseUser;
 import id.co.bca.pakar.be.oauth2.dto.SearchDto;
+import id.co.bca.pakar.be.oauth2.dto.UserDto;
 import id.co.bca.pakar.be.oauth2.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,15 +87,15 @@ public class UserController extends BaseController {
 
 	@PostMapping(value = "/api/auth/searchUserNotReader", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<RestResponse<List<String>>> searchUserNotReader(@RequestHeader (name="Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username,
-																		  @RequestBody SearchDto searchDto) {
+	public ResponseEntity<RestResponse<List<ResponseUser>>> searchUserNotReader(@RequestHeader (name="Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username,
+																				@RequestBody SearchDto searchDto) {
 		try {
 			logger.info("load username {}", searchDto);
-			List<String> user = userService.findUserNotReader(username, searchDto);
+			List<ResponseUser> user = userService.findUserNotReader(username, searchDto);
 			return createResponse(user, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
 		} catch (Exception e) {
 			logger.error("exception", e);
-			return this.createResponse(new ArrayList<String>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
+			return this.createResponse(new ArrayList<ResponseUser>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
 		}
 	}
 }
