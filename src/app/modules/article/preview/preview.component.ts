@@ -152,7 +152,7 @@ export class PreviewComponent implements OnInit {
       this.showVideo = true;
     } else {
       this.showVideo = false;
-      this.noVideoPreview = this.backend_img + '/articles/artikel-no-video.svg';
+      this.noVideoPreview = this.backend_img + '/articles/poster-myvideo.png';
     }
   }
 
