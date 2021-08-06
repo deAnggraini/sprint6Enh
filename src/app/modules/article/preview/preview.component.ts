@@ -25,9 +25,9 @@ export class PreviewComponent implements OnInit {
 
   hideTable: boolean = true;
   hideFAQ: boolean = true;
-  hideVideo: boolean = true;
+  showVideo: boolean = false;
+  noVideoPreview: string;
   videoUrl: SafeResourceUrl;
-  hideImage: boolean = true;
   imageTitle: string;
   imageSrc: string;
   dataForm: FormGroup;
@@ -39,9 +39,9 @@ export class PreviewComponent implements OnInit {
   relatedArticle = [];
   imageFile: string;
   sourceImg: string;
+  backend_img: string = environment.backend_img;
 
   //faq carousel
-  backend_img: string = environment.backend_img;
   slides = [];
   slideConfig = {
     "slidesToShow": 3,
@@ -122,7 +122,9 @@ export class PreviewComponent implements OnInit {
           };
         }
         this.imageTitle = image.name.split(".")[0];
-        this.hideImage = false;
+      } else {
+        this.imageSrc = this.backend_img + '/articles/artikel-no-image.jpg';
+        this.imageTitle = "Ini adalah judul dari infografis"
       }
 
     } else {
@@ -146,11 +148,11 @@ export class PreviewComponent implements OnInit {
   getVideo(event) {
     console.log({ event });
     if (event) {
-      // this.videoUrl = event;
       this.videoUrl = this._sanitizer.bypassSecurityTrustResourceUrl(event);
-      this.hideVideo = false;
+      this.showVideo = true;
     } else {
-      this.hideVideo = true;
+      this.showVideo = false;
+      this.noVideoPreview = this.backend_img + '/articles/poster-myvideo.png';
     }
   }
 
