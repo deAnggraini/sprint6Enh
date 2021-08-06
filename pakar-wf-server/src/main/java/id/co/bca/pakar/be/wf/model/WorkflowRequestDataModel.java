@@ -8,7 +8,7 @@ public class WorkflowRequestDataModel extends EntityBase {
     @Id
     @SequenceGenerator(name = "wfRequestDataSeqGen", sequenceName = "wfRequestDataSeq", initialValue = 1, allocationSize = 1)
     @GeneratedValue(generator = "wfRequestDataSeqGen")
-    private String id;
+    private Long id;
     @ManyToOne
     @JoinColumn(name = "request_id")
     private WorkflowRequestModel wfRequest;
@@ -17,11 +17,11 @@ public class WorkflowRequestDataModel extends EntityBase {
     @Column(name = " value")
     private String value;
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

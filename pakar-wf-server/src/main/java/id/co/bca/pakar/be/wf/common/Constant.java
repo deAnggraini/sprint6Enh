@@ -22,7 +22,7 @@ public class Constant {
 		MAX_UPLOAD_EXCEEDED(new String[] { "01", "Exceeded file size" }),
 		DATA_NOT_FOUND(new String[] { "01", "Not found data" }),
 		INVALID_STRUCTURE_LEVEL(new String[] { "01", "Level Structure Invalid" }),
-		INVALID_SORT_STRUCTURE(new String[] { "01", "Sort value exist in same parent  id" }),
+		INVALID_SORT_STRUCTURE(new String[] { "01", "Sort value exist in same parent id" }),
 		ACCESS_TOKEN_EXPIRED(new String[] {"100", "Access Token Expired"}),
 		INVALID_TOKEN(new String[] {"101", "Invalid Token"}),
 		INVALID_ACCESS_TOKEN(new String[] {"102", "Invalid Access Token"}),
@@ -50,6 +50,21 @@ public class Constant {
 	public static class Headers {
 		public static final String AUTHORIZATION = "Authorization";
 		public static final String X_USERNAME = "X-USERNAME";
-		public static final String BEARER = "Bearer";
+		public static final String BEARER = "Bearer ";
+	}
+
+	public static final class Roles {
+		public static final String ROLE_ADMIN = "SUPERADMIN";
+		public static final String ROLE_READER = "READER";
+		public static final String ROLE_EDITOR = "EDITOR";
+		public static final String ROLE_PUBLISHER = "PUBLISHER";
+	}
+
+	public static final class ArticleWfState {
+		public static final String PRE_DRAFT = "PREDRAFT";
+		public static final String DRAFT = "DRAFT";
+		public static final String PENDING = "PENDING";
+		public static final String PUBLISHED = "PUBLISHED";
+		public static final String REJECTED = "REJECTED";
 	}
 }
