@@ -1,17 +1,21 @@
 [
     {
         "id": 1,
+
         "username": "saifulhq",
         "email" : "saifulhq@gmail.com",
+        "fullname": "Saiful Haqqi",
+        "firstname": "Saiful",
+        "lastname": "Haqqi",
+
+        "pic": "./assets/media/users/default.jpg",
+        "roles": ["ADMIN"],
         "password" : "12345",
         "authToken": "QWERTASDFGZXCVB",
         "refreshToken" : "QWERTASDFGZXCVB",
         "expiresIn": "",
-        "roles": ["ADMIN", "EDITOR", "PUBLISHER"],
-        "pic": "./assets/media/users/default.jpg",
-        "fullname": "Saiful Haqqi",
-        "firstname": "Saiful",
-        "lastname": "Haqqi",
+
+
         "occupation": "STAFF",
         "companyName": "OGYA",
         "phone": "456669067892"

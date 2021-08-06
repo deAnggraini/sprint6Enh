@@ -23,8 +23,8 @@ const sample_empty = {
 const sample_basic = {
     id: 100,
     title: 'Tahapan',
-    desc: '',
-    image: '',
+    desc: `<p><b>TEBAL</b> <i>MIRING</i></p>`,
+    image: 'a.jpg',
     video: '',
     created_at: new Date(),
     created_by: '',
@@ -898,6 +898,49 @@ const lastKeyword = [
     { id: 0, text: 'Pembukaan Rekening Tahapan' },
     { id: 0, text: 'Flazz' },
 ];
+
+module.exports.mypages = [
+    {
+        type: 'article',
+        id: 1,
+        title: 'Host to Host ERP Integration',
+        location: 'Aplikasi dan Mesin > Aplikasi/Mesin Pendukung Transaksi Nasabah > Aplikasi Mesin Pendukung Transaksi Umum',
+        modified_date: new Date(),
+        modified_by: 'Putri Faizatu',
+        current_by: 'Theresa Theodorus, Anita Rachmat',
+        state: 'DRAFT'
+    },
+    {
+        type: 'microinformation',
+        id: 2,
+        title: 'Pembukaan Rekening Join Account',
+        location: 'Virtual Page > Rekening',
+        modified_date: new Date(),
+        modified_by: 'Yayopriyo Wibowo',
+        current_by: 'Theresa Theodorus, Natasha Debora',
+        state: 'DRAFT'
+    },
+    {
+        type: 'formulir',
+        id: 3,
+        title: 'Formulir Pembukaan Rekening',
+        location: 'Formulir > Formulir',
+        modified_date: new Date(),
+        modified_by: 'Anita Rachmat',
+        current_by: 'Firda Agustriyani',
+        state: 'DRAFT'
+    },
+    {
+        type: 'atribut',
+        id: 4,
+        title: 'Ini Adalah Judul Atribut Page',
+        location: 'Virtual Page > Lorem Ipsum Dolor sit Amet',
+        modified_date: new Date(),
+        modified_by: 'Putu Ayu Sruti Permata Sari',
+        current_by: 'Firda Agustriyani, Kemal Batubara, Indah Permata Sari, Andreas Herawan, Thomas Wibisono, John Doe, Amalia..',
+        state: 'DRAFT'
+    }
+]
 
 module.exports.suggestion = [
     {

@@ -94,4 +94,8 @@ router.get('/menu', (req, res) => {
     res.send({ error: false, msg: "", data: menus_top.concat(categories).concat(menus_bottom) });
 });
 
+router.post('/searchUserNotReader', (req, res) => {
+    res.send({ error: false, msg: "", data: users });
+});
+
 module.exports = router;
