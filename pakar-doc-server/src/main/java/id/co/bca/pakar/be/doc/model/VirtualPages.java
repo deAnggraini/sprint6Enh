@@ -10,7 +10,6 @@ public class VirtualPages extends EntityBase {
     @GeneratedValue(generator = "virtualPagesSeqGen")
     private Long id;
 
-
     @Column(name = "title", unique = true, nullable = false )
     private String title;
 
@@ -20,6 +19,9 @@ public class VirtualPages extends EntityBase {
     @Column(name = "used_by")
     private String used_by;
 
+    @ManyToOne
+    @JoinColumn(name = "folder")
+    private Folder folder;
 
     public Long getId() {
         return id;
@@ -52,5 +54,12 @@ public class VirtualPages extends EntityBase {
     public void setUsed_by(String used_by) {
         this.used_by = used_by;
     }
-    
+
+    public Folder getFolder() {
+        return folder;
+    }
+
+    public void setFolder(Folder folder) {
+        this.folder = folder;
+    }
 }

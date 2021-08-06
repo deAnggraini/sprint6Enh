@@ -13,7 +13,6 @@ public class Formulir extends EntityBase{
     @Column(name = "title", unique = true, nullable = false)
     private String title;
 
-
     public Long getId() {
         return id;
     }

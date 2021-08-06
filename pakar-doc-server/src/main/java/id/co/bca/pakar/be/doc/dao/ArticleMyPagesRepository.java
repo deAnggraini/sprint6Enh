@@ -16,11 +16,11 @@ public interface ArticleMyPagesRepository extends CrudRepository<Article, Long> 
     )
     List<Article> findMyPagesArticle(@Param("username") String username);
 
-    @Query("select ta from Formulir ta where created_by =:username and deleted is false and state = 'DRAFT'"
+    @Query("select ta from Formulir ta where created_by =:username and deleted is false "
     )
     List<Formulir> findMyPagesFormulir(@Param("username") String username);
 
-    @Query("select ta from VirtualPages ta where created_by =:username and deleted is false and state = 'DRAFT'"
+    @Query("select ta from VirtualPages ta where created_by =:username and deleted is false "
     )
     List<VirtualPages> findMyPagesVirtualPages(@Param("username") String username);
 
@@ -28,11 +28,11 @@ public interface ArticleMyPagesRepository extends CrudRepository<Article, Long> 
     )
     List<Article> findMyPagesArticlePending(@Param("username") String username);
 
-    @Query("select ta from Formulir ta where created_by =:username and deleted is false and state = 'PENDING'"
+    @Query("select ta from Formulir ta where created_by =:username and deleted is false "
     )
     List<Formulir> findMyPagesFormulirPending(@Param("username") String username);
 
-    @Query("select ta from VirtualPages ta where created_by =:username and deleted is false and state = 'PENDING'"
+    @Query("select ta from VirtualPages ta where created_by =:username and deleted is false"
     )
     List<VirtualPages> findMyPagesVirtualPagesPending(@Param("username") String username);
 
