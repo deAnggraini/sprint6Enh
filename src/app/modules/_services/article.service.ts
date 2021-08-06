@@ -53,6 +53,12 @@ export class ArticleService {
     return this.apiService.post(`${this._base_url}/generateArticle`, params);
   }
 
+  // search my pages
+  searchMyPages(keyword: string, state: string = 'DRAFT', page: number = 1, limit: number = 10, maxPage: number = 99) {
+    const params = { keyword, state, page, limit };
+    return this.apiService.post(`${this._base_url}/searchMyPages`, params);
+  }
+
   // search all data [article|faq|pdf]
   search(params: { keyword: string, page: number } = null): Observable<any> {
     if (params) {
@@ -163,10 +169,13 @@ export class ArticleService {
     }
     return formData;
   }
-  saveArticle(article: ArticleDTO, form = null) {
+  saveArticle(article: ArticleDTO, isHasSend: boolean = false, saveAndSend: any = '', sendNote: string = '') {
     const _contents = this.parseToSingleArray(article.contents);
     console.log({ _contents });
-    const _dataForm = Object.assign({}, article, { contents: _contents });
+    const _dataForm = Object.assign({}, article, { contents: _contents, isHasSend });
+    if (isHasSend) {
+      _dataForm.saveAndSend = saveAndSend;
+    }
     // const formData = this.parseToFormObject(_dataForm);
     const formData = toFormData(_dataForm);
     const image = formData.get('image');

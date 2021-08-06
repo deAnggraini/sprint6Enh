@@ -75,7 +75,7 @@ const routes: Routes = [
     RecommendationComponent,
     TerbaruComponent,
     FormArticleComponent,
-    PreviewComponent
+    PreviewComponent,
   ],
   imports: [
     CommonModule,

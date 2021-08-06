@@ -17,13 +17,14 @@
                 <div>Preview</div>
             </a>
             <div class="separator"></div>
-            <a href="#" class="btn btn-link link text-dark d-flex flex-row" [ngClass]="{'disabled' : !isAllPass()}"
-                (click)="onSave($event)">
+            <a href="#" class="btn btn-link link text-dark d-flex flex-row"
+                [ngClass]="{'disabled' : !this.dataForm.valid || hasError || hasImageError}" (click)="onSave($event)">
                 <div [inlineSVG]="'./assets/media/svg/bca/icon/save.svg'" cacheSVG="true" class="svg-icon"></div>
                 <div>Simpan</div>
             </a>
             <div class="separator"></div>
-            <a href="#" class="btn btn-link text-dark d-flex flex-row disabled">
+            <a href="#" class="btn btn-link text-dark d-flex flex-row" [ngClass]="{'disabled' : !isAllPass()}"
+                (click)="onSaveAndSend($event)">
                 <div [inlineSVG]="'./assets/media/svg/bca/icon/send.svg'" cacheSVG="true" class="svg-icon"></div>
                 <div>Simpan & Kirim</div>
             </a>
@@ -56,12 +57,12 @@
                 </pakar-combo-box-accordion>
             </div>
             <div class="form-group col-sm-11 col-lg-9 col-xl-9 col-xxl-9">
-                <label>Deskripsi Singkat *</label>
+                <label>Deskripsi Singkat <span class="text-danger">*</span></label>
                 <ckeditor #editorDesc [editor]="editor" [config]="config" tagName="textarea" (ready)="onReady($event)"
                     (change)="onChange($event)" formControlName="desc"></ckeditor>
             </div>
             <div class="form-group col-sm-11 col-lg-6 col-xl-6 col-xxl-6">
-                <label>Gambar Artikel *</label>
+                <label>Gambar Artikel <span class="text-danger">*</span></label>
                 <div class="custom-file">
                     <input type="file" class="custom-file-input" id="inputGroupFile04" accept="image/*"
                         (change)="onImageChange($event)">
@@ -162,8 +163,8 @@
                     (click)="onCancel($event)">Batal</button>
                 <button type="button" class="btn btn-blue-outline btn-sm px-5 ml-3"
                     [disabled]="!dataForm.valid || hasError || hasImageError" (click)="onSave($event)">Simpan</button>
-                <button type="button" class="btn btn-outline-dark btn-sm rounded-xl px-5 ml-3" disabled>Simpan &
-                    Kirim</button>
+                <button type="button" class="btn btn-outline-dark btn-sm rounded-xl px-5 ml-3"
+                    (click)="onSaveAndSend($event)" [disabled]="!isAllPass()">Simpan & Kirim</button>
             </div>
         </form>
     </div>
@@ -275,39 +276,29 @@
     </mat-accordion>
 </ng-template>
 
-<!-- <ng-template #formAddEdit let-c="close" let-d="dismiss">
+<ng-template #formSaveAndSend let-c="close" let-d="dismiss">
     <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Ubah Accordion</h4>
+        <h4 class="modal-title" id="modal-basic-title">Simpan & Kirim</h4>
         <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
             <i aria-hidden="true">&times;</i>
         </button>
     </div>
     <div class="modal-body pt-0">
-        <form class="form" [formGroup]="accForm" novalidate="novalidate" (ngSubmit)="accSaveAddEdit()">
-            <div class="form-group">
-                <label>Title <span class="text-danger">*</span></label>
-                <input class="form-control" type="text" maxlength="50" placeholder="Masukkan nama menu" required
-                    formControlName="title" autocomplete="off">
-            </div>
-        </form>
+        <div class="form-group">
+            <span>Apakah Kamu yakin ingin menyimpan halaman ini dan mengirimkannya? Halaman belum terpublish sebelum
+                mendapatkan persetujuan dari Admin.</span>
+        </div>
+        <div class="form-group">
+            <label>Kirim Ke <span class="text-danger">*</span></label>
+            <pakar-auto-complete [(ngModel)]="saveAndSend.sendTo.username" [options]="userOptions"
+                placeholder="Masukkan Nama" (onSearch)="searchUser($event)" (onChange)="userChange($event)">
+            </pakar-auto-complete>
+            <textarea rows="4" class="form-control" placeholder="Catatan" [(ngModel)]="saveAndSend.sendNote" style="margin-top:3px"></textarea>
+        </div>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-outline-light btn-sm rounded-lg px-5" (click)="c('Batal')">Batal</button>
-        <button type="button" class="btn btn-sm btn-blue rounded-lg px-5" (click)="accSaveAddEdit()"
-            [disabled]="accForm.invalid">Tambah</button>
+        <button type="button" class="btn btn-sm btn-blue rounded-lg px-5"
+            [disabled]="!(saveAndSend.sendTo.username && saveAndSend.sendNote)" (click)="doSaveAndSend($event)">Kirim</button>
     </div>
-</ng-template> -->
-
-<ng-template #formError let-control="control">
-    <ng-container *ngIf="control.errors && control.dirty">
-        <div class="fv-plugins-message-container">
-            <div class="fv-help-block">
-                <ng-container *ngIf="control.errors.required"><span>Field harus disi</span></ng-container>
-                <ng-container *ngIf="control.errors.minlength"><span>Panjang minimal
-                        {{control.errors.minlength.requiredLength}}</span></ng-container>
-                <ng-container *ngIf="control.errors.maxlength"><span>Panjang maximal
-                        {{control.errors.maxlength.requiredLength}}</span></ng-container>
-            </div>
-        </div>
-    </ng-container>
 </ng-template>

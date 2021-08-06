@@ -17,6 +17,8 @@ import { InputDropDownComponent } from './_components/input-drop-down/input-drop
 import { InputWithLengthComponent } from './_components/input-with-length/input-with-length.component';
 import { MultiSelectComponent } from './_components/multi-select/multi-select.component';
 import { ControlErrorComponent } from './_components/control-error/control-error.component';
+import { AutoCompleteComponent } from './_components/auto-complete/auto-complete.component';
+import { KeysPipe } from './pipe/keys.pipe';
 
 @NgModule({
   declarations: [
@@ -32,6 +34,8 @@ import { ControlErrorComponent } from './_components/control-error/control-error
     InputWithLengthComponent,
     MultiSelectComponent,
     ControlErrorComponent,
+    AutoCompleteComponent,
+    KeysPipe,
   ],
   imports: [
     CommonModule,
@@ -53,7 +57,9 @@ import { ControlErrorComponent } from './_components/control-error/control-error
     InputDropDownComponent,
     InputWithLengthComponent,
     MultiSelectComponent,
-    ControlErrorComponent
+    ControlErrorComponent,
+    AutoCompleteComponent,
+    KeysPipe
   ]
 })
 export class UtilsModule {

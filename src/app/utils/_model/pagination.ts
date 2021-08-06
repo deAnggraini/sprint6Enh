@@ -1,4 +1,12 @@
-export class PaginationModel {
+export interface PaginationDTO {
+    totalData: number;
+    page: number;
+    totalPage: number;
+    limit: number
+    rowPage: number;
+}
+
+export class PaginationModel implements PaginationDTO {
     totalData: number;
     page: number;
     totalPage: number;

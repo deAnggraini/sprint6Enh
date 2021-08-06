@@ -20,6 +20,11 @@ const routes: Routes = [
           import('../modules/article/article.module').then((m) => m.ArticleModule),
       },
       {
+        path: 'user',
+        loadChildren: () =>
+          import('../modules/user/user.module').then((m) => m.UserModule),
+      },
+      {
         path: 'struktur',
         loadChildren: () =>
           import('../modules/category-article/category-article.module').then((m) => m.CategoryArticleModule),

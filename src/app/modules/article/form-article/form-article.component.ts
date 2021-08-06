@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy, ChangeDetectorRef, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy, ChangeDetectorRef, TemplateRef } from '@angular/core';
 import * as CustomEditor from './../../../ckeditor/build/ckeditor';
 import { ArticleService } from '../../_services/article.service';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -9,12 +9,13 @@ import { Option } from 'src/app/utils/_model/option';
 import { SkReferenceService } from '../../_services/sk-reference.service';
 import { AuthService, UserModel } from '../../auth';
 import { ArticleDTO, ArticleContentDTO, ArticleParentDTO } from '../../_model/article.dto';
-import { FormGroup, FormBuilder, Validators, FormControl, ValidationErrors, FormArray } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { StrukturService } from '../../_services/struktur.service';
 import { catchError, map } from 'rxjs/operators';
 import { ConfirmService } from 'src/app/utils/_services/confirm.service';
 import { ToastService } from 'src/app/utils/_services/toast.service';
-import { Content } from '@angular/compiler/src/render3/r3_ast';
+import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { UserService } from '../../_services/user.service';
 
 const TOOL_TIPS = [
   'Berisi aturan/kaidah/ketetapan/syarat/kriteria atas produk/aplikasi yang harus dipahami pembaca sebelum melakukan prosedur atas produk/aplikasi tersebut; dapat dituangkan dalam bentuk kalimat ataupun tabel.',
@@ -38,6 +39,7 @@ const defaultValue: ArticleDTO = {
   references: [],
   related: [],
   suggestions: [],
+  isHasSend: false,
 }
 
 // function alphaNumericValidator(control: FormControl): ValidationErrors | null {
@@ -53,7 +55,7 @@ const defaultValue: ArticleDTO = {
 export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('editorDesc') editorComponent: CKEditorComponent;
-  @ViewChild('articleForm') formArticle: ElementRef<HTMLFormElement>;
+  @ViewChild('formSaveAndSend') formSaveAndSend: TemplateRef<any>;
 
   subscriptions: Subscription[] = [];
 
@@ -132,24 +134,32 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   };
 
   // error manual
-  allPass: boolean = false;
   hasError: boolean = false;
   errorMsg: string = '';
   hasImageError: boolean = false;
   errorImageMsg: string = '';
-  // controls: FormArray;
 
   logs: Map<number, ArticleContentDTO[]> = new Map();
   user: UserModel;
   isEdit: boolean = false;
   dataForm: FormGroup;
-  // dataForm: ArticleDTO;
   finishRender: boolean = false;
   skReferences: BehaviorSubject<Option[]> = new BehaviorSubject([]);
   relatedArticle$: BehaviorSubject<Option[]> = new BehaviorSubject([]);
   suggestionArticle$: BehaviorSubject<Option[]> = new BehaviorSubject([]);
   locationOptions: BehaviorSubject<Option[]> = new BehaviorSubject([]);
   isPreview: boolean = false;
+
+  // save and send
+  userOptions: Option[] = [];
+  isHasSend: boolean = false;
+  saveAndSend = {
+    sendTo: {
+      username: '',
+      email: '',
+    },
+    sendNote: ''
+  }
 
   // accordion
   selectedAccordion: ArticleContentDTO;
@@ -173,17 +183,42 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     private fb: FormBuilder,
     private struktur: StrukturService,
     private confirm: ConfirmService,
-    private toast: ToastService) {
+    private toast: ToastService,
+    private modalService: NgbModal,
+    private configModel: NgbModalConfig,
+    private userService: UserService) {
+    this.configModel.backdrop = 'static';
+    this.configModel.keyboard = false;
   }
 
   // validation
+  isContentsPass(contents: ArticleContentDTO[]): boolean {
+    let result: boolean = true;
+    contents.forEach(d => {
+      if (!result) return;
+      if (d.level > 1) {
+        if (!d.title) result = false;
+        if (!d.topicTitle) result = false;
+        if (!d.topicContent) result = false;
+      } else {
+        // if (!d.intro) result = false;
+      }
+      if (d.children && d.children.length && result)
+        result = this.isContentsPass(d.children);
+    });
+    return result;
+  }
   isAllPass(): boolean {
-    let result = this.dataForm.valid && this.hasError === false && this.hasImageError === false;
-    const contents: ArticleContentDTO[] = this.dataForm.get('contents').value;
+    const _dataForm: ArticleDTO = this.dataForm.value;
+    if (!(this.dataForm.valid && this.hasError === false && this.hasImageError === false)) return false;
+    if (!_dataForm.desc) return false;
+    if (!_dataForm.image) return false;
+    const contents = _dataForm.contents;
     const len = contents.length;
     if (len < 1) {
-      result = false;
+      return false;
     }
+    const result = this.isContentsPass(contents);
     return result;
   }
 
@@ -215,20 +250,6 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   // article action button
-  private convertToFormData(_c: ArticleContentDTO[]): ArticleContentDTO[] {
-    let result: ArticleContentDTO[] = [];
-    if (_c && _c.length) {
-      const _clone: ArticleContentDTO[] = JSON.parse(JSON.stringify(_c));
-      _clone.forEach(d => {
-        delete d.expanded;
-        delete d.isEdit;
-        delete d.no;
-        result.push(d);
-        result = result.concat(this.convertToFormData(d.children));
-      });
-    }
-    return result;
-  }
   onSave(e) {
     this.confirm.open({
       title: `Simpan`,
@@ -238,9 +259,9 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     }).then((confirmed) => {
       if (confirmed === true) {
         const _dataForm = this.dataForm.value;
-        const formData = new FormData(this.formArticle.nativeElement);
+        // const formData = new FormData(this.formArticle.nativeElement);
         this.subscriptions.push(
-          this.article.saveArticle(this.dataForm.value, formData).subscribe(resp => {
+          this.article.saveArticle(_dataForm).subscribe(resp => {
             if (resp) {
               this.onPreview(e);
               this.cdr.detectChanges();
@@ -252,9 +273,6 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     return false;
   }
   onCancel(e) {
-    // console.log(this.dataForm.valid, this.dataForm.value);
-    // console.log(this.dataForm.value.contents);
-    // console.log(this.logs);
     this.confirm.open({
       title: `Batal Tambah Artikel`,
       message: `<p>Apakah Kamu yakin ingin keluar dan membatalkan membuat artikel baru?`,
@@ -276,7 +294,25 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     return false;
   }
   onSaveAndSend(e) {
+    // reset form
+    this.saveAndSend.sendTo.username = '';
+    this.saveAndSend.sendTo.email = '';
+    this.saveAndSend.sendNote = '';
 
+    this.modalService.open(this.formSaveAndSend);
+    return false;
+  }
+  doSaveAndSend(e) {
+    const _dataForm = this.dataForm.value;
+    console.log(this.saveAndSend);
+    // this.subscriptions.push(
+    //   this.article.saveArticle(_dataForm, true, this.saveAndSend).subscribe(resp => {
+    //     if (resp) {
+    //       this.cdr.detectChanges();
+    //     }
+    //   })
+    // );
+    return false;
   }
   onPreview(e) {
     this.article.formData = this.dataForm.value as ArticleDTO;
@@ -451,6 +487,25 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  // User saerch
+  searchUser(keyword) {
+    console.log({ keyword });
+    if (keyword) {
+      this.subscriptions.push(
+        this.userService.searchUserNotReader(keyword).subscribe(resp => {
+          if (resp) {
+            this.userOptions = this.userService.usersToOptions(resp);
+          }
+        })
+      );
+    } else {
+      this.userOptions = [];
+    }
+  }
+  userChange(item: Option) {
+    this.saveAndSend.sendTo.email = item.value;
+  }
+
   // accordion event
   numberingFormat(data: ArticleContentDTO): string {
     const listParent = data.listParent;
@@ -562,7 +617,6 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   onImageChange(e) {
     if (e.target.files && e.target.files.length) {
       const [file] = e.target.files;
-      // const { size, name, type } = file;
       this.dataForm.patchValue({
         image: file
       });

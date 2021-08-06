@@ -31,7 +31,7 @@ export declare interface ArticleContentDTO {
     children: ArticleContentDTO[],
     listParent?: ArticleParentDTO[],
     expanded?: boolean,
-    isEdit?: boolean
+    isEdit?: boolean,
 }
 
 export declare interface ArticleDTO {
@@ -50,4 +50,14 @@ export declare interface ArticleDTO {
     references: SkReferenceDTO[],
     related: ArticleRelatedDTO[],
     suggestions: ArticleRelatedDTO[],
+
+    // save & send
+    isHasSend: boolean,
+    saveAndSend?: {
+        sendTo: {
+            username: string,
+            email: string,
+        },
+        sendNote: string
+    }
 }

@@ -13,5 +13,12 @@ export class CommonHttpResponse {
         page: number,
         maxPage?: number,
         rowPerPage?: number,
+
+        /* Pagination DTO */
+        // totalData: number;
+        // page: number;
+        totalPage: number;
+        limit: number
+        rowPage: number;
     }
 }

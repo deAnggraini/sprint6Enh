@@ -39,8 +39,9 @@ $bca-color-dark: #0F5EA9;
   font-size: 1.625rem !important;
 }
 
-.font-size-28 {
-  font-size: 1.75rem !important;
+.font-size-28,
+.fs28 {
+  font-size: 28px !important;
 }
 
 .font-bold-400,
@@ -70,10 +71,12 @@ $bca-color-dark: #0F5EA9;
   @extend .font-size-18;
 }
 
-.pakar-text-header {
+.pakar-text-header,
+.pakar-text-header-28,
+.th28 {
   color: #201F1E;
-  @extend .font-bold-600;
-  @extend .font-size-28;
+  @extend .fb6;
+  @extend .fs28;
 }
 
 .pakar-text-header-desc {
@@ -104,9 +107,9 @@ $bca-color-dark: #0F5EA9;
       cursor: not-allowed;
     }
 
-    &:hover:not(:disabled)
-    // , &:focus:not(:disabled) 
-    {
+    &:hover:not(:disabled) // , &:focus:not(:disabled) 
+
+      {
       background-color: $bca-color-dark;
 
       i,

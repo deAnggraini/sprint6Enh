@@ -1,0 +1,138 @@
+<div class="background-overlay background-search" style="
+    background-image: url('./assets/media/images/struktur_bg.jpeg');
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 184px;
+"></div>
+<div class="mx-15 mt-n50">
+    <div class="my-7">
+        <pakar-search></pakar-search>
+    </div>
+    <div class="card card-custom px-10 py-5">
+        <div class="d-flex flex-row  align-items-center justify-content-between mb-3">
+            <div class="d-flex flex-row align-items-center">
+                <span [inlineSVG]="'./assets/media/svg/bca/icon/page.svg'" class="svg-icon mr-2"></span>
+                <div class="pakar-text-header my-2">My Pages</div>
+            </div>
+            <div class="input-group inner">
+                <input type="text" class="form-control" placeholder="Cari artikel, virtual page atau formulir"
+                    [(ngModel)]="keyword" style="height: 34px;">
+                <div class="form-control-clear btn btn-icon btn-clean" *ngIf="keyword" (click)="keyword =''">
+                    <span [inlineSVG]="'./assets/media/svg/icons/Navigation/Close.svg'" cacheSVG="true"
+                        class="hidden svg-icon mr-1 ml-1"></span>
+                </div>
+                <span class="input-group-btn" style="height: 34px;">
+                    <button class="btn btn-outline-secondary btn-success btn-sm" type="button"
+                        (click)="btnSearch(inputSearch)">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </span>
+            </div>
+        </div>
+
+        <ul ngbNav #nav="ngbNav" class="nav-tabs">
+            <li [ngbNavItem]="i+1" *ngFor="let key of listHeader; let i = index ">
+                <a ngbNavLink style="text-transform:capitalize;">
+                    {{key}} ({{dataForm[key].pagination.totalData || 0}})
+                </a>
+                <ng-template ngbNavContent>
+                    <table class="table table-head-borderless">
+                        <thead>
+                            <tr>
+                                <th scope="col" style="width: 36px;"><span
+                                        [inlineSVG]="'./assets/media/svg/bca/icon/doc-empty.svg'" class="svg"></span>
+                                </th>
+                                <th scope="col" sortable="name" (sort)="onSort($event)">Judul</th>
+                                <th scope="col" sortable="area" (sort)="onSort($event)" style="width: 320px;">Lokasi
+                                </th>
+                                <th scope="col" sortable="population" (sort)="onSort($event)" style="width: 180px;">
+                                    Modifikasi Terakhir</th>
+                                <th scope="col" sortable="population" (sort)="onSort($event)" style="width: 180px;">
+                                    Modifikasi Oleh</th>
+                                <th scope="col" sortable="population" (sort)="onSort($event)" style="width: 260px;">
+                                    Sedang di Edit Oleh</th>
+                                <th scope="col" sortable="population" (sort)="onSort($event)" style="width: 45px;">
+                                    &nbsp;</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngIf="dataForm[key].dataList.length == 0">
+                                <td colspan="8">
+                                    <div class="d-flex flex-column align-items-center empty-data">
+                                        <span [inlineSVG]="'./assets/media/svg/bca/icon/doc-2-empty.svg'"
+                                            class="svg"></span>
+                                        <div>Kamu tidak memiliki halaman yang dalam proses review.</div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <ng-container *ngIf="dataForm[key].dataList.length">
+                                <tr *ngFor="let item of dataForm[key].dataList; let i = index;">
+                                    <td>
+                                        <span [inlineSVG]="'./assets/media/svg/bca/icon/'+getIcon(item.type)"
+                                            class="svg"></span>
+                                    </td>
+                                    <td>{{item.title}}</td>
+                                    <td>{{item.location}}</td>
+                                    <td>{{item.modified_date | date}}</td>
+                                    <td>{{item.modified_by}}</td>
+                                    <td>{{item.current_by}}</td>
+                                    <td style="width: 45px;">
+                                        <div ngbDropdown #dropDown="ngbDropdown" container="body"
+                                            placement="bottom-right auto">
+                                            <div type="button" class="btn btn-clear" ngbDropdownToggle>
+                                                <i class="ki ki-more-hor"></i>
+                                            </div>
+                                            <div class="dropdown-menu p-0 m-0 dropdown-menu-right dropdown-menu-anim-up"
+                                                ngbDropdownMenu>
+                                                <ul class="navi navi-hover">
+                                                    <li class="navi-item">
+                                                        <a class="navi-link cursor-pointer"
+                                                            (click)="onClickRevision(item, i); dropDown.close()">
+                                                            <span class="navi-text font-weight-bolder">Riwayat
+                                                                Revisi</span>
+                                                        </a>
+                                                    </li>
+                                                    <li class="navi-item">
+                                                        <a class="navi-link cursor-pointer"
+                                                            (click)="onClickEdit(item, i); dropDown.close()">
+                                                            <span class="navi-text font-weight-bolder">Ubah</span>
+                                                        </a>
+                                                    </li>
+                                                    <li class="navi-item">
+                                                        <a class="navi-link cursor-pointer"
+                                                            (click)="onClickCancel(item, i); dropDown.close()">
+                                                            <span class="navi-text font-weight-bolder">Hapus / Batal
+                                                                Tambah</span>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </ng-container>
+                        </tbody>
+                    </table>
+                    <div *ngIf="dataForm[key].dataList.length"
+                        class="d-flex justify-content-center align-items-center flex-wrap mt-5">
+                        <app-pagination (onChange)="setPage(key, dataForm[key], $event)"
+                            [paging]="dataForm[key].pagination">
+                        </app-pagination>
+                    </div>
+                </ng-template>
+            </li>
+
+            <!-- Right Combo Box -->
+            <li ngbNavItem class="ml-auto">
+                Jenis Halaman :
+                <select [(ngModel)]="type">
+                    <option value="ALL">Semua</option>
+                    <option value="article">Artikel</option>
+                    <option value="virtualpage">Virtual Page</option>
+                    <option value="formulir">Formulir</option>
+                </select>
+            </li>
+        </ul>
+        <div [ngbNavOutlet]="nav" class="data-item mt-2"></div>
+    </div>
+</div>
