@@ -6,9 +6,7 @@ import javax.persistence.*;
 @Table(name = "r_wf_transition")
 public class WorkflowTransitionModel extends EntityBase {
     @Id
-    @SequenceGenerator(name = "wfTransSeqGen", sequenceName = "wfTransSeq", initialValue = 1, allocationSize = 1)
-    @GeneratedValue(generator = "wfTransSeqGen")
-    @Column(name = "id", nullable = false, unique = true, length = 10)
+    @Column(name = "id", nullable = false, unique = true)
     private Long id;
     @Version
     @Column(name = "optlock", columnDefinition = "integer DEFAULT 0", nullable = false)

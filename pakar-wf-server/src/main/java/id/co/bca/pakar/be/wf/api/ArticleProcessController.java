@@ -5,6 +5,9 @@ import id.co.bca.pakar.be.wf.common.Constant;
 import id.co.bca.pakar.be.wf.dto.ArticleDto;
 import id.co.bca.pakar.be.wf.dto.RequestTaskDto;
 import id.co.bca.pakar.be.wf.dto.TaskDto;
+import id.co.bca.pakar.be.wf.exception.UndefinedProcessException;
+import id.co.bca.pakar.be.wf.exception.UndefinedStartedStateException;
+import id.co.bca.pakar.be.wf.exception.UndefinedUserTaskException;
 import id.co.bca.pakar.be.wf.service.ArticleWorkflowService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,14 +54,33 @@ public class ArticleProcessController extends BaseController {
 ////        service.submitReview(approval);
 //    }
 
+    /**
+     * start workflow request
+     *
+     * @param authorization
+     * @param username
+     * @param articleDto
+     */
     @PostMapping(value = "/api/wf/draft", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
             MediaType.APPLICATION_JSON_VALUE})
-    public void submitDraft(@RequestHeader(name = "Authorization") String authorization, @RequestHeader(name = "X-USERNAME") String username, @RequestBody ArticleDto articleDto) {
+    public ResponseEntity<RestResponse<TaskDto>> submitDraft(@RequestHeader(name = "Authorization") String authorization, @RequestHeader(name = "X-USERNAME") String username, @RequestBody ArticleDto articleDto) {
         try {
+            logger.info("receive request to start article workflow");
             ObjectMapper oMapper = new ObjectMapper();
-            articleWorkflowService.startProcess(username, oMapper.convertValue(articleDto, Map.class));
+            TaskDto taskDto = articleWorkflowService.startProcess(username, oMapper.convertValue(articleDto, Map.class));
+            return createResponse(taskDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, null));
+        } catch (UndefinedUserTaskException e) {
+            logger.error("exception", e);
+            return createResponse(new TaskDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("usertask.not.found", null, null));
+        } catch (UndefinedProcessException e) {
+            logger.error("exception", e);
+            return createResponse(new TaskDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, null));
+        } catch (UndefinedStartedStateException e) {
+            logger.error("exception", e);
+            return createResponse(new TaskDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, null));
         } catch (Exception e) {
             logger.error("exception", e);
+            return createResponse(new TaskDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, null));
         }
     }
 
@@ -68,6 +90,14 @@ public class ArticleProcessController extends BaseController {
 //        service.startProcess(article);
     }
 
+    /**
+     * API for get all task for certain assigne
+     *
+     * @param authorization
+     * @param username
+     * @param dto
+     * @return
+     */
     @PostMapping("/api/wf/tasks")
     public ResponseEntity<RestResponse<List<TaskDto>>> getTasks(@RequestHeader(name = "Authorization") String authorization, @RequestHeader(name = "X-USERNAME") String username, @RequestBody RequestTaskDto dto) {
         try {
@@ -75,11 +105,11 @@ public class ArticleProcessController extends BaseController {
             logger.info("received token bearer --- {}", authorization);
             dto.setUsername(username);
             dto.setToken(getTokenFromHeader(authorization));
-//            Boolean status = articleWorkflowService.deleteContent(deleteContentDto);
-            return createResponse(new ArrayList<TaskDto>(), Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, Locale.ENGLISH));
+            List<TaskDto> taskDtos = articleWorkflowService.getTasks(username);
+            return createResponse(taskDtos, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, Locale.ENGLISH));
         } catch (Exception e) {
             logger.error("exception", e);
-            return createResponse(new ArrayList<TaskDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, Locale.ENGLISH));
+            return createResponse(new ArrayList<TaskDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, null));
         }
     }
 }

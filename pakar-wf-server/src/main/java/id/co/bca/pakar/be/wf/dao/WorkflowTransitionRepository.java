@@ -5,5 +5,5 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface WorkflowTransitionDao extends CrudRepository<WorkflowTransitionModel, Long> {
+public interface WorkflowTransitionRepository extends CrudRepository<WorkflowTransitionModel, Long> {
 }

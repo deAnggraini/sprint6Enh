@@ -3,12 +3,10 @@ package id.co.bca.pakar.be.wf.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "r_wf_transition_action")
-public class WorkflowTransitionActionModel extends EntityBase {
+@Table(name = "r_wf_transition_service_task")
+public class WorkflowTransitionServiceTaskModel extends EntityBase {
     @Id
-    @SequenceGenerator(name = "wfTransActionSeqGen", sequenceName = "wfTransActionSeq", initialValue = 1, allocationSize = 1)
-    @GeneratedValue(generator = "wfTransActionSeqGen")
-    @Column(name = "id", nullable = false, unique = true, length = 10)
+    @Column(name = "id", nullable = false, unique = true)
     private Long id;
     @Version
     @Column(name = "optlock", columnDefinition = "integer DEFAULT 0", nullable = false)
@@ -17,8 +15,8 @@ public class WorkflowTransitionActionModel extends EntityBase {
     @JoinColumn(name = "transition", nullable = false)
     private WorkflowTransitionModel transition;
     @ManyToOne
-    @JoinColumn(name = "action", nullable = false)
-    private WorkflowActionModel action;
+    @JoinColumn(name = "service_task", nullable = false)
+    private WorkflowServiceTaskModel serviceTask;
 
     public Long getId() {
         return id;
@@ -44,11 +42,11 @@ public class WorkflowTransitionActionModel extends EntityBase {
         this.transition = transition;
     }
 
-    public WorkflowActionModel getAction() {
-        return action;
+    public WorkflowServiceTaskModel getServiceTask() {
+        return serviceTask;
     }
 
-    public void setAction(WorkflowActionModel action) {
-        this.action = action;
+    public void setServiceTask(WorkflowServiceTaskModel serviceTask) {
+        this.serviceTask = serviceTask;
     }
 }

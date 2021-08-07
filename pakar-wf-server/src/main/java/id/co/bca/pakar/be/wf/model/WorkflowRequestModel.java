@@ -25,8 +25,6 @@ public class WorkflowRequestModel extends EntityBase {
     private WorkflowStateModel currentState;
     @Column(name = "userid", nullable = false)
     private String userid;
-//    @Column(name = "username", nullable = false)
-//    private String username;
 
     public String getId() {
         return id;

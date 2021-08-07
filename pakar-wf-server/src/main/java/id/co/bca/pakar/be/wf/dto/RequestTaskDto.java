@@ -2,7 +2,7 @@ package id.co.bca.pakar.be.wf.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class RequestTaskDto extends BaseDto {
+public class RequestTaskDto extends PageDto {
     @JsonProperty("assigne")
     private String assigne;
 

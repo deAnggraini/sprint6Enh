@@ -4,11 +4,11 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "t_wf_action_target")
-public class WorkflowActionTargetModel extends EntityBase {
+@Table(name = "t_wf_user_task_assginment")
+public class WorkflowUserTaskAssignmentModel extends EntityBase {
     @Id
-    @SequenceGenerator(name = "wfActionTargetSeqGen", sequenceName = "wfActionTargetSeq", initialValue = 1, allocationSize = 1)
-    @GeneratedValue(generator = "wfActionTargetSeqGen")
+    @SequenceGenerator(name = "wfUserTaskAssignmentSeqGen", sequenceName = "wfUserTaskAssignmentSeq", initialValue = 1, allocationSize = 1)
+    @GeneratedValue(generator = "wfUserTaskAssignmentSeqGen")
     private Long id;
     @Column(name = "proposed_by")
     private String proposedBy;
@@ -16,6 +16,9 @@ public class WorkflowActionTargetModel extends EntityBase {
     private Date proposedDate = new Date();
     @Column(name = "assigne")
     private String assigne;
+    @ManyToOne
+    @JoinColumn(name = "user_task")
+    private WorkflowUserTaskModel userTaskModel;
 
     public Long getId() {
         return id;
@@ -47,5 +50,13 @@ public class WorkflowActionTargetModel extends EntityBase {
 
     public void setAssigne(String assigne) {
         this.assigne = assigne;
+    }
+
+    public WorkflowUserTaskModel getUserTaskModel() {
+        return userTaskModel;
+    }
+
+    public void setUserTaskModel(WorkflowUserTaskModel userTaskModel) {
+        this.userTaskModel = userTaskModel;
     }
 }

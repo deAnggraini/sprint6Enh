@@ -6,17 +6,17 @@ import javax.persistence.*;
  *
  */
 @Entity
-@Table(name = "r_wf_action")
-public class WorkflowActionModel extends EntityBase {
+@Table(name = "r_wf_user_task")
+public class WorkflowUserTaskModel extends EntityBase {
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "id", nullable = false, unique = true)
     private Long id;
     @Version
     @Column(name = "optlock", columnDefinition = "integer DEFAULT 0", nullable = false)
     private Long version;
     @ManyToOne
-    @JoinColumn(name = "action_type")
-    private WorkflowActionTypeModel actionType;
+    @JoinColumn(name = "user_task_type")
+    private WorkflowUserTaskTypeModel userTaskType;
     @ManyToOne
     @JoinColumn(name = "process")
     private WorkflowProcessModel process;
@@ -39,14 +39,6 @@ public class WorkflowActionModel extends EntityBase {
 
     public void setVersion(Long version) {
         this.version = version;
-    }
-
-    public WorkflowActionTypeModel getActionType() {
-        return actionType;
-    }
-
-    public void setActionType(WorkflowActionTypeModel actionType) {
-        this.actionType = actionType;
     }
 
     public WorkflowProcessModel getProcess() {

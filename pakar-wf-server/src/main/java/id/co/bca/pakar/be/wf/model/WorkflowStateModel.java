@@ -17,6 +17,9 @@ public class WorkflowStateModel extends EntityBase {
     @Column(name = "name", nullable = true, length = 255)
     private String name;
     @ManyToOne
+    @JoinColumn(name = "state_type", nullable = false)
+    private WorkflowStateTypeModel workflowStateTypeModel;
+    @ManyToOne
     @JoinColumn(name = "process_id", nullable = false, referencedColumnName = "id")
     private WorkflowProcessModel workflowProcessModel;
 
@@ -42,6 +45,14 @@ public class WorkflowStateModel extends EntityBase {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public WorkflowStateTypeModel getWorkflowStateTypeModel() {
+        return workflowStateTypeModel;
+    }
+
+    public void setWorkflowStateTypeModel(WorkflowStateTypeModel workflowStateTypeModel) {
+        this.workflowStateTypeModel = workflowStateTypeModel;
     }
 
     public WorkflowProcessModel getWorkflowProcessModel() {
