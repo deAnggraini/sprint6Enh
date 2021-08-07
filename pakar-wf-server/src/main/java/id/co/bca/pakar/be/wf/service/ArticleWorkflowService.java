@@ -38,6 +38,9 @@ public class ArticleWorkflowService {
     @Autowired
     private WorkflowRequestUserTaskRepository workflowRequestUserTaskRepository;
 
+    @Autowired
+    private WorkflowRequestDataRepository workflowRequestDataRepository;
+
     /**
      * start process workflow article
      *
@@ -50,6 +53,7 @@ public class ArticleWorkflowService {
     public TaskDto startProcess(String username, Map map) throws Exception {
         try {
             logger.debug("start process workflow");
+            logger.debug("article id {}",map.get("id"));
             Map<String, Object> variables = new HashMap<>();
             variables.put("sender", map.get("sender"));
             variables.put("receiver", map.get("receiver"));
@@ -78,7 +82,14 @@ public class ArticleWorkflowService {
             requestModel.setWfprocess(workflowProcessModel);
 
             logger.info("save request flow");
-            workflowRequestRepository.save(requestModel);
+            requestModel = workflowRequestRepository.save(requestModel);
+
+            WorkflowRequestDataModel requestDataModel = new WorkflowRequestDataModel();
+            requestDataModel.setCreatedBy(username);
+            requestDataModel.setWfRequest(requestModel);
+            requestDataModel.setName("ARTICLE_ID");
+            requestDataModel.setValue(""+ variables.get("article_id"));
+            requestDataModel = workflowRequestDataRepository.save(requestDataModel);
 
             Optional<WorkflowUserTaskModel> userTaskOpt = workflowUserTaskRepository.findById(USER_TASK_DEFAULT_DEF);
             if (userTaskOpt.isEmpty()) {
@@ -87,26 +98,19 @@ public class ArticleWorkflowService {
 
             WorkflowUserTaskModel userTaskModel = userTaskOpt.get();
 
-            logger.info("populate user assignment ");
-            WorkflowUserTaskAssignmentModel workflowUserTaskAssignmentModel = new WorkflowUserTaskAssignmentModel();
-            workflowUserTaskAssignmentModel.setAssigne(username); // assign to self pic
-            workflowUserTaskAssignmentModel.setCreatedBy(username);
-            workflowUserTaskAssignmentModel.setProposedBy(username);
-            workflowUserTaskAssignmentModel.setUserTaskModel(userTaskModel);
-            logger.info("save user task assignment");
-            workflowUserTaskAssignmentRepository.save(workflowUserTaskAssignmentModel);
-
             WorkflowRequestUserTaskModel requestUserTaskModel = new WorkflowRequestUserTaskModel();
             requestUserTaskModel.setCreatedBy(username);
             requestUserTaskModel.setUserTaskModel(userTaskModel);
             requestUserTaskModel.setRequestModel(requestModel);
+            requestUserTaskModel.setProposedBy(username);
+            requestUserTaskModel.setAssigne(username); // assign to self pic
             workflowRequestUserTaskRepository.save(requestUserTaskModel);
 
             TaskDto taskDto = new TaskDto();
             taskDto.setCurrentState(initState.getCode());
             taskDto.setArticleId((Long)variables.get("article_id"));
             taskDto.setProcessId(requestModel.getId());
-            taskDto.setAssigne(workflowUserTaskAssignmentModel.getAssigne());
+            taskDto.setAssigne(requestUserTaskModel.getAssigne());
 
             return taskDto;
         } catch (UndefinedUserTaskException e) {
@@ -128,7 +132,7 @@ public class ArticleWorkflowService {
     public List<TaskDto> getTasks(String assignee) throws Exception {
         logger.debug("get all task for assigne {}", assignee);
         try {
-            Iterable<WorkflowUserTaskAssignmentModel> tasks = workflowUserTaskAssignmentRepository.findByAssigne(assignee);
+            Iterable<WorkflowRequestUserTaskModel> tasks = workflowRequestUserTaskRepository.findByAssigne(assignee);
             List<TaskDto> dtos = new MapperHelper().mapToTaskDtos(tasks);
             return dtos;
         } catch (Exception e) {
@@ -136,6 +140,19 @@ public class ArticleWorkflowService {
             throw new Exception("exception", e);
         }
     }
+
+//    @Transactional
+//    public List<TaskDto> getTaskRequest(String assignee) throws Exception {
+//        logger.debug("get all request task for assigne {}", assignee);
+//        try {
+//            Iterable<WorkflowRequestModel> tasks = workflowRequestRepository.findByAssigne(assignee);
+//            List<TaskDto> dtos = new MapperHelper().mapToTaskDtos(tasks);
+//            return dtos;
+//        } catch (Exception e) {
+//            logger.error("exception", e);
+//            throw new Exception("exception", e);
+//        }
+//    }
 //
 //    @Transactional
 //    public void submitReview(Approval approval) {
@@ -145,13 +162,20 @@ public class ArticleWorkflowService {
 //    }
 
     private class MapperHelper {
-        public List<TaskDto> mapToTaskDtos(Iterable<WorkflowUserTaskAssignmentModel> iterable) {
+        public List<TaskDto> mapToTaskDtos(Iterable<WorkflowRequestUserTaskModel> iterable) {
             List<TaskDto> dtos = new ArrayList<>();
-            for (WorkflowUserTaskAssignmentModel model : iterable) {
+            for (WorkflowRequestUserTaskModel model : iterable) {
                 TaskDto dto = new TaskDto();
                 dto.setAssigne(model.getAssigne());
-                Long userTask = model.getUserTaskModel().getId();
-                dto.setCurrentState("DRAFT");
+                dto.setCurrentState(model.getRequestModel().getCurrentState().getCode());
+                dto.setProcessId(model.getRequestModel().getId());
+                logger.debug("article id {}", model.getRequestModel().getId());
+                Optional<WorkflowRequestDataModel> requestDataModelOpt = workflowRequestDataRepository.findByNameAndRequestId("ARTICLE_ID", model.getRequestModel().getId());
+                if(requestDataModelOpt.isPresent()) {
+                    WorkflowRequestDataModel requestDataModel = requestDataModelOpt.get();
+                    logger.debug("article id {}", requestDataModel.getValue());
+                    dto.setArticleId(Long.parseLong(requestDataModel.getValue()));
+                }
                 dtos.add(dto);
             }
             return dtos;

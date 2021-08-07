@@ -1,6 +1,7 @@
 package id.co.bca.pakar.be.wf.model;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "t_wf_request_user_task")
@@ -16,6 +17,12 @@ public class WorkflowRequestUserTaskModel extends EntityBase {
     @ManyToOne
     @JoinColumn(name = "user_task_id")
     private WorkflowUserTaskModel userTaskModel;
+    @Column(name = "proposed_by")
+    private String proposedBy;
+    @Column(name = "proposed_date")
+    private Date proposedDate = new Date();
+    @Column(name = "assigne")
+    private String assigne;
 
     public Long getId() {
         return id;
@@ -39,5 +46,29 @@ public class WorkflowRequestUserTaskModel extends EntityBase {
 
     public void setUserTaskModel(WorkflowUserTaskModel userTaskModel) {
         this.userTaskModel = userTaskModel;
+    }
+
+    public String getProposedBy() {
+        return proposedBy;
+    }
+
+    public void setProposedBy(String proposedBy) {
+        this.proposedBy = proposedBy;
+    }
+
+    public Date getProposedDate() {
+        return proposedDate;
+    }
+
+    public void setProposedDate(Date proposedDate) {
+        this.proposedDate = proposedDate;
+    }
+
+    public String getAssigne() {
+        return assigne;
+    }
+
+    public void setAssigne(String assigne) {
+        this.assigne = assigne;
     }
 }
