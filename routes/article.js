@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const categoryArticle = require('../database/category-article');
-const { mypages, sample_empty, sample_basic, sample_non_basic, articles, recommendation, news, popular, suggestion, lastKeyword } = require('../database/articles');
+const { notification, mypages, sample_empty, sample_basic, sample_non_basic, articles, recommendation, news, popular, suggestion, lastKeyword } = require('../database/articles');
 const theme = require('../database/themes');
 const _ = require('lodash');
 const path = require('path');
@@ -438,11 +438,11 @@ router.post('/searchMyPages', (req, res) => {
 
     let list = [];
     let totalElements = 0, totalPages = 0;
-    if (state == "DRAFT") {
-        totalElements = Math.ceil(Math.random() * 100);
-        list = mypages.slice(0, limit);
-        totalPages = Math.ceil(totalElements / limit);
-    }
+    // if (state == "DRAFT") {
+    totalElements = Math.ceil(Math.random() * 100);
+    list = mypages.slice(0, limit);
+    totalPages = Math.ceil(totalElements / limit);
+    // }
     const data = {
         totalElements,
         totalPages,
@@ -451,6 +451,13 @@ router.post('/searchMyPages', (req, res) => {
     }
 
     res.send({ error: false, msg: "", data });
+});
+
+router.post('/getNotification', (req, res) => {
+    const { body } = req;
+    console.log({ body });
+
+    res.send({ error: false, msg: "", data: notification });
 });
 
 module.exports = router;
