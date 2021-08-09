@@ -600,6 +600,9 @@ public class ArticleController extends BaseController {
             maps.put("totalPages", pageMyPageDto.getTotalPages());
             maps.put("currentPage", searchDto.getPage());
             return createResponse(maps, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, null));
+        } catch (MinValuePageNumberException e) {
+            logger.error("exception", e);
+            return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("paging.minimum.invalid", null, null));
         } catch (DataNotFoundException e) {
             logger.error("exception", e);
             return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, null));

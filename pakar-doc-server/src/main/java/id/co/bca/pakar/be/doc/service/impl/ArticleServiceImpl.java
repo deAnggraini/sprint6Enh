@@ -1041,7 +1041,7 @@ public class ArticleServiceImpl implements ArticleService {
      * @throws Exception
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {Exception.class, MinValuePageNumberException.class})
     public Page<MyPageDto> searchMyPages(SearchMyPageDto searchDto) throws Exception {
         try {
             logger.info("search my page dto");
@@ -1053,8 +1053,11 @@ public class ArticleServiceImpl implements ArticleService {
                 searchDto.setPage(0L);
             }
 
+            int pageNum = searchDto.getPage().intValue() - 1;
+            if(pageNum < 0)
+                throw new MinValuePageNumberException("page number smaller than 0");
             Sort sort = searchDto.getSorting().getSort().equals("asc")? Sort.by(searchDto.getSorting().getColumn()).ascending() : Sort.by(searchDto.getSorting().getColumn()).descending();
-            Pageable pageable = PageRequest.of(searchDto.getPage().intValue() - 1, searchDto.getSize().intValue(), sort);
+            Pageable pageable = PageRequest.of(pageNum, searchDto.getSize().intValue(), sort);
             RequestTaskDto requestTaskDto = new RequestTaskDto();
             requestTaskDto.setAssigne(searchDto.getUsername());
             ResponseEntity<ApiResponseWrapper.RestResponse<List<TaskDto>>> restResponse = pakarWfClient
@@ -1065,6 +1068,9 @@ public class ArticleServiceImpl implements ArticleService {
             }
             Page<Article> searchResultPage = articleMyPagesRepository.findMyPagesArticle(ids, searchDto.getKeyword(), searchDto.getType(), searchDto.getState(), searchDto.getSorting(),pageable);
             return new TodoMapperMyPages().mapEntityPageIntoDTOPage(pageable, searchResultPage);
+        } catch (MinValuePageNumberException e) {
+            logger.error("exception", e);
+            throw new MinValuePageNumberException("exception", e);
         } catch (Exception e) {
             logger.error("exception", e);
             throw new Exception("exception", e);
