@@ -84,10 +84,27 @@ public class ArticleProcessController extends BaseController {
         }
     }
 
-    @PostMapping(value = "/api/wf/draftAndSend", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
+    @PostMapping(value = "/api/wf/sendDraft", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
             MediaType.APPLICATION_JSON_VALUE})
-    public void submitDraftAndSend(@RequestHeader(name = "Authorization") String authorization, @RequestHeader(name = "X-USERNAME") String username, @RequestBody ModelMap modelMap) {
-//        service.startProcess(article);
+    public ResponseEntity<RestResponse<TaskDto>> submitDraftAndSend(@RequestHeader(name = "Authorization") String authorization, @RequestHeader(name = "X-USERNAME") String username, @RequestBody ArticleDto articleDto) {
+        try {
+            logger.info("receive request to send draft article workflow");
+            ObjectMapper oMapper = new ObjectMapper();
+            TaskDto taskDto = articleWorkflowService.startProcess(username, oMapper.convertValue(articleDto, Map.class));
+            return createResponse(taskDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, null));
+        } catch (UndefinedUserTaskException e) {
+            logger.error("exception", e);
+            return createResponse(new TaskDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("usertask.not.found", null, null));
+        } catch (UndefinedProcessException e) {
+            logger.error("exception", e);
+            return createResponse(new TaskDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, null));
+        } catch (UndefinedStartedStateException e) {
+            logger.error("exception", e);
+            return createResponse(new TaskDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, null));
+        } catch (Exception e) {
+            logger.error("exception", e);
+            return createResponse(new TaskDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, null));
+        }
     }
 
     /**

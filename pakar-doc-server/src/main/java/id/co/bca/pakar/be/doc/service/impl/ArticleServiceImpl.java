@@ -2,6 +2,7 @@ package id.co.bca.pakar.be.doc.service.impl;
 
 import id.co.bca.pakar.be.doc.client.ApiResponseWrapper;
 import id.co.bca.pakar.be.doc.client.PakarOauthClient;
+import id.co.bca.pakar.be.doc.client.PakarWfClient;
 import id.co.bca.pakar.be.doc.common.Constant;
 import id.co.bca.pakar.be.doc.dao.*;
 import id.co.bca.pakar.be.doc.dto.*;
@@ -91,9 +92,11 @@ public class ArticleServiceImpl implements ArticleService {
     @Autowired
     private ArticleMyPagesRepository articleMyPagesRepository;
 
-
     @Autowired
     private PakarOauthClient pakarOauthClient;
+
+    @Autowired
+    private PakarWfClient pakarWfClient;
 
     @Value("${upload.path.category}")
     private String pathCategory;
@@ -154,7 +157,7 @@ public class ArticleServiceImpl implements ArticleService {
             for (ArticleTemplateContent articleTemplateContent : templateContents) {
                 ArticleContent articleContent = new ArticleContent();
                 Long seqContentId = articleContentRepository.getContentId();
-                logger.info("get sequence content id {}",  seqContentId);
+                logger.info("get sequence content id {}", seqContentId);
                 articleContent.setId(seqContentId);
                 articleContent.setCreatedBy(generateArticleDto.getUsername());
                 logger.debug("articleTemplateContent.getName() value {}", articleTemplateContent.getName());
@@ -248,7 +251,7 @@ public class ArticleServiceImpl implements ArticleService {
 
             // get current structure
             Optional<Structure> currStructOpt = structureRepository.findById(article.getStructure().getId());
-            if(currStructOpt.isEmpty()) {
+            if (currStructOpt.isEmpty()) {
                 throw new StructureNotFoundException("not found structure id ---> " + article.getStructure().getId());
             }
             Structure currStruct = currStructOpt.get();
@@ -293,7 +296,7 @@ public class ArticleServiceImpl implements ArticleService {
             throw new StructureNotFoundException("not found structure");
         } catch (ArticleNotFoundException e) {
             logger.error("exception", e);
-            throw new ArticleNotFoundException("not found article id "+id);
+            throw new ArticleNotFoundException("not found article id " + id);
         } catch (Exception e) {
             logger.error("exception", e);
             throw new Exception("get article failed");
@@ -319,7 +322,7 @@ public class ArticleServiceImpl implements ArticleService {
             Article article = articleOpt.get();
             article.setModifyBy(articleDto.getUsername());
             article.setModifyDate(new Date());
-            article.setArticleState(Constant.ArticleWfState.DRAFT);
+//            article.setArticleState(Constant.ArticleWfState.DRAFT);
             article.setVideoLink(articleDto.getVideoLink());
 
             article = articleRepository.save(article);
@@ -380,6 +383,21 @@ public class ArticleServiceImpl implements ArticleService {
                 articleImageRepository.save(am);
             }
 
+            // call to workflow server to set draft
+            ResponseEntity<ApiResponseWrapper.RestResponse<TaskDto>> restResponse = pakarWfClient
+                    .startProcess(BEARER + articleDto.getToken(), articleDto.getUsername(), articleDto);
+            String currentState = restResponse.getBody().getData().getCurrentState();
+            if (articleDto.getArticleAssignerDto() != null) {
+                // send to
+                restResponse = pakarWfClient
+                        .sendDraft(BEARER + articleDto.getToken(), articleDto.getUsername(), articleDto);
+                currentState = restResponse.getBody().getData().getCurrentState();
+            }
+
+            // set state
+            article.setArticleState(currentState);
+            article = articleRepository.save(article);
+
             articleResponseDto.setId(article.getId());
             articleResponseDto.setVideoLink(article.getVideoLink());
             for (BaseArticleDto dto : articleDto.getRelated()) {
@@ -405,8 +423,8 @@ public class ArticleServiceImpl implements ArticleService {
         }
     }
 
+
     /**
-     *
      * @param id
      * @param username
      * @param token
@@ -419,13 +437,13 @@ public class ArticleServiceImpl implements ArticleService {
         try {
             logger.info("cancel article with id {}", id);
             Optional<Article> articleOpt = articleRepository.findById(id);
-            if(articleOpt.isEmpty()) {
+            if (articleOpt.isEmpty()) {
                 logger.info("not article with id {}", id);
-                throw new DataNotFoundException("not found article with id "+id);
+                throw new DataNotFoundException("not found article with id " + id);
             }
 
             Article article = articleOpt.get();
-            if(!article.getArticleState().equalsIgnoreCase(PUBLISHED)) {
+            if (!article.getArticleState().equalsIgnoreCase(PUBLISHED)) {
                 logger.info("delete related article");
                 Iterable<RelatedArticle> relatedArticles = articleRelatedRepository.findRelatedArticleByArticleId(article.getId());
                 relatedArticleRepository.deleteAll(relatedArticles);
@@ -518,13 +536,13 @@ public class ArticleServiceImpl implements ArticleService {
             /*
             cek level first, if level == 1 then get content id, this content id will use to set content id
              */
-            if(articleContentDto.getLevel().longValue() == 1)
+            if (articleContentDto.getLevel().longValue() == 1)
                 articleContentDto.setId(articleContentRepository.getContentId());
             logger.info("process save and update content with id {}", articleContentDto.getId());
             articleContentDto.getBreadcumbArticleContentDtos().clear();
             Optional<ArticleContent> articleContentOpt = articleContentRepository.findById(articleContentDto.getId());
             ArticleContent articleContent = null;
-            if(articleContentOpt.isEmpty()) {
+            if (articleContentOpt.isEmpty()) {
                 logger.debug("not found article content with id {}, create new entity", articleContentDto.getId());
                 articleContent = new ArticleContent();
                 articleContent.setId(articleContentDto.getId());
@@ -543,7 +561,7 @@ public class ArticleServiceImpl implements ArticleService {
             articleContent.setSort(articleContentDto.getOrder());
             articleContent.setLevel(articleContentDto.getLevel());
 
-            if(articleContentDto.getLevel().longValue() != 1) {
+            if (articleContentDto.getLevel().longValue() != 1) {
                 Optional<ArticleContent> parentOpt = articleContentRepository.findById(articleContentDto.getParent());
                 if (parentOpt.isEmpty()) {
                     throw new ParentContentNotFoundException("parent article content not found");
@@ -562,7 +580,7 @@ public class ArticleServiceImpl implements ArticleService {
             logger.info("save article content to db");
             articleContent = articleContentRepository.save(articleContent);
 
-            if(!article.getArticleState().equalsIgnoreCase(PRE_DRAFT)) {
+            if (!article.getArticleState().equalsIgnoreCase(PRE_DRAFT)) {
                 // save to history
                 new ArticleHistoryHelper().populateArticleHistory();
             }
@@ -583,8 +601,8 @@ public class ArticleServiceImpl implements ArticleService {
                     bcDto.setName(_parent.getName());
                     bcDto.setLevel(_parent.getLevel());
                     articleContentDto.getBreadcumbArticleContentDtos().add(bcDto);
-                    logger.debug("copy list parent object id:name ---> {}:{} has level value {}", new Object[] {bcDto.getId()
-                            ,bcDto.getName(),
+                    logger.debug("copy list parent object id:name ---> {}:{} has level value {}", new Object[]{bcDto.getId()
+                            , bcDto.getName(),
                             bcDto.getLevel()});
                     if (parentId == null)
                         parentStatus = Boolean.FALSE;
@@ -732,13 +750,13 @@ public class ArticleServiceImpl implements ArticleService {
 
             // get article
             Optional<Article> articleOpt = articleRepository.findById(articleContent.getArticle().getId());
-            if(articleOpt.isEmpty()) {
+            if (articleOpt.isEmpty()) {
                 logger.info("not found article from content with id {}", deleteContentDto.getContentId());
                 throw new DataNotFoundException("data not found");
             }
 
             Article _article = articleOpt.get();
-            if(_article.getArticleState().toLowerCase().equalsIgnoreCase(PUBLISHED)) {
+            if (_article.getArticleState().toLowerCase().equalsIgnoreCase(PUBLISHED)) {
                 List<ArticleContent> children = articleContentRepository.findContentChildrenAndOwnRowByParentId(articleContent.getId());
                 for (ArticleContent content : children) {
                     logger.debug("content level {} and title {}", content.getLevel(), content.getName());
@@ -770,7 +788,7 @@ public class ArticleServiceImpl implements ArticleService {
             throw new ArticleContentNotFoundException("has no authorize delete content level 1");
         } catch (DataNotFoundException e) {
             logger.error("exception", e);
-            throw new DataNotFoundException("data not found for content id "+deleteContentDto.getContentId());
+            throw new DataNotFoundException("data not found for content id " + deleteContentDto.getContentId());
         } catch (Exception e) {
             logger.error("exception", e);
             throw new Exception("exception", e);
@@ -786,7 +804,7 @@ public class ArticleServiceImpl implements ArticleService {
     public Page<RelatedArticleDto> search(SearchDto searchDto) throws Exception {
         try {
             logger.info("search related article");
-            if(searchDto.getPage() == null) {
+            if (searchDto.getPage() == null) {
                 searchDto.setPage(0L);
             }
             Pageable pageable = PageRequest.of(searchDto.getPage().intValue() - 1, searchDto.getSize().intValue());
@@ -830,7 +848,6 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     /**
-     *
      * @param content
      * @return
      */
@@ -848,7 +865,6 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     /**
-     *
      * @param iterable
      * @return
      */
@@ -865,7 +881,6 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     /**
-     *
      * @param iterable
      * @return
      */
@@ -881,7 +896,6 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     /**
-     *
      * @param iterable
      * @return
      */
@@ -1026,6 +1040,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     /**
      * Search My Pages in Article
+     *
      * @param requestMyPages
      * @return
      * @throws Exception
@@ -1062,7 +1077,7 @@ public class ArticleServiceImpl implements ArticleService {
                 listOfDtosDraft.add(dto);
             }
 
-            for (Formulir enFormulir: searchResultFormulir) {
+            for (Formulir enFormulir : searchResultFormulir) {
                 ResponseMyPages dto = new ResponseMyPages();
                 dto.setTipe(Constant.JenisHalaman.Formulir);
                 dto.setJudul(enFormulir.getTitle());
@@ -1071,14 +1086,14 @@ public class ArticleServiceImpl implements ArticleService {
                     dto.setIsNew(false);
                     dto.setModifikasi_date(enFormulir.getModifyDate());
                     dto.setModifikasi_by(enFormulir.getModifyBy());
-                }else {
+                } else {
                     dto.setIsNew(true);
                 }
 
                 listOfDtosDraft.add(dto);
             }
 
-            for (VirtualPages enVirtualPages: searchResultVirtualPages) {
+            for (VirtualPages enVirtualPages : searchResultVirtualPages) {
                 ResponseMyPages dto = new ResponseMyPages();
                 dto.setTipe(Constant.JenisHalaman.Virtual_Pages);
                 dto.setJudul(enVirtualPages.getTitle());
@@ -1119,7 +1134,7 @@ public class ArticleServiceImpl implements ArticleService {
                 listOfDtosPending.add(dto);
             }
 
-            for (Formulir enFormulir: searchResultFormulirPending) {
+            for (Formulir enFormulir : searchResultFormulirPending) {
                 ResponseMyPages dto = new ResponseMyPages();
                 dto.setTipe(Constant.JenisHalaman.Formulir);
                 dto.setJudul(enFormulir.getTitle());
@@ -1135,7 +1150,7 @@ public class ArticleServiceImpl implements ArticleService {
                 listOfDtosPending.add(dto);
             }
 
-            for (VirtualPages enVirtualPages: searchResultVirtualPagesPending) {
+            for (VirtualPages enVirtualPages : searchResultVirtualPagesPending) {
                 ResponseMyPages dto = new ResponseMyPages();
                 dto.setTipe(Constant.JenisHalaman.Virtual_Pages);
                 dto.setJudul(enVirtualPages.getTitle());
@@ -1179,11 +1194,11 @@ public class ArticleServiceImpl implements ArticleService {
         try {
             Page<Article> searchResultPage = null;
             logger.info("search related article");
-            if(searchDto.getPage() == null) {
+            if (searchDto.getPage() == null) {
                 searchDto.setPage(0L);
             }
 
-            if(searchDto.getPage() == 0) {
+            if (searchDto.getPage() == 0) {
                 searchDto.setPage(0L);
             }
             Pageable pageable = PageRequest.of(searchDto.getPage().intValue() - 1, searchDto.getSize().intValue());

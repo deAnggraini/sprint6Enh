@@ -28,6 +28,15 @@ public class MultipartArticleDto extends BaseArticleDto {
     @JsonProperty("suggestions")
     private List<SuggestionArticleDto> suggestions = new ArrayList<>();
 
+    @JsonProperty("isHasSend")
+    private Boolean isHasSend;
+
+    @JsonProperty("sendTo")
+    private ArticleAssignerDto articleAssignerDto;
+
+    @JsonProperty("sendNote")
+    private String sendNote;
+
     public String getShortDescription() {
         return shortDescription;
     }
@@ -82,5 +91,29 @@ public class MultipartArticleDto extends BaseArticleDto {
 
     public void setSuggestions(List<SuggestionArticleDto> suggestions) {
         this.suggestions = suggestions;
+    }
+
+    public Boolean getHasSend() {
+        return isHasSend;
+    }
+
+    public void setHasSend(Boolean hasSend) {
+        isHasSend = hasSend;
+    }
+
+    public ArticleAssignerDto getArticleAssignerDto() {
+        return articleAssignerDto;
+    }
+
+    public void setArticleAssignerDto(ArticleAssignerDto articleAssignerDto) {
+        this.articleAssignerDto = articleAssignerDto;
+    }
+
+    public String getSendNote() {
+        return sendNote;
+    }
+
+    public void setSendNote(String sendNote) {
+        this.sendNote = sendNote;
     }
 }

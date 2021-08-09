@@ -1,13 +1,9 @@
 package id.co.bca.pakar.be.wf.api;
 
-import id.co.bca.pakar.be.wf.client.ApiResponseWrapper;
 import id.co.bca.pakar.be.wf.client.PakarOauthClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class MyController extends BaseController {

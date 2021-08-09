@@ -3,8 +3,8 @@ package id.co.bca.pakar.be.wf.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class TaskDto {
-    @JsonProperty("processId")
-    private String processId;
+    @JsonProperty("requestId")
+    private String requestId;
 
     @JsonProperty("articleId")
     private Long articleId;
@@ -39,11 +39,11 @@ public class TaskDto {
         this.currentState = currentState;
     }
 
-    public String getProcessId() {
-        return processId;
+    public String getRequestId() {
+        return requestId;
     }
 
-    public void setProcessId(String processId) {
-        this.processId = processId;
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
     }
 }
