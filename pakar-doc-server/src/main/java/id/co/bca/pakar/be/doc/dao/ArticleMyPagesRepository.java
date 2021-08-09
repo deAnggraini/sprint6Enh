@@ -36,13 +36,9 @@ public interface ArticleMyPagesRepository extends CrudRepository<Article, Long> 
     )
     List<VirtualPages> findMyPagesVirtualPagesPending(@Param("username") String username);
 
-    @Query("SELECT m FROM Article m WHERE id IN (:ids) " +
+    @Query("SELECT m FROM Article m WHERE m.id IN (:ids) " +
             "AND m.deleted IS FALSE " +
-            "AND m.articleState = :state ")
-    Page<Article> findMyPagesArticle(@Param("ids") List<Long> ids, @Param("state") String state, Pageable pageable);
-
-//    @Query("SELECT m FROM Article m WHERE id IN (:ids) " +
-//            "AND m.deleted IS FALSE " +
-//            "AND m.state = :state ")
-//    Page<Article> findMyPagesArticle(@Param("ids") List<Long> ids, @Param("keyword") String keyword, @Param("type") String type, @Param("state") String state, Pageable pageable);
+            "AND m.articleState = :state " +
+            "AND LOWER(m.judulArticle) LIKE CONCAT('%',LOWER(:keyword),'%') ")
+    Page<Article> findMyPagesArticle(@Param("ids") List<Long> ids, @Param("keyword") String keyword, @Param("state") String state, Pageable pageable);
 }

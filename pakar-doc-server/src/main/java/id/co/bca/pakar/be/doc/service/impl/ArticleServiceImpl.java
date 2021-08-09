@@ -1071,8 +1071,9 @@ public class ArticleServiceImpl implements ArticleService {
             List<Long> ids = new ArrayList<>();
             for(TaskDto task : restResponse.getBody().getData()) {
                 ids.add(task.getArticleId());
+                logger.debug("article id from workflow service {}", task.getArticleId());
             }
-            Page<Article> searchResultPage = articleMyPagesRepository.findMyPagesArticle(ids, searchDto.getState(), pageable);
+            Page<Article> searchResultPage = articleMyPagesRepository.findMyPagesArticle(ids, searchDto.getKeyword(), searchDto.getState(), pageable);
             return new TodoMapperMyPages().mapEntityPageIntoDTOPage(pageable, searchResultPage);
         } catch (MinValuePageNumberException e) {
             logger.error("exception", e);
@@ -1174,6 +1175,10 @@ public class ArticleServiceImpl implements ArticleService {
 
             dto.setId(entity.getId());
             dto.setTitle(entity.getJudulArticle());
+            dto.setIsNew(entity.getNewArticle());
+            dto.setState(entity.getArticleState());
+            dto.setModifiedBy(entity.getModifyBy());
+            dto.setModifiedDate(entity.getModifyDate());
             return dto;
         }
 
