@@ -1,18 +1,17 @@
 package id.co.bca.pakar.be.doc.dao;
 
-import id.co.bca.pakar.be.doc.dto.SortingPageDto;
 import id.co.bca.pakar.be.doc.model.Article;
 import id.co.bca.pakar.be.doc.model.Formulir;
 import id.co.bca.pakar.be.doc.model.VirtualPages;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface ArticleMyPagesRepository extends CrudRepository<Article, Long> {
+public interface ArticleMyPagesRepository extends PagingAndSortingRepository<Article, Long> {
     @Query("select ta from Article ta where created_by =:username and deleted is false and state = 'DRAFT'"
     )
     List<Article> findMyPagesArticle(@Param("username") String username);
