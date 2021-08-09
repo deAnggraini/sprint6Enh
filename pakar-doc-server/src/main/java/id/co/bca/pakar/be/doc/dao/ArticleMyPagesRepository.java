@@ -41,11 +41,11 @@ public interface ArticleMyPagesRepository extends CrudRepository<Article, Long> 
             "AND m.deleted IS FALSE " +
             "AND m.state = :state "
     )
-    Page<Article> findMyPagesArticle(@Param("ids") List<Long> ids, @Param("state") String state, SortingPageDto sorting, Pageable pageable);
+    Page<Article> findMyPagesArticle(@Param("ids") List<Long> ids, @Param("state") String state, Pageable pageable);
 
     @Query("SELECT m FROM Article m WHERE id IN (:ids) " +
             "AND m.deleted IS FALSE " +
             "AND m.state = :state "
     )
-    Page<Article> findMyPagesArticle(@Param("ids") List<Long> ids, @Param("keyword") String keyword, @Param("type") String type, @Param("state") String state, SortingPageDto sorting, Pageable pageable);
+    Page<Article> findMyPagesArticle(@Param("ids") List<Long> ids, @Param("keyword") String keyword, @Param("type") String type, @Param("state") String state, Pageable pageable);
 }
