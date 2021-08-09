@@ -908,7 +908,8 @@ module.exports.mypages = [
         modified_date: new Date(),
         modified_by: 'Putri Faizatu',
         current_by: 'Theresa Theodorus, Anita Rachmat',
-        state: 'DRAFT'
+        state: 'DRAFT',
+        isNew: false
     },
     {
         type: 'microinformation',
@@ -918,7 +919,8 @@ module.exports.mypages = [
         modified_date: new Date(),
         modified_by: 'Yayopriyo Wibowo',
         current_by: 'Theresa Theodorus, Natasha Debora',
-        state: 'DRAFT'
+        state: 'DRAFT',
+        isNew: true
     },
     {
         type: 'formulir',
@@ -928,7 +930,8 @@ module.exports.mypages = [
         modified_date: new Date(),
         modified_by: 'Anita Rachmat',
         current_by: 'Firda Agustriyani',
-        state: 'DRAFT'
+        state: 'DRAFT',
+        isNew: false
     },
     {
         type: 'atribut',
@@ -938,7 +941,8 @@ module.exports.mypages = [
         modified_date: new Date(),
         modified_by: 'Putu Ayu Sruti Permata Sari',
         current_by: 'Firda Agustriyani, Kemal Batubara, Indah Permata Sari, Andreas Herawan, Thomas Wibisono, John Doe, Amalia..',
-        state: 'DRAFT'
+        state: 'DRAFT',
+        isNew: true
     }
 ]
 
