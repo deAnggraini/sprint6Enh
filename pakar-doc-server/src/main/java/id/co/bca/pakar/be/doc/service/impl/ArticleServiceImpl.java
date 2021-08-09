@@ -1106,9 +1106,9 @@ public class ArticleServiceImpl implements ArticleService {
             }
             Pageable pageable = PageRequest.of(searchDto.getPage().intValue() - 1, searchDto.getSize().intValue());
             if (searchDto.getKeyword() == null || searchDto.getKeyword() == "") {
-                searchResultPage = suggestionArticleRepository.findSuggestionArticleWithoutKey(searchDto.getExclude(), pageable);
+                searchResultPage = suggestionArticleRepository.findSuggestionArticleWithoutKey(searchDto.getExclude(), searchDto.getStructureId(), pageable);
             } else {
-                searchResultPage = suggestionArticleRepository.findSuggestionArticles(searchDto.getExclude(), searchDto.getKeyword(), pageable);
+                searchResultPage = suggestionArticleRepository.findSuggestionArticles(searchDto.getExclude(), searchDto.getKeyword(), searchDto.getStructureId(), pageable);
             }
             logger.debug("total items {}", searchResultPage.getTotalElements());
             logger.debug("total contents {}", searchResultPage.getContent().size());

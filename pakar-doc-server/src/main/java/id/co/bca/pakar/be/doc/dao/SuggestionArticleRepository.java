@@ -25,14 +25,15 @@ public interface SuggestionArticleRepository extends CrudRepository<Article, Lon
     @Query("select tsa.article from SuggestionArticle tsa " +
             "where tsa.article.id NOT IN (:ids) " +
             "and lower(tsa.article.judulArticle) like lower(concat('%', :keyword,'%')) " +
-            "and tsa.article.articleState = 'PUBLISHED' order by  tsa.article.judulArticle, tsa.hit_count"
+            "and tsa.article.articleState = 'PUBLISHED' and tsa.article.structure.id =:structureId " +
+            "order by tsa.hit_count desc, tsa.article.judulArticle asc"
     )
-    Page<Article> findSuggestionArticles(@Param("ids") List<Long> ids, @Param("keyword") String keyword, Pageable pageable);
+    Page<Article> findSuggestionArticles(@Param("ids") List<Long> ids, @Param("keyword") String keyword, @Param("structureId") Long structureId, Pageable pageable);
 
     @Query("select tsa.article from SuggestionArticle tsa " +
             "where tsa.article.id NOT IN (:ids) " +
-            "and tsa.article.articleState = 'PUBLISHED' order by tsa.hit_count"
+            "and tsa.article.articleState = 'PUBLISHED' and tsa.article.structure.id =:structureId order by tsa.hit_count desc, tsa.article.judulArticle asc"
     )
-    Page<Article> findSuggestionArticleWithoutKey(@Param("ids") List<Long> ids, Pageable pageable);
+    Page<Article> findSuggestionArticleWithoutKey(@Param("ids") List<Long> ids, @Param("structureId") Long structureId, Pageable pageable);
 
 }
