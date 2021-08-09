@@ -20,9 +20,9 @@ public interface PakarWfClient {
     @PostMapping(value = "/api/wf/draft", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
             MediaType.APPLICATION_JSON_VALUE})
     ResponseEntity<ApiResponseWrapper.RestResponse<TaskDto>> saveDraft(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader, @RequestHeader(Constant.Headers.X_USERNAME) String username, @RequestBody MultipartArticleDto articleDto);
-    @PostMapping(value = "/api/wf/sendDraft", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
+    @PostMapping(value = "/api/wf/send", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
             MediaType.APPLICATION_JSON_VALUE})
-    ResponseEntity<ApiResponseWrapper.RestResponse<TaskDto>> sendDraft(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader, @RequestHeader(Constant.Headers.X_USERNAME) String username, @RequestBody MultipartArticleDto articleDto);
+    ResponseEntity<ApiResponseWrapper.RestResponse<TaskDto>> send(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader, @RequestHeader(Constant.Headers.X_USERNAME) String username, @RequestBody MultipartArticleDto articleDto);
     @PostMapping(value = "/api/wf/tasks", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
             MediaType.APPLICATION_JSON_VALUE})
     ResponseEntity<ApiResponseWrapper.RestResponse<List<TaskDto>>> getTasks(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader, @RequestHeader(Constant.Headers.X_USERNAME) String username, @RequestBody RequestTaskDto dto);

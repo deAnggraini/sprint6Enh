@@ -84,9 +84,9 @@ public class ArticleProcessController extends BaseController {
         }
     }
 
-    @PostMapping(value = "/api/wf/review", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
+    @PostMapping(value = "/api/wf/send", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
             MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<RestResponse<TaskDto>> review(@RequestHeader(name = "Authorization") String authorization, @RequestHeader(name = "X-USERNAME") String username, @RequestBody ArticleDto articleDto) {
+    public ResponseEntity<RestResponse<TaskDto>> send(@RequestHeader(name = "Authorization") String authorization, @RequestHeader(name = "X-USERNAME") String username, @RequestBody ArticleDto articleDto) {
         try {
             logger.info("receive request to send draft article workflow");
             ObjectMapper oMapper = new ObjectMapper();

@@ -384,7 +384,7 @@ public class ArticleServiceImpl implements ArticleService {
                 logger.info("send article to {}", articleDto.getSendTo().getUsername());
                 logger.debug("send note article {}", articleDto.getSendNote());
                 restResponse = pakarWfClient
-                        .sendDraft(BEARER + articleDto.getToken(), articleDto.getUsername(), articleDto);
+                        .send(BEARER + articleDto.getToken(), articleDto.getUsername(), articleDto);
                 logger.debug("response api request sendDraft {}", restResponse);
                 currentState = restResponse.getBody().getData().getCurrentState();
             }
