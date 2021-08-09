@@ -16,10 +16,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import java.util.List;
 
 @FeignClient(name = "pakar-wf-server", url = "${spring.security.oauth2.resourceserver.wf-server}")
-//Enabling feign
-//@FeignClient(name="pakar-doc-service")
-//enabling ribbon
-//@RibbonClient(name="pakar-doc-service")
 public interface PakarWfClient {
     @PostMapping(value = "/api/wf/draft", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
             MediaType.APPLICATION_JSON_VALUE})
