@@ -55,7 +55,11 @@ VALUES(1, 'system', now()::DATE, false, NULL, NULL, 'EDITOR EDIT DRAFT ARTICLE',
 INSERT INTO public.r_wf_user_task(id, created_by, created_date, deleted, modify_by, modify_date, description, "name", optlock, user_task_type, process)
 VALUES(2, 'system', now()::DATE, false, NULL, NULL, 'EDITOR SEND DRAFT ARTICLE', '', 0, 1, 'ARTICLE_REVIEW');
 INSERT INTO public.r_wf_user_task(id, created_by, created_date, deleted, modify_by, modify_date, description, "name", optlock, user_task_type, process)
-VALUES(3, 'system', now()::DATE, false, NULL, NULL, 'PUBLISHER REVIEW ARTICLE TO BE PUBLISHED OR REJECTED', '', 0, 1, 'ARTICLE_REVIEW');
+VALUES(3, 'system', now()::DATE, false, NULL, NULL, 'PUBLISHER APPROVE ARTICLE TO BE PUBLISHED', '', 0, 1, 'ARTICLE_REVIEW');
+INSERT INTO public.r_wf_user_task(id, created_by, created_date, deleted, modify_by, modify_date, description, "name", optlock, user_task_type, process)
+VALUES(4, 'system', now()::DATE, false, NULL, NULL, 'PUBLISHER DENY ARTICLE', '', 0, 2, 'ARTICLE_REVIEW');
+INSERT INTO public.r_wf_user_task(id, created_by, created_date, deleted, modify_by, modify_date, description, "name", optlock, user_task_type, process)
+VALUES(5, 'system', now()::DATE, false, NULL, NULL, 'EDITOR CANCEL ARTICLE WAS SEND TO PUBLISHER', '', 0, 3, 'ARTICLE_REVIEW');
 
 INSERT INTO public.r_wf_transition(id, created_by, created_date, deleted, modify_by, modify_date, optlock, name, current_state, next_state, process_id)
 VALUES (1, 'system', now()::date, 'f', NULL, NULL, 0, 'WAITING REVIEW', 'DRAFT', 'PENDING', 'ARTICLE_REVIEW');

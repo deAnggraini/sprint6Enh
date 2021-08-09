@@ -43,6 +43,9 @@ public class Article extends EntityBase {
 	@Column(name = "use_empty_template", columnDefinition = "BOOLEAN DEFAULT FALSE")
 	private Boolean useEmptyTemplate = Boolean.FALSE;
 
+	@Column(name = "new_article", columnDefinition = "BOOLEAN DEFAULT TRUE")
+	private Boolean newArticle;
+
 	public Long getId() {
 		return id;
 	}
@@ -129,5 +132,13 @@ public class Article extends EntityBase {
 
 	public void setUseEmptyTemplate(Boolean useEmptyTemplate) {
 		this.useEmptyTemplate = useEmptyTemplate;
+	}
+
+	public Boolean getNewArticle() {
+		return newArticle;
+	}
+
+	public void setNewArticle(Boolean newArticle) {
+		this.newArticle = newArticle;
 	}
 }

@@ -7,8 +7,13 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface WorkflowUserTaskAssignmentRepository extends CrudRepository<WorkflowUserTaskAssignmentModel, Long> {
-    @Query("SELECT m FROM WorkflowUserTaskAssignmentModel m " +
-            "WHERE m.assigne=:assigne " +
-            "AND m.deleted IS FALSE ")
-    Iterable<WorkflowUserTaskAssignmentModel> findByAssigne(String assigne);
+//    @Query("SELECT m FROM WorkflowUserTaskAssignmentModel m " +
+//            "WHERE m.assigne=:assigne " +
+//            "AND m.deleted IS FALSE ")
+//    Iterable<WorkflowUserTaskAssignmentModel> findByAssigne(String assigne);
+//
+//    @Query("SELECT m FROM WorkflowUserTaskAssignmentModel m " +
+//            "WHERE m.assigne=:assigne " +
+//            "AND m.deleted IS FALSE ")
+//    Iterable<WorkflowUserTaskAssignmentModel> findByAssigne(String assigne);
 }

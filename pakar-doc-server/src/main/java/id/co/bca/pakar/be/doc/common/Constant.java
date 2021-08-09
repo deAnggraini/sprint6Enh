@@ -62,6 +62,7 @@ public class Constant {
 
 	public static final class ArticleWfState {
 		public static final String PRE_DRAFT = "PREDRAFT";
+		public static final String NEW = "NEW";
 		public static final String DRAFT = "DRAFT";
 		public static final String PENDING = "PENDING";
 		public static final String PUBLISHED = "PUBLISHED";

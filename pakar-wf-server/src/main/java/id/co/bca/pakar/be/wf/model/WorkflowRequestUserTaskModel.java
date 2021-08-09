@@ -14,9 +14,6 @@ public class WorkflowRequestUserTaskModel extends EntityBase {
     @ManyToOne
     @JoinColumn(name = "request_id")
     private WorkflowRequestModel requestModel;
-    @ManyToOne
-    @JoinColumn(name = "user_task_id")
-    private WorkflowUserTaskModel userTaskModel;
     @Column(name = "proposed_by")
     private String proposedBy;
     @Column(name = "proposed_date")
@@ -40,14 +37,6 @@ public class WorkflowRequestUserTaskModel extends EntityBase {
 
     public void setRequestModel(WorkflowRequestModel requestModel) {
         this.requestModel = requestModel;
-    }
-
-    public WorkflowUserTaskModel getUserTaskModel() {
-        return userTaskModel;
-    }
-
-    public void setUserTaskModel(WorkflowUserTaskModel userTaskModel) {
-        this.userTaskModel = userTaskModel;
     }
 
     public String getProposedBy() {

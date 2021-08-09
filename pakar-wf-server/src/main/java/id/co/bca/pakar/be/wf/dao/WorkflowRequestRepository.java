@@ -15,9 +15,15 @@ public interface WorkflowRequestRepository extends CrudRepository<WorkflowReques
             nativeQuery = true)
     Iterable<WorkflowRequestModel> findByAssigne(@Param("assigne") String assigne);
 
-    @Query(value = "select twr.* FROM t_wf_request_user_task twrut " +
-            "left join t_wf_request twr on twr.id = twrut.request_id " +
-            "where twrut.user_task_id = :id",
-            nativeQuery = true)
-    Iterable<WorkflowRequestModel> findByUserTask(@Param("id") Long id);
+//    @Query(value = "select twr.* FROM t_wf_request_user_task twrut " +
+//            "left join t_wf_request twr on twr.id = twrut.request_id " +
+//            "where twrut.user_task_id = :id",
+//            nativeQuery = true)
+//    Iterable<WorkflowRequestModel> findByUserTask(@Param("id") Long id);
+//
+//    @Query(value = "select twr.* FROM t_wf_request_user_task twrut " +
+//            "left join t_wf_request twr on twr.id = twrut.request_id " +
+//            "where twrut.user_task_id = :id",
+//            nativeQuery = true)
+//    Iterable<WorkflowRequestModel> findByUserTask(@Param("id") Long id);
 }

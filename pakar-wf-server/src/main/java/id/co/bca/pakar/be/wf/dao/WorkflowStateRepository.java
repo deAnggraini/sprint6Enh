@@ -3,6 +3,7 @@ package id.co.bca.pakar.be.wf.dao;
 import id.co.bca.pakar.be.wf.model.WorkflowStateModel;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -15,4 +16,10 @@ public interface WorkflowStateRepository extends CrudRepository<WorkflowStateMod
             "WHERE m.workflowStateTypeModel.name='Start' " +
             "AND m.deleted IS FALSE")
     WorkflowStateModel findDefaultStartStateByName();
+
+    @Query("SELECT m From WorkflowStateModel m " +
+            "WHERE m.code.name= :state " +
+            "AND m.workflowProcessModel.id = :processId " +
+            "AND m.deleted IS FALSE")
+    WorkflowStateModel findStateByName(@Param("state") String state, @Param("processId") String processId);
 }

@@ -38,10 +38,13 @@ public class ArticleDto extends BaseArticleDto {
     private Boolean isHasSend;
 
     @JsonProperty("sendTo")
-    private ArticleAssignerDto sendTo;
+    private AssignDto sendTo;
 
     @JsonProperty("sendNote")
     private String sendNote;
+
+    @JsonProperty("taskType")
+    private String taskType;
 
     @JsonProperty("isEmptyTemplate")
     private Boolean emptyTemplate = false;
@@ -146,5 +149,37 @@ public class ArticleDto extends BaseArticleDto {
 
     public void setStructureParentList(List<BreadcumbStructureDto> structureParentList) {
         this.structureParentList = structureParentList;
+    }
+
+    public Boolean getHasSend() {
+        return isHasSend;
+    }
+
+    public void setHasSend(Boolean hasSend) {
+        isHasSend = hasSend;
+    }
+
+    public AssignDto getSendTo() {
+        return sendTo;
+    }
+
+    public void setSendTo(AssignDto sendTo) {
+        this.sendTo = sendTo;
+    }
+
+    public String getSendNote() {
+        return sendNote;
+    }
+
+    public void setSendNote(String sendNote) {
+        this.sendNote = sendNote;
+    }
+
+    public String getTaskType() {
+        return taskType;
+    }
+
+    public void setTaskType(String taskType) {
+        this.taskType = taskType;
     }
 }

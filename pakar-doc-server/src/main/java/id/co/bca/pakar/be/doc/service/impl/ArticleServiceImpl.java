@@ -24,8 +24,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
-import static id.co.bca.pakar.be.doc.common.Constant.ArticleWfState.PRE_DRAFT;
-import static id.co.bca.pakar.be.doc.common.Constant.ArticleWfState.PUBLISHED;
+import static id.co.bca.pakar.be.doc.common.Constant.ArticleWfState.*;
 import static id.co.bca.pakar.be.doc.common.Constant.Headers.BEARER;
 import static id.co.bca.pakar.be.doc.common.Constant.Roles.ROLE_ADMIN;
 import static id.co.bca.pakar.be.doc.common.Constant.Roles.ROLE_READER;
@@ -143,7 +142,7 @@ public class ArticleServiceImpl implements ArticleService {
             article.setArticleUsedBy(generateArticleDto.getUsedBy());
             Structure structure = structureRepository.findStructure(generateArticleDto.getStructureId());
             article.setStructure(structure);
-            article.setArticleState(PRE_DRAFT);
+            article.setArticleState(NEW);
             if (template.getTemplateName().trim().toLowerCase().equalsIgnoreCase("empty".toLowerCase())) {
                 article.setUseEmptyTemplate(Boolean.TRUE);
             }
@@ -373,17 +372,22 @@ public class ArticleServiceImpl implements ArticleService {
                 articleImageRepository.save(am);
             }
 
-            // call to workflow server to set draft
-            logger.info("save draft article using article id {}", article.getId());
-            ResponseEntity<ApiResponseWrapper.RestResponse<TaskDto>> restResponse = pakarWfClient
-                    .start(BEARER + articleDto.getToken(), articleDto.getUsername(), articleDto);
-            logger.debug("response api request {}", restResponse);
-            String currentState = restResponse.getBody().getData().getCurrentState();
+            String currentState = article.getArticleState();
+
+            // call to workflow server to set draft, if sendto <> null
+            if(currentState.equalsIgnoreCase(NEW)) {
+                logger.info("save draft article using article id {}", article.getId());
+                ResponseEntity<ApiResponseWrapper.RestResponse<TaskDto>> restResponse = pakarWfClient
+                        .start(BEARER + articleDto.getToken(), articleDto.getUsername(), articleDto);
+                logger.debug("response api request {}", restResponse);
+                currentState = restResponse.getBody().getData().getCurrentState();
+            }
+
             if (articleDto.getSendTo() != null) {
                 // send to
                 logger.info("send article to {}", articleDto.getSendTo().getUsername());
                 logger.debug("send note article {}", articleDto.getSendNote());
-                restResponse = pakarWfClient
+                ResponseEntity<ApiResponseWrapper.RestResponse<TaskDto>> restResponse = pakarWfClient
                         .next(BEARER + articleDto.getToken(), articleDto.getUsername(), articleDto);
                 logger.debug("response api request sendDraft {}", restResponse);
                 currentState = restResponse.getBody().getData().getCurrentState();
@@ -578,7 +582,7 @@ public class ArticleServiceImpl implements ArticleService {
             logger.info("save article content to db");
             articleContent = articleContentRepository.save(articleContent);
 
-            if (!article.getArticleState().equalsIgnoreCase(PRE_DRAFT)) {
+            if (!article.getArticleState().equalsIgnoreCase(NEW)) {
                 // save to history
                 new ArticleHistoryHelper().populateArticleHistory();
             }

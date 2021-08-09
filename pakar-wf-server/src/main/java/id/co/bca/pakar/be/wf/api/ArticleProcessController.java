@@ -88,9 +88,9 @@ public class ArticleProcessController extends BaseController {
             MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<RestResponse<TaskDto>> next(@RequestHeader(name = "Authorization") String authorization, @RequestHeader(name = "X-USERNAME") String username, @RequestBody ArticleDto articleDto) {
         try {
-            logger.info("receive request to send draft article workflow");
+            logger.info("receive request to process workflow");
             ObjectMapper oMapper = new ObjectMapper();
-            TaskDto taskDto = articleWorkflowService.review(username, oMapper.convertValue(articleDto, Map.class));
+            TaskDto taskDto = articleWorkflowService.next(username, oMapper.convertValue(articleDto, Map.class));
             return createResponse(taskDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, null));
         } catch (UndefinedUserTaskException e) {
             logger.error("exception", e);
