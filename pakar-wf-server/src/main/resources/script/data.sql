@@ -63,6 +63,8 @@ INSERT INTO public.r_wf_transition(id, created_by, created_date, deleted, modify
 VALUES (2, 'system', now()::date, 'f', NULL, NULL, 0, 'APPROVE ARTICLE', 'PENDING', 'PUBLISHED', 'ARTICLE_REVIEW');
 INSERT INTO public.r_wf_transition(id, created_by, created_date, deleted, modify_by, modify_date, optlock, name, current_state, next_state, process_id)
 VALUES (3, 'system', now()::date, 'f', NULL, NULL, 0, 'EDIT ARTICLE DRAFT ONLY', 'DRAFT', 'DRAFT', 'ARTICLE_REVIEW');
+INSERT INTO public.r_wf_transition(id, created_by, created_date, deleted, modify_by, modify_date, optlock, name, current_state, next_state, process_id)
+VALUES (4, 'system', now()::date, 'f', NULL, NULL, 0, 'DENY ARTICLE', 'PENDING', 'DRAFT', 'ARTICLE_REVIEW');
 
 INSERT INTO public.r_wf_transition_user_task(id, created_by, created_date, deleted, modify_by, modify_date, optlock, user_task, transition)
 VALUES(1, 'system', now()::DATE, false, NULL, NULL, 0, 1, 2);

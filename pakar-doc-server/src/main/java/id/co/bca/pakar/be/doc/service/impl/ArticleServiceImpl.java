@@ -376,7 +376,7 @@ public class ArticleServiceImpl implements ArticleService {
             // call to workflow server to set draft
             logger.info("save draft article using article id {}", article.getId());
             ResponseEntity<ApiResponseWrapper.RestResponse<TaskDto>> restResponse = pakarWfClient
-                    .saveDraft(BEARER + articleDto.getToken(), articleDto.getUsername(), articleDto);
+                    .start(BEARER + articleDto.getToken(), articleDto.getUsername(), articleDto);
             logger.debug("response api request {}", restResponse);
             String currentState = restResponse.getBody().getData().getCurrentState();
             if (articleDto.getSendTo() != null) {
@@ -384,7 +384,7 @@ public class ArticleServiceImpl implements ArticleService {
                 logger.info("send article to {}", articleDto.getSendTo().getUsername());
                 logger.debug("send note article {}", articleDto.getSendNote());
                 restResponse = pakarWfClient
-                        .send(BEARER + articleDto.getToken(), articleDto.getUsername(), articleDto);
+                        .next(BEARER + articleDto.getToken(), articleDto.getUsername(), articleDto);
                 logger.debug("response api request sendDraft {}", restResponse);
                 currentState = restResponse.getBody().getData().getCurrentState();
             }
