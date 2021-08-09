@@ -46,6 +46,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   };
   page: BehaviorSubject<number> = new BehaviorSubject(1);
   paging: PaginationModel = PaginationModel.createEmpty();
+  currentPage: number = 1;
 
   constructor(
     private route: ActivatedRoute,
@@ -62,6 +63,8 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   public setPage(page: number) {
+    this.currentPage = page;
+    this.search();
     // this.page.next(page);
   }
 
@@ -83,14 +86,26 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   parseResponse(resp: Response) {
+    var dataLists: any[] = [];
+    var rowPage: number = 3;
+
     this.suggestion = resp.suggestion || '';
     if (resp.result) {
       if (resp.result.length === 0) {
         this.keys = [];
         this.faq = this.emptyDataItem();
       }
-      this.pakar = resp.result;
-      this.paging = new PaginationModel(resp.result.page, resp.result.total);
+      this.pakar = resp.result;      
+      for (let i = 0; i < this.pakar.length; i += 10) {
+        var temp = this.pakar.data.slice(i, i + 10);
+        dataLists.push(temp);
+      }
+      this.pakar.data = dataLists[this.currentPage - 1];
+
+      if (Math.ceil(resp.result.total/10) == 4) {
+        rowPage = 4
+      }
+      this.paging = new PaginationModel(this.currentPage, resp.result.total, 10, rowPage);
       // this.paging.setShowMaxPage(true);
     }
     if (resp.keys) {
@@ -112,7 +127,10 @@ export class SearchComponent implements OnInit, OnDestroy {
   search() {
     const searchSubscr = this.articleService.search(this.getQParams()).subscribe(resp => {
       if (resp) {
+        console.log("** resp: ", resp);
+        
         this.parseResponse(resp as Response);
+        // console.log("** parseResponse: ", this.parseResponse(resp as Response));
       }
     });
     this.subscriptions.push(searchSubscr);
