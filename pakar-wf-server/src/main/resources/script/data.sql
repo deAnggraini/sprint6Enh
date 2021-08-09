@@ -25,6 +25,22 @@ VALUES ('REJECTED', 'SYSTEM', now()::DATE, 'f', NULL, NULL, 'STATE ARTICLE IN RE
 INSERT INTO public.r_wf_state(code, created_by, created_date, deleted, modify_by, modify_date, name, process_id, optlock)
 VALUES ('CANCELLED', 'SYSTEM', now()::DATE, 'f', NULL, NULL, 'STATE ARTICLE IN CANCELLED CONDITION', 'ARTICLE_REVIEW', 0, 5);
 
+INSERT INTO public.r_wf_state
+(code, created_by, created_date, deleted, modify_by, modify_date, "name", optlock, process_id, state_type)
+VALUES('DRAFT', 'SYSTEM', '2021-08-06 00:00:00.000', false, NULL, NULL, 'STATE ARTICLE IN DRAFT CONDITION', 0, 'ARTICLE_REVIEW', 1);
+INSERT INTO public.r_wf_state
+(code, created_by, created_date, deleted, modify_by, modify_date, "name", optlock, process_id, state_type)
+VALUES('PENDING', 'SYSTEM', '2021-08-06 00:00:00.000', false, NULL, NULL, 'STATE ARTICLE IN PENDING CONDITION', 0, 'ARTICLE_REVIEW', 2);
+INSERT INTO public.r_wf_state
+(code, created_by, created_date, deleted, modify_by, modify_date, "name", optlock, process_id, state_type)
+VALUES('PUBLISHED', 'SYSTEM', '2021-08-06 00:00:00.000', false, NULL, NULL, 'STATE ARTICLE IN PUBLISHED CONDITION', 0, 'ARTICLE_REVIEW', 3);
+INSERT INTO public.r_wf_state
+(code, created_by, created_date, deleted, modify_by, modify_date, "name", optlock, process_id, state_type)
+VALUES('CANCELLED', 'SYSTEM', '2021-08-06 00:00:00.000', false, NULL, NULL, 'STATE ARTICLE IN CANCELLED CONDITION', 0, 'ARTICLE_REVIEW', 5);
+INSERT INTO public.r_wf_state
+(code, created_by, created_date, deleted, modify_by, modify_date, "name", optlock, process_id, state_type)
+VALUES('DENIED', 'SYSTEM', '2021-08-06 00:00:00.000', false, NULL, NULL, 'STATE ARTICLE IN REJECTED CONDITION', 0, 'ARTICLE_REVIEW', 4);
+
 INSERT INTO public.r_wf_user_task_type(id, created_by, created_date, deleted, modify_by, modify_date, "name", optlock)
 VALUES(1, 'system', now()::date, false, null, null, 'APPROVE', 0);
 INSERT INTO public.r_wf_user_task_type(id, created_by, created_date, deleted, modify_by, modify_date, "name", optlock)

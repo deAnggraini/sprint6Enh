@@ -32,7 +32,7 @@ public class MultipartArticleDto extends BaseArticleDto {
     private Boolean isHasSend;
 
     @JsonProperty("sendTo")
-    private ArticleAssignerDto articleAssignerDto;
+    private ArticleAssignerDto sendTo;
 
     @JsonProperty("sendNote")
     private String sendNote;
@@ -101,12 +101,12 @@ public class MultipartArticleDto extends BaseArticleDto {
         isHasSend = hasSend;
     }
 
-    public ArticleAssignerDto getArticleAssignerDto() {
-        return articleAssignerDto;
+    public ArticleAssignerDto getSendTo() {
+        return sendTo;
     }
 
-    public void setArticleAssignerDto(ArticleAssignerDto articleAssignerDto) {
-        this.articleAssignerDto = articleAssignerDto;
+    public void setSendTo(ArticleAssignerDto sendTo) {
+        this.sendTo = sendTo;
     }
 
     public String getSendNote() {

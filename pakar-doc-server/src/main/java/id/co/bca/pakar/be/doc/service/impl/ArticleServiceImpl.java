@@ -316,12 +316,6 @@ public class ArticleServiceImpl implements ArticleService {
             }
 
             Article article = articleOpt.get();
-            article.setModifyBy(articleDto.getUsername());
-            article.setModifyDate(new Date());
-//            article.setArticleState(Constant.ArticleWfState.DRAFT);
-            article.setVideoLink(articleDto.getVideoLink());
-
-            article = articleRepository.save(article);
 
             for (SkReffDto skReffDto : articleDto.getSkReff()) {
                 ArticleSkReff articleSkReff = new ArticleSkReff();
@@ -380,18 +374,26 @@ public class ArticleServiceImpl implements ArticleService {
             }
 
             // call to workflow server to set draft
+            logger.info("save draft article using article id {}", article.getId());
             ResponseEntity<ApiResponseWrapper.RestResponse<TaskDto>> restResponse = pakarWfClient
                     .saveDraft(BEARER + articleDto.getToken(), articleDto.getUsername(), articleDto);
+            logger.debug("response api request {}", restResponse);
             String currentState = restResponse.getBody().getData().getCurrentState();
-            if (articleDto.getArticleAssignerDto() != null) {
+            if (articleDto.getSendTo() != null) {
                 // send to
+                logger.info("send article to {}", articleDto.getSendTo().getUsername());
+                logger.debug("send note article {}", articleDto.getSendNote());
                 restResponse = pakarWfClient
                         .sendDraft(BEARER + articleDto.getToken(), articleDto.getUsername(), articleDto);
+                logger.debug("response api request sendDraft {}", restResponse);
                 currentState = restResponse.getBody().getData().getCurrentState();
             }
 
             // set state
+            article.setModifyBy(articleDto.getUsername());
+            article.setModifyDate(new Date());
             article.setArticleState(currentState);
+            article.setVideoLink(articleDto.getVideoLink());
             article = articleRepository.save(article);
 
             articleResponseDto.setId(article.getId());

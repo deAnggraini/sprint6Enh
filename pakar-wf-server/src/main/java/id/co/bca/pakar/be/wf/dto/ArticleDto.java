@@ -34,6 +34,15 @@ public class ArticleDto extends BaseArticleDto {
     @JsonProperty("suggestions")
     private List<SuggestionArticleDto> suggestions = new ArrayList<>();
 
+    @JsonProperty("isHasSend")
+    private Boolean isHasSend;
+
+    @JsonProperty("sendTo")
+    private ArticleAssignerDto sendTo;
+
+    @JsonProperty("sendNote")
+    private String sendNote;
+
     @JsonProperty("isEmptyTemplate")
     private Boolean emptyTemplate = false;
 

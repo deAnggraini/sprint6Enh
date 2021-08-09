@@ -84,13 +84,13 @@ public class ArticleProcessController extends BaseController {
         }
     }
 
-    @PostMapping(value = "/api/wf/sendDraft", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
+    @PostMapping(value = "/api/wf/review", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
             MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<RestResponse<TaskDto>> sendDraft(@RequestHeader(name = "Authorization") String authorization, @RequestHeader(name = "X-USERNAME") String username, @RequestBody ArticleDto articleDto) {
+    public ResponseEntity<RestResponse<TaskDto>> review(@RequestHeader(name = "Authorization") String authorization, @RequestHeader(name = "X-USERNAME") String username, @RequestBody ArticleDto articleDto) {
         try {
             logger.info("receive request to send draft article workflow");
             ObjectMapper oMapper = new ObjectMapper();
-            TaskDto taskDto = articleWorkflowService.startProcess(username, oMapper.convertValue(articleDto, Map.class));
+            TaskDto taskDto = articleWorkflowService.review(username, oMapper.convertValue(articleDto, Map.class));
             return createResponse(taskDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, null));
         } catch (UndefinedUserTaskException e) {
             logger.error("exception", e);

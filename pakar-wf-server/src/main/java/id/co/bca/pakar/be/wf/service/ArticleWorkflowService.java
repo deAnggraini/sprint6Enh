@@ -128,92 +128,92 @@ public class ArticleWorkflowService {
         }
     }
 
-//    /**
-//     * start process workflow article
-//     *
-//     * @param username
-//     * @param map
-//     */
-//    @Transactional(rollbackFor = {Exception.class,
-//            UndefinedProcessException.class,
-//            UndefinedStartedStateException.class})
-//    public TaskDto nextState(String username, Map map) throws Exception {
-//        try {
-//            logger.debug("move to next state");
-//            logger.debug("article id {}", map.get("id"));
-//            Map<String, Object> variables = new HashMap<>();
-////            variables.put("sender", map.get("sender"));
-////            variables.put("receiver", map.get("receiver"));
-//            variables.put("article_id", map.get("id"));
-////            variables.put("title", map.get("judul_article"));
-//            Optional<WorkflowProcessModel> workflowProcessOpt = workflowProcessRepository.findById(ARTICLE_PROCESS_DEF);
-//            if (workflowProcessOpt.isEmpty()) {
-//                throw new UndefinedProcessException("undefined process " + ARTICLE_PROCESS_DEF);
-//            }
-//            WorkflowProcessModel workflowProcessModel = workflowProcessOpt.isPresent() ? workflowProcessOpt.get() : null;
-//
-//            logger.info("find started state");
-//            WorkflowStateModel initState = workflowStateRepository.findDefaultStartStateById();
-//            if (initState == null) {
-//                throw new UndefinedStartedStateException("undefined started state ");
-//            }
-//
-//            WorkflowRequestModel requestModel = workflowRequestRepository.findByAssigne(username);
-//            requestModel.setCreatedBy(username);
-//            Date requestDate = new Date();
-//            requestModel.setCreatedDate(requestDate);
-//            requestModel.setRequestDate(requestDate);
-//            requestModel.setTitle((String) variables.get("title"));
-//            requestModel.setUserid(username);
-//            requestModel.setCurrentState(initState);
-//            requestModel.setWfprocess(workflowProcessModel);
-//
-//            logger.info("save request flow");
-//            requestModel = workflowRequestRepository.save(requestModel);
-//
-//            WorkflowRequestDataModel requestDataModel = new WorkflowRequestDataModel();
-//            requestDataModel.setCreatedBy(username);
-//            requestDataModel.setWfRequest(requestModel);
-//            requestDataModel.setName("ARTICLE_ID");
-//            requestDataModel.setValue("" + variables.get("article_id"));
-//            requestDataModel = workflowRequestDataRepository.save(requestDataModel);
-//
-//            Optional<WorkflowUserTaskModel> userTaskOpt = workflowUserTaskRepository.findById(USER_TASK_DEFAULT_DEF);
-//            if (userTaskOpt.isEmpty()) {
-//                throw new UndefinedUserTaskException("undefined user task");
-//            }
-//
-//            WorkflowUserTaskModel userTaskModel = userTaskOpt.get();
-//
-//            WorkflowRequestUserTaskModel requestUserTaskModel = new WorkflowRequestUserTaskModel();
-//            requestUserTaskModel.setCreatedBy(username);
-//            requestUserTaskModel.setUserTaskModel(userTaskModel);
-//            requestUserTaskModel.setRequestModel(requestModel);
-//            requestUserTaskModel.setProposedBy(username);
-//            requestUserTaskModel.setAssigne(username); // assign to self pic
-//            workflowRequestUserTaskRepository.save(requestUserTaskModel);
-//
-//            TaskDto taskDto = new TaskDto();
-//            taskDto.setCurrentState(initState.getCode());
-//            taskDto.setArticleId((Long) variables.get("article_id"));
-//            taskDto.setRequestId(requestModel.getId());
-//            taskDto.setAssigne(requestUserTaskModel.getAssigne());
-//
-//            return taskDto;
-//        } catch (UndefinedUserTaskException e) {
-//            logger.error("exception", e);
-//            throw new UndefinedUserTaskException("user task not found");
-//        } catch (UndefinedProcessException e) {
-//            logger.error("exception", e);
-//            throw new UndefinedProcessException("process not found");
-//        } catch (UndefinedStartedStateException e) {
-//            logger.error("exception", e);
-//            throw new UndefinedStartedStateException("start state not found");
-//        } catch (Exception e) {
-//            logger.error("exception", e);
-//            throw new Exception(e);
-//        }
-//    }
+    /**
+     * start process workflow article
+     *
+     * @param username
+     * @param map
+     */
+    @Transactional(rollbackFor = {Exception.class,
+            UndefinedProcessException.class,
+            UndefinedStartedStateException.class})
+    public TaskDto review(String username, Map map) throws Exception {
+        try {
+            logger.debug("move to next state");
+            logger.debug("article id {}", map.get("id"));
+            Map<String, Object> variables = new HashMap<>();
+            variables.put("sendTo", map.get("sendTo"));
+//            variables.put("receiver", map.get("receiver"));
+            variables.put("article_id", map.get("id"));
+//            variables.put("title", map.get("judul_article"));
+            Optional<WorkflowProcessModel> workflowProcessOpt = workflowProcessRepository.findById(ARTICLE_PROCESS_DEF);
+            if (workflowProcessOpt.isEmpty()) {
+                throw new UndefinedProcessException("undefined process " + ARTICLE_PROCESS_DEF);
+            }
+            WorkflowProcessModel workflowProcessModel = workflowProcessOpt.isPresent() ? workflowProcessOpt.get() : null;
+
+            logger.info("find started state");
+            WorkflowStateModel initState = workflowStateRepository.findDefaultStartStateById();
+            if (initState == null) {
+                throw new UndefinedStartedStateException("undefined started state ");
+            }
+
+            WorkflowRequestModel requestModel = workflowRequestRepository.findByAssigne(username);
+            requestModel.setCreatedBy(username);
+            Date requestDate = new Date();
+            requestModel.setCreatedDate(requestDate);
+            requestModel.setRequestDate(requestDate);
+            requestModel.setTitle((String) variables.get("title"));
+            requestModel.setUserid(username);
+            requestModel.setCurrentState(initState);
+            requestModel.setWfprocess(workflowProcessModel);
+
+            logger.info("save request flow");
+            requestModel = workflowRequestRepository.save(requestModel);
+
+            WorkflowRequestDataModel requestDataModel = new WorkflowRequestDataModel();
+            requestDataModel.setCreatedBy(username);
+            requestDataModel.setWfRequest(requestModel);
+            requestDataModel.setName("ARTICLE_ID");
+            requestDataModel.setValue("" + variables.get("article_id"));
+            requestDataModel = workflowRequestDataRepository.save(requestDataModel);
+
+            Optional<WorkflowUserTaskModel> userTaskOpt = workflowUserTaskRepository.findById(USER_TASK_DEFAULT_DEF);
+            if (userTaskOpt.isEmpty()) {
+                throw new UndefinedUserTaskException("undefined user task");
+            }
+
+            WorkflowUserTaskModel userTaskModel = userTaskOpt.get();
+
+            WorkflowRequestUserTaskModel requestUserTaskModel = new WorkflowRequestUserTaskModel();
+            requestUserTaskModel.setCreatedBy(username);
+            requestUserTaskModel.setUserTaskModel(userTaskModel);
+            requestUserTaskModel.setRequestModel(requestModel);
+            requestUserTaskModel.setProposedBy(username);
+            requestUserTaskModel.setAssigne(username); // assign to self pic
+            workflowRequestUserTaskRepository.save(requestUserTaskModel);
+
+            TaskDto taskDto = new TaskDto();
+            taskDto.setCurrentState(initState.getCode());
+            taskDto.setArticleId((Long) variables.get("article_id"));
+            taskDto.setRequestId(requestModel.getId());
+            taskDto.setAssigne(requestUserTaskModel.getAssigne());
+
+            return taskDto;
+        } catch (UndefinedUserTaskException e) {
+            logger.error("exception", e);
+            throw new UndefinedUserTaskException("user task not found");
+        } catch (UndefinedProcessException e) {
+            logger.error("exception", e);
+            throw new UndefinedProcessException("process not found");
+        } catch (UndefinedStartedStateException e) {
+            logger.error("exception", e);
+            throw new UndefinedStartedStateException("start state not found");
+        } catch (Exception e) {
+            logger.error("exception", e);
+            throw new Exception(e);
+        }
+    }
 
     @Transactional
     public List<TaskDto> getTasks(String assignee) throws Exception {
