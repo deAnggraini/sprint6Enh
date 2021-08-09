@@ -36,7 +36,9 @@ export class TerbaruComponent implements OnInit {
   }
 
   populateList() {
-    this.articleService.news().subscribe( resp => {      
+    this.articleService.news().subscribe( resp => {
+        resp.sort((a,b) => (a.id < b.id ? -1 : 1));
+                    
         for (let i = 0; i < resp.length; i += 12) {
           var temporaryList = resp.slice(i, i + 12);
           this.dataLists.push(temporaryList);
