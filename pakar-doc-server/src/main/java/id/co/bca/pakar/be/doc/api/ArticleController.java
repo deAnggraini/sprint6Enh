@@ -576,28 +576,36 @@ public class ArticleController extends BaseController {
     }
 
     /**
-     * find myPages
-//     * @param searchDto
+     *
+     * @param authorization
+     * @param username
+     * @param searchDto
      * @return
      */
     @PostMapping(value = "/api/doc/searchMyPages", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
             MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<RestResponse<MyPagesDto>> searchMyPages(@RequestHeader("Authorization") String authorization,
-                                                                                   @RequestHeader(name = "X-USERNAME") String username
+    public ResponseEntity<RestResponse<Map<String, Object>>> searchMyPages(@RequestHeader("Authorization") String authorization,
+                                                                                   @RequestHeader(name = "X-USERNAME") String username,
+                                                                                    @RequestBody SearchMyPageDto searchDto
                                                                                    ) {
         try {
             logger.info("search suggestion articles process");
             logger.info("received token bearer --- {}", authorization);
-//            searchDto.setUsername(username);
-//            searchDto.setToken(getTokenFromHeader(authorization));
-            MyPagesDto pageArticleDto = articleService.searchMyPages(username);
-            return createResponse(pageArticleDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
+            searchDto.setUsername(username);
+            searchDto.setToken(getTokenFromHeader(authorization));
+            Page<MyPageDto> pageMyPageDto = articleService.searchMyPages(searchDto);
+            Map<String, Object> maps = new HashMap<String, Object>();
+            maps.put("list", pageMyPageDto.getContent());
+            maps.put("totalElements", pageMyPageDto.getTotalElements());
+            maps.put("totalPages", pageMyPageDto.getTotalPages());
+            maps.put("currentPage", searchDto.getPage());
+            return createResponse(maps, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, null));
         } catch (DataNotFoundException e) {
             logger.error("exception", e);
-            return createResponse(new MyPagesDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, new Locale("en", "US")));
+            return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, null));
         } catch(Exception e) {
             logger.error("exception", e);
-            return createResponse(new MyPagesDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
+            return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, null));
         }
     }
 }

@@ -63,7 +63,7 @@ public class ArticleProcessController extends BaseController {
      */
     @PostMapping(value = "/api/wf/draft", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
             MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<RestResponse<TaskDto>> submitDraft(@RequestHeader(name = "Authorization") String authorization, @RequestHeader(name = "X-USERNAME") String username, @RequestBody ArticleDto articleDto) {
+    public ResponseEntity<RestResponse<TaskDto>> saveDraft(@RequestHeader(name = "Authorization") String authorization, @RequestHeader(name = "X-USERNAME") String username, @RequestBody ArticleDto articleDto) {
         try {
             logger.info("receive request to start article workflow");
             ObjectMapper oMapper = new ObjectMapper();
@@ -86,7 +86,7 @@ public class ArticleProcessController extends BaseController {
 
     @PostMapping(value = "/api/wf/sendDraft", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
             MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<RestResponse<TaskDto>> submitDraftAndSend(@RequestHeader(name = "Authorization") String authorization, @RequestHeader(name = "X-USERNAME") String username, @RequestBody ArticleDto articleDto) {
+    public ResponseEntity<RestResponse<TaskDto>> sendDraft(@RequestHeader(name = "Authorization") String authorization, @RequestHeader(name = "X-USERNAME") String username, @RequestBody ArticleDto articleDto) {
         try {
             logger.info("receive request to send draft article workflow");
             ObjectMapper oMapper = new ObjectMapper();

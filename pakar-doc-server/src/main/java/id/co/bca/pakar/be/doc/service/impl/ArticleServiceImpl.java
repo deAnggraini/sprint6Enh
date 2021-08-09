@@ -3,7 +3,6 @@ package id.co.bca.pakar.be.doc.service.impl;
 import id.co.bca.pakar.be.doc.client.ApiResponseWrapper;
 import id.co.bca.pakar.be.doc.client.PakarOauthClient;
 import id.co.bca.pakar.be.doc.client.PakarWfClient;
-import id.co.bca.pakar.be.doc.common.Constant;
 import id.co.bca.pakar.be.doc.dao.*;
 import id.co.bca.pakar.be.doc.dto.*;
 import id.co.bca.pakar.be.doc.exception.*;
@@ -385,7 +384,7 @@ public class ArticleServiceImpl implements ArticleService {
 
             // call to workflow server to set draft
             ResponseEntity<ApiResponseWrapper.RestResponse<TaskDto>> restResponse = pakarWfClient
-                    .startProcess(BEARER + articleDto.getToken(), articleDto.getUsername(), articleDto);
+                    .saveDraft(BEARER + articleDto.getToken(), articleDto.getUsername(), articleDto);
             String currentState = restResponse.getBody().getData().getCurrentState();
             if (articleDto.getArticleAssignerDto() != null) {
                 // send to
@@ -1039,135 +1038,49 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     /**
-     * Search My Pages in Article
      *
-     * @param requestMyPages
+     * @param searchDto
      * @return
      * @throws Exception
      */
     @Override
-    public MyPagesDto searchMyPages(String requestMyPages) throws Exception {
+    @Transactional
+    public Page<MyPageDto> searchMyPages(SearchMyPageDto searchDto) throws Exception {
         try {
-            logger.info("search faq");
-            List<ResponseMyPages> listOfDtosDraft = new ArrayList<>();
-            List<ResponseMyPages> listOfDtosPending = new ArrayList<>();
-            MyPagesDto listDto = new MyPagesDto();
-            // DRAFT //
-            List<Article> searchResultArticle = articleMyPagesRepository.findMyPagesArticle(requestMyPages);
-            List<Formulir> searchResultFormulir = articleMyPagesRepository.findMyPagesFormulir(requestMyPages);
-            List<VirtualPages> searchResultVirtualPages = articleMyPagesRepository.findMyPagesVirtualPages(requestMyPages);
-
-
-            for (Article entity : searchResultArticle) {
-                ResponseMyPages dto = new ResponseMyPages();
-                dto.setTipe(Constant.JenisHalaman.Artikel);
-                dto.setJudul(entity.getJudulArticle());
-                Structure structureArticle = entity.getStructure();
-                logger.info("structure child ", structureArticle);
-//                dto.setLokasi(structureArticle);
-                if (entity.getModifyBy() != null) {
-                    dto.setIsNew(false);
-                    dto.setModifikasi_by(entity.getModifyBy());
-                    dto.setModifikasi_date(entity.getModifyDate());
-                } else {
-                    dto.setIsNew(true);
-                }
-
-
-                listOfDtosDraft.add(dto);
+            logger.info("search my page dto");
+            List<MyPageDto> listOfDtos = new ArrayList<>();
+            if (searchDto.getPage() == null) {
+                searchDto.setPage(0L);
             }
 
-            for (Formulir enFormulir : searchResultFormulir) {
-                ResponseMyPages dto = new ResponseMyPages();
-                dto.setTipe(Constant.JenisHalaman.Formulir);
-                dto.setJudul(enFormulir.getTitle());
-
-                if (enFormulir.getModifyBy() != null) {
-                    dto.setIsNew(false);
-                    dto.setModifikasi_date(enFormulir.getModifyDate());
-                    dto.setModifikasi_by(enFormulir.getModifyBy());
-                } else {
-                    dto.setIsNew(true);
-                }
-
-                listOfDtosDraft.add(dto);
+            if (searchDto.getPage() == 0) {
+                searchDto.setPage(0L);
             }
-
-            for (VirtualPages enVirtualPages : searchResultVirtualPages) {
-                ResponseMyPages dto = new ResponseMyPages();
-                dto.setTipe(Constant.JenisHalaman.Virtual_Pages);
-                dto.setJudul(enVirtualPages.getTitle());
-
-                if (enVirtualPages.getModifyBy() != null) {
-                    dto.setIsNew(false);
-                    dto.setModifikasi_date(enVirtualPages.getModifyDate());
-                    dto.setModifikasi_by(enVirtualPages.getModifyBy());
-                } else {
-                    dto.setIsNew(true);
-                }
-
-                listOfDtosDraft.add(dto);
+            Pageable pageable = PageRequest.of(searchDto.getPage().intValue() - 1, searchDto.getSize().intValue());
+//            Page<Article> searchResultPage = articleRepository.findRelatedArticles(searchDto.getExclude(), searchDto.getKeyword(), pageable);
+//            logger.debug("total items {}", searchResultPage.getTotalElements());
+//            logger.debug("total contents {}", searchResultPage.getContent().size());
+//            return new ToDoMapper().mapEntityPageIntoDTOPage(pageable, searchResultPage);
+//            if (searchDto.getKeyword() == null || searchDto.getKeyword() == "") {
+//                searchResultPage = suggestionArticleRepository.findSuggestionArticleWithoutKey(searchDto.getExclude(), pageable);
+//            } else {
+//                searchResultPage = suggestionArticleRepository.findSuggestionArticles(searchDto.getExclude(), searchDto.getKeyword(), pageable);
+//            }
+//            List<ResponseMyPages> listOfDtosDraft = new ArrayList<>();
+//            List<ResponseMyPages> listOfDtosPending = new ArrayList<>();
+//
+//            MyPagesDto listDto = new MyPagesDto();
+//
+            RequestTaskDto requestTaskDto = new RequestTaskDto();
+            requestTaskDto.setAssigne(searchDto.getUsername());
+            ResponseEntity<ApiResponseWrapper.RestResponse<List<TaskDto>>> restResponse = pakarWfClient
+                    .getTasks(BEARER + searchDto.getToken(), searchDto.getUsername(),requestTaskDto);
+            List<Long> ids = new ArrayList<>();
+            for(TaskDto task : restResponse.getBody().getData()) {
+                ids.add(task.getArticleId());
             }
-
-            // PENDING //
-            List<Article> searchResultArticlePending = articleMyPagesRepository.findMyPagesArticlePending(requestMyPages);
-            List<Formulir> searchResultFormulirPending = articleMyPagesRepository.findMyPagesFormulirPending(requestMyPages);
-            List<VirtualPages> searchResultVirtualPagesPending = articleMyPagesRepository.findMyPagesVirtualPagesPending(requestMyPages);
-
-
-            for (Article entity : searchResultArticlePending) {
-                ResponseMyPages dto = new ResponseMyPages();
-                dto.setTipe(Constant.JenisHalaman.Artikel);
-                dto.setJudul(entity.getJudulArticle());
-                Structure structureArticle = entity.getStructure();
-                logger.info("structure child ", structureArticle);
-//                dto.setLokasi(structureArticle);
-                if (entity.getModifyBy() != null) {
-                    dto.setIsNew(false);
-                    dto.setModifikasi_by(entity.getModifyBy());
-                    dto.setModifikasi_date(entity.getModifyDate());
-                } else {
-                    dto.setIsNew(true);
-                }
-
-
-                listOfDtosPending.add(dto);
-            }
-
-            for (Formulir enFormulir : searchResultFormulirPending) {
-                ResponseMyPages dto = new ResponseMyPages();
-                dto.setTipe(Constant.JenisHalaman.Formulir);
-                dto.setJudul(enFormulir.getTitle());
-
-                if (enFormulir.getModifyBy() != null) {
-                    dto.setIsNew(false);
-                    dto.setModifikasi_date(enFormulir.getModifyDate());
-                    dto.setModifikasi_by(enFormulir.getModifyBy());
-                } else {
-                    dto.setIsNew(true);
-                }
-
-                listOfDtosPending.add(dto);
-            }
-
-            for (VirtualPages enVirtualPages : searchResultVirtualPagesPending) {
-                ResponseMyPages dto = new ResponseMyPages();
-                dto.setTipe(Constant.JenisHalaman.Virtual_Pages);
-                dto.setJudul(enVirtualPages.getTitle());
-
-                if (enVirtualPages.getModifyBy() != null) {
-                    dto.setIsNew(false);
-                    dto.setModifikasi_date(enVirtualPages.getModifyDate());
-                    dto.setModifikasi_by(enVirtualPages.getModifyBy());
-                } else {
-                    dto.setIsNew(true);
-                }
-
-                listOfDtosPending.add(dto);
-            }
-            listDto.setDraft(listOfDtosDraft);
-            listDto.setPending(listOfDtosPending);
-            return listDto;
+            Page<Article> searchResultPage = articleMyPagesRepository.findMyPagesArticle(ids, searchDto.getKeyword(), searchDto.getType(), searchDto.getState(), searchDto.getSorting(),pageable);
+            return new TodoMapperMyPages().mapEntityPageIntoDTOPage(pageable, searchResultPage);
         } catch (Exception e) {
             logger.error("exception", e);
             throw new Exception("exception", e);
@@ -1249,6 +1162,27 @@ public class ArticleServiceImpl implements ArticleService {
          */
         public Page<SuggestionArticleDto> mapEntityPageIntoDTOPage(Pageable pageRequest, Page<Article> source) {
             List<SuggestionArticleDto> dtos = mapEntitiesIntoDTOs(source.getContent());
+            return new PageImpl<>(dtos, pageRequest, source.getTotalElements());
+        }
+    }
+
+    private class TodoMapperMyPages {
+        public List<MyPageDto> mapEntitiesIntoDTOs(Iterable<Article> entities) {
+            List<MyPageDto> dtos = new ArrayList<>();
+            entities.forEach(e -> dtos.add(mapEntityIntoDTO(e)));
+            return dtos;
+        }
+
+        public MyPageDto mapEntityIntoDTO(Article entity) {
+            MyPageDto dto = new MyPageDto();
+
+            dto.setId(entity.getId());
+            dto.setTitle(entity.getJudulArticle());
+            return dto;
+        }
+
+        public Page<MyPageDto> mapEntityPageIntoDTOPage(Pageable pageRequest, Page<Article> source) {
+            List<MyPageDto> dtos = mapEntitiesIntoDTOs(source.getContent());
             return new PageImpl<>(dtos, pageRequest, source.getTotalElements());
         }
     }

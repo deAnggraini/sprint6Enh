@@ -1,5 +1,6 @@
 package id.co.bca.pakar.be.doc.dao;
 
+import id.co.bca.pakar.be.doc.dto.SortingPageDto;
 import id.co.bca.pakar.be.doc.model.Article;
 import id.co.bca.pakar.be.doc.model.Formulir;
 import id.co.bca.pakar.be.doc.model.VirtualPages;
@@ -35,6 +36,12 @@ public interface ArticleMyPagesRepository extends CrudRepository<Article, Long> 
     @Query("select ta from VirtualPages ta where created_by =:username and deleted is false"
     )
     List<VirtualPages> findMyPagesVirtualPagesPending(@Param("username") String username);
+
+    @Query("SELECT m FROM Article m WHERE id IN (:ids) " +
+            "AND m.deleted IS FALSE " +
+            "AND m.state = :state "
+    )
+    Page<Article> findMyPagesArticle(@Param("ids") List<Long> ids, @Param("keyword") String keyword, @Param("type") String type, @Param("state") String state, SortingPageDto sorting, Pageable pageable);
 
 
 }

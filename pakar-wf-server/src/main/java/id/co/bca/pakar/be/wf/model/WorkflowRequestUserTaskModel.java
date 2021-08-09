@@ -23,6 +23,8 @@ public class WorkflowRequestUserTaskModel extends EntityBase {
     private Date proposedDate = new Date();
     @Column(name = "assigne")
     private String assigne;
+    @Column(name = "approved_date")
+    private Date approvedDate;
 
     public Long getId() {
         return id;
@@ -70,5 +72,13 @@ public class WorkflowRequestUserTaskModel extends EntityBase {
 
     public void setAssigne(String assigne) {
         this.assigne = assigne;
+    }
+
+    public Date getApprovedDate() {
+        return approvedDate;
+    }
+
+    public void setApprovedDate(Date approvedDate) {
+        this.approvedDate = approvedDate;
     }
 }
