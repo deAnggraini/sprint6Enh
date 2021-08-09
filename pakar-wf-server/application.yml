@@ -12,9 +12,8 @@ spring:
     timeout:
       read: 60000
       connection: 60000
-  config:
-    activate:
-      on-profile: "dev-local"
+  profiles:
+    active: "dev-local"
   main:
     banner-mode: "off"
   jpa:
@@ -28,9 +27,7 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQL10Dialect
 ---
 spring:
-  config:
-    activate:
-      on-profile: dev-local
+  profiles: dev-local
   security:
     oauth2:
       resourceserver:
@@ -59,9 +56,7 @@ spring:
       maximumPoolSize: 5
 ---
 spring:
-  config:
-    activate:
-      on-profile: dev-local-docker
+  profiles: dev-local-docker
   security:
     oauth2:
       resourceserver:
@@ -88,9 +83,7 @@ spring:
       maximumPoolSize: 5
 ---
 spring:
-  config:
-    activate:
-      on-profile: dev-ogya
+  profiles: dev-ogya
   security:
     oauth2:
       resourceserver:
@@ -116,9 +109,7 @@ spring:
       maximumPoolSize: 5
 ---
 spring:
-  config:
-    activate:
-      on-profile: dev-bca
+  profiles: dev-ogya
   security:
     oauth2:
       resourceserver:
