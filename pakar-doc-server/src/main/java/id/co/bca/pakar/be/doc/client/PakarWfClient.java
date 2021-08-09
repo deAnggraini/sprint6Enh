@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.util.List;
 
-@FeignClient(name = "pakar-doc-server", url = "${spring.security.oauth2.resourceserver.doc-server}")
+@FeignClient(name = "pakar-wf-server", url = "${spring.security.oauth2.resourceserver.wf-server}")
 //Enabling feign
 //@FeignClient(name="pakar-doc-service")
 //enabling ribbon
