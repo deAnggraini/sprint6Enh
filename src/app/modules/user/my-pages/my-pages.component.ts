@@ -66,6 +66,18 @@ export class MyPagesComponent implements OnInit, OnDestroy {
   listHeader: string[] = ['approved', 'pending', 'draft'];
   listStatus: string[] = ['PUBLISHED', 'PENDING', 'DRAFT'];
 
+  // table
+  tableHeader = {
+    draft: ['', 'Judul', 'Lokasi', 'Modifikasi Terakhir', 'Modifikasi Oleh', 'Sedang di Edit Oleh', ''],
+    pending: ['', 'Judul', 'Lokasi', 'Modifikasi Terakhir', 'Reviewer/Publisher', 'Sedang di Edit Oleh', ''],
+    approved: ['', 'Judul', 'Lokasi', 'Tanggal Approve', 'Approver', 'Tanggal Berlaku', ''],
+  }
+  tableColumn = {
+    draft: ['type', 'title', 'location', 'modified_date', 'modified_by', 'current_by', ''],
+    pending: ['type', 'title', 'location', 'modified_date', 'send_to', 'current_by', ''],
+    approved: ['type', 'title', 'location', 'approved_date', 'approved_by', 'affective_date', ''],
+  }
+
   // filter component
   keyword: string = '';
   type: string = 'ALL';
@@ -122,7 +134,6 @@ export class MyPagesComponent implements OnInit, OnDestroy {
     const sort: SortEvent = tabDto.sort;
     this.subscriptions.push(
       this.articleService.searchMyPages(this.keyword, status, type, page, { column: sort.column, sort: sort.direction }, limit).subscribe(resp => {
-        console.log({ resp });
         if (resp) {
           const { totalElements, totalPages, currentPage } = resp;
           const tabDto: TabDTO = this.dataForm[key];
@@ -162,11 +173,10 @@ export class MyPagesComponent implements OnInit, OnDestroy {
     }
   }
   onClickRevision(item: any, index: number) {
-    console.log('onClickRevision', { item, index });
+    // console.log('onClickRevision', { item, index });
     return false;
   }
   onClickEdit(item: MyPageRowItem, index: number) {
-    console.log('onClickEdit', { item, index });
     this.confirm.open({
       title: `Ubah Artikel`,
       message: `<p>Apakah Kamu yakin ingin mengubah artikel “<b>${item.title}</b>”?`,
@@ -179,10 +189,22 @@ export class MyPagesComponent implements OnInit, OnDestroy {
     return false;
   }
   onClickCancel(item: MyPageRowItem, index: number) {
-    console.log('onClickCancel', { item, index });
     this.confirm.open({
       title: `Hapus Artikel`,
       message: `<p>Apakah kamu yakin ingin menghapus artike “<b>${item.title}</b>”?`,
+      btnOkText: 'Hapus',
+      btnCancelText: 'Batal'
+    }).then((confirmed) => {
+      if (confirmed === true) {
+        this.onRefreshTable();
+      }
+    });
+    return false;
+  }
+  onClickCancelSend(item: MyPageRowItem, index: number) {
+    this.confirm.open({
+      title: `Batal Kirim`,
+      message: `<p>Apakah kamu ingin membatalkan pengiriman artikel “<b>${item.title}</b>”?`,
       btnOkText: 'Hapus',
       btnCancelText: 'Batal'
     }).then((confirmed) => {

@@ -1,0 +1,40 @@
+:host ::ng-deep {
+  .card-notif {
+    padding: 20px 15px;
+
+    &.card-notif-head {
+      border-bottom: 1px solid #EDEBE9;
+    }
+
+    &.card-notif-footer {
+      border-top: 1px solid #EDEBE9;
+      padding: 10px;
+      text-align: center;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+    }
+
+    &.card-notif-body {
+      padding: 15px;
+      padding-bottom: 40px;
+
+      .row-item {
+        padding: 5px 0;
+
+        .r-info {
+          color: #8A8886;
+
+          .notif-img {
+            margin-right: 6px;
+          }
+
+          .notif-dot {
+            margin-right: 6px;
+            margin-left: 6px;
+          }
+        }
+      }
+    }
+  }
+}

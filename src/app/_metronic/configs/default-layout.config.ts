@@ -189,9 +189,9 @@ export const DefaultLayoutConfig = {
     // Notifications
     notifications: {
       display: true,
-      layout: 'offcanvas', // offcanvas, dropdown,
+      layout: 'dropdown', // offcanvas, dropdown,
       dropdown: {
-        style: 'dark', // light|dark
+        style: 'light', // light|dark
       },
       offcanvas: {
         direction: 'right',

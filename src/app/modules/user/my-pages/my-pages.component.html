@@ -49,15 +49,43 @@
                                 <th scope="col" sortable="location" (sort)="onSort($event)" style="width: 320px;">
                                     <span class="text-title">Lokasi</span><i class="sortable"></i>
                                 </th>
-                                <th scope="col" sortable="modified_date" (sort)="onSort($event)" style="width: 180px;">
-                                    <span class="text-title">Modifikasi Terakhir</span><i class="sortable"></i>
-                                </th>
-                                <th scope="col" sortable="modified_by" (sort)="onSort($event)" style="width: 180px;">
-                                    <span class="text-title">Modifikasi Oleh</span><i class="sortable"></i>
-                                </th>
+
+                                <ng-container *ngIf="key == 'approved'">
+                                    <th scope="col" sortable="approved_date" (sort)="onSort($event)"
+                                        style="width: 180px;">
+                                        <span class="text-title">{{tableHeader[key][3]}}</span><i class="sortable"></i>
+                                    </th>
+                                    <th scope="col" sortable="approved_by" (sort)="onSort($event)"
+                                        style="width: 180px;">
+                                        <span class="text-title">{{tableHeader[key][4]}}</span><i class="sortable"></i>
+                                    </th>
+                                </ng-container>
+
+                                <ng-container *ngIf="key == 'pending'">
+                                    <th scope="col" sortable="modified_date" (sort)="onSort($event)"
+                                        style="width: 180px;">
+                                        <span class="text-title">{{tableHeader[key][3]}}</span><i class="sortable"></i>
+                                    </th>
+                                    <th scope="col" sortable="send_to" (sort)="onSort($event)" style="width: 180px;">
+                                        <span class="text-title">{{tableHeader[key][4]}}</span><i class="sortable"></i>
+                                    </th>
+                                </ng-container>
+
+                                <ng-container *ngIf="key == 'draft'">
+                                    <th scope="col" sortable="modified_date" (sort)="onSort($event)"
+                                        style="width: 180px;">
+                                        <span class="text-title">{{tableHeader[key][3]}}</span><i class="sortable"></i>
+                                    </th>
+                                    <th scope="col" sortable="modified_by" (sort)="onSort($event)"
+                                        style="width: 180px;">
+                                        <span class="text-title">{{tableHeader[key][4]}}</span><i class="sortable"></i>
+                                    </th>
+                                </ng-container>
+
                                 <th scope="col" style="width: 260px;">
-                                    Sedang di Edit Oleh
+                                    {{tableHeader[key][4]}}
                                 </th>
+
                                 <th scope="col" style="width: 45px;">&nbsp;</th>
                             </tr>
                         </thead>
@@ -80,39 +108,77 @@
                                         <span [inlineSVG]="'./assets/media/svg/bca/icon/'+getIcon(item.type)"
                                             class="svg"></span>
                                     </td>
-                                    <td>{{item.title | maxLength: 30}}<sup *ngIf="item.isNew"
-                                            class="sup-new fb7">(new)</sup></td>
-                                    <td>{{item.location | maxLength: 45}}</td>
-                                    <td>{{item.modified_date | date:'dd/MM/yyyy hh:mm a'}}</td>
-                                    <td>{{item.modified_by}}</td>
-                                    <td>{{item.current_by}}</td>
+                                    <td>{{item.title}}<sup *ngIf="item.isNew" class="sup-new fb7">(new)</sup></td>
+                                    <td>{{item.location}}</td>
+
+                                    <ng-container *ngIf="key == 'approved'">
+                                        <td>{{item.approved_date | date:'dd/MM/yyyy hh:mm a'}}</td>
+                                        <td>{{item.approved_by}}</td>
+                                        <td>{{item.affective_date | date:'dd/MM/yyyy hh:mm a'}}</td>
+                                    </ng-container>
+
+                                    <ng-container *ngIf="key == 'pending'">
+                                        <td>{{item.modified_date | date:'dd/MM/yyyy hh:mm a'}}</td>
+                                        <td>{{item.send_to}}</td>
+                                        <td>{{item.current_by}}</td>
+                                    </ng-container>
+
+                                    <ng-container *ngIf="key == 'draft'">
+                                        <td>{{item.modified_date | date:'dd/MM/yyyy hh:mm a'}}</td>
+                                        <td>{{item.modified_by}}</td>
+                                        <td>{{item.current_by}}</td>
+                                    </ng-container>
+
                                     <td class="td-dot3" style="width: 45px;" ngbDropdownToggle>
                                         <div class="cursor-pointer">
                                             <i class="ki ki-more-hor"></i>
                                         </div>
                                         <div class="dropdown-menu p-0 m-0 dropdown-menu-right dropdown-menu-anim-up"
                                             ngbDropdownMenu>
-                                            <ul class="navi navi-hover">
+                                            <ul class="navi">
                                                 <li class="navi-item">
-                                                    <a class="navi-link cursor-pointer"
+                                                    <a class="navi-link disabled"
                                                         (click)="onClickRevision(item, i); dropDown.close()">
                                                         <span class="navi-text font-weight-bolder">Riwayat
                                                             Revisi</span>
                                                     </a>
                                                 </li>
                                                 <li class="navi-item">
-                                                    <a class="navi-link cursor-pointer"
+                                                    <a class="navi-link disabled"
                                                         (click)="onClickEdit(item, i); dropDown.close()">
                                                         <span class="navi-text font-weight-bolder">Ubah</span>
                                                     </a>
                                                 </li>
-                                                <li class="navi-item">
-                                                    <a class="navi-link cursor-pointer"
-                                                        (click)="onClickCancel(item, i); dropDown.close()">
-                                                        <span class="navi-text font-weight-bolder">Hapus / Batal
-                                                            Tambah</span>
-                                                    </a>
-                                                </li>
+
+                                                <ng-container *ngIf="key == 'approved'">
+                                                    <li class="navi-item">
+                                                        <a class="navi-link disabled"
+                                                            (click)="onClickCancel(item, i); dropDown.close()">
+                                                            <span class="navi-text font-weight-bolder">Hapus</span>
+                                                        </a>
+                                                    </li>
+                                                </ng-container>
+
+                                                <ng-container *ngIf="key == 'pending'">
+                                                    <li class="navi-item">
+                                                        <a class="navi-link disabled"
+                                                            (click)="onClickCancelSend(item, i); dropDown.close()">
+                                                            <span class="navi-text font-weight-bolder">Batal
+                                                                Kirim</span>
+                                                        </a>
+                                                    </li>
+                                                </ng-container>
+
+                                                <ng-container *ngIf="key == 'draft'">
+                                                    <li class="navi-item">
+                                                        <a class="navi-link cursor-pointer"
+                                                            (click)="onClickCancel(item, i); dropDown.close()">
+                                                            <span class="navi-text font-weight-bolder">Hapus / Batal
+                                                                Tambah</span>
+                                                        </a>
+                                                    </li>
+                                                </ng-container>
+
                                             </ul>
                                         </div>
                                     </td>

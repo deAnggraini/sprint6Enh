@@ -252,9 +252,11 @@
             // Disabled state
             &.disabled {
                 opacity: get($navi-config, link-opacity-disabled);
+                cursor: not-allowed;
+                pointer-events: none;
             }
 
-            &:hover {
+            &:not(.disabled):hover {
                 @include navi-link-transition($transition);
                 @include navi-link-theme(get($navi-config, link-bullet-bg-hover), get($navi-config, link-text-color-hover), get($navi-config, link-icon-color-hover), get($navi-config, link-arrow-color-hover), null, null);
             }
