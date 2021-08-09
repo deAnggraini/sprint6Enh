@@ -13,13 +13,13 @@ import { Location } from '@angular/common';
 export class RecommendationComponent implements OnInit {
 
   dataList: any[] = [];
-  total: number = 0;
+  dataLists: any[] = [];
   length: number = 0;
   backend_img: string = environment.backend_img;
 
   // pagination
-  dataPerPage: number = 12;
-  page: number = 1;
+  dataLimit: number = 12;
+  currentPage: number = 1;
   rowPage: number = 3;
   paging: PaginationModel = PaginationModel.createEmpty();
 
@@ -31,17 +31,27 @@ export class RecommendationComponent implements OnInit {
     private location: Location) { }
 
   ngOnInit(): void {
-    this.articleService.recommendation().subscribe(
-      resp => {
-        // this.dataList = resp;
-        this.dataList = resp.slice(0, 12);
-        // this.total = Math.floor(Math.random() * 100 + 10);
-        this.length = resp.length;
-        setTimeout(() => this.changeDetectorRef.detectChanges(), 0);
+    this.populateList();
 
-        this.paging = new PaginationModel(this.page, this.length, this.dataPerPage, this.rowPage);
+  }
+
+  populateList() {
+    this.articleService.recommendation().subscribe(resp => {
+      for (let i = 0; i < resp.length; i += 12) {
+        var temporaryList = resp.slice(i, i + 12);
+        this.dataLists.push(temporaryList);
       }
-    );
+      this.dataList = this.dataLists[this.currentPage - 1];
+      this.length = resp.length;
+
+      this.paging = new PaginationModel(this.currentPage, this.length, this.dataLimit);
+      setTimeout(() => this.changeDetectorRef.detectChanges(), 0);
+    });
+  }
+
+  setPage(page: number) {
+    this.currentPage = page;
+    this.populateList();
   }
 
   back() {
