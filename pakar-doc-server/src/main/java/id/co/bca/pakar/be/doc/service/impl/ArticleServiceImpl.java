@@ -1066,7 +1066,7 @@ public class ArticleServiceImpl implements ArticleService {
             for(TaskDto task : restResponse.getBody().getData()) {
                 ids.add(task.getArticleId());
             }
-            Page<Article> searchResultPage = articleMyPagesRepository.findMyPagesArticle(ids, searchDto.getKeyword(), searchDto.getType(), searchDto.getState(), searchDto.getSorting(),pageable);
+            Page<Article> searchResultPage = articleMyPagesRepository.findMyPagesArticle(ids, searchDto.getState(), searchDto.getSorting(),pageable);
             return new TodoMapperMyPages().mapEntityPageIntoDTOPage(pageable, searchResultPage);
         } catch (MinValuePageNumberException e) {
             logger.error("exception", e);
