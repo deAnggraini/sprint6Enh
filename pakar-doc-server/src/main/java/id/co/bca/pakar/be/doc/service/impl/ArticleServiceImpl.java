@@ -15,10 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -1048,7 +1045,6 @@ public class ArticleServiceImpl implements ArticleService {
     public Page<MyPageDto> searchMyPages(SearchMyPageDto searchDto) throws Exception {
         try {
             logger.info("search my page dto");
-            List<MyPageDto> listOfDtos = new ArrayList<>();
             if (searchDto.getPage() == null) {
                 searchDto.setPage(0L);
             }
@@ -1056,21 +1052,9 @@ public class ArticleServiceImpl implements ArticleService {
             if (searchDto.getPage() == 0) {
                 searchDto.setPage(0L);
             }
-            Pageable pageable = PageRequest.of(searchDto.getPage().intValue() - 1, searchDto.getSize().intValue());
-//            Page<Article> searchResultPage = articleRepository.findRelatedArticles(searchDto.getExclude(), searchDto.getKeyword(), pageable);
-//            logger.debug("total items {}", searchResultPage.getTotalElements());
-//            logger.debug("total contents {}", searchResultPage.getContent().size());
-//            return new ToDoMapper().mapEntityPageIntoDTOPage(pageable, searchResultPage);
-//            if (searchDto.getKeyword() == null || searchDto.getKeyword() == "") {
-//                searchResultPage = suggestionArticleRepository.findSuggestionArticleWithoutKey(searchDto.getExclude(), pageable);
-//            } else {
-//                searchResultPage = suggestionArticleRepository.findSuggestionArticles(searchDto.getExclude(), searchDto.getKeyword(), pageable);
-//            }
-//            List<ResponseMyPages> listOfDtosDraft = new ArrayList<>();
-//            List<ResponseMyPages> listOfDtosPending = new ArrayList<>();
-//
-//            MyPagesDto listDto = new MyPagesDto();
-//
+
+            Sort sort = searchDto.getSorting().getSort().equals("asc")? Sort.by(searchDto.getSorting().getColumn()).ascending() : Sort.by(searchDto.getSorting().getColumn()).descending();
+            Pageable pageable = PageRequest.of(searchDto.getPage().intValue() - 1, searchDto.getSize().intValue(), sort);
             RequestTaskDto requestTaskDto = new RequestTaskDto();
             requestTaskDto.setAssigne(searchDto.getUsername());
             ResponseEntity<ApiResponseWrapper.RestResponse<List<TaskDto>>> restResponse = pakarWfClient

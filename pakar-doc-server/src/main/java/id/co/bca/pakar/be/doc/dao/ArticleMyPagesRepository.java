@@ -42,6 +42,4 @@ public interface ArticleMyPagesRepository extends CrudRepository<Article, Long> 
             "AND m.state = :state "
     )
     Page<Article> findMyPagesArticle(@Param("ids") List<Long> ids, @Param("keyword") String keyword, @Param("type") String type, @Param("state") String state, SortingPageDto sorting, Pageable pageable);
-
-
 }
