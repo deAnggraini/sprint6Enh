@@ -174,7 +174,7 @@ a {
   -webkit-box-orient: vertical;
 }
 
-.text-ellipsis-2 {
+.text-ellipsis-2, .te-2 {
   text-overflow: ellipsis;
   overflow: hidden;
   display: -webkit-box;
@@ -182,7 +182,7 @@ a {
   -webkit-box-orient: vertical;
 }
 
-.text-ellipsis-3 {
+.text-ellipsis-3, .te-3 {
   text-overflow: ellipsis;
   overflow: hidden;
   display: -webkit-box;

@@ -54,8 +54,11 @@ export class ArticleService {
   }
 
   // search my pages
-  searchMyPages(keyword: string, state: string = 'DRAFT', page: number = 1, limit: number = 10, maxPage: number = 99) {
-    const params = { keyword, state, page, limit };
+  searchMyPages(keyword: string, state: string = 'DRAFT', type: string = 'ALL', page: number = 1,
+    sorting: { column: string, sort: string }, limit: number = 10,
+    maxPage: number = 99) {
+    const params = { keyword, state, type, page, limit, sorting };
+    console.log({ params });
     return this.apiService.post(`${this._base_url}/searchMyPages`, params);
   }
 

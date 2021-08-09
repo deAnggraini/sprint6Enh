@@ -9,7 +9,7 @@
 
     </a>
     <a *ngFor="let page of paging.listPage;" class="btn btn-icon btn-sm border-0 btn-clean mr-2 my-1"
-        (click)="setPage(page)" [ngClass]="{'active' : paging.page == page, disabled: page < 1}">
+        (click)="setPage(page)" [ngClass]="{'active' : paging.page == page, 'disabled': page == paging.page || page < 1}">
         <span class="font-size-14 font-bold-600">{{page > 0 ? page : '...'}}</span>
     </a>
 

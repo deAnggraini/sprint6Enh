@@ -7,7 +7,7 @@ export class MaxLengthPipe implements PipeTransform {
 
   transform(value: string, max: number, ellipsis: string = "..."): string {
     if (!value) return "";
-    if (value.length > max) return `${value.substr(0, max)}...`;
+    if (value.length > max) return `${value.substr(0, max)}${ellipsis}`;
     return value;
   }
 

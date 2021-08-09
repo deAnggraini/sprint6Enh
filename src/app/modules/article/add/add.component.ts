@@ -139,13 +139,15 @@ export class AddComponent implements OnInit, OnDestroy {
       structureId: [this.defaultValue.structureId, Validators.compose([Validators.required])],
       usedBy: [{ value: this.defaultValue.usedBy, disabled: true }, Validators.compose([Validators.required])],
       templateId: [this.defaultValue.templateId, Validators.compose([Validators.required])]
-    });
+    }, { updateOn: 'submit' });
+
     const locationSubrc = this.dataForm.get('structureId').valueChanges.subscribe(d => {
       if (d) {
         this.dataForm.get('usedBy').enable();
       }
     })
     this.subscriptions.push(locationSubrc);
+
     const templateSubrc = this.dataForm.get('templateId').valueChanges.subscribe(d => {
       if (d) {
         const found = this.listTemplate.find(r => r.id == parseInt(d));

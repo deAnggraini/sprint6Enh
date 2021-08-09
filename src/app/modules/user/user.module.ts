@@ -9,6 +9,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { UtilsModule } from 'src/app/utils/utils.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { InlineSVGModule } from 'ng-inline-svg';
+import { NgbdSortableHeader } from './my-pages/sortable.directive';
 
 const routes: Routes = [
   {
@@ -26,6 +27,7 @@ const routes: Routes = [
   declarations: [
     UserComponent,
     MyPagesComponent,
+    NgbdSortableHeader,
   ],
   imports: [
     CommonModule,

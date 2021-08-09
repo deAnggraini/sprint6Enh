@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormControl, ValidationErrors } from '@angular/forms';
 
 export function alphaNumericValidator(control: FormControl): ValidationErrors | null {
@@ -11,7 +11,7 @@ export function alphaNumericValidator(control: FormControl): ValidationErrors | 
   templateUrl: './control-error.component.html',
   styleUrls: ['./control-error.component.scss']
 })
-export class ControlErrorComponent implements OnInit {
+export class ControlErrorComponent implements OnInit, OnChanges {
 
   @Input() control: FormControl;
   @Input() alias: string;
@@ -40,6 +40,10 @@ export class ControlErrorComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log('ControlErrorComponent onChange', changes);
   }
 
 }
