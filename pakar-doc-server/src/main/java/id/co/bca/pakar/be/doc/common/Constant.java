@@ -70,8 +70,8 @@ public class Constant {
 	}
 
 	public static final class JenisHalaman {
-		public static final String Artikel = "Article";
-		public static final String Formulir = "Formulir";
-		public static final String Virtual_Pages = "Virtual Pages";
+		public static final String Artikel = "article";
+		public static final String Formulir = "formulir";
+		public static final String Virtual_Pages = "virtual Pages";
 	}
 }
