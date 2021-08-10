@@ -1,7 +1,6 @@
 package id.co.bca.pakar.be.wf.service;
 
 import id.co.bca.pakar.be.wf.dao.*;
-import id.co.bca.pakar.be.wf.dto.AssignDto;
 import id.co.bca.pakar.be.wf.dto.TaskDto;
 import id.co.bca.pakar.be.wf.exception.UndefinedProcessException;
 import id.co.bca.pakar.be.wf.exception.UndefinedStartedStateException;
@@ -18,7 +17,6 @@ import java.util.*;
 public class ArticleWorkflowService {
     private static Logger logger = LoggerFactory.getLogger(ArticleWorkflowService.class);
     private static String ARTICLE_PROCESS_DEF = "ARTICLE_REVIEW";
-//    private static Long USER_TASK_DEFAULT_DEF = 1L;
 
     @Autowired
     private WorkflowProcessRepository workflowProcessRepository;
@@ -147,11 +145,8 @@ public class ArticleWorkflowService {
             if (workflowProcessOpt.isEmpty()) {
                 throw new UndefinedProcessException("undefined process " + ARTICLE_PROCESS_DEF);
             }
-            WorkflowProcessModel workflowProcessModel = workflowProcessOpt.isPresent() ? workflowProcessOpt.get() : null;
+//            WorkflowProcessModel workflowProcessModel = workflowProcessOpt.isPresent() ? workflowProcessOpt.get() : null;
 
-//            logger.debug("find workflow request by article id {}", variables.get("article_id"));
-//            WorkflowRequestModel currentWfRequest = workflowRequestUserTaskRepository.findWorkflowRequest("" + (Long) variables.get("article_id"), username);
-//            logger.debug("current state is {}", currentWfRequest.getCurrentState().getCode());
             logger.debug("find workflow request by article id {}", variables.get("article_id"));
             WorkflowRequestUserTaskModel currentWfRequestUt = workflowRequestUserTaskRepository.findWorkflowRequestUserTask("" + (Long) variables.get("article_id"), username);
 
@@ -162,7 +157,9 @@ public class ArticleWorkflowService {
             WorkflowStateModel currentState = workflowStateRepository.findStateByName(currentWfRequest.getCurrentState().getCode(), ARTICLE_PROCESS_DEF);
             logger.debug("current state is {}", currentState.getCode());
 
-            WorkflowTransitionUserTaskModel wfTransUtask = workflowTransitionUserTaskRepository.findTransitionByCurrentStateAndActionType(currentState.getCode(), 1L);
+
+            WorkflowTransitionUserTaskModel wfTransUtask = workflowTransitionUserTaskRepository.findTransitionByCurrentStateAndActionType(currentState.getCode()
+                    , new Helper().convertTaskTypeToNumeric((String) map.get("taskType")));
             WorkflowStateModel nextState = wfTransUtask.getTransition().getNextState();
             logger.debug("next state transition is {}", nextState.getCode());
 
@@ -180,14 +177,14 @@ public class ArticleWorkflowService {
             requestUserTaskModel.setCreatedBy(username);
             requestUserTaskModel.setRequestModel(currentWfRequest);
             requestUserTaskModel.setProposedBy(username);
-            requestUserTaskModel.setAssigne((String)assignDto.get("username"));
+            requestUserTaskModel.setAssigne((String) assignDto.get("username"));
             requestUserTaskModel = workflowRequestUserTaskRepository.save(requestUserTaskModel);
 
             TaskDto taskDto = new TaskDto();
             taskDto.setCurrentState(nextState.getCode());
             taskDto.setArticleId((Long) variables.get("article_id"));
             taskDto.setRequestId(currentWfRequest.getId());
-            taskDto.setAssigne((String)assignDto.get("username"));
+            taskDto.setAssigne((String) assignDto.get("username"));
 
             return taskDto;
         } catch (UndefinedProcessException e) {
@@ -250,6 +247,20 @@ public class ArticleWorkflowService {
                 dtos.add(dto);
             }
             return dtos;
+        }
+    }
+
+    private class Helper {
+        Long convertTaskTypeToNumeric(String type) {
+            if (type.equalsIgnoreCase("Approve"))
+                return 1L;
+            else if (type.equalsIgnoreCase("Deny")) {
+                return 2L;
+            } else if (type.equalsIgnoreCase("Cancel")) {
+                return 3L;
+            } else {
+                return 0L; // undefined
+            }
         }
     }
 }
