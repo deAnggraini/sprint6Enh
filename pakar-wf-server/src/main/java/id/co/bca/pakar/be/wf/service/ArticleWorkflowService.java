@@ -141,6 +141,7 @@ public class ArticleWorkflowService {
             Map<String, Object> variables = new HashMap<>();
             variables.put("sendTo", map.get("sendTo"));
             variables.put("article_id", map.get("id"));
+            variables.put("sendNote", map.get("sendNote"));
             Optional<WorkflowProcessModel> workflowProcessOpt = workflowProcessRepository.findById(ARTICLE_PROCESS_DEF);
             if (workflowProcessOpt.isEmpty()) {
                 throw new UndefinedProcessException("undefined process " + ARTICLE_PROCESS_DEF);
@@ -182,6 +183,7 @@ public class ArticleWorkflowService {
             newRequestUserTaskModel.setRequestModel(currentWfRequest);
             newRequestUserTaskModel.setProposedBy(username);
             newRequestUserTaskModel.setAssigne((String) assignDto.get("username"));
+            newRequestUserTaskModel.setNote((String)variables.get("sendNote"));
             newRequestUserTaskModel = workflowRequestUserTaskRepository.save(newRequestUserTaskModel);
 
             TaskDto taskDto = new TaskDto();
