@@ -18,7 +18,10 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 export class PreviewComponent implements OnInit {
 
   @Input() hideTopbar: boolean = false;
+  @Input() alert: boolean = false;
+  @Input() alertMessage: string;
   @Output() onCancelCallback = new EventEmitter<any>();
+
   articleDTO: ArticleDTO;
 
   categoryId: number = 0;
@@ -46,8 +49,6 @@ export class PreviewComponent implements OnInit {
   onPreview: boolean = false;
   isExpand: boolean = false;
   editable: boolean = true;
-  alert: boolean = true;
-  alertMessage: string;
 
 
   //faq carousel
@@ -111,9 +112,8 @@ export class PreviewComponent implements OnInit {
       setTimeout(() => this.changeDetectorRef.detectChanges(), 0);
     });
 
-
     //alert test
-    this.alertMessage = 'Artikel berhasil disimpan ke dalam draft.'
+    // if (!this.alertMessage) this.alertMessage = 'Artikel berhasil disimpan ke dalam draft.'
   }
 
   private loadData() {

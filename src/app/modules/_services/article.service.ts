@@ -176,6 +176,7 @@ export class ArticleService {
     if (isHasSend) {
       _dataForm.sendTo = saveAndSend.sendTo;
       _dataForm.sendNote = saveAndSend.sendNote;
+      _dataForm.taskType = 'Approve';
     }
     // const formData = this.parseToFormObject(_dataForm);
     const formData = toFormData(_dataForm);

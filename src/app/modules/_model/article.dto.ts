@@ -61,5 +61,6 @@ export declare interface ArticleDTO {
         username: string,
         email: string,
     },
-    sendNote?: string
+    sendNote?: string,
+    taskType?: string, // Approve, Deny, Cancel
 }

@@ -148,7 +148,13 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   relatedArticle$: BehaviorSubject<Option[]> = new BehaviorSubject([]);
   suggestionArticle$: BehaviorSubject<Option[]> = new BehaviorSubject([]);
   locationOptions: BehaviorSubject<Option[]> = new BehaviorSubject([]);
+
+
+  // preview property
   isPreview: boolean = false;
+  previewHideTopbar: boolean = false;
+  previewAlert: boolean = false;
+  previewAlertMessage: string = '';
 
   // save and send
   userOptions: Option[] = [];
@@ -263,7 +269,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
         this.subscriptions.push(
           this.article.saveArticle(_dataForm).subscribe(resp => {
             if (resp) {
-              this.onPreview(e);
+              this.onPreview(e, true, true, 'Artikel berhasil disimpan ke dalam draft.');
               this.cdr.detectChanges();
             }
           })
@@ -307,15 +313,19 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     this.subscriptions.push(
       this.article.saveArticle(_dataForm, true, this.saveAndSend).subscribe(resp => {
         if (resp) {
-          this.onPreview(e);
+          this.modalService.dismissAll();
+          this.onPreview(e, true, true, 'Artikel berhasil disimpan dan dikirim.');
           this.cdr.detectChanges();
         }
       })
     );
     return false;
   }
-  onPreview(e) {
+  onPreview(e, hideTopbar: boolean = false, alert: boolean = false, msg: string = '') {
     this.article.formData = this.dataForm.value as ArticleDTO;
+    this.previewHideTopbar = hideTopbar;
+    this.previewAlert = alert;
+    this.previewAlertMessage = msg;
     this.isPreview = !this.isPreview;
     return false;
   }
