@@ -25,8 +25,8 @@ public interface ArticleMyPagesRepository extends CrudRepository<Article, Long> 
             "AND m.deleted IS FALSE " +
             "AND m.articleState = :state " +
             "AND (LOWER(m.judulArticle) LIKE CONCAT('%',LOWER(:keyword),'%') " +
-            "       OR m.fullNameModifier LIKE %:keyword% " +
-            "       OR m.structure.location_text LIKE %:keyword% ) ")
+            "       OR LOWER(m.fullNameModifier) LIKE CONCAT('%', LOWER(:keyword), '%') " +
+            "       OR LOWER(m.structure.location_text) LIKE CONCAT('%',LOWER(:keyword), '%') ) ")
     Page<Article> findMyPagesArticle(@Param("ids") List<Long> ids, @Param("keyword") String keyword, @Param("state") String state, Pageable pageable);
 
     @Query("select rs.location_text from Structure rs where rs.id =:structureId and rs.deleted is false ")
