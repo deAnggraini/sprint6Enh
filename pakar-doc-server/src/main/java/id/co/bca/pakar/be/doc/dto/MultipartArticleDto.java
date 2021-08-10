@@ -96,11 +96,11 @@ public class MultipartArticleDto extends BaseArticleDto {
         this.suggestions = suggestions;
     }
 
-    public Boolean getHasSend() {
+    public Boolean getIsHasSend() {
         return isHasSend;
     }
 
-    public void setHasSend(Boolean hasSend) {
+    public void setIsHasSend(Boolean hasSend) {
         isHasSend = hasSend;
     }
 

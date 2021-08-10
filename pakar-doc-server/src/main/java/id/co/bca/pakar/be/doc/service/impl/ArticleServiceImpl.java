@@ -387,7 +387,7 @@ public class ArticleServiceImpl implements ArticleService {
                 }
             }
 
-            if (articleDto.getSendTo() != null) {
+            if (articleDto.getIsHasSend().booleanValue()) {
                 // send to
                 logger.info("send article to {}", articleDto.getSendTo().getUsername());
                 logger.debug("send note article {}", articleDto.getSendNote());
