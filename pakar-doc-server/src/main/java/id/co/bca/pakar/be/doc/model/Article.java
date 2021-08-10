@@ -44,7 +44,7 @@ public class Article extends EntityBase {
 	private Boolean useEmptyTemplate = Boolean.FALSE;
 
 	@Column(name = "new_article", columnDefinition = "BOOLEAN DEFAULT TRUE")
-	private Boolean newArticle;
+	private Boolean newArticle = Boolean.TRUE;
 
 	public Long getId() {
 		return id;
