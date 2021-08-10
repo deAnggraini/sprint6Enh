@@ -40,7 +40,7 @@ export class NotificationComponent implements OnInit, OnDestroy {
   setPage(page: number) {
     this.onSearch(this.keyword, page);
   }
-  doSearch() {
+  doSearch(value: string) {
     this.onSearch(this.keyword, 1);
   }
   onSearch(keyword: string, page: number = 1, limit: number = 10) {
