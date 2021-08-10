@@ -78,7 +78,7 @@ export class ArticleService {
   }
 
   suggestionArticle(keyword: string, structureId: number, exclude: number[] = [], page: number = 1, limit: number = 10) {
-    const params = { keyword, exclude, page, limit };
+    const params = { keyword, structureId, exclude, page, limit };
     return this.apiService.post(`${this._base_url}/suggestionArticle`, params);
   }
 

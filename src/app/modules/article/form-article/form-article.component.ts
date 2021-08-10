@@ -304,14 +304,14 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   doSaveAndSend(e) {
     const _dataForm = this.dataForm.value;
-    console.log(this.saveAndSend);
-    // this.subscriptions.push(
-    //   this.article.saveArticle(_dataForm, true, this.saveAndSend).subscribe(resp => {
-    //     if (resp) {
-    //       this.cdr.detectChanges();
-    //     }
-    //   })
-    // );
+    // console.log(this.saveAndSend);
+    this.subscriptions.push(
+      this.article.saveArticle(_dataForm, true, this.saveAndSend).subscribe(resp => {
+        if (resp) {
+          this.cdr.detectChanges();
+        }
+      })
+    );
     return false;
   }
   onPreview(e) {
