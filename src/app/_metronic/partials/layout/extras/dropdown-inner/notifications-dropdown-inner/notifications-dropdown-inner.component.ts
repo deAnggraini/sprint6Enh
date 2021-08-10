@@ -10,38 +10,7 @@ import { Subscription } from 'rxjs';
 export class NotificationsDropdownInnerComponent implements OnInit, OnDestroy {
 
   subscriptions: Subscription[] = [];
-  dataList: NotificationDTO[] = [
-    {
-      id: 1,
-      status: 'informasi',
-      type: 'Informasi',
-      isUnread: true,
-      date: new Date(),
-      by: '',
-      title: 'PAKAR Info',
-      desc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
-    },
-    {
-      id: 2,
-      status: 'konflik',
-      type: 'Artikel',
-      isUnread: false,
-      date: new Date(),
-      by: 'Thalia Sari Landi',
-      title: 'Tahapan',
-      desc: 'Artikel Tahapan yang sedang kamu ubah sudah rilis versi terbaru. Segera sesuaikan dengan versi terbaru.'
-    },
-    {
-      id: 3,
-      status: 'terima',
-      type: 'Virtual Pages',
-      isUnread: true,
-      date: new Date(),
-      by: 'Stacia Marella',
-      title: 'Joint Account',
-      desc: 'Mohon review atas pembuatan Virtual Page.'
-    }
-  ];
+  dataList: NotificationDTO[] = [];
 
   constructor(private notifService: NotificationService) { }
 

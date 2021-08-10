@@ -30,7 +30,7 @@ export declare interface ResponseNotificationDTO {
 })
 export class NotificationService {
 
-  private _base_url = `${environment.apiUrl}/auth`;
+  private _base_url = `${environment.apiUrl}/doc`;
   private notif$: BehaviorSubject<ResponseNotificationDTO> = new BehaviorSubject(null);
 
   constructor(private api: ApiService) { }
@@ -38,10 +38,15 @@ export class NotificationService {
   list(): Observable<any> {
     return this.api.post(`${this._base_url}/getNotification`, {}).pipe(
       map((resp: ResponseNotificationDTO) => {
-        this.notif$.next(resp);
+        if (resp) this.notif$.next(resp);
         return resp;
       })
     );
+  }
+
+  listNotif(keyword: string, page: number = 1, limit: number = 10) {
+    const params = { keyword, page, limit };
+    return this.api.post(`${this._base_url}/getNotification`, params);
   }
 
   getNotif(): BehaviorSubject<ResponseNotificationDTO> {

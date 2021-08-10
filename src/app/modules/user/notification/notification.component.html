@@ -1,1 +1,66 @@
-<p>notification works!</p>
+<div class="background-overlay background-search" style="
+    background-image: url('./assets/media/images/notification_bg.jpeg');
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 184px;
+"></div>
+<div class="mx-15 mt-n50">
+    <div class="my-7">
+        <pakar-search></pakar-search>
+    </div>
+    <div class="card card-custom px-10 py-5">
+        <div class="d-flex flex-row  align-items-center justify-content-between mb-3">
+            <div class="d-flex flex-row align-items-center">
+                <span [inlineSVG]="'./assets/media/svg/bca/icon/notification.svg'" class="svg-icon mr-2"></span>
+                <div class="pakar-text-header my-2">Notifikasi</div>
+            </div>
+            <div class="input-group inner">
+                <input type="text" class="form-control" placeholder="Cari artikel, virtual page atau formulir"
+                    [(ngModel)]="keyword" style="height: 34px;">
+                <div class="form-control-clear btn btn-icon btn-clean" *ngIf="keyword"
+                    (click)="keyword =''; onSearch($event)" style="height: 34px;">
+                    <span [inlineSVG]="'./assets/media/svg/bca/icon/close.svg'" cacheSVG="true"
+                        class="hidden svg mr-1 ml-1"></span>
+                </div>
+                <span class="input-group-btn" style="height: 34px;">
+                    <button class="btn btn-outline-secondary btn-success btn-sm" type="button"
+                        (click)="doSearch($event)">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </span>
+            </div>
+        </div>
+        <div style="border-bottom: 1px solid #EDEBE9; padding-left: 15px;">
+            <a>Tandai sudah dibaca (32)</a>
+        </div>
+        <div class="card-notif card-notif-body">
+            <ng-container *ngIf="dataList.length; else emptyData">
+                <div *ngFor="let item of dataList" class="row-item mb-2">
+                    <div class="r-info mb-2">
+                        <span [inlineSVG]="'./assets/media/svg/bca/icon/'+getIcon(item)" cacheSVG="true"
+                            class="svg notif-img"></span>
+                        <span>{{item.type}}</span>
+                        <span [inlineSVG]="'./assets/media/svg/bca/icon/notif-dot.svg'" cacheSVG="true"
+                            class="svg notif-dot"></span>
+                        <span>{{item.date | date:'dd/MM/yyyy'}}</span>
+                    </div>
+                    <div class="r-title fs18 fb6 mb-2">
+                        <span>{{item.title}}</span>
+                        <span *ngIf="item.by"> - {{item.by}}</span>
+                    </div>
+                    <div class="r-desc fs14 fb4 mb-2">{{item.desc}}</div>
+                </div>
+            </ng-container>
+            <div class="d-flex justify-content-center align-items-center flex-wrap mt-5">
+                <app-pagination (onChange)="setPage($event)" [paging]="pagination">
+                </app-pagination>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #emptyData>
+    <div>
+        <span [inlineSVG]="'./assets/media/svg/bca/icon/notification-empty.svg'" cacheSVG="true" class="svg"></span>
+    </div>
+</ng-template>

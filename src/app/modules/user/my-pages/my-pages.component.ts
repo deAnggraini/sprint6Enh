@@ -12,10 +12,13 @@ export declare interface MyPageRowItem {
   location: string,
   modified_date: Date,
   modified_by: string,
+  approved_date?: Date,
+  approved_by?: string,
+  affective_date?: Date,
+  send_to?: string,
   current_by: string,
   state: string,
   isNew: boolean
-
 }
 
 interface MyPageFiter {

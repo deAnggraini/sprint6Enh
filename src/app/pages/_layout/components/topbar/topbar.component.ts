@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { Observable } from 'rxjs';
 import { LayoutService } from '../../../../_metronic/core';
 import { AuthService } from '../../../../modules/auth/_services/auth.service';
@@ -11,6 +11,7 @@ import KTLayoutQuickPanel from '../../../../../assets/js/layout/extended/quick-p
 import KTLayoutQuickUser from '../../../../../assets/js/layout/extended/quick-user';
 import KTLayoutHeaderTopbar from '../../../../../assets/js/layout/base/header-topbar';
 import { KTUtil } from '../../../../../assets/js/components/util';
+import { NotificationService } from 'src/app/modules/_services/notification.service';
 
 @Component({
   selector: 'app-topbar',
@@ -36,7 +37,13 @@ export class TopbarComponent implements OnInit, AfterViewInit {
   showAddButton: boolean = false;
   aliasName: string = 'AA';
 
-  constructor(private layout: LayoutService, private auth: AuthService) {
+  unReadNotif: number = 0;
+
+  constructor(
+    private layout: LayoutService,
+    private auth: AuthService,
+    private notifService: NotificationService,
+    private cdr: ChangeDetectorRef) {
     this.user$ = this.auth.currentUserSubject.asObservable();
   }
 
@@ -75,6 +82,18 @@ export class TopbarComponent implements OnInit, AfterViewInit {
       const role = u.roles[0];
       this.showSettingButton = ["SUPERADMIN", "ADMIN"].includes(role);
       this.showAddButton = ["ADMIN", "EDITOR"].includes(role);
+    });
+
+    this.notifService.getNotif().subscribe(resp => {
+      console.log('change notif', resp);
+      if (resp) {
+        this.unReadNotif = resp.total_unread;
+        console.log('unread', this.unReadNotif);
+        this.cdr.detectChanges();
+      }
+    })
+    this.notifService.list().subscribe(resp => {
+      // console.log(resp);
     });
   }
 

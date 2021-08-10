@@ -87,13 +87,13 @@
     </div>
   </ng-container> -->
   <ng-container *ngIf="extrasNotificationsLayout === 'dropdown'">
-    <div class="dropdown" ngbDropdown placement="bottom-right">
+    <div class="dropdown" ngbDropdown placement="bottom-right" autoClose="true">
       <div class="topbar-item kt_quick_notifications_toggle" data-toggle="dropdown" data-offset="10px,0px"
         ngbDropdownToggle>
         <div class="btn btn-icon btn-icon-mobile btn-clean btn-sm">
           <span [inlineSVG]="'./assets/media/svg/bca/top-bar/notifications2.svg'" cacheSVG="true"
             class="svg-icon svg-icon-xl"></span>
-          <span class="label label-number">99</span>
+          <span class="label label-number" *ngIf="unReadNotif">{{unReadNotif}}</span>
         </div>
       </div>
 
