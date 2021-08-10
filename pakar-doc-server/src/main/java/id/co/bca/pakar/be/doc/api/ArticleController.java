@@ -589,7 +589,7 @@ public class ArticleController extends BaseController {
                                                                                     @RequestBody SearchMyPageDto searchDto
                                                                                    ) {
         try {
-            logger.info("search suggestion articles process");
+            logger.info("search My Pages process");
             logger.info("received token bearer --- {}", authorization);
             searchDto.setUsername(username);
             searchDto.setToken(getTokenFromHeader(authorization));

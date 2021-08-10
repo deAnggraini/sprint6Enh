@@ -1183,13 +1183,14 @@ public class ArticleServiceImpl implements ArticleService {
 
         public MyPageDto mapEntityIntoDTO(Article entity) {
             MyPageDto dto = new MyPageDto();
-
+            String locTemp = articleMyPagesRepository.findLocation(entity.getStructure().getId());
             dto.setId(entity.getId());
             dto.setTitle(entity.getJudulArticle());
             dto.setIsNew(entity.getNewArticle());
             dto.setState(entity.getArticleState());
             dto.setModifiedBy(entity.getModifyBy());
             dto.setModifiedDate(entity.getModifyDate());
+            dto.setLocation(locTemp);
             return dto;
         }
 
@@ -1205,6 +1206,8 @@ public class ArticleServiceImpl implements ArticleService {
                 return "modifyDate";
             } else if(reqColumn.equals("modified_by")) {
                 return "modifyBy";
+            } else if(reqColumn.equals("location")) {
+                return "location_text";
             }
             return "";
         }
