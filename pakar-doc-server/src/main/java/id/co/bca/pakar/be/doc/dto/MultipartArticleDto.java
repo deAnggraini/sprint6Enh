@@ -8,19 +8,19 @@ import java.util.List;
 
 public class MultipartArticleDto extends BaseArticleDto {
     @JsonProperty("desc")
-    private String shortDescription;
+    private String desc;
 
     @JsonProperty("image")
     private MultipartFile image;
 
     @JsonProperty("video")
-    private String videoLink;
+    private String video;
 
     @JsonProperty("contents")
     private List<ArticleContentDto> contents = new ArrayList<>();
 
     @JsonProperty("references")
-    private List<SkReffDto> skReff = new ArrayList<>();
+    private List<SkReffDto> references = new ArrayList<>();
 
     @JsonProperty("related")
     private List<MultipartArticleDto> related = new ArrayList<>();
@@ -40,12 +40,12 @@ public class MultipartArticleDto extends BaseArticleDto {
     @JsonProperty("taskType")
     private String taskType; // APPROVE, DENY, CANCEL
 
-    public String getShortDescription() {
-        return shortDescription;
+    public String getDesc() {
+        return desc;
     }
 
-    public void setShortDescription(String shortDescription) {
-        this.shortDescription = shortDescription;
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 
     public MultipartFile getImage() {
@@ -56,12 +56,12 @@ public class MultipartArticleDto extends BaseArticleDto {
         this.image = image;
     }
 
-    public String getVideoLink() {
-        return videoLink;
+    public String getVideo() {
+        return video;
     }
 
-    public void setVideoLink(String videoLink) {
-        this.videoLink = videoLink;
+    public void setVideo(String video) {
+        this.video = video;
     }
 
     public List<ArticleContentDto> getContents() {
@@ -72,12 +72,12 @@ public class MultipartArticleDto extends BaseArticleDto {
         this.contents = contents;
     }
 
-    public List<SkReffDto> getSkReff() {
-        return skReff;
+    public List<SkReffDto> getReferences() {
+        return references;
     }
 
-    public void setSkReff(List<SkReffDto> skReff) {
-        this.skReff = skReff;
+    public void setReferences(List<SkReffDto> references) {
+        this.references = references;
     }
 
     public List<MultipartArticleDto> getRelated() {

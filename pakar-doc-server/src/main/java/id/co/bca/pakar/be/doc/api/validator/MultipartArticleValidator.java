@@ -39,13 +39,13 @@ public class MultipartArticleValidator implements Validator {
         MultipartArticleDto dto = (MultipartArticleDto) target;
 
         try {
-            if (dto.getJudulArticle().isEmpty()) {
+            if (dto.getTitle().isEmpty()) {
                 errors.rejectValue("judulArticle", "judul.article.required", "judul article is required");
                 return;
             }
 
-            if (dto.getShortDescription() != null) {
-                if (dto.getShortDescription().length() > 1000) {
+            if (dto.getDesc() != null) {
+                if (dto.getDesc().length() > 1000) {
                     errors.rejectValue("shortDescription", "shortDescription.article.maximum.length", "maximum length 1000 characters");
                     return;
                 }
@@ -92,9 +92,9 @@ public class MultipartArticleValidator implements Validator {
                 }
             }
 
-            if (dto.getVideoLink() != null) {
+            if (dto.getVideo() != null) {
                 String regex = "(https?)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
-                if (!dto.getVideoLink().matches(regex)) {
+                if (!dto.getVideo().matches(regex)) {
                     errors.rejectValue("videoLink", "article.videoLink.url.invalid", "video link url invalid");
                     return;
                 }
