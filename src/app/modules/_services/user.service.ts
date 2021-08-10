@@ -26,7 +26,7 @@ export class UserService {
       users.forEach(d => {
         result.push({
           id: d.username,
-          text: `${d.fullname} - ${d.email}`,
+          text: `${d.fullname}`,
           value: d.email
         });
       })

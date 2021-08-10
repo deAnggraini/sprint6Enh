@@ -10,12 +10,14 @@ import { UtilsModule } from 'src/app/utils/utils.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { NgbdSortableHeader } from './my-pages/sortable.directive';
+import { NotificationComponent } from './notification/notification.component';
 
 const routes: Routes = [
   {
     path: '',
     component: UserComponent,
     children: [
+      { path: 'notification', component: NotificationComponent, },
       { path: 'mypages', component: MyPagesComponent, },
       { path: '', redirectTo: 'mypages', pathMatch: 'full' },
       { path: '**', redirectTo: 'mypages', pathMatch: 'full' },
@@ -28,6 +30,7 @@ const routes: Routes = [
     UserComponent,
     MyPagesComponent,
     NgbdSortableHeader,
+    NotificationComponent,
   ],
   imports: [
     CommonModule,

@@ -77,41 +77,33 @@
 </ng-container>
 
 <ng-container *ngIf="extrasNotificationsDisplay">
-  <ng-container *ngIf="extrasNotificationsLayout === 'offcanvas'">
-    <!--begin::Notifications-->
+  <!-- <ng-container *ngIf="extrasNotificationsLayout === 'offcanvas'">
     <div class="topbar-item">
       <div class="btn btn-icon btn-icon-mobile btn-clean btn-sm mr-1" id="kt_quick_notifications_toggle">
-        <!-- <span [inlineSVG]="'./assets/media/svg/icons/General/Notifications1.svg'" cacheSVG="true" class="svg-icon svg-icon-xl"></span> -->
         <span [inlineSVG]="'./assets/media/svg/bca/top-bar/notifications2.svg'" cacheSVG="true"
           class="svg-icon svg-icon-xl"></span>
-        <span class="pulse-ring"></span>
+        <span class="label label-number">99</span>
       </div>
     </div>
-    <!--end::Notifications-->
-  </ng-container>
-
+  </ng-container> -->
   <ng-container *ngIf="extrasNotificationsLayout === 'dropdown'">
-    <!--begin::Notifications-->
-    <div class="dropdown" ngbDropdown placement="bottom">
-      <!--begin::Toggle-->
-      <div class="topbar-item" data-toggle="dropdown" data-offset="10px,0px" ngbDropdownToggle>
-        <div class="btn btn-icon btn-clean btn-dropdown btn-sm mr-1 pulse pulse-primary">
-          <span [inlineSVG]="'./assets/media/svg/icons/General/Notifications1.svg'" cacheSVG="true"
+    <div class="dropdown" ngbDropdown placement="bottom-right">
+      <div class="topbar-item kt_quick_notifications_toggle" data-toggle="dropdown" data-offset="10px,0px"
+        ngbDropdownToggle>
+        <div class="btn btn-icon btn-icon-mobile btn-clean btn-sm">
+          <span [inlineSVG]="'./assets/media/svg/bca/top-bar/notifications2.svg'" cacheSVG="true"
             class="svg-icon svg-icon-xl"></span>
-          <span class="pulse-ring"></span>
+          <span class="label label-number">99</span>
         </div>
       </div>
-      <!--end::Toggle-->
 
-      <!--begin::Dropdown-->
-      <div ngbDropdownMenu class="dropdown-menu p-0 m-0 dropdown-menu-anim-up dropdown-menu-lg">
-        <form>
-          <app-notifications-dropdown-inner></app-notifications-dropdown-inner>
-        </form>
+      <div ngbDropdownMenu class="dropdown-menu p-0 m-0 dropdown-menu-anim-up dropdown-menu-lg" style="border-radius: 2px;
+        width: 483px;
+        min-height: 484px;
+        box-shadow: 0px 1.2px 3.6px rgba(0, 0, 0, 0.1), 0px 6.4px 14.4px rgba(0, 0, 0, 0.13);">
+        <app-notifications-dropdown-inner></app-notifications-dropdown-inner>
       </div>
-      <!--end::Dropdown-->
     </div>
-    <!--end::Notifications-->
   </ng-container>
 </ng-container>
 

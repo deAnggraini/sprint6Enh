@@ -1,5 +1,25 @@
 :host ::ng-deep {
 
+  .kt_quick_notifications_toggle {
+    position: relative;
+
+    .label {
+      position: absolute;
+      font-size: 8px;
+      right: 2px;
+      top: 10px;
+      width: 14px;
+      height: 14px;
+
+      &.label-number {
+        background: #D83B01;
+        border: 1px solid #1995D1;
+        box-sizing: border-box;
+        color: white;
+      }
+    }
+  }
+
   .btn.btn-clean .svg-icon svg g [fill] {
     transition: fill 0.3s ease;
     fill: white;
