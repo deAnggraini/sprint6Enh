@@ -1071,6 +1071,8 @@ public class ArticleServiceImpl implements ArticleService {
             int pageNum = searchDto.getPage().intValue() - 1;
             if(pageNum < 0)
                 throw new MinValuePageNumberException("page number smaller than 0");
+            String reqSortColumnName = searchDto.getSorting().getColumn();
+            searchDto.getSorting().setColumn(new TodoMapperMyPages().convertColumnNameforSort(reqSortColumnName));
             Sort sort = searchDto.getSorting().getSort().equals("asc")? Sort.by(searchDto.getSorting().getColumn()).ascending() : Sort.by(searchDto.getSorting().getColumn()).descending();
             Pageable pageable = PageRequest.of(pageNum, searchDto.getSize().intValue(), sort);
             RequestTaskDto requestTaskDto = new RequestTaskDto();
@@ -1194,6 +1196,17 @@ public class ArticleServiceImpl implements ArticleService {
         public Page<MyPageDto> mapEntityPageIntoDTOPage(Pageable pageRequest, Page<Article> source) {
             List<MyPageDto> dtos = mapEntitiesIntoDTOs(source.getContent());
             return new PageImpl<>(dtos, pageRequest, source.getTotalElements());
+        }
+
+        public String convertColumnNameforSort(String reqColumn) {
+            if(reqColumn.equals("title")) {
+                return "judulArticle";
+            } else if(reqColumn.equals("modified_date")) {
+                return "modifyDate";
+            } else if(reqColumn.equals("modified_by")) {
+                return "modifyBy";
+            }
+            return "";
         }
     }
 }
