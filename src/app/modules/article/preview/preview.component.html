@@ -5,7 +5,7 @@ background-position: center;
 background-size: cover;
 height: 184px;
 "></div>
-<div class="top-bar d-flex flex-row justify-content-between">
+<div class="top-bar d-flex flex-row justify-content-between" *ngIf="!hideTopbar" >
     <div class="d-flex flex-row align-items-center">
         <a href="#" class="link text-dark d-flex flex-row pl-8" (click)="onCancel($event)">
             <div [inlineSVG]="'./assets/media/svg/bca/icon/edit-document.svg'" cacheSVG="true" class="svg-icon"></div>
@@ -24,14 +24,50 @@ height: 184px;
         </a>
     </div>
 </div>
-<div class="mx-15 mt-n13">
+
+<!-- Alert -->
+<div class="alert d-flex flex-row justify-content-between align-items-center alert-dismissible fade show" *ngIf="alert" role="alert">
+    <div class="d-flex flex-row">
+        <div [inlineSVG]="'./assets/media/svg/bca/icon/success.svg'" cacheSVG="true" class="svg-icon"></div>&nbsp;&nbsp;
+        <div class="font-weight-bold">{{ alertMessage }}</div>
+    </div>
+
+    <button type="button" class="btn btn-icon" data-bs-dismiss="alert" aria-label="Close" (click)="closeAlert()">
+        <i  [inlineSVG]="'./assets/media/svg/bca/icon/close.svg'" cacheSVG="true"></i>
+    </button>
+    <!-- <span [inlineSVG]="'./assets/media/svg/bca/icon/close.svg'" cacheSVG="true" class="btn d-flex flex-row"></span> -->
+</div>
+
+<div class="mx-15 mt-n25">
     <div class="back-panel">
         <pakar-breadcrumbs [node]="struktur$"></pakar-breadcrumbs>
     </div>
     <ng-container>
         <div class="pakar-container h-100 p-8 d-flex flex-column flex-column-auto flex-grow"
             style="min-height: initial;">
-            <span class="pakar-text-header">{{articleDTO.title}}</span>
+            <div class="d-flex flex-row justify-content-between">
+                <div class="d-flex flex-row">
+                    <span class="pakar-text-header">{{articleDTO.title}}</span>
+                </div>
+                <!-- on save -->
+                <div class="d-flex flex-row" *ngIf="!onPreview" >
+                    <!-- Expand & Collapse -->
+                    <div href="" class="btn" *ngIf="!isExpand" (click)="expandCollapse()">
+                            <span [inlineSVG]="'./assets/media/svg/bca/icon/expand-topik.svg'" cacheSVG="true" class="svg-icon menu-icon"></span>
+                            <span class="font-weight-bold" style="color: #0F5EA9;">Expand Topik</span>
+                    </div>
+                    <div href="" class="btn" *ngIf="isExpand" (click)="expandCollapse()">
+                        <span [inlineSVG]="'./assets/media/svg/bca/icon/collapse-topik.svg'" cacheSVG="true" class="svg-icon menu-icon"></span>
+                        <span class="font-weight-bold" style="color: #0F5EA9;">Collapse Topik</span>
+                    </div>
+
+                    <!-- Ubah Artikel -->
+                    <div href="" class="btn" *ngIf="editable">
+                        <span [inlineSVG]="'./assets/media/svg/bca/icon/edit-document-dark.svg'" cacheSVG="true" class="svg-icon menu-icon"></span>
+                        <span class="font-weight-bold" style="color: #0F5EA9;">Ubah Artikel</span>
+                    </div>
+                </div>
+            </div>
             <span class="pakar-text-header-desc my-4" style="color: #605E5C;">Terakhir diubah oleh
                 <span class="symbol symbol-lg-25 symbol-25 mx-2">
                     <span class="symbol-label font-size-h7 font-weight-bold rounded-xl px-2 ">{{aliasName}}</span>

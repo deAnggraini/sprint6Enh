@@ -23,6 +23,8 @@ export class PreviewComponent implements OnInit {
   categoryId: number = 0;
   struktur$: BehaviorSubject<StrukturDTO> = new BehaviorSubject<StrukturDTO>(null);
 
+  hideTopbar: boolean = false;
+
   hideTable: boolean = true;
   hideFAQ: boolean = true;
   showVideo: boolean = false;
@@ -41,6 +43,13 @@ export class PreviewComponent implements OnInit {
   sourceImg: string;
   backend_img: string = environment.backend_img;
 
+  onPreview: boolean = false;
+  isExpand: boolean = false;
+  editable: boolean = true;
+  alert: boolean = true;
+  alertMessage: string;
+
+ 
   //faq carousel
   slides = [];
   slideConfig = {
@@ -101,6 +110,10 @@ export class PreviewComponent implements OnInit {
       this.slides = resp.slice(0, 6);
       setTimeout(() => this.changeDetectorRef.detectChanges(), 0);
     });
+
+
+    //alert test
+    this.alertMessage = 'Artikel berhasil disimpan ke dalam draft.'
   }
 
   private loadData() {
@@ -121,7 +134,7 @@ export class PreviewComponent implements OnInit {
             this.imageSrc = reader.result as string;
           };
         }
-        this.imageTitle = image.name.split(".")[0];
+        this.imageTitle = image.name?.split(".")[0];
       } else {
         this.imageSrc = this.backend_img + '/articles/artikel-no-image.jpg';
         this.imageTitle = "Ini adalah judul dari infografis"
@@ -154,6 +167,18 @@ export class PreviewComponent implements OnInit {
       this.showVideo = false;
       this.noVideoPreview = this.backend_img + '/articles/poster-myvideo.png';
     }
+  }
+
+  expandCollapse() {   
+    if (this.isExpand == false) {
+      this.isExpand = true;
+    } else {
+      this.isExpand = false;
+    }
+  }
+
+  closeAlert() {
+    this.alert = false;
   }
 
 }
