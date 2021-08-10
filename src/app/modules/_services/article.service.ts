@@ -77,12 +77,10 @@ export class ArticleService {
     return this.apiService.post(`${this._base_url}/searchRelatedArticle`, params);
   }
 
-  suggestionArticle(keyword: string, exclude: number[] = [], page: number = 1, limit: number = 10) {
+  suggestionArticle(keyword: string, structureId: number, exclude: number[] = [], page: number = 1, limit: number = 10) {
     const params = { keyword, exclude, page, limit };
     return this.apiService.post(`${this._base_url}/suggestionArticle`, params);
   }
-
-
 
   news() {
     return this.apiService.post(`${this._base_url}/news`, {});
