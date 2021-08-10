@@ -37,6 +37,9 @@ public class MultipartArticleDto extends BaseArticleDto {
     @JsonProperty("sendNote")
     private String sendNote;
 
+    @JsonProperty("taskType")
+    private String taskType; // APPROVE, DENY, CANCEL
+
     public String getShortDescription() {
         return shortDescription;
     }
@@ -115,5 +118,13 @@ public class MultipartArticleDto extends BaseArticleDto {
 
     public void setSendNote(String sendNote) {
         this.sendNote = sendNote;
+    }
+
+    public String getTaskType() {
+        return taskType;
+    }
+
+    public void setTaskType(String taskType) {
+        this.taskType = taskType;
     }
 }
