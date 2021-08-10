@@ -47,8 +47,8 @@ INSERT INTO public.r_wf_user_task_type(id, created_by, created_date, deleted, mo
 VALUES(2, 'system', now()::date, false, null, null, 'DENY ', 0);
 INSERT INTO public.r_wf_user_task_type(id, created_by, created_date, deleted, modify_by, modify_date, "name", optlock)
 VALUES(3, 'system', now()::date, false, null, null, 'CANCEL', 0);
-INSERT INTO public.r_wf_user_task_type(id, created_by, created_date, deleted, modify_by, modify_date, "name", optlock)
-VALUES(4, 'system', now()::date, false, null, null, 'RESOLVE', 0);
+--INSERT INTO public.r_wf_user_task_type(id, created_by, created_date, deleted, modify_by, modify_date, "name", optlock)
+--VALUES(4, 'system', now()::date, false, null, null, 'RESOLVE', 0);
 
 INSERT INTO public.r_wf_user_task(id, created_by, created_date, deleted, modify_by, modify_date, description, "name", optlock, user_task_type, process)
 VALUES(1, 'system', now()::DATE, false, NULL, NULL, 'EDITOR EDIT DRAFT ARTICLE', '', 0, 1, 'ARTICLE_REVIEW');

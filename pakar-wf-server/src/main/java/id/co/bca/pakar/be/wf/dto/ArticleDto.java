@@ -44,7 +44,7 @@ public class ArticleDto extends BaseArticleDto {
     private String sendNote;
 
     @JsonProperty("taskType")
-    private String taskType;
+    private String taskType; // APPROVE, DENY, CANCEL
 
     @JsonProperty("isEmptyTemplate")
     private Boolean emptyTemplate = false;

@@ -18,6 +18,11 @@ public interface WorkflowStateRepository extends CrudRepository<WorkflowStateMod
     WorkflowStateModel findDefaultStartStateByName();
 
     @Query("SELECT m From WorkflowStateModel m " +
+            "WHERE m.workflowStateTypeModel.name='Start' " +
+            "AND m.deleted IS FALSE")
+    WorkflowStateModel findStateByStartTypeName();
+
+    @Query("SELECT m From WorkflowStateModel m " +
             "WHERE m.code.name= :state " +
             "AND m.workflowProcessModel.id = :processId " +
             "AND m.deleted IS FALSE")

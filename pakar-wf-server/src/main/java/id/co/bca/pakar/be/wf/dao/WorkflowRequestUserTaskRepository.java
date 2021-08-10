@@ -18,7 +18,21 @@ public interface WorkflowRequestUserTaskRepository extends CrudRepository<Workfl
             "LEFT JOIN t_wf_request twr ON twr.id = twrut.request_id " +
             "LEFT JOIN t_wf_request_data twrd ON twrd.request_id = twr.id " +
             "WHERE twrd.name = 'ARTICLE_ID' " +
-            "AND twrd.value = :articleId",
+            "AND twrd.value = :articleId " +
+            "AND twr.deleted IS FALSE ",
             nativeQuery = true)
     WorkflowRequestModel findWorkflowRequest(@Param("articleId") String articleId);
+
+    @Query(value = "SELECT twr.* FROM t_wf_request_user_task twrut " +
+            "LEFT JOIN t_wf_request twr ON twr.id = twrut.request_id " +
+            "LEFT JOIN t_wf_request_data twrd ON twrd.request_id = twr.id " +
+            "INNER JOIN r_wf_state rws ON rws.code = twr.current_state " +
+            "INNER JOIN r_wf_state_type rwst ON rwst.id = rws.state_type " +
+            "WHERE twrd.name = 'ARTICLE_ID' " +
+            "AND twrd.value = :articleId " +
+            "AND twrut.assigne = :assigne " +
+            "AND rwst.name in ('Start', 'Normal')" +
+            "AND twr.deleted IS FALSE ",
+            nativeQuery = true)
+    WorkflowRequestModel findWorkflowRequest(@Param("articleId") String articleId, @Param("assigne") String assigne);
 }
