@@ -51,7 +51,7 @@ router.post('/login', (req, res) => {
         let remaining = 6 - failCount;
         let alert = `You have ${remaining} remaining attempts to login`;
         if (failCount > 5) {
-            alert = `User ‘<b>${username}</b>’ currently locked. Please try again in <b>xx minutes.</b>`;
+            alert = `User ‘<b>${username}</b>’ currently locked. Please try again in <b>xx minutes.</b><br>Test new Line`;
         }
         res.send({ status: { code: '99', message: "Incorrect User ID or password", failCount, alert } });
     }

@@ -456,7 +456,9 @@ router.post('/searchMyPages', (req, res) => {
 router.post('/getNotification', (req, res) => {
     const { body } = req;
     console.log({ body });
-
+    if (body.keyword == "kosong") {
+        return res.send({ error: false, msg: "", data: { list: [], total_read: 0 } });
+    }
     res.send({ error: false, msg: "", data: notification });
 });
 

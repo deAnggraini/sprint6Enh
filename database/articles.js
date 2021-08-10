@@ -923,6 +923,10 @@ module.exports.mypages = [
         location: 'Virtual Page > Rekening',
         modified_date: new Date(),
         modified_by: 'Yayopriyo Wibowo',
+        approved_date: new Date(),
+        approved_by: 'Diandra Amanda',
+        affective_date: new Date(),
+        send_to: 'Yayopriyo Wibowo',
         current_by: 'Theresa Theodorus, Natasha Debora',
         state: 'DRAFT',
         isNew: true
@@ -934,6 +938,10 @@ module.exports.mypages = [
         location: 'Formulir > Formulir',
         modified_date: new Date(),
         modified_by: 'Anita Rachmat',
+        approved_date: new Date(),
+        approved_by: 'Diandra Amanda',
+        affective_date: new Date(),
+        send_to: 'Yayopriyo Wibowo',
         current_by: 'Firda Agustriyani',
         state: 'DRAFT',
         isNew: false
@@ -945,6 +953,10 @@ module.exports.mypages = [
         location: 'Virtual Page > Lorem Ipsum Dolor sit Amet',
         modified_date: new Date(),
         modified_by: 'Putu Ayu Sruti Permata Sari',
+        approved_date: new Date(),
+        approved_by: 'Diandra Amanda',
+        affective_date: new Date(),
+        send_to: 'Yayopriyo Wibowo',
         current_by: 'Firda Agustriyani, Kemal Batubara, Indah Permata Sari, Andreas Herawan, Thomas Wibisono, John Doe, Amalia..',
         state: 'DRAFT',
         isNew: true
