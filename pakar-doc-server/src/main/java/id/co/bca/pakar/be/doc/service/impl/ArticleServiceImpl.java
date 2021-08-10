@@ -137,7 +137,7 @@ public class ArticleServiceImpl implements ArticleService {
             logger.info("populate article");
             Article article = new Article();
             article.setCreatedBy(generateArticleDto.getUsername());
-            article.setJudulArticle(generateArticleDto.getJudulArticle());
+            article.setJudulArticle(generateArticleDto.getTitle());
             article.setArticleTemplate(template.getId());
             article.setArticleUsedBy(generateArticleDto.getUsedBy());
             Structure structure = structureRepository.findStructure(generateArticleDto.getStructureId());
@@ -227,7 +227,7 @@ public class ArticleServiceImpl implements ArticleService {
             articleDto.setCreatedBy(article.getCreatedBy());
             articleDto.setCreatedDate(article.getCreatedDate());
             articleDto.setId(article.getId());
-            articleDto.setJudulArticle(article.getJudulArticle());
+            articleDto.setTitle(article.getJudulArticle());
             articleDto.setShortDescription(article.getShortDescription());
             Iterable<ArticleContent> articleContents = articleContentRepository.findByArticleId(article.getId());
             List<ArticleContentDto> articleContentDtos = new TreeArticleContents().menuTree(mapToListArticleContentDto(articleContents));
@@ -316,7 +316,7 @@ public class ArticleServiceImpl implements ArticleService {
 
             Article article = articleOpt.get();
 
-            for (SkReffDto skReffDto : articleDto.getSkReff()) {
+            for (SkReffDto skReffDto : articleDto.getReferences()) {
                 ArticleSkReff articleSkReff = new ArticleSkReff();
                 articleSkReff.setCreatedBy(articleDto.getUsername());
                 articleSkReff.setArticle(article);
@@ -406,7 +406,7 @@ public class ArticleServiceImpl implements ArticleService {
             // set state
             article.setModifyBy(articleDto.getUsername());
             article.setModifyDate(new Date());
-            article.setVideoLink(articleDto.getVideoLink());
+            article.setVideoLink(articleDto.getVideo());
             article = articleRepository.save(article);
 
             articleResponseDto.setId(article.getId());
@@ -419,11 +419,11 @@ public class ArticleServiceImpl implements ArticleService {
                 articleResponseDto.getContents().add(dto);
             }
 
-            for (SkReffDto dto : articleDto.getSkReff()) {
+            for (SkReffDto dto : articleDto.getReferences()) {
                 articleResponseDto.getSkReff().add(dto);
             }
 
-            articleResponseDto.setJudulArticle(article.getJudulArticle());
+            articleResponseDto.setTitle(article.getJudulArticle());
             return articleResponseDto;
         } catch (DataNotFoundException e) {
             logger.error("", e);
@@ -1157,7 +1157,7 @@ public class ArticleServiceImpl implements ArticleService {
 //            dto.setCreatedBy(entity.getCreatedBy());
 //            dto.setCreatedDate(entity.getCreatedDate());
             dto.setId(entity.getId());
-            dto.setJudulArticle(entity.getJudulArticle());
+            dto.setTitle(entity.getJudulArticle());
             return dto;
         }
 

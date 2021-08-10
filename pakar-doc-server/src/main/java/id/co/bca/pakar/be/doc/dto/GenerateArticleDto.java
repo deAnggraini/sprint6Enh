@@ -34,14 +34,6 @@ public class GenerateArticleDto extends ArticleTitleDto {
         this.id = id;
     }
 
-    public String getJudulArticle() {
-        return judulArticle;
-    }
-
-    public void setJudulArticle(String judulArticle) {
-        this.judulArticle = judulArticle;
-    }
-
     public String getUsedBy() {
         return usedBy;
     }

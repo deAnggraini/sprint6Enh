@@ -10,20 +10,13 @@ public class ArticleTitleDto extends BaseDto {
     @Size(max = 50, message = "Maximum judul topik adalah 50 karakter")
 //    @Pattern(regexp="[0-9a-zA-Z\\/\\s\\-\\(\\)]*$", message = "title must alpha or numeric, whitespace, - , /, ()")
     @JsonProperty("title")
-    protected String judulArticle;
+    protected String title;
 
-    public String getJudulArticle() {
-        return judulArticle;
+    public String getTitle() {
+        return title;
     }
 
-    public void setJudulArticle(String judulArticle) {
-        this.judulArticle = judulArticle;
-    }
-
-    @Override
-    public String toString() {
-        return "ArticleTitleDto{" +
-                "judulArticle='" + judulArticle + '\'' +
-                '}';
+    public void setTitle(String title) {
+        this.title = title;
     }
 }
