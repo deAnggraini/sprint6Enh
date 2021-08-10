@@ -8,7 +8,7 @@ public class MyPageDto extends BaseDto {
     @JsonProperty("id")
     private Long id;
     @JsonProperty("type")
-    private String type;
+    private String type = "article";
     @JsonProperty("title")
     private String title;
     @JsonProperty("location")
