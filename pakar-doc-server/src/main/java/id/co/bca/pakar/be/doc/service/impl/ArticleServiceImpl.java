@@ -1107,7 +1107,7 @@ public class ArticleServiceImpl implements ArticleService {
             List<Long> ids = new ArrayList<>();
             for(TaskDto task : restResponse.getBody().getData()) {
                 ids.add(task.getArticleId());
-                logger.debug("article id from workflow service {}", task.getArticleId());
+//                logger.debug("article id from workflow service {}", task.getArticleId());
             }
             Page<Article> searchResultPage = articleMyPagesRepository.findMyPagesArticle(ids, searchDto.getKeyword(), searchDto.getState(), pageable);
             return new TodoMapperMyPages().mapEntityPageIntoDTOPage(pageable, searchResultPage);
