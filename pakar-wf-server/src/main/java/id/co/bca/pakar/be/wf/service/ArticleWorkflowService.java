@@ -149,12 +149,18 @@ public class ArticleWorkflowService {
             }
             WorkflowProcessModel workflowProcessModel = workflowProcessOpt.isPresent() ? workflowProcessOpt.get() : null;
 
+//            logger.debug("find workflow request by article id {}", variables.get("article_id"));
+//            WorkflowRequestModel currentWfRequest = workflowRequestUserTaskRepository.findWorkflowRequest("" + (Long) variables.get("article_id"), username);
+//            logger.debug("current state is {}", currentWfRequest.getCurrentState().getCode());
             logger.debug("find workflow request by article id {}", variables.get("article_id"));
-            WorkflowRequestModel currentWfRequest = workflowRequestUserTaskRepository.findWorkflowRequest("" + (Long) variables.get("article_id"), username);
+            WorkflowRequestUserTaskModel currentWfRequestUt = workflowRequestUserTaskRepository.findWorkflowRequestUserTask("" + (Long) variables.get("article_id"), username);
+
+            WorkflowRequestModel currentWfRequest = currentWfRequestUt.getRequestModel();
             logger.debug("current state is {}", currentWfRequest.getCurrentState().getCode());
 
-            logger.debug("find workflow state by current state");
+            logger.debug("find workflow state by current state ");
             WorkflowStateModel currentState = workflowStateRepository.findStateByName(currentWfRequest.getCurrentState().getCode(), ARTICLE_PROCESS_DEF);
+            logger.debug("current state is {}", currentState.getCode());
 
             WorkflowTransitionUserTaskModel wfTransUtask = workflowTransitionUserTaskRepository.findTransitionByCurrentStateAndActionType(currentState.getCode(), 1L);
             WorkflowStateModel nextState = wfTransUtask.getTransition().getNextState();
@@ -168,20 +174,20 @@ public class ArticleWorkflowService {
             currentWfRequest = workflowRequestRepository.save(currentWfRequest);
 
             logger.debug("task type from user {}", map.get("taskType"));
-            AssignDto assignDto = (AssignDto) map.get("sendTo");
+            Map assignDto = (Map) map.get("sendTo");
 
             WorkflowRequestUserTaskModel requestUserTaskModel = new WorkflowRequestUserTaskModel();
             requestUserTaskModel.setCreatedBy(username);
             requestUserTaskModel.setRequestModel(currentWfRequest);
             requestUserTaskModel.setProposedBy(username);
-            requestUserTaskModel.setAssigne(assignDto.getUsername());
+            requestUserTaskModel.setAssigne((String)assignDto.get("username"));
             requestUserTaskModel = workflowRequestUserTaskRepository.save(requestUserTaskModel);
 
             TaskDto taskDto = new TaskDto();
             taskDto.setCurrentState(nextState.getCode());
             taskDto.setArticleId((Long) variables.get("article_id"));
             taskDto.setRequestId(currentWfRequest.getId());
-            taskDto.setAssigne(assignDto.getUsername());
+            taskDto.setAssigne((String)assignDto.get("username"));
 
             return taskDto;
         } catch (UndefinedProcessException e) {

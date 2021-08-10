@@ -380,7 +380,11 @@ public class ArticleServiceImpl implements ArticleService {
                 ResponseEntity<ApiResponseWrapper.RestResponse<TaskDto>> restResponse = pakarWfClient
                         .start(BEARER + articleDto.getToken(), articleDto.getUsername(), articleDto);
                 logger.debug("response api request {}", restResponse);
+                logger.debug("reponse status code {}", restResponse.getStatusCode());
                 currentState = restResponse.getBody().getData().getCurrentState();
+                if(currentState != null) {
+                    article.setArticleState(currentState);
+                }
             }
 
             if (articleDto.getSendTo() != null) {
@@ -391,13 +395,17 @@ public class ArticleServiceImpl implements ArticleService {
                 ResponseEntity<ApiResponseWrapper.RestResponse<TaskDto>> restResponse = pakarWfClient
                         .next(BEARER + articleDto.getToken(), articleDto.getUsername(), articleDto);
                 logger.debug("response api request sendDraft {}", restResponse);
+                logger.debug("reponse status code {}", restResponse.getStatusCode());
                 currentState = restResponse.getBody().getData().getCurrentState();
+                if(currentState != null) {
+                    article.setNewArticle(Boolean.FALSE);
+                    article.setArticleState(currentState);
+                }
             }
 
             // set state
             article.setModifyBy(articleDto.getUsername());
             article.setModifyDate(new Date());
-            article.setArticleState(currentState);
             article.setVideoLink(articleDto.getVideoLink());
             article = articleRepository.save(article);
 
