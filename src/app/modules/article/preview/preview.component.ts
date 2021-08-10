@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -17,13 +17,13 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 })
 export class PreviewComponent implements OnInit {
 
+  @Input() hideTopbar: boolean = false;
   @Output() onCancelCallback = new EventEmitter<any>();
   articleDTO: ArticleDTO;
 
   categoryId: number = 0;
   struktur$: BehaviorSubject<StrukturDTO> = new BehaviorSubject<StrukturDTO>(null);
 
-  hideTopbar: boolean = false;
 
   hideTable: boolean = true;
   hideFAQ: boolean = true;
@@ -49,7 +49,7 @@ export class PreviewComponent implements OnInit {
   alert: boolean = true;
   alertMessage: string;
 
- 
+
   //faq carousel
   slides = [];
   slideConfig = {
@@ -169,7 +169,7 @@ export class PreviewComponent implements OnInit {
     }
   }
 
-  expandCollapse() {   
+  expandCollapse() {
     if (this.isExpand == false) {
       this.isExpand = true;
     } else {

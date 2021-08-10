@@ -176,7 +176,6 @@ export class MyPagesComponent implements OnInit, OnDestroy {
     }
   }
   onClickRevision(item: any, index: number) {
-    // console.log('onClickRevision', { item, index });
     return false;
   }
   onClickEdit(item: MyPageRowItem, index: number) {

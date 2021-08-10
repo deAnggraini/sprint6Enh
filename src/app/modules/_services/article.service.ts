@@ -170,18 +170,18 @@ export class ArticleService {
     }
     return formData;
   }
-  saveArticle(article: ArticleDTO, isHasSend: boolean = false, saveAndSend: any = '', sendNote: string = '') {
+  saveArticle(article: ArticleDTO, isHasSend: boolean = false, saveAndSend: any = {}, sendNote: string = '') {
     const _contents = this.parseToSingleArray(article.contents);
-    console.log({ _contents });
     const _dataForm = Object.assign({}, article, { contents: _contents, isHasSend });
     if (isHasSend) {
-      _dataForm.saveAndSend = saveAndSend;
+      _dataForm.sendTo = saveAndSend.sendTo;
+      _dataForm.sendNote = saveAndSend.sendNote;
     }
     // const formData = this.parseToFormObject(_dataForm);
     const formData = toFormData(_dataForm);
     const image = formData.get('image');
     if (typeof (image) == "string") formData.delete('image');
-    console.log({ _dataForm, image });
+
     return this.apiService.post(`${this._base_url}/saveArticle`, formData, this.apiService.getHeaders(false));
   }
 

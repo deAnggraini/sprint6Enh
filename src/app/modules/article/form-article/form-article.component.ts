@@ -304,10 +304,10 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   doSaveAndSend(e) {
     const _dataForm = this.dataForm.value;
-    // console.log(this.saveAndSend);
     this.subscriptions.push(
       this.article.saveArticle(_dataForm, true, this.saveAndSend).subscribe(resp => {
         if (resp) {
+          this.onPreview(e);
           this.cdr.detectChanges();
         }
       })
@@ -489,7 +489,6 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // User saerch
   searchUser(keyword) {
-    console.log({ keyword });
     if (keyword) {
       this.subscriptions.push(
         this.userService.searchUserNotReader(keyword).subscribe(resp => {
@@ -573,7 +572,6 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
   private setArticle(article: ArticleDTO) {
-    console.log({ article });
     if (article) {
       const { structureParentList, structureId } = article;
       article.structureOption = {
@@ -584,6 +582,30 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
 
       // set expanded default value
       this.recalculateChildren(article.contents, []);
+
+      // parsing referances to options
+      if (article.references && article.references.length) {
+        article.references.forEach(d => {
+          d.value = d.no;
+          d.text = `${d.no} - ${d.title}`;
+        })
+      }
+
+      // parsing related article to options
+      if (article.related && article.related.length) {
+        article.related.forEach(d => {
+          d.value = `${d.id}`;
+          d.text = `${d.title}`;
+        })
+      }
+
+      // parsing suggestions to options
+      if (article.suggestions && article.suggestions.length) {
+        article.suggestions.forEach(d => {
+          d.value = `${d.id}`;
+          d.text = `${d.title}`;
+        })
+      }
 
       this.dataForm.reset(article);
       this.addLogs(article.contents);
@@ -731,7 +753,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
       desc: [defaultValue.desc],
       image: [defaultValue.image],
       video: [defaultValue.video],
-      contents: [defaultValue.contents, Validators.compose([Validators.required])],
+      contents: [defaultValue.contents],
       // contents: this.fb.array([
       // this.fb.group({
       //   articleId: [0, Validators.compose([Validators.required])],

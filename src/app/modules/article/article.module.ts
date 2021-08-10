@@ -52,7 +52,7 @@ const routes: Routes = [
       {
         path: 'preview', component: PreviewComponent,
         data: {
-          allowedRoles: ['SUPERADMIN', 'ADMIN', , 'EDITOR']
+          allowedRoles: ['SUPERADMIN', 'ADMIN', 'PUBLISHER', 'EDITOR']
         }
       },
       { path: 'search', component: SearchComponent, },

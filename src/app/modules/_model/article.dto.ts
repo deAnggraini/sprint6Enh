@@ -3,12 +3,16 @@ import { Option } from 'src/app/utils/_model/option';
 export declare interface SkReferenceDTO {
     id: number,
     title: string,
-    no: string
+    no: string,
+    value?: string,
+    text?: string,
 }
 
 export declare interface ArticleRelatedDTO {
     id: number,
     title: string
+    value?: string,
+    text?: string,
 }
 
 export declare interface ArticleParentDTO {
@@ -53,11 +57,9 @@ export declare interface ArticleDTO {
 
     // save & send
     isHasSend: boolean,
-    saveAndSend?: {
-        sendTo: {
-            username: string,
-            email: string,
-        },
-        sendNote: string
-    }
+    sendTo?: {
+        username: string,
+        email: string,
+    },
+    sendNote?: string
 }

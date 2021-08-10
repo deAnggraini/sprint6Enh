@@ -140,7 +140,7 @@ export class AddComponent implements OnInit, OnDestroy {
       usedBy: [{ value: this.defaultValue.usedBy, disabled: true }, Validators.compose([Validators.required])],
       templateId: [this.defaultValue.templateId, Validators.compose([Validators.required])]
     });
-    //, { updateOn: 'submit' }
+    // , { updateOn: 'submit' }
 
     const locationSubrc = this.dataForm.get('structureId').valueChanges.subscribe(d => {
       if (d) {
