@@ -77,12 +77,12 @@ public class MultipartArticleValidator implements Validator {
                         image = ImageIO.read(dto.getImage().getInputStream());
                         int width = image.getWidth();
                         int heigth = image.getHeight();
-                        if (width > Long.parseLong(widthImage)) {
+                        if (width < Long.parseLong(widthImage)) {
                             errors.rejectValue("image", "article.image.file.width.invalid", "width image size invalid");
                             return;
                         }
 
-                        if (heigth > Long.parseLong(heightImage)) {
+                        if (heigth < Long.parseLong(heightImage)) {
                             errors.rejectValue("image", "article.image.file.height.invalid", "height image size invalid");
                             return;
                         }
