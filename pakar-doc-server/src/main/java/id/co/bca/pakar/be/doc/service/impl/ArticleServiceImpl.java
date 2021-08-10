@@ -6,6 +6,7 @@ import id.co.bca.pakar.be.doc.client.PakarWfClient;
 import id.co.bca.pakar.be.doc.common.Constant;
 import id.co.bca.pakar.be.doc.dao.*;
 import id.co.bca.pakar.be.doc.dto.*;
+import id.co.bca.pakar.be.doc.dto.auth.UserProfileDto;
 import id.co.bca.pakar.be.doc.dto.wf.WfArticleDto;
 import id.co.bca.pakar.be.doc.exception.*;
 import id.co.bca.pakar.be.doc.model.*;
@@ -416,7 +417,16 @@ public class ArticleServiceImpl implements ArticleService {
                 }
             }
 
+            // get user profile from oauth server
+            ResponseEntity<ApiResponseWrapper.RestResponse<UserProfileDto>> restResponse = null;
+            try {
+                restResponse = pakarOauthClient.getUser(BEARER + articleDto.getToken(), articleDto.getUsername());
+            } catch (Exception e) {
+                logger.error("call oauth server failed", e);
+            }
+
             // set state
+            article.setFullNameModifier(restResponse.getBody() != null ? restResponse.getBody().getData().getFullname() : "");
             article.setModifyBy(articleDto.getUsername());
             article.setModifyDate(new Date());
             article.setShortDescription(articleDto.getDesc());
@@ -437,6 +447,7 @@ public class ArticleServiceImpl implements ArticleService {
                 articleResponseDto.getReferences().add(dto);
             }
 
+            articleResponseDto.setDesc(article.getShortDescription());
             articleResponseDto.setTitle(article.getJudulArticle());
             return articleResponseDto;
         } catch (DataNotFoundException e) {
@@ -1202,7 +1213,8 @@ public class ArticleServiceImpl implements ArticleService {
             dto.setTitle(entity.getJudulArticle());
             dto.setIsNew(entity.getNewArticle());
             dto.setState(entity.getArticleState());
-            dto.setModifiedBy(entity.getModifyBy());
+//            dto.setModifiedBy(entity.getModifyBy());
+            dto.setModifiedBy(entity.getFullNameModifier());
             dto.setModifiedDate(entity.getModifyDate());
             dto.setType(Constant.JenisHalaman.Artikel);
             dto.setLocation(locTemp);

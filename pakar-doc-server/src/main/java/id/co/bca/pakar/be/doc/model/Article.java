@@ -46,6 +46,9 @@ public class Article extends EntityBase {
 	@Column(name = "new_article", columnDefinition = "BOOLEAN DEFAULT TRUE")
 	private Boolean newArticle = Boolean.TRUE;
 
+	@Column(name = "fn_modifier")
+	private String fullNameModifier;
+
 	public Long getId() {
 		return id;
 	}
@@ -140,5 +143,13 @@ public class Article extends EntityBase {
 
 	public void setNewArticle(Boolean newArticle) {
 		this.newArticle = newArticle;
+	}
+
+	public String getFullNameModifier() {
+		return fullNameModifier;
+	}
+
+	public void setFullNameModifier(String fullNameModifier) {
+		this.fullNameModifier = fullNameModifier;
 	}
 }

@@ -145,7 +145,6 @@ public class ArticleWorkflowService {
             if (workflowProcessOpt.isEmpty()) {
                 throw new UndefinedProcessException("undefined process " + ARTICLE_PROCESS_DEF);
             }
-//            WorkflowProcessModel workflowProcessModel = workflowProcessOpt.isPresent() ? workflowProcessOpt.get() : null;
 
             logger.debug("find workflow request by article id {}", variables.get("article_id"));
             WorkflowRequestUserTaskModel currentWfRequestUt = workflowRequestUserTaskRepository.findWorkflowRequestUserTask("" + (Long) variables.get("article_id"), username);
@@ -157,11 +156,15 @@ public class ArticleWorkflowService {
             WorkflowStateModel currentState = workflowStateRepository.findStateByName(currentWfRequest.getCurrentState().getCode(), ARTICLE_PROCESS_DEF);
             logger.debug("current state is {}", currentState.getCode());
 
-
             WorkflowTransitionUserTaskModel wfTransUtask = workflowTransitionUserTaskRepository.findTransitionByCurrentStateAndActionType(currentState.getCode()
                     , new Helper().convertTaskTypeToNumeric((String) map.get("taskType")));
             WorkflowStateModel nextState = wfTransUtask.getTransition().getNextState();
             logger.debug("next state transition is {}", nextState.getCode());
+
+            logger.debug("update current workflow request user task");
+            currentWfRequestUt.setModifyDate(new Date());
+            currentWfRequestUt.setApprovedDate(new Date());
+            currentWfRequestUt = workflowRequestUserTaskRepository.save(currentWfRequestUt);
 
             logger.debug("set current state of current workflow request to new state {}", nextState.getCode());
             currentWfRequest.setCurrentState(nextState);
@@ -173,12 +176,13 @@ public class ArticleWorkflowService {
             logger.debug("task type from user {}", map.get("taskType"));
             Map assignDto = (Map) map.get("sendTo");
 
-            WorkflowRequestUserTaskModel requestUserTaskModel = new WorkflowRequestUserTaskModel();
-            requestUserTaskModel.setCreatedBy(username);
-            requestUserTaskModel.setRequestModel(currentWfRequest);
-            requestUserTaskModel.setProposedBy(username);
-            requestUserTaskModel.setAssigne((String) assignDto.get("username"));
-            requestUserTaskModel = workflowRequestUserTaskRepository.save(requestUserTaskModel);
+            logger.debug("save new workflow request user task assigned to {}", assignDto);
+            WorkflowRequestUserTaskModel newRequestUserTaskModel = new WorkflowRequestUserTaskModel();
+            newRequestUserTaskModel.setCreatedBy(username);
+            newRequestUserTaskModel.setRequestModel(currentWfRequest);
+            newRequestUserTaskModel.setProposedBy(username);
+            newRequestUserTaskModel.setAssigne((String) assignDto.get("username"));
+            newRequestUserTaskModel = workflowRequestUserTaskRepository.save(newRequestUserTaskModel);
 
             TaskDto taskDto = new TaskDto();
             taskDto.setCurrentState(nextState.getCode());
