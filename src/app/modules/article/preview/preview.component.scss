@@ -43,6 +43,21 @@ ul {
   }
 }
 
+:host ::ng-deep .alert {
+  position: absolute;
+  z-index: 3;
+  top: 85px;
+  width: 1605px;
+  height: 52px;
+  left: 50px;
+
+  background: #EAFFEA;
+  border: 1px solid #107C10;
+  box-sizing: border-box;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.24);
+  border-radius: 5px;
+}
+
 //carousel
 :host ::ng-deep .carousel {
   .control-c {
