@@ -1,10 +1,9 @@
 package id.co.bca.pakar.be.doc.client;
 
 import id.co.bca.pakar.be.doc.common.Constant;
-import id.co.bca.pakar.be.doc.dto.ArticleDto;
-import id.co.bca.pakar.be.doc.dto.MultipartArticleDto;
 import id.co.bca.pakar.be.doc.dto.RequestTaskDto;
 import id.co.bca.pakar.be.doc.dto.TaskDto;
+import id.co.bca.pakar.be.doc.dto.wf.WfArticleDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -19,10 +18,12 @@ import java.util.List;
 public interface PakarWfClient {
     @PostMapping(value = "/api/wf/start", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
             MediaType.APPLICATION_JSON_VALUE})
-    ResponseEntity<ApiResponseWrapper.RestResponse<TaskDto>> start(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader, @RequestHeader(Constant.Headers.X_USERNAME) String username, @RequestBody MultipartArticleDto articleDto);
+    ResponseEntity<ApiResponseWrapper.RestResponse<TaskDto>> start(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader, @RequestHeader(Constant.Headers.X_USERNAME) String username, @RequestBody WfArticleDto articleDto);
+
     @PostMapping(value = "/api/wf/next", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
             MediaType.APPLICATION_JSON_VALUE})
-    ResponseEntity<ApiResponseWrapper.RestResponse<TaskDto>> next(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader, @RequestHeader(Constant.Headers.X_USERNAME) String username, @RequestBody MultipartArticleDto articleDto);
+    ResponseEntity<ApiResponseWrapper.RestResponse<TaskDto>> next(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader, @RequestHeader(Constant.Headers.X_USERNAME) String username, @RequestBody WfArticleDto articleDto);
+
     @PostMapping(value = "/api/wf/tasks", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
             MediaType.APPLICATION_JSON_VALUE})
     ResponseEntity<ApiResponseWrapper.RestResponse<List<TaskDto>>> getTasks(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader, @RequestHeader(Constant.Headers.X_USERNAME) String username, @RequestBody RequestTaskDto dto);

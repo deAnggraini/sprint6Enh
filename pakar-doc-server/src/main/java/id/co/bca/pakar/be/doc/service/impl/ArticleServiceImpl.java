@@ -6,6 +6,7 @@ import id.co.bca.pakar.be.doc.client.PakarWfClient;
 import id.co.bca.pakar.be.doc.common.Constant;
 import id.co.bca.pakar.be.doc.dao.*;
 import id.co.bca.pakar.be.doc.dto.*;
+import id.co.bca.pakar.be.doc.dto.wf.WfArticleDto;
 import id.co.bca.pakar.be.doc.exception.*;
 import id.co.bca.pakar.be.doc.model.*;
 import id.co.bca.pakar.be.doc.service.ArticleService;
@@ -379,8 +380,12 @@ public class ArticleServiceImpl implements ArticleService {
             // call to workflow server to set draft, if sendto <> null
             if(currentState.equalsIgnoreCase(NEW)) {
                 logger.info("save draft article using article id {}", article.getId());
+
+                WfArticleDto wfArticleDto = new WfArticleDto();
+                wfArticleDto.setId(articleDto.getId());
+                wfArticleDto.setTitle(articleDto.getTitle());
                 ResponseEntity<ApiResponseWrapper.RestResponse<TaskDto>> restResponse = pakarWfClient
-                        .start(BEARER + articleDto.getToken(), articleDto.getUsername(), articleDto);
+                        .start(BEARER + articleDto.getToken(), articleDto.getUsername(), wfArticleDto);
                 logger.debug("response api request {}", restResponse);
                 logger.debug("reponse status code {}", restResponse.getStatusCode());
                 currentState = restResponse.getBody().getData().getCurrentState();
@@ -393,9 +398,15 @@ public class ArticleServiceImpl implements ArticleService {
                 // send to
                 logger.info("send article to {}", articleDto.getSendTo().getUsername());
                 logger.debug("send note article {}", articleDto.getSendNote());
-                articleDto.setTaskType("Approve");
+                WfArticleDto wfArticleDto = new WfArticleDto();
+                wfArticleDto.setId(articleDto.getId());
+                wfArticleDto.setTitle(articleDto.getTitle());
+                wfArticleDto.setTaskType("Approve");
+                wfArticleDto.setSendTo(articleDto.getSendTo());
+                wfArticleDto.setSendNote(articleDto.getSendNote());
+
                 ResponseEntity<ApiResponseWrapper.RestResponse<TaskDto>> restResponse = pakarWfClient
-                        .next(BEARER + articleDto.getToken(), articleDto.getUsername(), articleDto);
+                        .next(BEARER + articleDto.getToken(), articleDto.getUsername(), wfArticleDto);
                 logger.debug("response api request sendDraft {}", restResponse);
                 logger.debug("reponse status code {}", restResponse.getStatusCode());
                 currentState = restResponse.getBody().getData().getCurrentState();
