@@ -1207,7 +1207,7 @@ public class ArticleServiceImpl implements ArticleService {
             } else if(reqColumn.equals("modified_by")) {
                 return "modifyBy";
             } else if(reqColumn.equals("location")) {
-                return "location_text";
+                return "structure.location_text";
             }
             return "";
         }
