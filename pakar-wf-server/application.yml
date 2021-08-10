@@ -109,7 +109,7 @@ spring:
       maximumPoolSize: 5
 ---
 spring:
-  profiles: dev-ogya
+  profiles: dev-bca
   security:
     oauth2:
       resourceserver:
@@ -127,8 +127,8 @@ spring:
       signingkey: pakar123
   dataSource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://192.168.181.95:5432/pakardb3
-    username: pakar3
+    url: jdbc:postgresql://192.168.181.95:5432/pakardb2
+    username: pakar2
     password: pakar123
     hikari:
       connectionTimeout: 20000
