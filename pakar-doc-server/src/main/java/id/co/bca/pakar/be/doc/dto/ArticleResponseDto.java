@@ -7,19 +7,19 @@ import java.util.List;
 
 public class ArticleResponseDto extends BaseArticleDto {
     @JsonProperty("desc")
-    private String shortDescription;
+    private String desc;
 
     @JsonProperty("image")
     private String image;
 
     @JsonProperty("video")
-    private String videoLink;
+    private String video;
 
     @JsonProperty("contents")
     private List<ArticleContentDto> contents = new ArrayList<>();
 
     @JsonProperty("references")
-    private List<SkReffDto> skReff = new ArrayList<>();
+    private List<SkReffDto> references = new ArrayList<>();
 
     @JsonProperty("related")
     private List<BaseArticleDto> related = new ArrayList<>();
@@ -27,12 +27,12 @@ public class ArticleResponseDto extends BaseArticleDto {
     @JsonProperty("suggestions")
     private List<SuggestionArticleDto> suggestions = new ArrayList<>();
 
-    public void setShortDescription(String shortDescription) {
-        this.shortDescription = shortDescription;
+    public String getDesc() {
+        return desc;
     }
 
-    public String getShortDescription() {
-        return shortDescription;
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 
     public String getImage() {
@@ -43,12 +43,12 @@ public class ArticleResponseDto extends BaseArticleDto {
         this.image = image;
     }
 
-    public String getVideoLink() {
-        return videoLink;
+    public String getVideo() {
+        return video;
     }
 
-    public void setVideoLink(String videoLink) {
-        this.videoLink = videoLink;
+    public void setVideo(String video) {
+        this.video = video;
     }
 
     public List<ArticleContentDto> getContents() {
@@ -59,12 +59,12 @@ public class ArticleResponseDto extends BaseArticleDto {
         this.contents = contents;
     }
 
-    public List<SkReffDto> getSkReff() {
-        return skReff;
+    public List<SkReffDto> getReferences() {
+        return references;
     }
 
-    public void setSkReff(List<SkReffDto> skReff) {
-        this.skReff = skReff;
+    public void setReferences(List<SkReffDto> references) {
+        this.references = references;
     }
 
     public List<BaseArticleDto> getRelated() {

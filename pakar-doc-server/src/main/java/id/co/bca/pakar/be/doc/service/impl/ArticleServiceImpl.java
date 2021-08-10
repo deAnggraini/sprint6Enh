@@ -230,6 +230,7 @@ public class ArticleServiceImpl implements ArticleService {
             articleDto.setId(article.getId());
             articleDto.setTitle(article.getJudulArticle());
             articleDto.setShortDescription(article.getShortDescription());
+            articleDto.setVideoLink(article.getVideoLink());
             Iterable<ArticleContent> articleContents = articleContentRepository.findByArticleId(article.getId());
             List<ArticleContentDto> articleContentDtos = new TreeArticleContents().menuTree(mapToListArticleContentDto(articleContents));
             articleDto.setContents(articleContentDtos);
@@ -407,11 +408,12 @@ public class ArticleServiceImpl implements ArticleService {
             // set state
             article.setModifyBy(articleDto.getUsername());
             article.setModifyDate(new Date());
+            article.setShortDescription(articleDto.getDesc());
             article.setVideoLink(articleDto.getVideo());
             article = articleRepository.save(article);
 
             articleResponseDto.setId(article.getId());
-            articleResponseDto.setVideoLink(article.getVideoLink());
+            articleResponseDto.setVideo(article.getVideoLink());
             for (BaseArticleDto dto : articleDto.getRelated()) {
                 articleResponseDto.getRelated().add(dto);
             }
@@ -421,7 +423,7 @@ public class ArticleServiceImpl implements ArticleService {
             }
 
             for (SkReffDto dto : articleDto.getReferences()) {
-                articleResponseDto.getSkReff().add(dto);
+                articleResponseDto.getReferences().add(dto);
             }
 
             articleResponseDto.setTitle(article.getJudulArticle());
