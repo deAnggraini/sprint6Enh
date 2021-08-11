@@ -518,12 +518,15 @@ public class ArticleServiceImpl implements ArticleService {
                 currentState = restResponse.getBody().getData().getCurrentState();
                 if (currentState != null) {
                     article.setArticleState(currentState);
+
+                    logger.debug("save article state");
                     articleState = new ArticleState();
                     articleState.setCreatedBy(articleDto.getUsername());
                     articleState.setSender(restResponse.getBody().getData().getSender());
                     articleState.setReceiver(restResponse.getBody().getData().getAssigne());
                     articleState.setReceiverState(restResponse.getBody().getData().getCurrentReceiverState());
                     articleState.setSenderState(restResponse.getBody().getData().getCurrentSenderState());
+                    articleState.setArticle(article);
 
                     articleState = articleStateRepository.save(articleState);
                 }
