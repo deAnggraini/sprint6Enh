@@ -6,8 +6,8 @@ import javax.persistence.*;
 @Table(name = "t_article_state")
 public class ArticleState extends EntityBase {
     @Id
-    @SequenceGenerator(name = "articleStateSeqGen", sequenceName = "articleEditSeq", initialValue = 1, allocationSize = 1)
-    @GeneratedValue(generator = "articleEditSeqGen")
+    @SequenceGenerator(name = "articleStateSeqGen", sequenceName = "articleStateSeq", initialValue = 1, allocationSize = 1)
+    @GeneratedValue(generator = "articleStateSeqGen")
     private Long id;
 
     @ManyToOne
