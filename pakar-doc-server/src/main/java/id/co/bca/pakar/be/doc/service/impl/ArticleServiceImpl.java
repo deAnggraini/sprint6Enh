@@ -1326,6 +1326,9 @@ public class ArticleServiceImpl implements ArticleService {
         }
     }
 
+    /**
+     * mapper for my page
+     */
     private class TodoMapperMyPages {
         public List<MyPageDto> mapEntitiesIntoDTOs(Iterable<Article> entities) {
             List<MyPageDto> dtos = new ArrayList<>();
@@ -1346,7 +1349,8 @@ public class ArticleServiceImpl implements ArticleService {
             dto.setModifiedDate(entity.getModifyDate());
             dto.setType(Constant.JenisHalaman.Artikel);
             dto.setLocation(locTemp);
-            dto.setCurrentBy(articleEdit.getEditorName());
+            if(articleEdit != null)
+                dto.setCurrentBy(articleEdit.getEditorName());
             return dto;
         }
 
