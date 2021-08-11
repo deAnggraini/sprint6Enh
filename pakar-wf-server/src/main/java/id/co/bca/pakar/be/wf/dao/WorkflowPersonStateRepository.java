@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface WorkflowPersonStateRepository extends CrudRepository<WorkflowPersonStateModel, String> {
     @Query(
-            "SELECT m FROM WorkflowPersonStateModel m" +
+            "SELECT m FROM WorkflowPersonStateModel m " +
                     "WHERE m.code=:code " +
                     "AND m.deleted IS FALSE"
     )
