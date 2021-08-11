@@ -15,4 +15,8 @@ public interface ArticleEditRepository extends CrudRepository<ArticleEdit, Long>
                 "AND m.deleted IS FALSE "
     )
     Iterable<ArticleEdit> findArticleInEditingStatus(@Param("articleId") Long articleId);
+
+
+    @Query("select m from ArticleEdit m where m.article.id=:articleId ")
+    ArticleEdit findCurrentEdit(@Param("articleId") Long articleId);
 }

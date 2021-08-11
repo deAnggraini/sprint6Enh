@@ -1208,6 +1208,7 @@ public class ArticleServiceImpl implements ArticleService {
     public Page<MyPageDto> searchMyPages(SearchMyPageDto searchDto) throws Exception {
         try {
             logger.info("search my page dto");
+            Page<Article> searchResultPage = null;
             if (searchDto.getPage() == null) {
                 searchDto.setPage(0L);
             }
@@ -1232,7 +1233,12 @@ public class ArticleServiceImpl implements ArticleService {
                 ids.add(task.getArticleId());
 //                logger.debug("article id from workflow service {}", task.getArticleId());
             }
-            Page<Article> searchResultPage = articleMyPagesRepository.findMyPagesArticle(ids, searchDto.getKeyword(), searchDto.getState(), pageable);
+
+            if (searchDto.getType().equals(Constant.JenisHalaman.All) || searchDto.getType().equals(Constant.JenisHalaman.Artikel)) {
+                searchResultPage = articleMyPagesRepository.findMyPagesArticle(ids, searchDto.getKeyword(), searchDto.getState(), pageable);
+            } else {
+                searchResultPage = null;
+            }
             return new TodoMapperMyPages().mapEntityPageIntoDTOPage(pageable, searchResultPage);
         } catch (MinValuePageNumberException e) {
             logger.error("exception", e);
@@ -1332,15 +1338,17 @@ public class ArticleServiceImpl implements ArticleService {
         public MyPageDto mapEntityIntoDTO(Article entity) {
             MyPageDto dto = new MyPageDto();
             String locTemp = articleMyPagesRepository.findLocation(entity.getStructure().getId());
+            ArticleEdit articleEdit = articleEditRepository.findCurrentEdit(entity.getId());
+//            dto.setSendTo(); -- isi field nama reviewer/publisher
             dto.setId(entity.getId());
             dto.setTitle(entity.getJudulArticle());
             dto.setIsNew(entity.getNewArticle());
             dto.setState(entity.getArticleState());
-//            dto.setModifiedBy(entity.getModifyBy());
             dto.setModifiedBy(entity.getFullNameModifier());
             dto.setModifiedDate(entity.getModifyDate());
             dto.setType(Constant.JenisHalaman.Artikel);
             dto.setLocation(locTemp);
+            dto.setCurrentBy(articleEdit.getEditorName());
             return dto;
         }
 

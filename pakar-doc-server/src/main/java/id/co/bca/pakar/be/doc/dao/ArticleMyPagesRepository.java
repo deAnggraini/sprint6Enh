@@ -1,6 +1,7 @@
 package id.co.bca.pakar.be.doc.dao;
 
 import id.co.bca.pakar.be.doc.model.Article;
+import id.co.bca.pakar.be.doc.model.ArticleEdit;
 import id.co.bca.pakar.be.doc.model.Formulir;
 import id.co.bca.pakar.be.doc.model.VirtualPages;
 import org.springframework.data.domain.Page;
@@ -32,10 +33,12 @@ public interface ArticleMyPagesRepository extends CrudRepository<Article, Long> 
     @Query("select rs.location_text from Structure rs where rs.id =:structureId and rs.deleted is false ")
     String findLocation(@Param("structureId") Long structureId);
 
+    // Awalnya untuk set location_text
 //    @Query(value = "WITH RECURSIVE structure_child AS (select id, parent, name from r_structure " +
 //            "where id =:structureId union select e.id, e.parent, e.name from r_structure e " +
 //            "INNER JOIN structure_child s ON s.parent = e.id) " +
 //            "select * from structure_child",
 //            nativeQuery = true)
 //    Structure findLocationParent(@Param("structureId") Long structureId);
+
 }
