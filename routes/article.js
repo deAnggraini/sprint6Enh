@@ -439,11 +439,11 @@ router.post('/searchMyPages', (req, res) => {
 
     let list = [];
     let totalElements = 0, totalPages = 0;
-    // if (state == "DRAFT") {
-    totalElements = Math.ceil(Math.random() * 100);
-    list = mypages.slice(0, limit);
-    totalPages = Math.ceil(totalElements / limit);
-    // }
+    if (state == "DRAFT") {
+        totalElements = Math.ceil(Math.random() * 100);
+        list = mypages.slice(0, limit);
+        totalPages = Math.ceil(totalElements / limit);
+    }
     const data = {
         totalElements,
         totalPages,

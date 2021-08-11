@@ -969,6 +969,69 @@ module.exports.mypages = [
         current_by: 'Firda Agustriyani, Kemal Batubara, Indah Permata Sari, Andreas Herawan, Thomas Wibisono, John Doe, Amalia..',
         state: 'DRAFT',
         isNew: true
+    },
+
+
+    {
+        type: 'article',
+        id: 5,
+        title: 'Host to Host ERP Integration',
+        location: 'Aplikasi dan Mesin > Aplikasi/Mesin Pendukung Transaksi Nasabah > Aplikasi Mesin Pendukung Transaksi Umum',
+        modified_date: new Date(),
+        modified_by: 'Putri Faizatu',
+        approved_date: new Date(),
+        approved_by: 'Diandra Amanda',
+        affective_date: new Date(),
+        send_to: 'Yayopriyo Wibowo',
+        current_by: 'Theresa Theodorus, Anita Rachmat',
+        state: 'DRAFT',
+        isNew: false,
+
+    },
+    {
+        type: 'microinformation',
+        id: 6,
+        title: 'Pembukaan Rekening Join Account',
+        location: 'Virtual Page > Rekening',
+        modified_date: new Date(),
+        modified_by: 'Yayopriyo Wibowo',
+        approved_date: new Date(),
+        approved_by: 'Diandra Amanda',
+        affective_date: new Date(),
+        send_to: 'Yayopriyo Wibowo',
+        current_by: 'Theresa Theodorus, Natasha Debora',
+        state: 'DRAFT',
+        isNew: true
+    },
+    {
+        type: 'formulir',
+        id: 7,
+        title: 'Formulir Pembukaan Rekening',
+        location: 'Formulir > Formulir',
+        modified_date: new Date(),
+        modified_by: 'Anita Rachmat',
+        approved_date: new Date(),
+        approved_by: 'Diandra Amanda',
+        affective_date: new Date(),
+        send_to: 'Yayopriyo Wibowo',
+        current_by: 'Firda Agustriyani',
+        state: 'DRAFT',
+        isNew: false
+    },
+    {
+        type: 'atribut',
+        id: 8,
+        title: 'Ini Adalah Judul Atribut Page',
+        location: 'Virtual Page > Lorem Ipsum Dolor sit Amet',
+        modified_date: new Date(),
+        modified_by: 'Putu Ayu Sruti Permata Sari',
+        approved_date: new Date(),
+        approved_by: 'Diandra Amanda',
+        affective_date: new Date(),
+        send_to: 'Yayopriyo Wibowo',
+        current_by: 'Firda Agustriyani, Kemal Batubara, Indah Permata Sari, Andreas Herawan, Thomas Wibisono, John Doe, Amalia..',
+        state: 'DRAFT',
+        isNew: true
     }
 ]
 
@@ -980,56 +1043,56 @@ module.exports.notification = {
     totalElements: 99,
     totalPages: 10,
     list: [
-        // {
-        //     id: 1,
-        //     status: 'informasi',
-        //     type: 'Informasi',
-        //     isUnread: true,
-        //     date: new Date(),
-        //     by: '',
-        //     title: 'PAKAR Info',
-        //     desc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
-        // },
-        // {
-        //     id: 2,
-        //     status: 'konflik',
-        //     type: 'Artikel',
-        //     isUnread: false,
-        //     date: new Date(),
-        //     by: 'Thalia Sari Landi',
-        //     title: 'Tahapan',
-        //     desc: 'Artikel Tahapan yang sedang kamu ubah sudah rilis versi terbaru. Segera sesuaikan dengan versi terbaru.'
-        // },
-        // {
-        //     id: 3,
-        //     status: 'terima',
-        //     type: 'Virtual Pages',
-        //     isUnread: true,
-        //     date: new Date(),
-        //     by: 'Stacia Marella',
-        //     title: 'Joint Account',
-        //     desc: 'Mohon review atas pembuatan Virtual Page.'
-        // },
-        // {
-        //     id: 4,
-        //     status: 'publikasi',
-        //     type: 'Artikel',
-        //     isUnread: false,
-        //     date: new Date(),
-        //     by: 'Shinta Dewi',
-        //     title: 'Time Loan',
-        //     desc: 'Perubahan PAKAR Time Loan telah disetujui.'
-        // },
-        // {
-        //     id: 5,
-        //     status: 'edit',
-        //     type: 'Artikel',
-        //     isUnread: true,
-        //     date: new Date(),
-        //     by: 'Ni Luh Gede Sri Fajaryani',
-        //     title: 'BCA Mobile',
-        //     desc: 'Terdapat editor baru yang melakukan perubahan pada artikel yang sama. Pastikan kamu melakukan perubahan di versi paling baru.'
-        // }
+        {
+            id: 1,
+            status: 'informasi',
+            type: 'Informasi',
+            isUnread: true,
+            date: new Date(),
+            by: '',
+            title: 'PAKAR Info',
+            desc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+        },
+        {
+            id: 2,
+            status: 'konflik',
+            type: 'Artikel',
+            isUnread: false,
+            date: new Date(),
+            by: 'Thalia Sari Landi',
+            title: 'Tahapan',
+            desc: 'Artikel Tahapan yang sedang kamu ubah sudah rilis versi terbaru. Segera sesuaikan dengan versi terbaru.'
+        },
+        {
+            id: 3,
+            status: 'terima',
+            type: 'Virtual Pages',
+            isUnread: true,
+            date: new Date(),
+            by: 'Stacia Marella',
+            title: 'Joint Account',
+            desc: 'Mohon review atas pembuatan Virtual Page.'
+        },
+        {
+            id: 4,
+            status: 'publikasi',
+            type: 'Artikel',
+            isUnread: false,
+            date: new Date(),
+            by: 'Shinta Dewi',
+            title: 'Time Loan',
+            desc: 'Perubahan PAKAR Time Loan telah disetujui.'
+        },
+        {
+            id: 5,
+            status: 'edit',
+            type: 'Artikel',
+            isUnread: true,
+            date: new Date(),
+            by: 'Ni Luh Gede Sri Fajaryani',
+            title: 'BCA Mobile',
+            desc: 'Terdapat editor baru yang melakukan perubahan pada artikel yang sama. Pastikan kamu melakukan perubahan di versi paling baru.'
+        }
     ]
 }
 
