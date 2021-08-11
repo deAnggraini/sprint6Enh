@@ -414,6 +414,7 @@ public class ArticleServiceImpl implements ArticleService {
                 articleEditRepository.save(articleEdit);
             }
 
+            articleDto.setNew(article.getNewArticle());
             return articleDto;
         } catch (StructureNotFoundException e) {
             logger.error("exception", e);
@@ -579,6 +580,7 @@ public class ArticleServiceImpl implements ArticleService {
             article.setModifyDate(new Date());
             article.setShortDescription(articleDto.getDesc());
             article.setVideoLink(articleDto.getVideo());
+            article.setNewArticle(Boolean.FALSE);
             article = articleRepository.save(article);
 
             articleResponseDto.setId(article.getId());
