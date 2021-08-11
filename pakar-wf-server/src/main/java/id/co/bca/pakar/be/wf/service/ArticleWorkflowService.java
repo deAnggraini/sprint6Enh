@@ -187,7 +187,7 @@ public class ArticleWorkflowService {
             Optional<WorkflowPersonStateModel> receiverStateOpt = workflowPersonStateRepository.findById("DRAFT");
             newRequestUserTaskModel.setReceiverState(receiverStateOpt.isPresent()? receiverStateOpt.get() : null);
             Optional<WorkflowPersonStateModel> senderStateOpt = workflowPersonStateRepository.findById("PENDING");
-            newRequestUserTaskModel.setSenderState(senderStateOpt.isPresent()? receiverStateOpt.get() : null);
+            newRequestUserTaskModel.setSenderState(senderStateOpt.isPresent()? senderStateOpt.get() : null);
             newRequestUserTaskModel = workflowRequestUserTaskRepository.save(newRequestUserTaskModel);
 
             TaskDto taskDto = new TaskDto();
@@ -195,7 +195,10 @@ public class ArticleWorkflowService {
             taskDto.setArticleId((Long) variables.get("article_id"));
             taskDto.setRequestId(currentWfRequest.getId());
             taskDto.setAssigne((String) assignDto.get("username"));
-
+            taskDto.setSender(newRequestUserTaskModel.getProposedBy());
+            taskDto.setCurrentSenderState(newRequestUserTaskModel.getSenderState().getCode());
+            taskDto.setAssigne(newRequestUserTaskModel.getAssigne());
+            taskDto.setCurrentReceiverState(newRequestUserTaskModel.getReceiverState().getCode());
             return taskDto;
         } catch (UndefinedProcessException e) {
             logger.error("exception", e);

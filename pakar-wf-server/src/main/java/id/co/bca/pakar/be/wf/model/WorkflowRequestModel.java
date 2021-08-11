@@ -25,12 +25,12 @@ public class WorkflowRequestModel extends EntityBase {
     private WorkflowStateModel currentState;
     @Column(name = "userid", nullable = false)
     private String userid;
-    @ManyToOne
-    @JoinColumn(name = "current_sender_state")
-    private WorkflowPersonStateModel currentSenderPersonState;
-    @ManyToOne
-    @JoinColumn(name = "current_receiver_state")
-    private WorkflowPersonStateModel currentReceiverPersonState;
+//    @ManyToOne
+//    @JoinColumn(name = "current_sender_state")
+//    private WorkflowPersonStateModel currentSenderPersonState;
+//    @ManyToOne
+//    @JoinColumn(name = "current_receiver_state")
+//    private WorkflowPersonStateModel currentReceiverPersonState;
 
     public String getId() {
         return id;
@@ -80,19 +80,19 @@ public class WorkflowRequestModel extends EntityBase {
         this.userid = userid;
     }
 
-    public WorkflowPersonStateModel getCurrentSenderPersonState() {
-        return currentSenderPersonState;
-    }
-
-    public void setCurrentSenderPersonState(WorkflowPersonStateModel currentSenderPersonState) {
-        this.currentSenderPersonState = currentSenderPersonState;
-    }
-
-    public WorkflowPersonStateModel getCurrentReceiverPersonState() {
-        return currentReceiverPersonState;
-    }
-
-    public void setCurrentReceiverPersonState(WorkflowPersonStateModel currentReceiverPersonState) {
-        this.currentReceiverPersonState = currentReceiverPersonState;
-    }
+//    public WorkflowPersonStateModel getCurrentSenderPersonState() {
+//        return currentSenderPersonState;
+//    }
+//
+//    public void setCurrentSenderPersonState(WorkflowPersonStateModel currentSenderPersonState) {
+//        this.currentSenderPersonState = currentSenderPersonState;
+//    }
+//
+//    public WorkflowPersonStateModel getCurrentReceiverPersonState() {
+//        return currentReceiverPersonState;
+//    }
+//
+//    public void setCurrentReceiverPersonState(WorkflowPersonStateModel currentReceiverPersonState) {
+//        this.currentReceiverPersonState = currentReceiverPersonState;
+//    }
 }
