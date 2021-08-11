@@ -112,7 +112,7 @@ spring:
     hikari:
       connectionTimeout: 20000
       maximumPoolSize: 5 
-  ---
+---
   spring:
     profiles: dev-bca
     eai:
