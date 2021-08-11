@@ -247,7 +247,7 @@ public class ArticleController extends BaseController {
         try {
             logger.info("generate article process");
             logger.info("received token bearer ---> {}", authorization);
-            ArticleDto articleDto = articleService.getArticleById(id);
+            ArticleDto articleDto = articleService.getArticleById(id, username);
             return createResponse(articleDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, Locale.ENGLISH));
         } catch (ArticleNotFoundException e) {
             logger.error("exception", e);

@@ -292,6 +292,118 @@ public class ArticleServiceImpl implements ArticleService {
                     return o1.getLevel().intValue() - o2.getLevel().intValue();
                 }
             });
+
+            return articleDto;
+        } catch (StructureNotFoundException e) {
+            logger.error("exception", e);
+            throw new StructureNotFoundException("not found structure");
+        } catch (ArticleNotFoundException e) {
+            logger.error("exception", e);
+            throw new ArticleNotFoundException("not found article id " + id);
+        } catch (Exception e) {
+            logger.error("exception", e);
+            throw new Exception("get article failed");
+        }
+    }
+
+    /**
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    @Override
+    @Transactional(rollbackFor = {Exception.class, StructureNotFoundException.class, ArticleNotFoundException.class})
+    public ArticleDto getArticleById(Long id, String username) throws Exception {
+        try {
+            Optional<Article> articleOpt = articleRepository.findById(id);
+
+            if (articleOpt.isEmpty()) {
+                throw new ArticleNotFoundException("not found article with id --> " + id);
+            }
+
+            Article article = articleOpt.get();
+            ArticleDto articleDto = new ArticleDto();
+            articleDto.setCreatedBy(article.getCreatedBy());
+            articleDto.setCreatedDate(article.getCreatedDate());
+            articleDto.setId(article.getId());
+            articleDto.setTitle(article.getJudulArticle());
+            articleDto.setShortDescription(article.getShortDescription());
+            articleDto.setVideoLink(article.getVideoLink());
+            Iterable<ArticleContent> articleContents = articleContentRepository.findByArticleId(article.getId());
+            List<ArticleContentDto> articleContentDtos = new TreeArticleContents().menuTree(mapToListArticleContentDto(articleContents));
+            articleDto.setContents(articleContentDtos);
+            Iterable<SkRefference> skRefferenceList = skReffRepository.findByArticleId(id);
+            articleDto.setSkReff(mapToSkReffDto(skRefferenceList));
+            Optional<Images> imageOpt = articleImageRepository.findByArticleId(article.getId());
+            if (!imageOpt.isEmpty()) {
+                Images image = imageOpt.get();
+                articleDto.setImage(image.getUri());
+            }
+            Iterable<Article> relatedArticles = articleRelatedRepository.findByArticleId(article.getId());
+            articleDto.setRelated(mapToRelatedArticleDto(relatedArticles));
+            articleDto.setEmptyTemplate(article.getUseEmptyTemplate());
+            articleDto.setStructureId(article.getStructure().getId());
+
+            // get current structure
+            Optional<Structure> currStructOpt = structureRepository.findById(article.getStructure().getId());
+            if (currStructOpt.isEmpty()) {
+                throw new StructureNotFoundException("not found structure id ---> " + article.getStructure().getId());
+            }
+            Structure currStruct = currStructOpt.get();
+            BreadcumbStructureDto bcDto = new BreadcumbStructureDto();
+            bcDto.setId(currStruct.getId());
+            bcDto.setName(currStruct.getStructureName());
+            bcDto.setLevel(currStruct.getLevel());
+            articleDto.getStructureParentList().add(bcDto);
+
+            // get list parent of new structure
+            Long parentId = article.getStructure().getParentStructure();
+            boolean parentStatus = Boolean.TRUE;
+            do {
+                Optional<Structure> parentStructure = structureRepository.findById(parentId);
+                if (!parentStructure.isEmpty()) {
+                    Structure _parent = parentStructure.get();
+                    parentId = _parent.getParentStructure();
+                    bcDto = new BreadcumbStructureDto();
+                    bcDto.setId(_parent.getId());
+                    bcDto.setName(_parent.getStructureName());
+                    bcDto.setLevel(_parent.getLevel());
+                    articleDto.getStructureParentList().add(bcDto);
+                    if (parentId == null)
+                        parentStatus = Boolean.FALSE;
+                    else if (parentId.longValue() == 0)
+                        parentStatus = Boolean.FALSE;
+                } else {
+                    parentStatus = Boolean.FALSE;
+                }
+            } while (parentStatus);
+
+            // sorting bread crumb
+            Collections.sort(articleDto.getStructureParentList(), new Comparator<BreadcumbStructureDto>() {
+                @Override
+                public int compare(BreadcumbStructureDto o1, BreadcumbStructureDto o2) {
+                    return o1.getLevel().intValue() - o2.getLevel().intValue();
+                }
+            });
+
+            // update article edit to open status
+            logger.debug("save user that start editing this article");
+            ArticleEdit articleEdit = new ArticleEdit();
+            articleEdit.setArticle(article);
+            articleEdit.setCreatedBy(username);
+            articleEdit.setStatus(Boolean.TRUE);
+            articleEdit.setStartTime(new Date());
+
+            // get user profile from oauth server
+            ResponseEntity<ApiResponseWrapper.RestResponse<UserProfileDto>> restResponse = null;
+            try {
+                restResponse = pakarOauthClient.getUser(BEARER + articleDto.getToken(), articleDto.getUsername());
+            } catch (Exception e) {
+                logger.error("call oauth server failed", e);
+            }
+            articleEdit.setEditorName(restResponse.getBody().getData().getFullname());
+            articleEditRepository.save(articleEdit);
+
             return articleDto;
         } catch (StructureNotFoundException e) {
             logger.error("exception", e);
