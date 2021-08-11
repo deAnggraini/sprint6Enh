@@ -695,7 +695,6 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
   changeLocation(value) {
-    console.log({ value });
     if (value) this.dataForm.get('structureId').setValue(value.id);
   }
 

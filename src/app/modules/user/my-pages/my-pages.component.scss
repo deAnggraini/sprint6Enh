@@ -19,8 +19,6 @@
     color: #107C10;
   }
 
-  .empty-data {}
-
   .data-item {
     padding: 5px;
   }
@@ -78,6 +76,7 @@
   #table-draft,
   #table-pending,
   #table-approved {
+
     &.table tr.is-click td {
       background-color: #F3F2F1;
 
@@ -85,5 +84,9 @@
         background-color: #C8C6C4 !important;
       }
     }
+  }
+
+  div.tab-pane {
+    height: 100%;
   }
 }

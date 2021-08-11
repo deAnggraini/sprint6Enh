@@ -58,7 +58,6 @@ export class ArticleService {
     sorting: { column: string, sort: string }, limit: number = 10,
     maxPage: number = 99) {
     const params = { keyword, state, type, page, limit, sorting };
-    console.log({ params });
     return this.apiService.post(`${this._base_url}/searchMyPages`, params);
   }
 
@@ -142,7 +141,6 @@ export class ArticleService {
   }
   private parseToSingleArray(contents: ArticleContentDTO[]): ArticleContentDTO[] {
     const result: ArticleContentDTO[] = [];
-    console.log({ contents });
     if (contents.length) {
       contents.forEach(item => {
         this.parseToArray(item).forEach(d => result.push(d));

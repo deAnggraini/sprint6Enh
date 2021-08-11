@@ -163,7 +163,7 @@ export class MyPagesComponent implements OnInit, OnDestroy {
     const tabDto: TabDTO = this.dataForm[key];
     const paging = tabDto.pagination;
     tabDto.sort = sort;
-    this.search(key, this.listStatus[key], this.type, paging.page);
+    this.search(key, this.listStatus[key], this.type, paging.page | 1);
   }
 
   // table ... event

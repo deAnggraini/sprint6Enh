@@ -1,211 +1,228 @@
-<div class="background-overlay background-search" style="
+<div class="background-overlay  d-flex flex-column flex-fill" style="
     background-image: url('./assets/media/images/struktur_bg.jpeg');
     background-repeat: no-repeat;
-    background-position: center;
-    height: 184px;
-"></div>
-<div class="mx-15 mt-n50">
-    <div class="my-7">
-        <pakar-search></pakar-search>
-    </div>
-    <div class="card card-custom px-10 py-5">
-        <div class="d-flex flex-row  align-items-center justify-content-between mb-3">
-            <div class="d-flex flex-row align-items-center">
-                <span [inlineSVG]="'./assets/media/svg/bca/icon/page.svg'" class="svg-icon mr-2"></span>
-                <div class="pakar-text-header my-2">My Pages</div>
-            </div>
-            <div class="input-group inner">
-                <input type="text" class="form-control" placeholder="Cari artikel, virtual page atau formulir"
-                    [(ngModel)]="keyword" style="height: 34px;">
-                <div class="form-control-clear btn btn-icon btn-clean" *ngIf="keyword"
-                    (click)="keyword =''; onSearch($event)" style="height: 34px;">
-                    <span [inlineSVG]="'./assets/media/svg/bca/icon/close.svg'" cacheSVG="true"
-                        class="hidden svg mr-1 ml-1"></span>
-                </div>
-                <span class="input-group-btn" style="height: 34px;">
-                    <button class="btn btn-outline-secondary btn-success btn-sm" type="button"
-                        (click)="onSearch($event)">
-                        <i class="fa fa-search"></i>
-                    </button>
-                </span>
-            </div>
+    background-position: top;
+    min-height: 184px;
+    background-size: 100% 184px;
+    height: 100%;
+">
+    <div class="d-flex flex-column flex-fill mx-15 mt-0">
+        <div class="my-7">
+            <pakar-search></pakar-search>
         </div>
-
-        <ul ngbNav #nav="ngbNav" class="nav-tabs" [(activeId)]="activeId" [destroyOnHide]="false">
-            <li [ngbNavItem]="i" *ngFor="let key of listHeader; let i = index ">
-                <a ngbNavLink style="text-transform:capitalize;">
-                    {{key}} ({{dataForm[key].pagination.totalData || 0}})
-                </a>
-                <ng-template ngbNavContent>
-                    <table [id]="'table-'+key" class="table table-head-borderless">
-                        <thead>
-                            <tr>
-                                <th scope="col" style="width: 36px;">
-                                    <span [inlineSVG]="'./assets/media/svg/bca/icon/doc-empty.svg'" class="svg"></span>
-                                </th>
-                                <th scope="col" sortable="title" (sort)="onSort($event)">
-                                    <span class="text-title">Judul</span><i class="sortable"></i>
-                                </th>
-                                <th scope="col" sortable="location" (sort)="onSort($event)" style="width: 320px;">
-                                    <span class="text-title">Lokasi</span><i class="sortable"></i>
-                                </th>
-
-                                <ng-container *ngIf="key == 'approved'">
-                                    <th scope="col" sortable="approved_date" (sort)="onSort($event)"
-                                        style="width: 180px;">
-                                        <span class="text-title">{{tableHeader[key][3]}}</span><i class="sortable"></i>
-                                    </th>
-                                    <th scope="col" sortable="approved_by" (sort)="onSort($event)"
-                                        style="width: 180px;">
-                                        <span class="text-title">{{tableHeader[key][4]}}</span><i class="sortable"></i>
-                                    </th>
-                                </ng-container>
-
-                                <ng-container *ngIf="key == 'pending'">
-                                    <th scope="col" sortable="modified_date" (sort)="onSort($event)"
-                                        style="width: 180px;">
-                                        <span class="text-title">{{tableHeader[key][3]}}</span><i class="sortable"></i>
-                                    </th>
-                                    <th scope="col" sortable="send_to" (sort)="onSort($event)" style="width: 180px;">
-                                        <span class="text-title">{{tableHeader[key][4]}}</span><i class="sortable"></i>
-                                    </th>
-                                </ng-container>
-
-                                <ng-container *ngIf="key == 'draft'">
-                                    <th scope="col" sortable="modified_date" (sort)="onSort($event)"
-                                        style="width: 180px;">
-                                        <span class="text-title">{{tableHeader[key][3]}}</span><i class="sortable"></i>
-                                    </th>
-                                    <th scope="col" sortable="modified_by" (sort)="onSort($event)"
-                                        style="width: 180px;">
-                                        <span class="text-title">{{tableHeader[key][4]}}</span><i class="sortable"></i>
-                                    </th>
-                                </ng-container>
-
-                                <th scope="col" style="width: 260px;">
-                                    {{tableHeader[key][5]}}
-                                </th>
-
-                                <th scope="col" style="width: 45px;">&nbsp;</th>
-                            </tr>
-                        </thead>
-                        <tbody [id]="'table-tbody-'+key">
-                            <tr *ngIf="dataForm[key].dataList.length == 0">
-                                <td colspan="8">
-                                    <div class="d-flex flex-column align-items-center empty-data">
-                                        <span
-                                            [inlineSVG]="'./assets/media/svg/bca/icon/'+(keyword ? 'doc-not-found' : 'doc-2-empty')+'.svg'"
-                                            class="svg"></span>
-                                        <div>Kamu tidak memiliki halaman yang dalam proses review.</div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <ng-container *ngIf="dataForm[key].dataList.length">
-                                <tr *ngFor="let item of dataForm[key].dataList; let i = index;" ngbDropdown
-                                    #dropDown="ngbDropdown" container="body" placement="bottom-right auto" class="dot3"
-                                    (openChange)="onOpenChangeDropdown($event, key, i)">
-                                    <td>
-                                        <span [inlineSVG]="'./assets/media/svg/bca/icon/'+getIcon(item.type)"
-                                            class="svg"></span>
-                                    </td>
-                                    <td>{{item.title}}<sup *ngIf="item.isNew" class="sup-new fb7">(new)</sup></td>
-                                    <td>{{item.location}}</td>
-
-                                    <ng-container *ngIf="key == 'approved'">
-                                        <td>{{item.approved_date | date:'dd/MM/yyyy hh:mm a'}}</td>
-                                        <td>{{item.approved_by}}</td>
-                                        <td>{{item.affective_date | date:'dd/MM/yyyy hh:mm a'}}</td>
-                                    </ng-container>
-
-                                    <ng-container *ngIf="key == 'pending'">
-                                        <td>{{item.modified_date | date:'dd/MM/yyyy hh:mm a'}}</td>
-                                        <td>{{item.send_to}}</td>
-                                        <td>{{item.current_by}}</td>
-                                    </ng-container>
-
-                                    <ng-container *ngIf="key == 'draft'">
-                                        <td>{{item.modified_date | date:'dd/MM/yyyy hh:mm a'}}</td>
-                                        <td>{{item.modified_by}}</td>
-                                        <td>{{item.current_by}}</td>
-                                    </ng-container>
-
-                                    <td class="td-dot3" style="width: 45px;" ngbDropdownToggle>
-                                        <div class="cursor-pointer">
-                                            <i class="ki ki-more-hor"></i>
-                                        </div>
-                                        <div class="dropdown-menu p-0 m-0 dropdown-menu-right dropdown-menu-anim-up"
-                                            ngbDropdownMenu>
-                                            <ul class="navi">
-                                                <li class="navi-item">
-                                                    <a class="navi-link disabled"
-                                                        (click)="onClickRevision(item, i); dropDown.close()">
-                                                        <span class="navi-text font-weight-bolder">Riwayat
-                                                            Revisi</span>
-                                                    </a>
-                                                </li>
-
-                                                <ng-container *ngIf="key == 'approved'">
-                                                    <li class="navi-item">
-                                                        <a class="navi-link disabled"
-                                                            (click)="onClickCancel(item, i); dropDown.close()">
-                                                            <span class="navi-text font-weight-bolder">Hapus</span>
-                                                        </a>
-                                                    </li>
-                                                </ng-container>
-
-                                                <ng-container *ngIf="key == 'pending'">
-                                                    <li class="navi-item">
-                                                        <a class="navi-link disabled"
-                                                            (click)="onClickCancelSend(item, i); dropDown.close()">
-                                                            <span class="navi-text font-weight-bolder">Batal
-                                                                Kirim</span>
-                                                        </a>
-                                                    </li>
-                                                </ng-container>
-
-                                                <ng-container *ngIf="key == 'draft'">
-                                                    <li class="navi-item">
-                                                        <a class="navi-link cursor-pointer"
-                                                            (click)="onClickEdit(item, i); dropDown.close()">
-                                                            <span class="navi-text font-weight-bolder">Ubah</span>
-                                                        </a>
-                                                    </li>
-                                                    <li class="navi-item">
-                                                        <a class="navi-link cursor-pointer"
-                                                            (click)="onClickCancel(item, i); dropDown.close()">
-                                                            <span class="navi-text font-weight-bolder">Hapus / Batal
-                                                                Tambah</span>
-                                                        </a>
-                                                    </li>
-                                                </ng-container>
-
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </ng-container>
-                        </tbody>
-                    </table>
-                    <div *ngIf="dataForm[key].dataList.length"
-                        class="d-flex justify-content-center align-items-center flex-wrap mt-5">
-                        <app-pagination (onChange)="setPage(key, dataForm[key], $event)"
-                            [paging]="dataForm[key].pagination">
-                        </app-pagination>
+        <div class="card card-custom d-flex flex-fill px-10 pt-5 mb-5">
+            <div class="d-flex flex-row  align-items-center justify-content-between mb-3">
+                <div class="d-flex flex-row align-items-center">
+                    <span [inlineSVG]="'./assets/media/svg/bca/icon/page.svg'" class="svg-icon mr-2"></span>
+                    <div class="pakar-text-header my-2">My Pages</div>
+                </div>
+                <div class="input-group inner">
+                    <input type="text" class="form-control" placeholder="Cari artikel, virtual page atau formulir"
+                        [(ngModel)]="keyword" style="height: 34px;">
+                    <div class="form-control-clear btn btn-icon btn-clean" *ngIf="keyword"
+                        (click)="keyword =''; onSearch($event)" style="height: 34px;">
+                        <span [inlineSVG]="'./assets/media/svg/bca/icon/close.svg'" cacheSVG="true"
+                            class="hidden svg mr-1 ml-1"></span>
                     </div>
-                </ng-template>
-            </li>
+                    <span class="input-group-btn" style="height: 34px;">
+                        <button class="btn btn-outline-secondary btn-success btn-sm" type="button"
+                            (click)="onSearch($event)">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </span>
+                </div>
+            </div>
 
-            <!-- Right Combo Box -->
-            <li ngbNavItem class="ml-auto">
-                Jenis Halaman :
-                <select [(ngModel)]="type" (change)="onSearch($event)">
-                    <option value="ALL">Semua</option>
-                    <option value="article">Artikel</option>
-                    <option value="virtualpage">Virtual Page</option>
-                    <option value="formulir">Formulir</option>
-                </select>
-            </li>
-        </ul>
-        <div [ngbNavOutlet]="nav" class="data-item mt-2"></div>
+            <ul ngbNav #nav="ngbNav" class="nav-tabs" [(activeId)]="activeId" [destroyOnHide]="false">
+                <li [ngbNavItem]="i" *ngFor="let key of listHeader; let i = index ">
+                    <a ngbNavLink style="text-transform:capitalize;">
+                        {{key}} ({{dataForm[key].pagination.totalData || 0}})
+                    </a>
+                    <ng-template ngbNavContent>
+                        <div class="d-flex flex-column flex-fill" style="height: 100%;">
+                            <table [id]="'table-'+key" class="table table-head-borderless">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" style="width: 36px;">
+                                            <span [inlineSVG]="'./assets/media/svg/bca/icon/doc-empty.svg'"
+                                                class="svg"></span>
+                                        </th>
+                                        <th scope="col" sortable="title" (sort)="onSort($event)">
+                                            <span class="text-title">Judul</span><i class="sortable"></i>
+                                        </th>
+                                        <th scope="col" sortable="location" (sort)="onSort($event)"
+                                            style="width: 320px;">
+                                            <span class="text-title">Lokasi</span><i class="sortable"></i>
+                                        </th>
+
+                                        <ng-container *ngIf="key == 'approved'">
+                                            <th scope="col" sortable="approved_date" (sort)="onSort($event)"
+                                                style="width: 180px;">
+                                                <span class="text-title">{{tableHeader[key][3]}}</span><i
+                                                    class="sortable"></i>
+                                            </th>
+                                            <th scope="col" sortable="approved_by" (sort)="onSort($event)"
+                                                style="width: 180px;">
+                                                <span class="text-title">{{tableHeader[key][4]}}</span><i
+                                                    class="sortable"></i>
+                                            </th>
+                                        </ng-container>
+
+                                        <ng-container *ngIf="key == 'pending'">
+                                            <th scope="col" sortable="modified_date" (sort)="onSort($event)"
+                                                style="width: 180px;">
+                                                <span class="text-title">{{tableHeader[key][3]}}</span><i
+                                                    class="sortable"></i>
+                                            </th>
+                                            <th scope="col" sortable="send_to" (sort)="onSort($event)"
+                                                style="width: 180px;">
+                                                <span class="text-title">{{tableHeader[key][4]}}</span><i
+                                                    class="sortable"></i>
+                                            </th>
+                                        </ng-container>
+
+                                        <ng-container *ngIf="key == 'draft'">
+                                            <th scope="col" sortable="modified_date" (sort)="onSort($event)"
+                                                style="width: 180px;">
+                                                <span class="text-title">{{tableHeader[key][3]}}</span><i
+                                                    class="sortable"></i>
+                                            </th>
+                                            <th scope="col" sortable="modified_by" (sort)="onSort($event)"
+                                                style="width: 180px;">
+                                                <span class="text-title">{{tableHeader[key][4]}}</span><i
+                                                    class="sortable"></i>
+                                            </th>
+                                        </ng-container>
+
+                                        <th scope="col" style="width: 260px;">
+                                            {{tableHeader[key][5]}}
+                                        </th>
+
+                                        <th scope="col" style="width: 45px;">&nbsp;</th>
+                                    </tr>
+                                </thead>
+                                <tbody [id]="'table-tbody-'+key">
+                                    <ng-container *ngIf="dataForm[key].dataList.length">
+                                        <tr *ngFor="let item of dataForm[key].dataList; let i = index;" ngbDropdown
+                                            #dropDown="ngbDropdown" container="body" placement="bottom-right auto"
+                                            class="dot3" (openChange)="onOpenChangeDropdown($event, key, i)">
+                                            <td>
+                                                <span [inlineSVG]="'./assets/media/svg/bca/icon/'+getIcon(item.type)"
+                                                    class="svg"></span>
+                                            </td>
+                                            <td>{{item.title}}<sup *ngIf="item.isNew" class="sup-new fb7">(new)</sup>
+                                            </td>
+                                            <td>{{item.location}}</td>
+
+                                            <ng-container *ngIf="key == 'approved'">
+                                                <td>{{item.approved_date | date:'dd/MM/yyyy hh:mm a'}}</td>
+                                                <td>{{item.approved_by}}</td>
+                                                <td>{{item.affective_date | date:'dd/MM/yyyy hh:mm a'}}</td>
+                                            </ng-container>
+
+                                            <ng-container *ngIf="key == 'pending'">
+                                                <td>{{item.modified_date | date:'dd/MM/yyyy hh:mm a'}}</td>
+                                                <td>{{item.send_to}}</td>
+                                                <td>{{item.current_by}}</td>
+                                            </ng-container>
+
+                                            <ng-container *ngIf="key == 'draft'">
+                                                <td>{{item.modified_date | date:'dd/MM/yyyy hh:mm a'}}</td>
+                                                <td>{{item.modified_by}}</td>
+                                                <td>{{item.current_by}}</td>
+                                            </ng-container>
+
+                                            <td class="td-dot3" style="width: 45px;" ngbDropdownToggle>
+                                                <div class="cursor-pointer">
+                                                    <i class="ki ki-more-hor"></i>
+                                                </div>
+                                                <div class="dropdown-menu p-0 m-0 dropdown-menu-right dropdown-menu-anim-up"
+                                                    ngbDropdownMenu>
+                                                    <ul class="navi">
+                                                        <li class="navi-item">
+                                                            <a class="navi-link disabled"
+                                                                (click)="onClickRevision(item, i); dropDown.close()">
+                                                                <span class="navi-text font-weight-bolder">Riwayat
+                                                                    Revisi</span>
+                                                            </a>
+                                                        </li>
+
+                                                        <ng-container *ngIf="key == 'approved'">
+                                                            <li class="navi-item">
+                                                                <a class="navi-link disabled"
+                                                                    (click)="onClickCancel(item, i); dropDown.close()">
+                                                                    <span
+                                                                        class="navi-text font-weight-bolder">Hapus</span>
+                                                                </a>
+                                                            </li>
+                                                        </ng-container>
+
+                                                        <ng-container *ngIf="key == 'pending'">
+                                                            <li class="navi-item">
+                                                                <a class="navi-link disabled"
+                                                                    (click)="onClickCancelSend(item, i); dropDown.close()">
+                                                                    <span class="navi-text font-weight-bolder">Batal
+                                                                        Kirim</span>
+                                                                </a>
+                                                            </li>
+                                                        </ng-container>
+
+                                                        <ng-container *ngIf="key == 'draft'">
+                                                            <li class="navi-item">
+                                                                <a class="navi-link cursor-pointer"
+                                                                    (click)="onClickEdit(item, i); dropDown.close()">
+                                                                    <span
+                                                                        class="navi-text font-weight-bolder">Ubah</span>
+                                                                </a>
+                                                            </li>
+                                                            <li class="navi-item">
+                                                                <a class="navi-link cursor-pointer"
+                                                                    (click)="onClickCancel(item, i); dropDown.close()">
+                                                                    <span class="navi-text font-weight-bolder">Hapus /
+                                                                        Batal
+                                                                        Tambah</span>
+                                                                </a>
+                                                            </li>
+                                                        </ng-container>
+
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </ng-container>
+                                </tbody>
+                            </table>
+
+                            <div *ngIf="dataForm[key].dataList.length == 0"
+                                class="d-flex flex-column flex-center flex-fill">
+                                <span
+                                    [inlineSVG]="'./assets/media/svg/bca/icon/'+(keyword ? 'doc-not-found' : 'doc-2-empty')+'.svg'"
+                                    class="svg"></span>
+                                <div>Kamu tidak memiliki halaman yang dalam proses review.</div>
+                            </div>
+                            <div *ngIf="dataForm[key].dataList.length"
+                                class="d-flex justify-content-center align-items-center flex-wrap mt-5">
+                                <app-pagination (onChange)="setPage(key, dataForm[key], $event)"
+                                    [paging]="dataForm[key].pagination">
+                                </app-pagination>
+                            </div>
+                        </div>
+                    </ng-template>
+                </li>
+
+                <!-- Right Combo Box -->
+                <li ngbNavItem class="ml-auto">
+                    Jenis Halaman :
+                    <select [(ngModel)]="type" (change)="onSearch($event)">
+                        <option value="ALL">Semua</option>
+                        <option value="article">Artikel</option>
+                        <option value="virtualpage">Virtual Page</option>
+                        <option value="formulir">Formulir</option>
+                    </select>
+                </li>
+            </ul>
+
+            <div [ngbNavOutlet]="nav" class="d-flex flex-column flex-fill data-item mt-2"></div>
+        </div>
     </div>
 </div>
