@@ -58,7 +58,6 @@ export class ArticleService {
     sorting: { column: string, sort: string }, limit: number = 10,
     maxPage: number = 99) {
     const params = { keyword, state, type, page, limit, sorting };
-    console.log({ params });
     return this.apiService.post(`${this._base_url}/searchMyPages`, params);
   }
 
@@ -98,8 +97,9 @@ export class ArticleService {
     return this.apiService.post(`${this._base_url}/checkUnique`, { title }, this.apiService.getHeaders(true), false);
   }
 
-  getById(id: number) {
-    return this.apiService.get(`${this._base_url}/getArticle?id=${id}`);
+  getById(id: number, isEdit: boolean) {
+    const params = { id, isEdit : isEdit ? true : false }; // convert isEdit to boolean, js mabok
+    return this.apiService.post(`${this._base_url}/getArticle`, params);
   }
 
   getContentId() {
@@ -141,7 +141,6 @@ export class ArticleService {
   }
   private parseToSingleArray(contents: ArticleContentDTO[]): ArticleContentDTO[] {
     const result: ArticleContentDTO[] = [];
-    console.log({ contents });
     if (contents.length) {
       contents.forEach(item => {
         this.parseToArray(item).forEach(d => result.push(d));

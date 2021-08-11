@@ -36,3 +36,13 @@
     background: none;
   }
 }
+
+:host .input-show {
+  width: 100%;
+  border: none;
+  outline: none;
+
+  &::placeholder {
+    color: #A19F9D;
+  }
+}

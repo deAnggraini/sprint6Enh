@@ -23,21 +23,22 @@ $bca-color-dark: #0F5EA9;
   font-size: 1rem !important;
 }
 
-.font-size-18 {
-  font-size: 1.125rem !important;
+.font-size-18,
+.fs18 {
+  font-size: 18px !important;
 }
 
 .font-size-20,
 .fs20 {
-  font-size: 1.25rem !important;
+  font-size: 20px !important;
 }
 
 .font-size-24 {
-  font-size: 1.5rem !important;
+  font-size: 24px !important;
 }
 
 .font-size-26 {
-  font-size: 1.625rem !important;
+  font-size: 26px !important;
 }
 
 .font-size-28,
@@ -218,6 +219,7 @@ $bca-color-dark: #0F5EA9;
     top: 0;
     bottom: 0;
     background: rgba(0, 0, 0, .6);
+    height: 184px;
   }
 }
 

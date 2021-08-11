@@ -53,6 +53,7 @@
             <div class="form-group col-sm-11 col-lg-9 col-xl-9 col-xxl-9">
                 <label>Lokasi Artikel <span class="text-danger">*</span></label>
                 <pakar-combo-box-accordion formControlName="structureOption" [options]="locationOptions"
+                    (onChange)="changeLocation($event)"
                     placeholder="Pilih lokasi yang tepat untuk artikel yang ingin ditambahkan">
                 </pakar-combo-box-accordion>
             </div>
@@ -80,7 +81,7 @@
                 <input type="url" class="form-control" formControlName="video" placeholder="Masukan URL myVideo">
             </div>
             <div class="form-group col-sm-12 col-lg-11 col-xl-11 col-xxl-11">
-                <label>Content Artikel *</label>
+                <label>Content Artikel <span class="text-danger">*</span></label>
                 <div class="border border-light rounded-sm p-3">
                     <mat-accordion [togglePosition]="'before'" multi="true">
                         <mat-expansion-panel *ngFor="let content of dataForm.get('contents').value; let i=index;"
@@ -171,8 +172,9 @@
 </ng-container>
 
 <ng-template #preview>
-    <pakar-article-preview (onCancelCallback)="onPreview($event)" [hideTopbar]="previewHideTopbar"
-        [alert]="previewHideTopbar" [alertMessage]="previewAlertMessage">
+    <pakar-article-preview (onCancelCallback)="onPreview(false)" [hideTopbar]="previewHideTopbar"
+        [alert]="previewHideTopbar" [alertMessage]="previewAlertMessage" (onSaveCallback)="onSave($event)"
+        (onSaveSendCallback)="onSaveAndSend($event)">
     </pakar-article-preview>
 </ng-template>
 

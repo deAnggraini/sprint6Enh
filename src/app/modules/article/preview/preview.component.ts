@@ -17,10 +17,12 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 })
 export class PreviewComponent implements OnInit {
 
-  @Input() hideTopbar: boolean = false;
+  @Input() hideTopbar: boolean = true;
   @Input() alert: boolean = false;
   @Input() alertMessage: string;
   @Output() onCancelCallback = new EventEmitter<any>();
+  @Output() onSaveCallback = new EventEmitter<any>();
+  @Output() onSaveSendCallback = new EventEmitter<any>();
 
   articleDTO: ArticleDTO;
 
@@ -85,6 +87,22 @@ export class PreviewComponent implements OnInit {
   onCancel(e) {
     if (this.onCancelCallback.observers.length) {
       this.onCancelCallback.emit(false);
+    } else {
+      this.router.navigate([`/article/form/${this.articleDTO.id}`]);
+    }
+    return false;
+  }
+  onSave(e) {
+    if (this.onSaveCallback.observers.length) {
+      this.onSaveCallback.emit(true);
+    } else {
+      this.router.navigate([`/article/form/${this.articleDTO.id}`]);
+    }
+    return false;
+  }
+  onSaveSend(e) {
+    if (this.onSaveSendCallback.observers.length) {
+      this.onSaveSendCallback.emit(false);
     } else {
       this.router.navigate([`/article/form/${this.articleDTO.id}`]);
     }

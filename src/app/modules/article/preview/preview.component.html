@@ -5,7 +5,7 @@ background-position: center;
 background-size: cover;
 height: 184px;
 "></div>
-<div class="top-bar d-flex flex-row justify-content-between" *ngIf="!hideTopbar" >
+<div class="top-bar d-flex flex-row justify-content-between" *ngIf="!hideTopbar">
     <div class="d-flex flex-row align-items-center">
         <a href="#" class="link text-dark d-flex flex-row pl-8" (click)="onCancel($event)">
             <div [inlineSVG]="'./assets/media/svg/bca/icon/edit-document.svg'" cacheSVG="true" class="svg-icon"></div>
@@ -13,12 +13,12 @@ height: 184px;
         </a>
     </div>
     <div class="d-flex flex-row align-items-center">
-        <a href="#" class="btn btn-link link text-dark d-flex flex-row">
+        <a href="#" class="btn btn-link link text-dark d-flex flex-row" (click)="onSave($event)">
             <div [inlineSVG]="'./assets/media/svg/bca/icon/save.svg'" cacheSVG="true" class="svg-icon"></div>
             <div>Simpan</div>
         </a>
         <div class="separator"></div>
-        <a href="#" class="link text-dark d-flex flex-row">
+        <a href="#" class="btn btn-link link text-dark d-flex flex-row" (click)="onSaveSend($event)">
             <div [inlineSVG]="'./assets/media/svg/bca/icon/send.svg'" cacheSVG="true" class="svg-icon"></div>
             <div>Simpan & Kirim</div>
         </a>
@@ -26,14 +26,15 @@ height: 184px;
 </div>
 
 <!-- Alert -->
-<div class="alert d-flex flex-row justify-content-between align-items-center alert-dismissible fade show" *ngIf="alert" role="alert">
+<div class="alert d-flex flex-row justify-content-between align-items-center alert-dismissible fade show" *ngIf="alert"
+    role="alert">
     <div class="d-flex flex-row">
         <div [inlineSVG]="'./assets/media/svg/bca/icon/success.svg'" cacheSVG="true" class="svg-icon"></div>&nbsp;&nbsp;
         <div class="font-weight-bold">{{ alertMessage }}</div>
     </div>
 
     <button type="button" class="btn btn-icon" data-bs-dismiss="alert" aria-label="Close" (click)="closeAlert()">
-        <i  [inlineSVG]="'./assets/media/svg/bca/icon/close.svg'" cacheSVG="true"></i>
+        <i [inlineSVG]="'./assets/media/svg/bca/icon/close.svg'" cacheSVG="true"></i>
     </button>
     <!-- <span [inlineSVG]="'./assets/media/svg/bca/icon/close.svg'" cacheSVG="true" class="btn d-flex flex-row"></span> -->
 </div>
@@ -50,20 +51,23 @@ height: 184px;
                     <span class="pakar-text-header">{{articleDTO.title}}</span>
                 </div>
                 <!-- on save -->
-                <div class="d-flex flex-row" *ngIf="!onPreview" >
+                <div class="d-flex flex-row" *ngIf="!onPreview">
                     <!-- Expand & Collapse -->
                     <div href="" class="btn" *ngIf="!isExpand" (click)="expandCollapse()">
-                            <span [inlineSVG]="'./assets/media/svg/bca/icon/expand-topik.svg'" cacheSVG="true" class="svg-icon menu-icon"></span>
-                            <span class="font-weight-bold" style="color: #0F5EA9;">Expand Topik</span>
+                        <span [inlineSVG]="'./assets/media/svg/bca/icon/expand-topik.svg'" cacheSVG="true"
+                            class="svg-icon menu-icon"></span>
+                        <span class="font-weight-bold" style="color: #0F5EA9;">Expand Topik</span>
                     </div>
                     <div href="" class="btn" *ngIf="isExpand" (click)="expandCollapse()">
-                        <span [inlineSVG]="'./assets/media/svg/bca/icon/collapse-topik.svg'" cacheSVG="true" class="svg-icon menu-icon"></span>
+                        <span [inlineSVG]="'./assets/media/svg/bca/icon/collapse-topik.svg'" cacheSVG="true"
+                            class="svg-icon menu-icon"></span>
                         <span class="font-weight-bold" style="color: #0F5EA9;">Collapse Topik</span>
                     </div>
 
                     <!-- Ubah Artikel -->
                     <div href="" class="btn" *ngIf="editable">
-                        <span [inlineSVG]="'./assets/media/svg/bca/icon/edit-document-dark.svg'" cacheSVG="true" class="svg-icon menu-icon"></span>
+                        <span [inlineSVG]="'./assets/media/svg/bca/icon/edit-document-dark.svg'" cacheSVG="true"
+                            class="svg-icon menu-icon"></span>
                         <span class="font-weight-bold" style="color: #0F5EA9;">Ubah Artikel</span>
                     </div>
                 </div>
@@ -216,10 +220,10 @@ height: 184px;
                         <!-- <video src="{{videoUrl}}" width="307" height="173" controls>
                             <source src="https://myvideo.bca.co.id/viewerportal/bcavideo/video.vp?programId=esc_program%3A55071&contentAssocId=association%3A183713">
                         </video> -->
-                        <iframe seamless frameborder=0 allowfullscreen webkitallowfullscreen mozallowfullscreen *ngIf="showVideo" 
-                            [src]="videoUrl" width="307" height="173">
+                        <iframe seamless frameborder=0 allowfullscreen webkitallowfullscreen mozallowfullscreen
+                            *ngIf="showVideo" [src]="videoUrl" width="307" height="173">
                         </iframe>
-                        <img class="img-show" *ngIf="!showVideo"  [src]="noVideoPreview" background-position:center
+                        <img class="img-show" *ngIf="!showVideo" [src]="noVideoPreview" background-position:center
                             style="object-fit: cover; width: 307px; height: 173px;">
                         <hr>
                     </div>

@@ -4,6 +4,7 @@ import { ArticleService } from '../../_services/article.service';
 import { Subscription } from 'rxjs';
 import { NgbdSortableHeader, SortEvent } from './sortable.directive';
 import { ConfirmService } from 'src/app/utils/_services/confirm.service';
+import { Router } from '@angular/router';
 
 export declare interface MyPageRowItem {
   type: string,
@@ -89,7 +90,8 @@ export class MyPagesComponent implements OnInit, OnDestroy {
   constructor(
     private cdr: ChangeDetectorRef,
     private articleService: ArticleService,
-    private confirm: ConfirmService) {
+    private confirm: ConfirmService,
+    private router: Router) {
     this.listStatus['approved'] = "PUBLISHED";
     this.listStatus['pending'] = "PENDING";
     this.listStatus['draft'] = "DRAFT";
@@ -161,7 +163,7 @@ export class MyPagesComponent implements OnInit, OnDestroy {
     const tabDto: TabDTO = this.dataForm[key];
     const paging = tabDto.pagination;
     tabDto.sort = sort;
-    this.search(key, this.listStatus[key], this.type, paging.page);
+    this.search(key, this.listStatus[key], this.type, paging.page | 1);
   }
 
   // table ... event
@@ -186,6 +188,7 @@ export class MyPagesComponent implements OnInit, OnDestroy {
       btnCancelText: 'Batal'
     }).then((confirmed) => {
       if (confirmed === true) {
+        this.router.navigate([`/article/form/${item.id}`, { isEdit: true }]);
       }
     });
     return false;

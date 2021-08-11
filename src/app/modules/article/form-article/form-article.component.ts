@@ -145,7 +145,6 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   suggestionArticle$: BehaviorSubject<Option[]> = new BehaviorSubject([]);
   locationOptions: BehaviorSubject<Option[]> = new BehaviorSubject([]);
 
-
   // preview property
   isPreview: boolean = false;
   previewHideTopbar: boolean = false;
@@ -253,6 +252,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // article action button
   onSave(e) {
+    console.log(this.dataForm.value);
     this.confirm.open({
       title: `Simpan`,
       message: `<p>Apakah Kamu yakin ingin menyimpan halaman ini? Halaman akan tersimpan kedalam draft Kamu`,
@@ -265,7 +265,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
         this.subscriptions.push(
           this.article.saveArticle(_dataForm).subscribe(resp => {
             if (resp) {
-              this.onPreview(e, true, true, 'Artikel berhasil disimpan ke dalam draft.');
+              this.onPreview(true, true, true, 'Artikel berhasil disimpan ke dalam draft.');
               this.cdr.detectChanges();
             }
           })
@@ -310,19 +310,19 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
       this.article.saveArticle(_dataForm, true, this.saveAndSend).subscribe(resp => {
         if (resp) {
           this.modalService.dismissAll();
-          this.onPreview(e, true, true, 'Artikel berhasil disimpan dan dikirim.');
+          this.onPreview(true, true, true, 'Artikel berhasil disimpan dan dikirim.');
           this.cdr.detectChanges();
         }
       })
     );
     return false;
   }
-  onPreview(e, hideTopbar: boolean = false, alert: boolean = false, msg: string = '') {
+  onPreview(show: boolean, hideTopbar: boolean = false, alert: boolean = false, msg: string = '') {
     this.article.formData = this.dataForm.value as ArticleDTO;
     this.previewHideTopbar = hideTopbar;
     this.previewAlert = alert;
     this.previewAlertMessage = msg;
-    this.isPreview = !this.isPreview;
+    this.isPreview = show;
     return false;
   }
 
@@ -543,9 +543,9 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     this.cdr.detectChanges();
   }
 
-  private getArticle(id: number) {
+  private getArticle(id: number, isEdit: boolean) {
     this.subscriptions.push(
-      this.article.getById(id).subscribe((resp: ArticleDTO) => {
+      this.article.getById(id, isEdit).subscribe((resp: ArticleDTO) => {
         this.setArticle(resp);
       })
     );
@@ -614,7 +614,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
         })
       }
 
-      this.isEdit = !article.status || article.status == "NEW" ? false : true;
+      this.isEdit = !article.isNew;
       this.dataForm.reset(article);
       this.addLogs(article.contents);
       this.cdr.detectChanges();
@@ -689,6 +689,9 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       return this.dataForm.value.image?.name;
     }
+  }
+  changeLocation(value) {
+    if (value) this.dataForm.get('structureId').setValue(value.id);
   }
 
   private goBackToAdd(msg: string) {
@@ -793,8 +796,9 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.article.formData == null) {
       this.subscriptions.push(
         this.route.params.subscribe(params => {
+          const isEdit: boolean = params.isEdit;
           if (params['id']) {
-            this.getArticle(parseInt(params['id']));
+            this.getArticle(parseInt(params['id']), isEdit);
           } else {
             this.goBackToAdd('Silahkan tambah artikel terlebih dahulu');
           }
