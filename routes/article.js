@@ -398,8 +398,9 @@ router.post('/generateArticle', (req, res) => {
     res.send({ error: false, msg: "", data: sample_empty });
 });
 
-router.get('/getArticle', (req, res) => {
-    const { id } = req.query;
+router.post('/getArticle', (req, res) => {
+    const { body } = req;
+    console.log({ body });
     res.send({ error: false, msg: "", data: sample_empty });
 });
 
