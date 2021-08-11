@@ -618,7 +618,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
         })
       }
 
-      this.isEdit = !article.status || article.status == "NEW" ? false : true;
+      this.isEdit = !article.isNew;
       this.dataForm.reset(article);
       this.addLogs(article.contents);
       this.cdr.detectChanges();

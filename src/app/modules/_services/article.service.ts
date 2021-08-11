@@ -99,7 +99,7 @@ export class ArticleService {
   }
 
   getById(id: number, isEdit: boolean) {
-    const params = { id, isEdit };
+    const params = { id, isEdit : isEdit ? true : false }; // convert isEdit to boolean, js mabok
     return this.apiService.post(`${this._base_url}/getArticle`, params);
   }
 
