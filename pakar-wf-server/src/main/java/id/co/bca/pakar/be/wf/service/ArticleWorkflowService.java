@@ -110,9 +110,10 @@ public class ArticleWorkflowService {
             taskDto.setArticleId((Long) variables.get("article_id"));
             taskDto.setRequestId(requestModel.getId());
             taskDto.setSender(requestUserTaskModel.getProposedBy());
-            taskDto.setCurrentSenderState(requestUserTaskModel.getSenderState().getCode());
+            taskDto.setCurrentSenderState(requestUserTaskModel.getSenderState() != null ?
+                    requestUserTaskModel.getSenderState().getCode() : null);
             taskDto.setAssigne(requestUserTaskModel.getAssigne());
-            taskDto.setCurrentReceiverState(requestUserTaskModel.getReceiverState().getCode());
+            taskDto.setCurrentReceiverState(requestUserTaskModel.getReceiverState() != null? requestUserTaskModel.getReceiverState().getCode() : "");
 
             return taskDto;
         } catch (UndefinedProcessException e) {
