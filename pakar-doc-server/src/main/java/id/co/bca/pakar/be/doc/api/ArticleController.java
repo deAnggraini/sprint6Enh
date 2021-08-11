@@ -236,18 +236,19 @@ public class ArticleController extends BaseController {
     }
 
     /**
+     *
      * @param authorization
      * @param username
-     * @param id
+     * @param requestDto
      * @return
      */
-    @GetMapping(value = "/api/doc/getArticle", produces = {
+    @PostMapping(value = "/api/doc/getArticle", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
             MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<RestResponse<ArticleDto>> geArticle(@RequestHeader("Authorization") String authorization, @RequestHeader(name = "X-USERNAME") String username, @RequestParam(name = "id") Long id) {
+    public ResponseEntity<RestResponse<ArticleDto>> geArticle(@RequestHeader("Authorization") String authorization, @RequestHeader(name = "X-USERNAME") String username, @RequestBody GetArticleDto requestDto) {
         try {
             logger.info("generate article process");
             logger.info("received token bearer ---> {}", authorization);
-            ArticleDto articleDto = articleService.getArticleById(id, username);
+            ArticleDto articleDto = articleService.getArticleById(requestDto.getId(), requestDto.getIsEdit(), username, getTokenFromHeader(authorization));
             return createResponse(articleDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, Locale.ENGLISH));
         } catch (ArticleNotFoundException e) {
             logger.error("exception", e);

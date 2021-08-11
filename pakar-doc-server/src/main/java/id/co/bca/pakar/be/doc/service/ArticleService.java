@@ -12,7 +12,7 @@ public interface ArticleService {
 
     ArticleDto getArticleById(Long id) throws Exception;
 
-    ArticleDto getArticleById(Long id, String username) throws Exception;
+    ArticleDto getArticleById(Long id, boolean isEdit, String username, String token) throws Exception;
 
     ArticleResponseDto saveArticle(MultipartArticleDto articleDto) throws Exception;
 
