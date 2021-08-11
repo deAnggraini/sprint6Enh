@@ -268,8 +268,8 @@ public class ArticleWorkflowService {
                 dto.setSender(model.getProposedBy());
                 dto.setCurrentState(model.getRequestModel().getCurrentState().getCode());
                 dto.setRequestId(model.getRequestModel().getId());
-                dto.setCurrentSenderState(model.getSenderState().getCode());
-                dto.setCurrentReceiverState(model.getReceiverState().getCode());
+                dto.setCurrentSenderState(model.getSenderState() != null ? model.getSenderState().getCode() : "");
+                dto.setCurrentReceiverState(model.getReceiverState() != null ? model.getReceiverState().getCode() : "");
                 logger.debug("article id {}", model.getRequestModel().getId());
                 Optional<WorkflowRequestDataModel> requestDataModelOpt = workflowRequestDataRepository.findByNameAndRequestId("ARTICLE_ID", model.getRequestModel().getId());
                 if (requestDataModelOpt.isPresent()) {
