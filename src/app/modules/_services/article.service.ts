@@ -98,8 +98,9 @@ export class ArticleService {
     return this.apiService.post(`${this._base_url}/checkUnique`, { title }, this.apiService.getHeaders(true), false);
   }
 
-  getById(id: number) {
-    return this.apiService.get(`${this._base_url}/getArticle?id=${id}`);
+  getById(id: number, isEdit: boolean) {
+    const params = { id, isEdit };
+    return this.apiService.post(`${this._base_url}/getArticle`, params);
   }
 
   getContentId() {

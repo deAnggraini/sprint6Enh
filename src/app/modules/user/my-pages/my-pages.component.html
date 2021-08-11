@@ -143,12 +143,6 @@
                                                             Revisi</span>
                                                     </a>
                                                 </li>
-                                                <li class="navi-item">
-                                                    <a class="navi-link disabled"
-                                                        (click)="onClickEdit(item, i); dropDown.close()">
-                                                        <span class="navi-text font-weight-bolder">Ubah</span>
-                                                    </a>
-                                                </li>
 
                                                 <ng-container *ngIf="key == 'approved'">
                                                     <li class="navi-item">
@@ -170,6 +164,12 @@
                                                 </ng-container>
 
                                                 <ng-container *ngIf="key == 'draft'">
+                                                    <li class="navi-item">
+                                                        <a class="navi-link cursor-pointer"
+                                                            (click)="onClickEdit(item, i); dropDown.close()">
+                                                            <span class="navi-text font-weight-bolder">Ubah</span>
+                                                        </a>
+                                                    </li>
                                                     <li class="navi-item">
                                                         <a class="navi-link cursor-pointer"
                                                             (click)="onClickCancel(item, i); dropDown.close()">
