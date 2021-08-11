@@ -91,6 +91,9 @@ public class ArticleServiceImpl implements ArticleService {
     private ArticleMyPagesRepository articleMyPagesRepository;
 
     @Autowired
+    private ArticleEditRepository articleEditRepository;
+
+    @Autowired
     private PakarOauthClient pakarOauthClient;
 
     @Autowired
