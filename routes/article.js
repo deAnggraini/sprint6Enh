@@ -400,7 +400,7 @@ router.post('/generateArticle', (req, res) => {
 
 router.get('/getArticle', (req, res) => {
     const { id } = req.query;
-    res.send({ error: false, msg: "", data: sample_basic });
+    res.send({ error: false, msg: "", data: sample_empty });
 });
 
 router.get('/getContentId', (req, res) => {

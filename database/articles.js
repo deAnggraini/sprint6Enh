@@ -18,6 +18,7 @@ const sample_empty = {
     related: [],  // {id, title}
     suggestions: [], // {id, title}
     isEmptyTemplate: true,
+    status: 'NEW'
 };
 
 const sample_basic = {
@@ -62,10 +63,17 @@ const sample_basic = {
             children: [],
         }
     ],
-    references: [], // {id, title, no},
-    related: [],  // {id, title}
-    suggestions: [], // {id, title}
+    references: [
+        { id: 2, title: "Perihal Ketentuan Tahapan 1", no: "025/SKSE/TL/2020" }
+    ], // {id, title, no},
+    related: [
+        { id: 2, title: "Perihal Ketentuan Tahapan 1", no: "025/SKSE/TL/2020" }
+    ],  // {id, title}
+    suggestions: [
+        { id: 2, title: "Perihal Ketentuan Tahapan 1", no: "025/SKSE/TL/2020" }
+    ], // {id, title}
     isEmptyTemplate: false,
+    status: 'NEW'
 };
 
 const sample_non_basic = {
@@ -349,6 +357,7 @@ const sample_non_basic = {
     related: [],
     suggestions: [],
     isEmptyTemplate: false,
+    status: 'DRAFT'
 };
 
 const articles = [
