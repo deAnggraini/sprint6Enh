@@ -54,6 +54,7 @@ export declare interface ArticleDTO {
     references: SkReferenceDTO[],
     related: ArticleRelatedDTO[],
     suggestions: ArticleRelatedDTO[],
+    status?:string, // pre-DRAF, DRAF
 
     // save & send
     isHasSend: boolean,

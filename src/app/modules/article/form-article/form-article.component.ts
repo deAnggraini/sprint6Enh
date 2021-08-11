@@ -583,6 +583,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   private setArticle(article: ArticleDTO) {
     if (article) {
+      console.log('setArticle', { article });
       const { structureParentList, structureId } = article;
       article.structureOption = {
         id: `${structureId}`,
@@ -617,9 +618,11 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
         })
       }
 
+      this.isEdit = !article.status || article.status == "NEW" ? false : true;
       this.dataForm.reset(article);
       this.addLogs(article.contents);
       this.cdr.detectChanges();
+
     } else {
       this.goBackToAdd('Data article tidak valid');
     }
