@@ -594,7 +594,7 @@ public class ArticleController extends BaseController {
             logger.info("received token bearer --- {}", authorization);
             searchDto.setUsername(username);
             searchDto.setToken(getTokenFromHeader(authorization));
-            Page<MyPageDto> pageMyPageDto = articleService.searchMyPages(searchDto);
+            Page<MyPageDto> pageMyPageDto = articleService.searchMyPages2(searchDto);
             Map<String, Object> maps = new HashMap<String, Object>();
             maps.put("list", pageMyPageDto.getContent());
             maps.put("totalElements", pageMyPageDto.getTotalElements());

@@ -13,7 +13,7 @@ import java.util.List;
 
 @Repository
 public interface ArticleStateRepository extends CrudRepository<ArticleState, Long> {
-    @Query("SELECT m FROM ArticleState m WHERE m.article.id IN (:ids) " +
+    @Query("SELECT m.article FROM ArticleState m WHERE m.article.id IN (:ids) " +
             "AND m.deleted IS FALSE " +
             "AND (m.senderState = :state OR m.receiverState = :state) " +
             "AND (LOWER(m.article.judulArticle) LIKE CONCAT('%',LOWER(:keyword),'%') " +

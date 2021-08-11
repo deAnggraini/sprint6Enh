@@ -35,4 +35,6 @@ public interface ArticleService {
     Page<SuggestionArticleDto> searchSuggestion(SearchSuggestionDto searchDto) throws Exception;
 
     Page<MyPageDto> searchMyPages(SearchMyPageDto searchDto) throws Exception;
+
+    Page<MyPageDto> searchMyPages2(SearchMyPageDto searchDto) throws Exception;
 }

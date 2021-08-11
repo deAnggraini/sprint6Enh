@@ -1272,6 +1272,56 @@ public class ArticleServiceImpl implements ArticleService {
         }
     }
 
+    /**
+     * @param searchDto
+     * @return
+     * @throws Exception
+     */
+    @Override
+    @Transactional(rollbackFor = {Exception.class, MinValuePageNumberException.class})
+    public Page<MyPageDto> searchMyPages2(SearchMyPageDto searchDto) throws Exception {
+        try {
+            logger.info("search my page dto");
+            Page<Article> searchResultPage = null;
+            if (searchDto.getPage() == null) {
+                searchDto.setPage(0L);
+            }
+
+            if (searchDto.getPage() == 0) {
+                searchDto.setPage(0L);
+            }
+
+            int pageNum = searchDto.getPage().intValue() - 1;
+            if (pageNum < 0)
+                throw new MinValuePageNumberException("page number smaller than 0");
+            String reqSortColumnName = searchDto.getSorting().getColumn();
+            searchDto.getSorting().setColumn(new TodoMapperMyPages().convertColumnNameforSort(reqSortColumnName));
+            Sort sort = searchDto.getSorting().getSort().equals("asc") ? Sort.by(searchDto.getSorting().getColumn()).ascending() : Sort.by(searchDto.getSorting().getColumn()).descending();
+            Pageable pageable = PageRequest.of(pageNum, searchDto.getSize().intValue(), sort);
+            RequestTaskDto requestTaskDto = new RequestTaskDto();
+            requestTaskDto.setAssigne(searchDto.getUsername());
+            ResponseEntity<ApiResponseWrapper.RestResponse<List<TaskDto>>> restResponse = pakarWfClient
+                    .getTasksWithState(BEARER + searchDto.getToken(), searchDto.getUsername(), requestTaskDto);
+            List<Long> ids = new ArrayList<>();
+            for (TaskDto task : restResponse.getBody().getData()) {
+                ids.add(task.getArticleId());
+            }
+
+            if (searchDto.getType().equals(Constant.JenisHalaman.All) || searchDto.getType().equals(Constant.JenisHalaman.Artikel)) {
+                searchResultPage = articleStateRepository.findMyPagesArticle(ids, searchDto.getKeyword(), searchDto.getState(), pageable);
+            } else {
+                searchResultPage = null;
+            }
+            return new TodoMapperMyPages().mapEntityPageIntoDTOPage(pageable, searchResultPage);
+        } catch (MinValuePageNumberException e) {
+            logger.error("exception", e);
+            throw new MinValuePageNumberException("exception", e);
+        } catch (Exception e) {
+            logger.error("exception", e);
+            throw new Exception("exception", e);
+        }
+    }
+
     private class ArticleHistoryHelper {
         public ArticleHistory populateArticleHistory() {
             return new ArticleHistory();
