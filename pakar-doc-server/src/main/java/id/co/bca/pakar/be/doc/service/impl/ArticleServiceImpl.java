@@ -1250,6 +1250,8 @@ public class ArticleServiceImpl implements ArticleService {
             Pageable pageable = PageRequest.of(pageNum, searchDto.getSize().intValue(), sort);
             RequestTaskDto requestTaskDto = new RequestTaskDto();
             requestTaskDto.setAssigne(searchDto.getUsername());
+            requestTaskDto.setPic(searchDto.getUsername());
+            requestTaskDto.setState(searchDto.getState());
             ResponseEntity<ApiResponseWrapper.RestResponse<List<TaskDto>>> restResponse = pakarWfClient
                     .getTasksWithState(BEARER + searchDto.getToken(), searchDto.getUsername(), requestTaskDto);
             List<Long> ids = new ArrayList<>();
@@ -1300,6 +1302,8 @@ public class ArticleServiceImpl implements ArticleService {
             Pageable pageable = PageRequest.of(pageNum, searchDto.getSize().intValue(), sort);
             RequestTaskDto requestTaskDto = new RequestTaskDto();
             requestTaskDto.setAssigne(searchDto.getUsername());
+            requestTaskDto.setPic(searchDto.getUsername());
+            requestTaskDto.setState(searchDto.getState());
             ResponseEntity<ApiResponseWrapper.RestResponse<List<TaskDto>>> restResponse = pakarWfClient
                     .getTasksWithState(BEARER + searchDto.getToken(), searchDto.getUsername(), requestTaskDto);
             List<Long> ids = new ArrayList<>();
