@@ -18,7 +18,7 @@ const sample_empty = {
     related: [],  // {id, title}
     suggestions: [], // {id, title}
     isEmptyTemplate: true,
-    status: 'NEW'
+    isNew: true
 };
 
 const sample_basic = {
@@ -73,7 +73,7 @@ const sample_basic = {
         { id: 2, title: "Perihal Ketentuan Tahapan 1", no: "025/SKSE/TL/2020" }
     ], // {id, title}
     isEmptyTemplate: false,
-    status: 'NEW'
+    isNew: true
 };
 
 const sample_non_basic = {
@@ -357,7 +357,7 @@ const sample_non_basic = {
     related: [],
     suggestions: [],
     isEmptyTemplate: false,
-    status: 'DRAFT'
+    isNew: false
 };
 
 const articles = [
@@ -980,56 +980,56 @@ module.exports.notification = {
     totalElements: 99,
     totalPages: 10,
     list: [
-        {
-            id: 1,
-            status: 'informasi',
-            type: 'Informasi',
-            isUnread: true,
-            date: new Date(),
-            by: '',
-            title: 'PAKAR Info',
-            desc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
-        },
-        {
-            id: 2,
-            status: 'konflik',
-            type: 'Artikel',
-            isUnread: false,
-            date: new Date(),
-            by: 'Thalia Sari Landi',
-            title: 'Tahapan',
-            desc: 'Artikel Tahapan yang sedang kamu ubah sudah rilis versi terbaru. Segera sesuaikan dengan versi terbaru.'
-        },
-        {
-            id: 3,
-            status: 'terima',
-            type: 'Virtual Pages',
-            isUnread: true,
-            date: new Date(),
-            by: 'Stacia Marella',
-            title: 'Joint Account',
-            desc: 'Mohon review atas pembuatan Virtual Page.'
-        },
-        {
-            id: 4,
-            status: 'publikasi',
-            type: 'Artikel',
-            isUnread: false,
-            date: new Date(),
-            by: 'Shinta Dewi',
-            title: 'Time Loan',
-            desc: 'Perubahan PAKAR Time Loan telah disetujui.'
-        },
-        {
-            id: 5,
-            status: 'edit',
-            type: 'Artikel',
-            isUnread: true,
-            date: new Date(),
-            by: 'Ni Luh Gede Sri Fajaryani',
-            title: 'BCA Mobile',
-            desc: 'Terdapat editor baru yang melakukan perubahan pada artikel yang sama. Pastikan kamu melakukan perubahan di versi paling baru.'
-        }
+        // {
+        //     id: 1,
+        //     status: 'informasi',
+        //     type: 'Informasi',
+        //     isUnread: true,
+        //     date: new Date(),
+        //     by: '',
+        //     title: 'PAKAR Info',
+        //     desc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+        // },
+        // {
+        //     id: 2,
+        //     status: 'konflik',
+        //     type: 'Artikel',
+        //     isUnread: false,
+        //     date: new Date(),
+        //     by: 'Thalia Sari Landi',
+        //     title: 'Tahapan',
+        //     desc: 'Artikel Tahapan yang sedang kamu ubah sudah rilis versi terbaru. Segera sesuaikan dengan versi terbaru.'
+        // },
+        // {
+        //     id: 3,
+        //     status: 'terima',
+        //     type: 'Virtual Pages',
+        //     isUnread: true,
+        //     date: new Date(),
+        //     by: 'Stacia Marella',
+        //     title: 'Joint Account',
+        //     desc: 'Mohon review atas pembuatan Virtual Page.'
+        // },
+        // {
+        //     id: 4,
+        //     status: 'publikasi',
+        //     type: 'Artikel',
+        //     isUnread: false,
+        //     date: new Date(),
+        //     by: 'Shinta Dewi',
+        //     title: 'Time Loan',
+        //     desc: 'Perubahan PAKAR Time Loan telah disetujui.'
+        // },
+        // {
+        //     id: 5,
+        //     status: 'edit',
+        //     type: 'Artikel',
+        //     isUnread: true,
+        //     date: new Date(),
+        //     by: 'Ni Luh Gede Sri Fajaryani',
+        //     title: 'BCA Mobile',
+        //     desc: 'Terdapat editor baru yang melakukan perubahan pada artikel yang sama. Pastikan kamu melakukan perubahan di versi paling baru.'
+        // }
     ]
 }
 
