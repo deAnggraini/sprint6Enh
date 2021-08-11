@@ -1324,15 +1324,16 @@ public class ArticleServiceImpl implements ArticleService {
         public MyPageDto mapEntityIntoDTO(Article entity) {
             MyPageDto dto = new MyPageDto();
             String locTemp = articleMyPagesRepository.findLocation(entity.getStructure().getId());
+            ArticleEdit articleEdit = articleEditRepository.findCurrentEdit(entity.getId());
             dto.setId(entity.getId());
             dto.setTitle(entity.getJudulArticle());
             dto.setIsNew(entity.getNewArticle());
             dto.setState(entity.getArticleState());
-//            dto.setModifiedBy(entity.getModifyBy());
             dto.setModifiedBy(entity.getFullNameModifier());
             dto.setModifiedDate(entity.getModifyDate());
             dto.setType(Constant.JenisHalaman.Artikel);
             dto.setLocation(locTemp);
+            dto.setCurrentBy(articleEdit.getEditorName());
             return dto;
         }
 
