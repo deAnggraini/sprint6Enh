@@ -127,10 +127,6 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
       options: [11, 13, 16, 18],
       supportAllValues: false
     },
-    placeholder: `Berisi penjelasan singkat tentang produk/aplikasi, <br>dapat berupa definisi atas produk/aplikasi tersebut.\r\n
-    \r\n
-    Contoh : \r\n
-    Time Loan - SME merupakan salah satu produk kredit produktif untuk modal kerja kepada debitur segmen Small dan Medium Enterprises (SME) dalam mata uang rupiah ataupun valas yang penarikannya menggunakan Surat Permohonan Penarikan Fasilitas Kredit/Perpanjangan Pembayaran untuk jangka waktu tertentu.`
   };
 
   // error manual

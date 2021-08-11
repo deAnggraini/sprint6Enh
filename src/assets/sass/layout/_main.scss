@@ -88,3 +88,25 @@ body {
     padding: 0 get($page-padding, tablet-and-mobile);
   }
 }
+
+//ckeditor
+.ck.editor[role="textbox"] {
+  font-family: "Calibri";
+  font-size: 11pt;
+}
+
+.ck-placeholder {
+  white-space: pre-wrap;
+  font-family: Segoe UI;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  color: #a19f9d;
+}
+
+.ck-font-size-dropdown .ck-dropdown__arrow {
+  width: 62px !important;
+}
+.ck-font-size-dropdown {
+  width: 50px !important;
+}

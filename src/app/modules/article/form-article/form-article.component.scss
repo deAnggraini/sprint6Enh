@@ -2,7 +2,7 @@ $acc-child-margin: 10px;
 
 :host ::ng-deep .top-bar {
   position: fixed;
-  z-index: 2;
+  z-index: 1002;
   top: 50px;
   height: 48px;
   background: #f3f2f1;
