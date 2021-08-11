@@ -42,6 +42,9 @@ public class ArticleWorkflowService {
     @Autowired
     private WorkflowTransitionUserTaskRepository workflowTransitionUserTaskRepository;
 
+    @Autowired
+    private WorkflowPersonStateRepository workflowPersonStateRepository;
+
     /**
      * start process workflow article
      *
@@ -92,18 +95,14 @@ public class ArticleWorkflowService {
             requestDataModel.setValue("" + variables.get("article_id"));
             requestDataModel = workflowRequestDataRepository.save(requestDataModel);
 
-//            Optional<WorkflowUserTaskModel> userTaskOpt = workflowUserTaskRepository.findById(USER_TASK_DEFAULT_DEF);
-//            if (userTaskOpt.isEmpty()) {
-//                throw new UndefinedUserTaskException("undefined user task");
-//            }
-//
-//            WorkflowUserTaskModel userTaskModel = userTaskOpt.get();
-
             WorkflowRequestUserTaskModel requestUserTaskModel = new WorkflowRequestUserTaskModel();
             requestUserTaskModel.setCreatedBy(username);
             requestUserTaskModel.setRequestModel(requestModel);
             requestUserTaskModel.setProposedBy(username);
             requestUserTaskModel.setAssigne(username); // assign to self pic
+            Optional<WorkflowPersonStateModel> receiverStateOpt = workflowPersonStateRepository.findById("DRAFT");
+            requestUserTaskModel.setReceiverState(receiverStateOpt.isPresent()? receiverStateOpt.get() : null);
+
             workflowRequestUserTaskRepository.save(requestUserTaskModel);
 
             TaskDto taskDto = new TaskDto();
@@ -171,6 +170,7 @@ public class ArticleWorkflowService {
             currentWfRequest.setCurrentState(nextState);
             currentWfRequest.setModifyBy(username);
             currentWfRequest.setModifyDate(new Date());
+
             logger.debug("save request to db");
             currentWfRequest = workflowRequestRepository.save(currentWfRequest);
 
@@ -184,6 +184,10 @@ public class ArticleWorkflowService {
             newRequestUserTaskModel.setProposedBy(username);
             newRequestUserTaskModel.setAssigne((String) assignDto.get("username"));
             newRequestUserTaskModel.setNote((String)variables.get("sendNote"));
+            Optional<WorkflowPersonStateModel> receiverStateOpt = workflowPersonStateRepository.findById("DRAFT");
+            newRequestUserTaskModel.setReceiverState(receiverStateOpt.isPresent()? receiverStateOpt.get() : null);
+            Optional<WorkflowPersonStateModel> senderStateOpt = workflowPersonStateRepository.findById("PENDING");
+            newRequestUserTaskModel.setSenderState(senderStateOpt.isPresent()? receiverStateOpt.get() : null);
             newRequestUserTaskModel = workflowRequestUserTaskRepository.save(newRequestUserTaskModel);
 
             TaskDto taskDto = new TaskDto();
@@ -207,6 +211,26 @@ public class ArticleWorkflowService {
         logger.debug("get all task for assigne {}", assignee);
         try {
             Iterable<WorkflowRequestUserTaskModel> tasks = workflowRequestUserTaskRepository.findByAssigne(assignee);
+            List<TaskDto> dtos = new MapperHelper().mapToTaskDtos(tasks);
+            return dtos;
+        } catch (Exception e) {
+            logger.error("exception", e);
+            throw new Exception("exception", e);
+        }
+    }
+
+    /**
+     *
+     * @param pic
+     * @param state
+     * @return
+     * @throws Exception
+     */
+    @Transactional(rollbackFor = {Exception.class})
+    public List<TaskDto> getTasksWithPicState(String pic, String state) throws Exception {
+        logger.debug("get all task for pic {}", pic);
+        try {
+            Iterable<WorkflowRequestUserTaskModel> tasks = workflowRequestUserTaskRepository.findByPicAndState(pic, state);
             List<TaskDto> dtos = new MapperHelper().mapToTaskDtos(tasks);
             return dtos;
         } catch (Exception e) {
@@ -241,8 +265,11 @@ public class ArticleWorkflowService {
             for (WorkflowRequestUserTaskModel model : iterable) {
                 TaskDto dto = new TaskDto();
                 dto.setAssigne(model.getAssigne());
+                dto.setSender(model.getProposedBy());
                 dto.setCurrentState(model.getRequestModel().getCurrentState().getCode());
                 dto.setRequestId(model.getRequestModel().getId());
+                dto.setCurrentSenderState(model.getSenderState().getCode());
+                dto.setCurrentReceiverState(model.getReceiverState().getCode());
                 logger.debug("article id {}", model.getRequestModel().getId());
                 Optional<WorkflowRequestDataModel> requestDataModelOpt = workflowRequestDataRepository.findByNameAndRequestId("ARTICLE_ID", model.getRequestModel().getId());
                 if (requestDataModelOpt.isPresent()) {

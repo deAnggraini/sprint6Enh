@@ -94,6 +94,9 @@ public class ArticleServiceImpl implements ArticleService {
     private ArticleEditRepository articleEditRepository;
 
     @Autowired
+    private ArticleStateRepository articleStateRepository;
+
+    @Autowired
     private PakarOauthClient pakarOauthClient;
 
     @Autowired
@@ -500,6 +503,7 @@ public class ArticleServiceImpl implements ArticleService {
 
             String currentState = article.getArticleState();
 
+            ArticleState articleState = null;
             // call to workflow server to set draft, if sendto <> null
             if (currentState.equalsIgnoreCase(NEW)) {
                 logger.info("save draft article using article id {}", article.getId());
@@ -514,6 +518,14 @@ public class ArticleServiceImpl implements ArticleService {
                 currentState = restResponse.getBody().getData().getCurrentState();
                 if (currentState != null) {
                     article.setArticleState(currentState);
+                    articleState = new ArticleState();
+                    articleState.setCreatedBy(articleDto.getUsername());
+                    articleState.setSender(restResponse.getBody().getData().getSender());
+                    articleState.setReceiver(restResponse.getBody().getData().getAssigne());
+                    articleState.setReceiverState(restResponse.getBody().getData().getCurrentReceiverState());
+                    articleState.setSenderState(restResponse.getBody().getData().getCurrentSenderState());
+
+                    articleState = articleStateRepository.save(articleState);
                 }
             }
 
@@ -537,6 +549,17 @@ public class ArticleServiceImpl implements ArticleService {
                     article.setNewArticle(Boolean.FALSE);
                     article.setArticleState(currentState);
                 }
+
+                if(articleState == null) {
+                    articleState = articleStateRepository.findByArticleId(article.getId());
+                }
+                articleState.setCreatedBy(articleDto.getUsername());
+                articleState.setSender(restResponse.getBody().getData().getSender());
+                articleState.setReceiver(restResponse.getBody().getData().getAssigne());
+                articleState.setReceiverState(restResponse.getBody().getData().getCurrentReceiverState());
+                articleState.setSenderState(restResponse.getBody().getData().getCurrentSenderState());
+
+                articleStateRepository.save(articleState);
             }
 
             // get user profile from oauth server
@@ -1225,11 +1248,10 @@ public class ArticleServiceImpl implements ArticleService {
             RequestTaskDto requestTaskDto = new RequestTaskDto();
             requestTaskDto.setAssigne(searchDto.getUsername());
             ResponseEntity<ApiResponseWrapper.RestResponse<List<TaskDto>>> restResponse = pakarWfClient
-                    .getTasks(BEARER + searchDto.getToken(), searchDto.getUsername(), requestTaskDto);
+                    .getTasksWithState(BEARER + searchDto.getToken(), searchDto.getUsername(), requestTaskDto);
             List<Long> ids = new ArrayList<>();
             for (TaskDto task : restResponse.getBody().getData()) {
                 ids.add(task.getArticleId());
-//                logger.debug("article id from workflow service {}", task.getArticleId());
             }
 
             if (searchDto.getType().equals(Constant.JenisHalaman.All) || searchDto.getType().equals(Constant.JenisHalaman.Artikel)) {
@@ -1351,6 +1373,9 @@ public class ArticleServiceImpl implements ArticleService {
             dto.setLocation(locTemp);
             if(articleEdit != null)
                 dto.setCurrentBy(articleEdit.getEditorName());
+            ArticleState articleState = articleStateRepository.findByArticleId(entity.getId());
+            if(articleState != null)
+                dto.setSendTo(articleState.getSender());
             return dto;
         }
 

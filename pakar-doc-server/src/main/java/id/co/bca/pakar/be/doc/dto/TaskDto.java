@@ -9,6 +9,9 @@ public class TaskDto {
     @JsonProperty("articleId")
     private Long articleId;
 
+    @JsonProperty("sender")
+    private String sender;
+
     @JsonProperty("assigne")
     private String assigne;
 
@@ -27,6 +30,14 @@ public class TaskDto {
 
     public void setArticleId(Long articleId) {
         this.articleId = articleId;
+    }
+
+    public String getSender() {
+        return sender;
+    }
+
+    public void setSender(String sender) {
+        this.sender = sender;
     }
 
     public String getAssigne() {

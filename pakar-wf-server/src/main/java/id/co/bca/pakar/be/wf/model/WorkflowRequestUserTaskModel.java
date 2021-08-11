@@ -24,6 +24,12 @@ public class WorkflowRequestUserTaskModel extends EntityBase {
     private String assigne;
     @Column(name = "approved_date")
     private Date approvedDate;
+    @ManyToOne
+    @JoinColumn(name = "sender_state")
+    private WorkflowPersonStateModel senderState;
+    @ManyToOne
+    @JoinColumn(name = "receiver_state")
+    private WorkflowPersonStateModel receiverState;
 
     public Long getId() {
         return id;
@@ -79,5 +85,21 @@ public class WorkflowRequestUserTaskModel extends EntityBase {
 
     public void setApprovedDate(Date approvedDate) {
         this.approvedDate = approvedDate;
+    }
+
+    public WorkflowPersonStateModel getSenderState() {
+        return senderState;
+    }
+
+    public void setSenderState(WorkflowPersonStateModel senderState) {
+        this.senderState = senderState;
+    }
+
+    public WorkflowPersonStateModel getReceiverState() {
+        return receiverState;
+    }
+
+    public void setReceiverState(WorkflowPersonStateModel receiverState) {
+        this.receiverState = receiverState;
     }
 }

@@ -1,7 +1,6 @@
 package id.co.bca.pakar.be.doc.model;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 @Table(name = "t_article_state")
@@ -18,8 +17,11 @@ public class ArticleState extends EntityBase {
     @Column(name = "sender")
     private String sender;
 
+    @Column(name = "receiver")
+    private String receiver;
+
     @Column(name = "sender_state", columnDefinition = "VARCHAR(255) default 'PENDING'")
-    private String senderState; // PREDRAFT, DRAFT, PENDING, PUBLISHED, REJECTED
+    private String senderState; // DRAFT, PENDING, APPROVE
 
     @Column(name = "receiver_state")
     private String receiverState;
@@ -46,6 +48,14 @@ public class ArticleState extends EntityBase {
 
     public void setSender(String sender) {
         this.sender = sender;
+    }
+
+    public String getReceiver() {
+        return receiver;
+    }
+
+    public void setReceiver(String receiver) {
+        this.receiver = receiver;
     }
 
     public String getSenderState() {

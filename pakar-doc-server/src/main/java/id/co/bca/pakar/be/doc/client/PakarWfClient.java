@@ -28,4 +28,8 @@ public interface PakarWfClient {
             MediaType.APPLICATION_JSON_VALUE})
     ResponseEntity<ApiResponseWrapper.RestResponse<List<TaskDto>>> getTasks(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader, @RequestHeader(Constant.Headers.X_USERNAME) String username, @RequestBody RequestTaskDto dto);
 
+    @PostMapping(value = "/api/wf/tasksWithState", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
+            MediaType.APPLICATION_JSON_VALUE})
+    ResponseEntity<ApiResponseWrapper.RestResponse<List<TaskDto>>> getTasksWithState(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader, @RequestHeader(Constant.Headers.X_USERNAME) String username, @RequestBody RequestTaskDto dto);
+
 }
