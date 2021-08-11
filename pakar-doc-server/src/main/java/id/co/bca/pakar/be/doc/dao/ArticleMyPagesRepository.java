@@ -1,7 +1,6 @@
 package id.co.bca.pakar.be.doc.dao;
 
 import id.co.bca.pakar.be.doc.model.Article;
-import id.co.bca.pakar.be.doc.model.ArticleEdit;
 import id.co.bca.pakar.be.doc.model.Formulir;
 import id.co.bca.pakar.be.doc.model.VirtualPages;
 import org.springframework.data.domain.Page;

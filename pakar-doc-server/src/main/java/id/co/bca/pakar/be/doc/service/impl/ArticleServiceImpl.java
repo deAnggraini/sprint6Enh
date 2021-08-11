@@ -308,7 +308,6 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     /**
-     *
      * @param id
      * @param isEdit
      * @param username
@@ -391,7 +390,7 @@ public class ArticleServiceImpl implements ArticleService {
                 }
             });
 
-            if(isEdit) {
+            if (isEdit) {
                 // update article edit to open status
                 logger.debug("save user that start editing this article");
                 ArticleEdit articleEdit = new ArticleEdit();
@@ -502,7 +501,7 @@ public class ArticleServiceImpl implements ArticleService {
             String currentState = article.getArticleState();
 
             // call to workflow server to set draft, if sendto <> null
-            if(currentState.equalsIgnoreCase(NEW)) {
+            if (currentState.equalsIgnoreCase(NEW)) {
                 logger.info("save draft article using article id {}", article.getId());
 
                 WfArticleDto wfArticleDto = new WfArticleDto();
@@ -513,7 +512,7 @@ public class ArticleServiceImpl implements ArticleService {
                 logger.debug("response api request {}", restResponse);
                 logger.debug("reponse status code {}", restResponse.getStatusCode());
                 currentState = restResponse.getBody().getData().getCurrentState();
-                if(currentState != null) {
+                if (currentState != null) {
                     article.setArticleState(currentState);
                 }
             }
@@ -534,7 +533,7 @@ public class ArticleServiceImpl implements ArticleService {
                 logger.debug("response api request sendDraft {}", restResponse);
                 logger.debug("reponse status code {}", restResponse.getStatusCode());
                 currentState = restResponse.getBody().getData().getCurrentState();
-                if(currentState != null) {
+                if (currentState != null) {
                     article.setNewArticle(Boolean.FALSE);
                     article.setArticleState(currentState);
                 }
@@ -1198,7 +1197,6 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     /**
-     *
      * @param searchDto
      * @return
      * @throws Exception
@@ -1218,18 +1216,18 @@ public class ArticleServiceImpl implements ArticleService {
             }
 
             int pageNum = searchDto.getPage().intValue() - 1;
-            if(pageNum < 0)
+            if (pageNum < 0)
                 throw new MinValuePageNumberException("page number smaller than 0");
             String reqSortColumnName = searchDto.getSorting().getColumn();
             searchDto.getSorting().setColumn(new TodoMapperMyPages().convertColumnNameforSort(reqSortColumnName));
-            Sort sort = searchDto.getSorting().getSort().equals("asc")? Sort.by(searchDto.getSorting().getColumn()).ascending() : Sort.by(searchDto.getSorting().getColumn()).descending();
+            Sort sort = searchDto.getSorting().getSort().equals("asc") ? Sort.by(searchDto.getSorting().getColumn()).ascending() : Sort.by(searchDto.getSorting().getColumn()).descending();
             Pageable pageable = PageRequest.of(pageNum, searchDto.getSize().intValue(), sort);
             RequestTaskDto requestTaskDto = new RequestTaskDto();
             requestTaskDto.setAssigne(searchDto.getUsername());
             ResponseEntity<ApiResponseWrapper.RestResponse<List<TaskDto>>> restResponse = pakarWfClient
-                    .getTasks(BEARER + searchDto.getToken(), searchDto.getUsername(),requestTaskDto);
+                    .getTasks(BEARER + searchDto.getToken(), searchDto.getUsername(), requestTaskDto);
             List<Long> ids = new ArrayList<>();
-            for(TaskDto task : restResponse.getBody().getData()) {
+            for (TaskDto task : restResponse.getBody().getData()) {
                 ids.add(task.getArticleId());
 //                logger.debug("article id from workflow service {}", task.getArticleId());
             }
@@ -1338,7 +1336,7 @@ public class ArticleServiceImpl implements ArticleService {
         public MyPageDto mapEntityIntoDTO(Article entity) {
             MyPageDto dto = new MyPageDto();
             String locTemp = articleMyPagesRepository.findLocation(entity.getStructure().getId());
-ArticleEdit articleEdit = articleEditRepository.findCurrentEdit(entity.getId());
+            ArticleEdit articleEdit = articleEditRepository.findCurrentEdit(entity.getId());
             dto.setId(entity.getId());
             dto.setTitle(entity.getJudulArticle());
             dto.setIsNew(entity.getNewArticle());
@@ -1358,13 +1356,13 @@ ArticleEdit articleEdit = articleEditRepository.findCurrentEdit(entity.getId());
         }
 
         public String convertColumnNameforSort(String reqColumn) {
-            if(reqColumn.equals("title")) {
+            if (reqColumn.equals("title")) {
                 return "judulArticle";
-            } else if(reqColumn.equals("modified_date")) {
+            } else if (reqColumn.equals("modified_date")) {
                 return "modifyDate";
-            } else if(reqColumn.equals("modified_by")) {
+            } else if (reqColumn.equals("modified_by")) {
                 return "modifyBy";
-            } else if(reqColumn.equals("location")) {
+            } else if (reqColumn.equals("location")) {
                 return "structure.location_text";
             }
             return "";

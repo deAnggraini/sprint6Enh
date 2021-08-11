@@ -15,6 +15,12 @@ public class TaskDto {
     @JsonProperty("current_state")
     private String currentState;
 
+    @JsonProperty("current_sender_state")
+    private String currentSenderState;
+
+    @JsonProperty("current_receiver_state")
+    private String currentReceiverState;
+
     public Long getArticleId() {
         return articleId;
     }
@@ -45,5 +51,21 @@ public class TaskDto {
 
     public void setRequestId(String requestId) {
         this.requestId = requestId;
+    }
+
+    public String getCurrentSenderState() {
+        return currentSenderState;
+    }
+
+    public void setCurrentSenderState(String currentSenderState) {
+        this.currentSenderState = currentSenderState;
+    }
+
+    public String getCurrentReceiverState() {
+        return currentReceiverState;
+    }
+
+    public void setCurrentReceiverState(String currentReceiverState) {
+        this.currentReceiverState = currentReceiverState;
     }
 }
