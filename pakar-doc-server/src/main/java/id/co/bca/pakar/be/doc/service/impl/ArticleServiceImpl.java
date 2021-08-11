@@ -1238,7 +1238,7 @@ public class ArticleServiceImpl implements ArticleService {
                 searchResultPage = articleMyPagesRepository.findMyPagesArticle(ids, searchDto.getKeyword(), searchDto.getState(), pageable);
             } else {
                 searchResultPage = null;
-            }            Page<Article> searchResultPage = articleMyPagesRepository.findMyPagesArticle(ids, searchDto.getKeyword(), searchDto.getState(), pageable);
+            }
             return new TodoMapperMyPages().mapEntityPageIntoDTOPage(pageable, searchResultPage);
         } catch (MinValuePageNumberException e) {
             logger.error("exception", e);
