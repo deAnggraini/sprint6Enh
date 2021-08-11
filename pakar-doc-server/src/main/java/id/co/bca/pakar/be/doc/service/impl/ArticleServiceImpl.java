@@ -219,7 +219,7 @@ public class ArticleServiceImpl implements ArticleService {
      * @throws Exception
      */
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public ArticleDto getArticleById(Long id) throws Exception {
         try {
             Optional<Article> articleOpt = articleRepository.findById(id);
@@ -236,6 +236,7 @@ public class ArticleServiceImpl implements ArticleService {
             articleDto.setTitle(article.getJudulArticle());
             articleDto.setShortDescription(article.getShortDescription());
             articleDto.setVideoLink(article.getVideoLink());
+            articleDto.setNew(article.getNewArticle());
             Iterable<ArticleContent> articleContents = articleContentRepository.findByArticleId(article.getId());
             List<ArticleContentDto> articleContentDtos = new TreeArticleContents().menuTree(mapToListArticleContentDto(articleContents));
             articleDto.setContents(articleContentDtos);
@@ -307,13 +308,17 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     /**
+     *
      * @param id
+     * @param isEdit
+     * @param username
+     * @param token
      * @return
      * @throws Exception
      */
     @Override
     @Transactional(rollbackFor = {Exception.class, StructureNotFoundException.class, ArticleNotFoundException.class})
-    public ArticleDto getArticleById(Long id, String username) throws Exception {
+    public ArticleDto getArticleById(Long id, boolean isEdit, String username, String token) throws Exception {
         try {
             Optional<Article> articleOpt = articleRepository.findById(id);
 
@@ -386,23 +391,26 @@ public class ArticleServiceImpl implements ArticleService {
                 }
             });
 
-            // update article edit to open status
-            logger.debug("save user that start editing this article");
-            ArticleEdit articleEdit = new ArticleEdit();
-            articleEdit.setArticle(article);
-            articleEdit.setCreatedBy(username);
-            articleEdit.setStatus(Boolean.TRUE);
-            articleEdit.setStartTime(new Date());
+            if(isEdit) {
+                // update article edit to open status
+                logger.debug("save user that start editing this article");
+                ArticleEdit articleEdit = new ArticleEdit();
+                articleEdit.setArticle(article);
+                articleEdit.setCreatedBy(username);
+                articleEdit.setStatus(Boolean.TRUE);
+                articleEdit.setStartTime(new Date());
 
-            // get user profile from oauth server
-            ResponseEntity<ApiResponseWrapper.RestResponse<UserProfileDto>> restResponse = null;
-            try {
-                restResponse = pakarOauthClient.getUser(BEARER + articleDto.getToken(), articleDto.getUsername());
-            } catch (Exception e) {
-                logger.error("call oauth server failed", e);
+                // get user profile from oauth server
+                ResponseEntity<ApiResponseWrapper.RestResponse<UserProfileDto>> restResponse = null;
+                try {
+                    restResponse = pakarOauthClient.getUser(BEARER + token, username);
+                } catch (Exception e) {
+                    logger.error("call oauth server failed", e);
+                }
+                articleEdit.setEditorName(restResponse.getBody().getData().getFullname());
+                articleEdit.setUsername(restResponse.getBody().getData().getUsername());
+                articleEditRepository.save(articleEdit);
             }
-            articleEdit.setEditorName(restResponse.getBody().getData().getFullname());
-            articleEditRepository.save(articleEdit);
 
             return articleDto;
         } catch (StructureNotFoundException e) {
