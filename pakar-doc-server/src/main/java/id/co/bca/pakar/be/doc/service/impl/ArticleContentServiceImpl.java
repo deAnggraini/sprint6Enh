@@ -13,6 +13,7 @@ import id.co.bca.pakar.be.doc.dto.RequestTaskDto;
 import id.co.bca.pakar.be.doc.dto.SearchMyPageDto;
 import id.co.bca.pakar.be.doc.dto.TaskDto;
 import id.co.bca.pakar.be.doc.exception.AccesDeniedDeleteContentException;
+import id.co.bca.pakar.be.doc.exception.AccesDeniedViewContentsException;
 import id.co.bca.pakar.be.doc.exception.MinValuePageNumberException;
 import id.co.bca.pakar.be.doc.model.Article;
 import id.co.bca.pakar.be.doc.model.ArticleEdit;
@@ -84,8 +85,12 @@ public class ArticleContentServiceImpl implements ArticleContentService {
             if (searchDto.getType().equals(Constant.JenisHalaman.All) || searchDto.getType().equals(Constant.JenisHalaman.Artikel)) {
                 if(role.equals(Constant.Roles.ROLE_ADMIN)) {
                     searchResultPage = articleRepository.findContentArticleForAdmin(searchDto.getKeyword(), pageable);
-                } else {
+                } else if (role.equals(Constant.Roles.ROLE_EDITOR) || role.equals(Constant.Roles.ROLE_PUBLISHER)){
                     searchResultPage = articleRepository.findContentArticle(searchDto.getKeyword(), pageable);
+                } else {
+                    logger.info("role {} has no authorize to see contents", role);
+                    throw new AccesDeniedViewContentsException("role " + role + " has no authorize to see contents");
+
                 }
             } else {
                 searchResultPage = null;
