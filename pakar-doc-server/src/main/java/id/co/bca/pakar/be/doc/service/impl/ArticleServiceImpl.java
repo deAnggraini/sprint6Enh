@@ -475,6 +475,13 @@ public class ArticleServiceImpl implements ArticleService {
                 relatedArticleRepository.save(relatedArticle);
             }
 
+            /**** save article content *****/
+            articleDto.getContents()
+                    .forEach(e ->
+                            new ArticleContentHelper().verifyUpdateAndSaveContent(e, articleDto.getUsername()));
+
+            /*******************************/
+
             Images _images = null;
             if (articleDto.getImage() != null) {
                 if (!articleDto.getImage().isEmpty()) {
@@ -1359,6 +1366,44 @@ public class ArticleServiceImpl implements ArticleService {
 
         public ArticleContentHistory populateArticleContentHistory() {
             return new ArticleContentHistory();
+        }
+    }
+
+    private class ArticleContentHelper {
+        public void verifyUpdateAndSaveContent(ArticleContentDto dto, String username) {
+            Optional<ArticleContent> entity = articleContentRepository.findById(dto.getId());
+            if(entity.isEmpty()) {
+                logger.info("save new article content {}", dto.toString());
+                ArticleContent _entity = new ArticleContent();
+                _entity.setId(dto.getId());
+                _entity.setCreatedBy(username);
+                _entity.setParent(dto.getParent());
+                Optional<Article> artOpt = articleRepository.findById(dto.getArticleId());
+                _entity.setArticle(artOpt.get());
+                _entity.setSort(dto.getOrder());
+                _entity.setLevel(dto.getLevel());
+                _entity.setName(dto.getTitle());
+                _entity.setTopicCaption(dto.getTopicTitle());
+                _entity.setTopicContent(dto.getTopicContent());
+                _entity.setDescription(dto.getIntro());
+
+                articleContentRepository.save(_entity);
+            } else {
+                ArticleContent _entity = entity.get();
+                _entity.setModifyBy(username);
+                _entity.setModifyDate(new Date());
+                _entity.setParent(dto.getParent());
+//                Optional<Article> artOpt = articleRepository.findById(dto.getArticleId());
+//                _entity.setArticle(artOpt.get());
+                _entity.setSort(dto.getOrder());
+                _entity.setLevel(dto.getLevel());
+                _entity.setName(dto.getTitle());
+                _entity.setTopicCaption(dto.getTopicTitle());
+                _entity.setTopicContent(dto.getTopicContent());
+                _entity.setDescription(dto.getIntro());
+
+                articleContentRepository.save(_entity);
+            }
         }
     }
 
