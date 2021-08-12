@@ -5,10 +5,7 @@ import id.co.bca.pakar.be.doc.api.validator.MultipartArticleValidator;
 import id.co.bca.pakar.be.doc.common.Constant;
 import id.co.bca.pakar.be.doc.dto.*;
 import id.co.bca.pakar.be.doc.exception.*;
-import id.co.bca.pakar.be.doc.service.ArticleService;
-import id.co.bca.pakar.be.doc.service.ArticleTemplateService;
-import id.co.bca.pakar.be.doc.service.ThemeService;
-import id.co.bca.pakar.be.doc.service.UploadService;
+import id.co.bca.pakar.be.doc.service.*;
 import id.co.bca.pakar.be.doc.util.JSONMapperAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +40,9 @@ public class ArticleController extends BaseController {
 
     @Autowired
     private ArticleService articleService;
+
+    @Autowired
+    private ArticleContentService articleContentService;
 
     @Autowired
     private MultiArticleContentValidator multiArticleContentValidator;
@@ -595,6 +595,42 @@ public class ArticleController extends BaseController {
             searchDto.setUsername(username);
             searchDto.setToken(getTokenFromHeader(authorization));
             Page<MyPageDto> pageMyPageDto = articleService.searchMyPages2(searchDto);
+            Map<String, Object> maps = new HashMap<String, Object>();
+            maps.put("list", pageMyPageDto.getContent());
+            maps.put("totalElements", pageMyPageDto.getTotalElements());
+            maps.put("totalPages", pageMyPageDto.getTotalPages());
+            maps.put("currentPage", searchDto.getPage());
+            return createResponse(maps, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, null));
+        } catch (MinValuePageNumberException e) {
+            logger.error("exception", e);
+            return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("paging.minimum.invalid", null, null));
+        } catch (DataNotFoundException e) {
+            logger.error("exception", e);
+            return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, null));
+        } catch(Exception e) {
+            logger.error("exception", e);
+            return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, null));
+        }
+    }
+
+    /**
+     *
+     * @param authorization
+     * @param username
+     * @return
+     */
+    @PostMapping(value = "/api/doc/searchContent", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
+            MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<RestResponse<Map<String, Object>>> searchContent(@RequestHeader("Authorization") String authorization,
+                                                                           @RequestHeader(name = "X-USERNAME") String username,
+                                                                           @RequestBody SearchMyPageDto searchDto
+    ) {
+        try {
+            logger.info("search My Pages process");
+            logger.info("received token bearer --- {}", authorization);
+            searchDto.setUsername(username);
+            searchDto.setToken(getTokenFromHeader(authorization));
+            Page<MyPageDto> pageMyPageDto = articleContentService.searchContent(searchDto);
             Map<String, Object> maps = new HashMap<String, Object>();
             maps.put("list", pageMyPageDto.getContent());
             maps.put("totalElements", pageMyPageDto.getTotalElements());
