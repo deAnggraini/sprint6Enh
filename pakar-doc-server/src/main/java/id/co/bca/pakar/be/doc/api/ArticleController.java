@@ -643,6 +643,9 @@ public class ArticleController extends BaseController {
         } catch (DataNotFoundException e) {
             logger.error("exception", e);
             return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, null));
+        } catch (AccesDeniedViewContentsException e) {
+            logger.error("exception", e);
+            return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("contents.article.not.for.reader", null, null));
         } catch(Exception e) {
             logger.error("exception", e);
             return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, null));

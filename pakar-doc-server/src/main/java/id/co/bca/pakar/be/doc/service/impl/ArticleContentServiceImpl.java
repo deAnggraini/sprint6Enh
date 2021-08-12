@@ -1,5 +1,6 @@
 package id.co.bca.pakar.be.doc.service.impl;
 
+import id.co.bca.pakar.be.doc.client.ApiClient;
 import id.co.bca.pakar.be.doc.client.ApiResponseWrapper;
 import id.co.bca.pakar.be.doc.client.PakarOauthClient;
 import id.co.bca.pakar.be.doc.client.PakarWfClient;
@@ -44,6 +45,9 @@ public class ArticleContentServiceImpl implements ArticleContentService {
     private PakarOauthClient pakarOauthClient;
 
     @Autowired
+    private ApiClient apiClient;
+
+    @Autowired
     private ArticleMyPagesRepository articleMyPagesRepository;
 
     @Autowired
@@ -60,10 +64,17 @@ public class ArticleContentServiceImpl implements ArticleContentService {
     @Transactional(rollbackFor = {Exception.class, MinValuePageNumberException.class})
     public Page<MyPageDto> searchContent(SearchMyPageDto searchDto) throws Exception {
         try {
-            logger.info("search my page dto");
-            ResponseEntity<ApiResponseWrapper.RestResponse<List<String>>> restResponse = pakarOauthClient.getRoles(BEARER + searchDto.getToken(), searchDto.getUsername());
-            List<String> roles = restResponse.getBody().getData();
-            String role = roles.get(0);
+            logger.info("search Content dto");
+//            ResponseEntity<ApiResponseWrapper.RestResponse<List<String>>> restResponse = pakarOauthClient.getRoles(BEARER + searchDto.getToken(), searchDto.getUsername());
+//            logger.info("restResponse roles ", restResponse);
+//            List<String> roles = restResponse.getBody().getData();
+//            logger.info("get roles ", roles);
+//            String role = roles.get(0);
+            String role = apiClient.getRoles(searchDto.getUsername(), searchDto.getToken());
+            if (role.equals(ROLE_READER)) {
+                logger.info("role {} has no authorize to see contents", role);
+                throw new AccesDeniedViewContentsException("role " + role + " has no authorize to see contents");
+            }
 
             Page<Article> searchResultPage = null;
             if (searchDto.getPage() == null) {
@@ -83,14 +94,10 @@ public class ArticleContentServiceImpl implements ArticleContentService {
             Pageable pageable = PageRequest.of(pageNum, searchDto.getSize().intValue(), sort);
 
             if (searchDto.getType().equals(Constant.JenisHalaman.All) || searchDto.getType().equals(Constant.JenisHalaman.Artikel)) {
-                if(role.equals(Constant.Roles.ROLE_ADMIN)) {
+                if(role.equals(ROLE_READER)) {
                     searchResultPage = articleRepository.findContentArticleForAdmin(searchDto.getKeyword(), pageable);
                 } else if (role.equals(Constant.Roles.ROLE_EDITOR) || role.equals(Constant.Roles.ROLE_PUBLISHER)){
                     searchResultPage = articleRepository.findContentArticle(searchDto.getKeyword(), pageable);
-                } else {
-                    logger.info("role {} has no authorize to see contents", role);
-                    throw new AccesDeniedViewContentsException("role " + role + " has no authorize to see contents");
-
                 }
             } else {
                 searchResultPage = null;
