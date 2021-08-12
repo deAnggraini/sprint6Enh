@@ -1420,7 +1420,9 @@ public class ArticleServiceImpl implements ArticleService {
         public MyPageDto mapEntityIntoDTO(Article entity) {
             MyPageDto dto = new MyPageDto();
             String locTemp = articleMyPagesRepository.findLocation(entity.getStructure().getId());
-            ArticleEdit articleEdit = articleEditRepository.findCurrentEdit(entity.getId());
+//            ArticleEdit articleEdit = articleEditRepository.findCurrentEdit(entity.getId());
+            List<ArticleEdit> articleEdits = articleEditRepository.findTopByOrderByIdDesc(entity.getId());
+
             dto.setId(entity.getId());
             dto.setTitle(entity.getJudulArticle());
             dto.setIsNew(entity.getNewArticle());
@@ -1430,8 +1432,15 @@ public class ArticleServiceImpl implements ArticleService {
             dto.setModifiedDate(entity.getModifyDate());
             dto.setType(Constant.JenisHalaman.Artikel);
             dto.setLocation(locTemp);
-            if(articleEdit != null)
-                dto.setCurrentBy(articleEdit.getEditorName());
+            int i = 0;
+            StringBuffer currentEdit = new StringBuffer();
+            for(ArticleEdit articleEdit : articleEdits) {
+                currentEdit.append(articleEdit.getEditorName());
+                if(i < articleEdits.size() - 1)
+                    currentEdit.append(",");
+                i++;
+            }
+            dto.setCurrentBy(currentEdit.toString());
             ArticleState articleState = articleStateRepository.findByArticleId(entity.getId());
             if(articleState != null)
                 dto.setSendTo(articleState.getSender());
