@@ -26,17 +26,19 @@ height: 184px;
 </div>
 
 <!-- Alert -->
-<div class="alert d-flex flex-row justify-content-between align-items-center alert-dismissible fade show" *ngIf="alert"
-    role="alert">
-    <div class="d-flex flex-row">
-        <div [inlineSVG]="'./assets/media/svg/bca/icon/success.svg'" cacheSVG="true" class="svg-icon"></div>&nbsp;&nbsp;
-        <div class="font-weight-bold">{{ alertMessage }}</div>
-    </div>
+<div class="mx-15" id="alert">
+    <div class="alert d-flex flex-grow justify-content-between p-8 align-items-center alert-dismissible fade show"
+        *ngIf="alert" role="alert">
+        <div class="d-flex flex-row">
+            <div [inlineSVG]="'./assets/media/svg/bca/icon/success.svg'" cacheSVG="true" class="svg-icon"></div>
+            &nbsp;&nbsp;
+            <div class="font-weight-bold">{{ alertMessage }}</div>
+        </div>
 
-    <button type="button" class="btn btn-icon" data-bs-dismiss="alert" aria-label="Close" (click)="closeAlert()">
-        <i [inlineSVG]="'./assets/media/svg/bca/icon/close.svg'" cacheSVG="true"></i>
-    </button>
-    <!-- <span [inlineSVG]="'./assets/media/svg/bca/icon/close.svg'" cacheSVG="true" class="btn d-flex flex-row"></span> -->
+        <button type="button" class="btn btn-icon" data-bs-dismiss="alert" aria-label="Close" (click)="closeAlert()">
+            <i [inlineSVG]="'./assets/media/svg/bca/icon/close.svg'" cacheSVG="true"></i>
+        </button>
+    </div>
 </div>
 
 <div class="mx-15 mt-n25">

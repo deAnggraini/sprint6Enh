@@ -116,6 +116,7 @@ export class PreviewComponent implements OnInit {
     this.relatedArticle = this.articleDTO.related;
     this.getVideo(this.articleDTO.video);
 
+    setTimeout(() => {document.getElementById('alert').hidden = true }, 3000);
 
     //user
     this.user$.subscribe(u => {
@@ -130,8 +131,6 @@ export class PreviewComponent implements OnInit {
       setTimeout(() => this.changeDetectorRef.detectChanges(), 0);
     });
 
-    //alert test
-    // if (!this.alertMessage) this.alertMessage = 'Artikel berhasil disimpan ke dalam draft.'
   }
 
   private loadData() {
@@ -196,6 +195,12 @@ export class PreviewComponent implements OnInit {
   }
 
   closeAlert() {
+    console.log("masuk close alert");
+    // var alert1 = document.getElementById('alerts');
+    // var display = document.getElementById('name');
+
+    // alert1.innerHTML = "";
+    
     this.alert = false;
   }
 
