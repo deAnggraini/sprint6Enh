@@ -88,7 +88,7 @@ const menus_top = [
         menus: [],
         icon: '/menus/content.svg',
         image: '',
-        uri: '/contents',
+        uri: '/user/contents',
         edit: false,
     },
     {

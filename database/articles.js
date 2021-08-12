@@ -1036,7 +1036,7 @@ module.exports.mypages = [
 ]
 
 module.exports.notification = {
-    total_notification: 99,
+    // total_notification: 99,
     total_unread: 50,
     total_read: 49,
 
@@ -1047,7 +1047,7 @@ module.exports.notification = {
             id: 1,
             status: 'informasi',
             type: 'Informasi',
-            isUnread: true,
+            isRead: true,
             date: new Date(),
             by: '',
             title: 'PAKAR Info',
@@ -1057,7 +1057,7 @@ module.exports.notification = {
             id: 2,
             status: 'konflik',
             type: 'Artikel',
-            isUnread: false,
+            isRead: false,
             date: new Date(),
             by: 'Thalia Sari Landi',
             title: 'Tahapan',
@@ -1066,18 +1066,18 @@ module.exports.notification = {
         {
             id: 3,
             status: 'terima',
-            type: 'Virtual Pages',
-            isUnread: true,
+            type: 'Artikel',
+            isRead: true,
             date: new Date(),
             by: 'Stacia Marella',
             title: 'Joint Account',
-            desc: 'Mohon review atas pembuatan Virtual Page.'
+            desc: 'Mohon review atas pembuatan Virtual Page.' // sendNote
         },
         {
             id: 4,
             status: 'publikasi',
             type: 'Artikel',
-            isUnread: false,
+            isRead: false,
             date: new Date(),
             by: 'Shinta Dewi',
             title: 'Time Loan',
@@ -1087,7 +1087,7 @@ module.exports.notification = {
             id: 5,
             status: 'edit',
             type: 'Artikel',
-            isUnread: true,
+            isRead: true,
             date: new Date(),
             by: 'Ni Luh Gede Sri Fajaryani',
             title: 'BCA Mobile',

@@ -454,6 +454,28 @@ router.post('/searchMyPages', (req, res) => {
     res.send({ error: false, msg: "", data });
 });
 
+router.post('/searchContent', (req, res) => {
+    const { body } = req;
+    console.log({ body });
+    const { page, limit, type } = body;
+
+    let list = [];
+    let totalElements = 0, totalPages = 0;
+    if (type == "ALL" || type == "article") {
+        totalElements = Math.ceil(Math.random() * 100);
+        list = mypages.slice(0, limit);
+        totalPages = Math.ceil(totalElements / limit);
+    }
+    const data = {
+        totalElements,
+        totalPages,
+        currentPage: page,
+        list,
+    }
+
+    res.send({ error: false, msg: "", data });
+});
+
 router.post('/getNotification', (req, res) => {
     const { body } = req;
     console.log({ body });
