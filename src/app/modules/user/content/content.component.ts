@@ -33,7 +33,7 @@ interface FormBean {
   virtualpage: TabDTO,
   formulir: TabDTO,
 }
-const PAGE_LIMIT = 5;
+const PAGE_LIMIT = 10;
 const EMPTY_FORM_BEAN: FormBean = {
   all: {
     dataList: [],

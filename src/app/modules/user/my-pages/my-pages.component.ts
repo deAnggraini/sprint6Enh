@@ -34,7 +34,7 @@ interface FormBean {
   pending: TabDTO,
   draft: TabDTO,
 }
-const PAGE_LIMIT = 5;
+const PAGE_LIMIT = 10;
 const EMPTY_FORM_BEAN: FormBean = {
   approved: {
     dataList: [],
