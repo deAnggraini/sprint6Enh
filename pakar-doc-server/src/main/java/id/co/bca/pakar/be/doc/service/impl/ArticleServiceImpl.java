@@ -396,9 +396,15 @@ public class ArticleServiceImpl implements ArticleService {
             if (isEdit) {
                 // update article edit to open status
                 logger.debug("save user that start editing this article");
-                ArticleEdit articleEdit = new ArticleEdit();
+                ArticleEdit articleEdit = articleEditRepository.findByUsername(article.getId(), username);
+                if(articleEdit == null) {
+                    articleEdit = new ArticleEdit();
+                    articleEdit.setCreatedBy(username);
+                } else {
+                    articleEdit.setModifyBy(username);
+                    articleEdit.setModifyDate(new Date());
+                }
                 articleEdit.setArticle(article);
-                articleEdit.setCreatedBy(username);
                 articleEdit.setStatus(Boolean.TRUE);
                 articleEdit.setStartTime(new Date());
 

@@ -31,4 +31,12 @@ public interface ArticleEditRepository extends CrudRepository<ArticleEdit, Long>
             "ORDER BY m.id " +
             "DESC")
     List<ArticleEdit> findTopByOrderByIdDesc(@Param("articleId") Long articleId);
+
+    @Query(
+            "SELECT m FROM ArticleEdit m " +
+                    "WHERE m.article.id=:articleId " +
+                    "AND m.username=:username " +
+                    "AND m.deleted IS FALSE "
+    )
+    ArticleEdit findByUsername(@Param("articleId") Long articleId, @Param("username") String username);
 }
