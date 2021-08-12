@@ -102,7 +102,7 @@ public class ArticleServiceImpl implements ArticleService {
     @Autowired
     private PakarWfClient pakarWfClient;
 
-    @Value("${upload.path.category}")
+    @Value("${upload.path.article}")
     private String pathCategory;
     @Value("${upload.path.base}")
     private String basePath;
