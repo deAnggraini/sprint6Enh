@@ -51,7 +51,7 @@ export class NotificationComponent implements OnInit, OnDestroy {
           this.dataList = resp.list;
           this.unread = resp.total_unread;
           this.pagination = new PaginationModel(page, resp.totalElements);
-          this.notifService.getNotif().next(resp);
+          if (updateTopBar) this.notifService.getNotif().next(resp);
         } else {
           this.dataList = [];
           this.unread = 0;

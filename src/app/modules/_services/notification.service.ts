@@ -37,7 +37,7 @@ export class NotificationService {
 
   refresh() {
     this.list().subscribe(resp => {
-      console.log('refresh notif', resp);
+      // console.log('refresh notif', resp);
     })
   }
   list(): Observable<any> {

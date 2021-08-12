@@ -1,10 +1,11 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChildren, QueryList } from '@angular/core';
 import { PaginationModel } from 'src/app/utils/_model/pagination';
 import { ArticleService } from '../../_services/article.service';
-import { Subscription } from 'rxjs';
+import { Subscription, of } from 'rxjs';
 import { NgbdSortableHeader, SortEvent } from './sortable.directive';
 import { ConfirmService } from 'src/app/utils/_services/confirm.service';
 import { Router } from '@angular/router';
+import { catchError, map } from 'rxjs/operators';
 
 export declare interface MyPageRowItem {
   type: string,
@@ -111,6 +112,17 @@ export class MyPagesComponent implements OnInit, OnDestroy {
     return "doc-empty.svg"
   }
 
+  getEmptyMessage(key: string) {
+    if (this.keyword) return 'Halaman yang Kamu cari tidak dapat ditemukan';
+    let msg = '';
+    switch (key) {
+      case 'draft': msg = 'edit'; break;
+      case 'pending': msg = 'review'; break;
+      case 'approved': msg = 'publish'; break;
+    }
+    return `Kamu tidak memiliki halaman yang dalam proses <i>${msg}</i>.`;
+  }
+
   setPage(key: string, item: TabDTO, page: number) {
     this.search(key, this.listStatus[key], this.type, page);
   }
@@ -192,12 +204,16 @@ export class MyPagesComponent implements OnInit, OnDestroy {
   onClickCancel(item: MyPageRowItem, index: number) {
     this.confirm.open({
       title: `Hapus Artikel`,
-      message: `<p>Apakah kamu yakin ingin menghapus artike “<b>${item.title}</b>”?`,
+      message: `<p>Apakah Kamu yakin ingin menghapus dan membatalkan penambahan artikel “<b>${item.title}</b>”?`,
       btnOkText: 'Hapus',
       btnCancelText: 'Batal'
     }).then((confirmed) => {
       if (confirmed === true) {
-        this.onRefreshTable();
+        this.subscriptions.push(
+          this.articleService.cancelArticle(item.id).subscribe(resp => {
+            if (resp) this.onRefreshTable();
+          })
+        );
       }
     });
     return false;
@@ -210,10 +226,35 @@ export class MyPagesComponent implements OnInit, OnDestroy {
       btnCancelText: 'Batal'
     }).then((confirmed) => {
       if (confirmed === true) {
-        this.onRefreshTable();
+        this.subscriptions.push(
+          this.articleService.cancelSend(item.id)
+            .pipe(
+              catchError((err) => {
+                this.showErrorModal('Gagal Batal Kirim', 'Batal Kirim tidak dapat dilakukan karena halaman tersebut sedang dalam proses review.');
+                return of(null);
+              }),
+              map(resp => resp)
+            )
+            .subscribe(resp => {
+              if (resp) { this.onRefreshTable(); }
+            })
+        )
       }
     });
     return false;
+  }
+
+  showErrorModal(title: string, message: string) {
+    this.confirm.open({
+      title,
+      message,
+      btnOkText: 'OK',
+      btnCancelText: ''
+    }).then((confirmed) => {
+      if (confirmed === true) {
+        // do nothing
+      }
+    });
   }
 
 }

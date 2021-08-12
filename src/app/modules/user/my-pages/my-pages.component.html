@@ -36,7 +36,7 @@
             <ul ngbNav #nav="ngbNav" class="nav-tabs" [(activeId)]="activeId" [destroyOnHide]="false">
                 <li [ngbNavItem]="i" *ngFor="let key of listHeader; let i = index ">
                     <a ngbNavLink style="text-transform:capitalize;">
-                        {{key}} ({{dataForm[key].pagination.totalData || 0}})
+                        <b>{{key}} ({{dataForm[key].pagination.totalData || 0}})</b>
                     </a>
                     <ng-template ngbNavContent>
                         <div class="d-flex flex-column flex-fill" style="height: 100%;">
@@ -159,7 +159,7 @@
 
                                                         <ng-container *ngIf="key == 'pending'">
                                                             <li class="navi-item">
-                                                                <a class="navi-link disabled"
+                                                                <a class="navi-link cursor-pointer"
                                                                     (click)="onClickCancelSend(item, i); dropDown.close()">
                                                                     <span class="navi-text font-weight-bolder">Batal
                                                                         Kirim</span>
@@ -198,7 +198,7 @@
                                 <span
                                     [inlineSVG]="'./assets/media/svg/bca/icon/'+(keyword ? 'doc-not-found' : 'doc-2-empty')+'.svg'"
                                     class="svg"></span>
-                                <div>Kamu tidak memiliki halaman yang dalam proses review.</div>
+                                <div [innerHTML]="getEmptyMessage(key)"></div>
                             </div>
                             <div *ngIf="dataForm[key].dataList.length"
                                 class="d-flex justify-content-center align-items-center flex-wrap mt-5">

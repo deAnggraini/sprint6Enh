@@ -128,6 +128,10 @@ export class ArticleService {
     return this.apiService.post(`${this._base_url}/cancelArticle`, { id });
   }
 
+  cancelSend(id: number) {
+    return this.apiService.post(`${this._base_url}/cancelSendArticle`, { id });
+  }
+
   private parseToArray(content: ArticleContentDTO): ArticleContentDTO[] {
     let result: ArticleContentDTO[] = [];
     if (content) {
