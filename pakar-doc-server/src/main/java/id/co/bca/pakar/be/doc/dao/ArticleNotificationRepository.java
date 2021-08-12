@@ -12,14 +12,14 @@ import java.util.List;
 
 @Repository
 public interface ArticleNotificationRepository extends CrudRepository<ArticleNotification, Long> {
-//    @Query("SELECT m FROM ArticleNotification m " +
-//            "WHERE m.receiver = :username " +
-//            "AND m.deleted IS FALSE " +
-//            "AND (LOWER(m.article.judulArticle) LIKE CONCAT('%',LOWER(:keyword),'%') " +
-//            "       OR LOWER(m.documentType) LIKE CONCAT('%',LOWER(:keyword),'%') " +
-//            "       OR LOWER(m.sender) LIKE CONCAT('%',LOWER(:keyword),'%')" +
-//            "    ) ")
-//    Page<ArticleNotification> findNotification(@Param("username") String username, @Param("keyword") String keyword, Pageable pageable);
+    @Query("SELECT m FROM ArticleNotification m " +
+            "WHERE m.receiver = :username " +
+            "AND m.deleted IS FALSE " +
+            "AND (LOWER(m.article.judulArticle) LIKE CONCAT('%',LOWER(:keyword),'%') " +
+            "       OR LOWER(m.documentType) LIKE CONCAT('%',LOWER(:keyword),'%') " +
+            "       OR LOWER(m.sender) LIKE CONCAT('%',LOWER(:keyword),'%')" +
+            "    ) ")
+    Page<ArticleNotification> findNotification(@Param("username") String username, @Param("keyword") String keyword, Pageable pageable);
 
     @Query("SELECT m FROM ArticleNotification m " +
             "WHERE m.receiver = :username " +
@@ -27,8 +27,7 @@ public interface ArticleNotificationRepository extends CrudRepository<ArticleNot
     Page<ArticleNotification> findNotification(@Param("username") String username, Pageable pageable);
 
     @Query("SELECT m FROM ArticleNotification m " +
-            "WHERE m.receiver = :username " +
-            "AND m.deleted IS FALSE ")
+            "WHERE m.receiver=:username ")
     List<ArticleNotification> findAll(@Param("username") String username, Pageable pageable);
 
     @Query("SELECT COUNT(m) FROM ArticleNotification m " +

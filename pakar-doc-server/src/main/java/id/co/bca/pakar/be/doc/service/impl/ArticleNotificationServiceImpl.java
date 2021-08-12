@@ -31,7 +31,7 @@ public class ArticleNotificationServiceImpl implements ArticleNotificationServic
     @Transactional(readOnly = true)
     public Page<ArticleNotificationDto> searchNotification(String username, String token, SearchNotificationDto searchDto) throws Exception {
         try {
-            logger.info("search notification process");
+            logger.info("search notification process for receiver {}", username);
             Page<ArticleNotification> searchPageResult = null;
             if (searchDto.getPage() == null) {
                 searchDto.setPage(0L);
@@ -46,10 +46,7 @@ public class ArticleNotificationServiceImpl implements ArticleNotificationServic
                 throw new MinValuePageNumberException("page number smaller than 0");
 
             Pageable paging = PageRequest.of(searchDto.getPage().intValue() - 1, searchDto.getSize().intValue());
-            List<ArticleNotification> alls = articleNotificationRepository.findAll(searchDto.getUsername(), paging);
-            logger.debug("total data {}", alls.size());
-            
-            searchPageResult = articleNotificationRepository.findNotification(searchDto.getUsername(), paging);
+            searchPageResult = articleNotificationRepository.findNotification(username, searchDto.getKeyword(), paging);
             return new ArticleNotificationMapperEntityToDto().mapEntityPageIntoDTOPage(paging, searchPageResult);
         } catch (Exception e) {
             logger.error("exception", e);
@@ -89,10 +86,10 @@ public class ArticleNotificationServiceImpl implements ArticleNotificationServic
         public List<ArticleNotificationDto> mapEntitiesIntoDTOs(List<ArticleNotification> entities) {
             List<ArticleNotificationDto> dtos = new ArrayList<>();
             entities.forEach(e -> dtos.add(mapEntityIntoDTO(e)));
-            for(ArticleNotification entity : entities) {
-                logger.debug("entity id {}", entity.getId());
-                dtos.add(mapEntityIntoDTO(entity));
-            }
+//            for(ArticleNotification entity : entities) {
+//                logger.debug("entity id {}", entity.getId());
+//                dtos.add(mapEntityIntoDTO(entity));
+//            }
             return dtos;
         }
 
@@ -110,24 +107,8 @@ public class ArticleNotificationServiceImpl implements ArticleNotificationServic
 
         public Page<ArticleNotificationDto> mapEntityPageIntoDTOPage(Pageable pageRequest, Page<ArticleNotification> source) {
             logger.debug("start mappping article notification to dto ");
-            for(ArticleNotification entity : source.getContent()) {
-                logger.debug("data entity {}", entity.toString());
-            }
             List<ArticleNotificationDto> dtos = mapEntitiesIntoDTOs(source.getContent());
             return new PageImpl<>(dtos, pageRequest, source.getTotalElements());
-        }
-
-        public String convertColumnNameforSort(String reqColumn) {
-            if (reqColumn.equals("title")) {
-                return "judulArticle";
-            } else if (reqColumn.equals("modified_date")) {
-                return "modifyDate";
-            } else if (reqColumn.equals("modified_by")) {
-                return "modifyBy";
-            } else if (reqColumn.equals("location")) {
-                return "structure.location_text";
-            }
-            return "";
         }
     }
 }

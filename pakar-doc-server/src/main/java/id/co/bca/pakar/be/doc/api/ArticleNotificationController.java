@@ -39,7 +39,7 @@ public class ArticleNotificationController extends BaseController {
     public ResponseEntity<RestResponse<Map<String, Object>>> getNotification(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username,
                                                                              @RequestBody SearchNotificationDto searchDto ) {
         try {
-            logger.info("get notification");
+            logger.info("get notification for receiver {}",username);
             Page<ArticleNotificationDto> dtoPage = articleNotificationService.searchNotification(username, getTokenFromHeader(authorization), searchDto);
             Map<String, Object> maps = new HashMap<String, Object>();
             maps.put("list", dtoPage.getContent());
