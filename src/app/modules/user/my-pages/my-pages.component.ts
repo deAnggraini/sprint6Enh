@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChildren, QueryList } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChildren, QueryList, TemplateRef, ViewChild } from '@angular/core';
 import { PaginationModel } from 'src/app/utils/_model/pagination';
 import { ArticleService } from '../../_services/article.service';
 import { Subscription, of } from 'rxjs';
@@ -6,6 +6,7 @@ import { NgbdSortableHeader, SortEvent } from './sortable.directive';
 import { ConfirmService } from 'src/app/utils/_services/confirm.service';
 import { Router } from '@angular/router';
 import { catchError, map } from 'rxjs/operators';
+import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 
 export declare interface MyPageRowItem {
   type: string,
@@ -60,6 +61,7 @@ const EMPTY_FORM_BEAN: FormBean = {
 export class MyPagesComponent implements OnInit, OnDestroy {
 
   @ViewChildren(NgbdSortableHeader) headers: QueryList<NgbdSortableHeader>;
+  @ViewChild('riwayatVersiModal') riwayatVersiModal: TemplateRef<any>;
 
   subscriptions: Subscription[] = [];
   dataForm: FormBean = JSON.parse(JSON.stringify(EMPTY_FORM_BEAN));
@@ -83,15 +85,23 @@ export class MyPagesComponent implements OnInit, OnDestroy {
   keyword: string = '';
   type: string = 'ALL';
   selectedTr: { key: string, i: number } = { key: null, i: -1 };
+  selectedItem: MyPageRowItem;
 
   constructor(
     private cdr: ChangeDetectorRef,
     private articleService: ArticleService,
     private confirm: ConfirmService,
-    private router: Router) {
+    private router: Router,
+    private modalService: NgbModal,
+    private configModel: NgbModalConfig) {
+
     this.listStatus['approved'] = "PUBLISHED";
     this.listStatus['pending'] = "PENDING";
     this.listStatus['draft'] = "DRAFT";
+
+    this.configModel.backdrop = 'static';
+    this.configModel.keyboard = false;
+
   }
 
   ngOnInit(): void {
@@ -185,7 +195,9 @@ export class MyPagesComponent implements OnInit, OnDestroy {
       _tr.classList.add('is-click');
     }
   }
-  onClickRevision(item: any, index: number) {
+  onClickRevision(item: MyPageRowItem, index: number) {
+    this.selectedItem = item;
+    this.modalService.open(this.riwayatVersiModal, { size: 'xl' });
     return false;
   }
   onClickEdit(item: MyPageRowItem, index: number) {

@@ -794,20 +794,22 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   ngOnInit(): void {
     this.initForm();
-    if (this.article.formData == null) {
-      this.subscriptions.push(
-        this.route.params.subscribe(params => {
-          const isEdit: boolean = params.isEdit;
-          if (params['id']) {
-            this.getArticle(parseInt(params['id']), isEdit);
-          } else {
-            this.goBackToAdd('Silahkan tambah artikel terlebih dahulu');
-          }
-        })
-      );
-    } else {
-      this.setArticle(this.article.formData);
-    }
+
+    // if (this.article.formData == null) {
+    this.subscriptions.push(
+      this.route.params.subscribe(params => {
+        const isEdit: boolean = params.isEdit;
+        if (params['id']) {
+          this.getArticle(parseInt(params['id']), isEdit);
+        } else {
+          this.goBackToAdd('Silahkan tambah artikel terlebih dahulu');
+        }
+      })
+    );
+    // } else {
+    //   this.setArticle(this.article.formData);
+    // }
+
     this.subscriptions.push(
       this.auth.currentUserSubject.subscribe((resp: UserModel) => {
         this.user = resp;

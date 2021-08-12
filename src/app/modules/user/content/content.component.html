@@ -94,21 +94,21 @@
                                                     ngbDropdownMenu>
                                                     <ul class="navi">
                                                         <li class="navi-item">
-                                                            <a class="navi-link disabled"
+                                                            <a class="navi-link cursor-pointer"
                                                                 (click)="onClickRevision(item, i); dropDown.close()">
                                                                 <span class="navi-text font-weight-bolder">Riwayat
                                                                     Revisi</span>
                                                             </a>
                                                         </li>
                                                         <li class="navi-item">
-                                                            <a class="navi-link disabled"
+                                                            <a class="navi-link cursor-pointer"
                                                                 (click)="onClickEdit(item, i); dropDown.close()">
                                                                 <span class="navi-text font-weight-bolder">Ubah</span>
                                                             </a>
                                                         </li>
 
                                                         <li class="navi-item">
-                                                            <a class="navi-link disabled"
+                                                            <a class="navi-link cursor-pointer"
                                                                 (click)="onClickCancel(item, i); dropDown.close()">
                                                                 <span class="navi-text font-weight-bolder">Hapus</span>
                                                             </a>
@@ -175,3 +175,28 @@
         </div>
     </div>
 </div>
+
+<ng-template #riwayatVersiModal let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Riwayat Versi - {{selectedItem.title}}</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <i aria-hidden="true">&times;</i>
+        </button>
+    </div>
+    <div class="modal-body pt-0" style="min-height: 400px;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Versi</th>
+                    <th>Modifikasi Oleh</th>
+                    <th>Tanggal Approve</th>
+                    <th>Approver</th>
+                    <th>Referensi Dokumen</th>
+                    <th>Tanggal Berlaku</th>
+                    <th>Catatan</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</ng-template>
