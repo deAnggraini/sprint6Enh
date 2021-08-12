@@ -1421,7 +1421,7 @@ public class ArticleServiceImpl implements ArticleService {
             MyPageDto dto = new MyPageDto();
             String locTemp = articleMyPagesRepository.findLocation(entity.getStructure().getId());
 //            ArticleEdit articleEdit = articleEditRepository.findCurrentEdit(entity.getId());
-            List<ArticleEdit> articleEdits = articleEditRepository.findTopByOrderByIdDesc(entity.getId());
+            List<ArticleEdit> articleEdits = articleEditRepository.findArticleInEditingStatus(entity.getId());
 
             dto.setId(entity.getId());
             dto.setTitle(entity.getJudulArticle());
