@@ -11,6 +11,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { NgbdSortableHeader } from './my-pages/sortable.directive';
 import { NotificationComponent } from './notification/notification.component';
+import { ContentComponent } from './content/content.component';
 
 const routes: Routes = [
   {
@@ -19,6 +20,7 @@ const routes: Routes = [
     children: [
       { path: 'notification', component: NotificationComponent, },
       { path: 'mypages', component: MyPagesComponent, },
+      { path: 'contents', component: ContentComponent, },
       { path: '', redirectTo: 'mypages', pathMatch: 'full' },
       { path: '**', redirectTo: 'mypages', pathMatch: 'full' },
     ],
@@ -31,6 +33,7 @@ const routes: Routes = [
     MyPagesComponent,
     NgbdSortableHeader,
     NotificationComponent,
+    ContentComponent,
   ],
   imports: [
     CommonModule,
