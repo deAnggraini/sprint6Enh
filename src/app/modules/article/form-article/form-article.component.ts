@@ -127,6 +127,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
       options: [11, 13, 16, 18],
       supportAllValues: false
     },
+    wordCount: { maxLimit: 100 }
   };
 
   // error manual
