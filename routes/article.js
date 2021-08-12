@@ -439,7 +439,7 @@ router.post('/searchMyPages', (req, res) => {
 
     let list = [];
     let totalElements = 0, totalPages = 0;
-    if (state == "DRAFT") {
+    if (state == "DRAFT" || state == "PENDING") {
         totalElements = Math.ceil(Math.random() * 100);
         list = mypages.slice(0, limit);
         totalPages = Math.ceil(totalElements / limit);
@@ -488,6 +488,10 @@ router.post('/getNotification', (req, res) => {
 
 router.post('/updateStatusNotification', (req, res) => {
     res.send({ error: false, msg: "", data: true });
+});
+
+router.post('/cancelSendArticle', (req, res) => {
+    res.send({ status: { code: '01', message: 'asd' }, data: true });
 });
 
 module.exports = router;
