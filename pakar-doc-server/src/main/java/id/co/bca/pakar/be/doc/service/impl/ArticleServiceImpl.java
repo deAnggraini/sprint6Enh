@@ -423,7 +423,10 @@ public class ArticleServiceImpl implements ArticleService {
                 articleEditRepository.save(articleEdit);
             }
 
-            articleDto.setNew(article.getNewArticle());
+            if(article.getArticleState().equalsIgnoreCase("NEW"))
+                articleDto.setNew(Boolean.TRUE.booleanValue());
+            else
+                articleDto.setNew(Boolean.FALSE.booleanValue());
             return articleDto;
         } catch (StructureNotFoundException e) {
             logger.error("exception", e);
@@ -521,7 +524,8 @@ public class ArticleServiceImpl implements ArticleService {
             String currentState = article.getArticleState();
 
             ArticleState articleState = null;
-            article.setNewArticle(Boolean.FALSE);
+            article.setNewArticle(Boolean.TRUE);
+
             // call to workflow server to set draft, if sendto <> null
             if (currentState.equalsIgnoreCase(NEW)) {
                 logger.info("save draft article using article id {}", article.getId());
@@ -536,7 +540,6 @@ public class ArticleServiceImpl implements ArticleService {
                 currentState = restResponse.getBody().getData().getCurrentState();
                 if (currentState != null) {
                     article.setArticleState(currentState);
-//                    article.setNewArticle(Boolean.TRUE);
 
                     logger.debug("save article state");
                     articleState = new ArticleState();
