@@ -1369,6 +1369,9 @@ public class ArticleServiceImpl implements ArticleService {
         }
     }
 
+    /**
+     * private class to handle article content
+     */
     private class ArticleContentHelper {
         public void verifyUpdateAndSaveContent(ArticleContentDto dto, String username) {
             Optional<ArticleContent> entity = articleContentRepository.findById(dto.getId());
@@ -1387,7 +1390,47 @@ public class ArticleServiceImpl implements ArticleService {
                 _entity.setTopicContent(dto.getTopicContent());
                 _entity.setDescription(dto.getIntro());
 
-                articleContentRepository.save(_entity);
+                _entity = articleContentRepository.save(_entity);
+
+                // reset list parent
+                logger.info("get list parent article content");
+                // get list parent of articleContent
+                Long parentId = _entity.getParent();
+                boolean parentStatus = Boolean.TRUE;
+                do {
+                    logger.debug("find article content with parent id {}", parentId);
+                    Optional<ArticleContent> parentContent = articleContentRepository.findById(parentId);
+                    if (!parentContent.isEmpty()) {
+                        ArticleContent _parent = parentContent.get();
+                        parentId = _parent.getParent();
+                        BreadcumbArticleContentDto bcDto = new BreadcumbArticleContentDto();
+                        bcDto.setId(_parent.getId());
+                        bcDto.setName(_parent.getName());
+                        bcDto.setLevel(_parent.getLevel());
+                        dto.getBreadcumbArticleContentDtos().add(bcDto);
+                        logger.debug("copy list parent object id:name ---> {}:{} has level value {}", new Object[]{bcDto.getId()
+                                , bcDto.getName(),
+                                bcDto.getLevel()});
+                        if (parentId == null)
+                            parentStatus = Boolean.FALSE;
+                        else if (parentId.longValue() == 0)
+                            parentStatus = Boolean.FALSE;
+                    } else {
+                        logger.debug("article content with parent id {} not found, break loop", parentId);
+                        parentStatus = Boolean.FALSE;
+                    }
+                } while (parentStatus);
+
+                logger.debug("sorted list parent content");
+                // sorting bread crumb
+                Collections.sort(dto.getBreadcumbArticleContentDtos(), new Comparator<BreadcumbArticleContentDto>() {
+                    @Override
+                    public int compare(BreadcumbArticleContentDto o1, BreadcumbArticleContentDto o2) {
+                        logger.debug("level 1 {}", o1.getLevel());
+                        logger.debug("level 2 {}", o2.getLevel());
+                        return o1.getLevel().intValue() - o2.getLevel().intValue();
+                    }
+                });
             } else {
                 ArticleContent _entity = entity.get();
                 _entity.setModifyBy(username);
