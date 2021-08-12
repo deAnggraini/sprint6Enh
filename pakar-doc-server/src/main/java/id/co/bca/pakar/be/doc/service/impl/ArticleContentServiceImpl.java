@@ -97,7 +97,10 @@ public class ArticleContentServiceImpl implements ArticleContentService {
             }
 
             return new TodoMapperMyPages().mapEntityPageIntoDTOPage(pageable, searchResultPage);
-        } catch (MinValuePageNumberException e) {
+        } catch (AccesDeniedViewContentsException e) {
+            logger.error("exception", e);
+            throw new AccesDeniedViewContentsException("exception", e);
+        } catch(MinValuePageNumberException e) {
             logger.error("exception", e);
             throw new MinValuePageNumberException("exception", e);
         } catch (Exception e) {
