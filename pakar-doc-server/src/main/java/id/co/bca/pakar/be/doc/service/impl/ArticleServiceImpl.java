@@ -1336,8 +1336,8 @@ public class ArticleServiceImpl implements ArticleService {
                     searchResultPage = articleStateRepository.findMyPagesDratfArticle(ids, searchDto.getKeyword(), searchDto.getUsername(), searchDto.getState(), pageable);
                 else if(searchDto.getState().equalsIgnoreCase("PENDING"))
                     searchResultPage = articleStateRepository.findMyPagesPendingArticle(ids, searchDto.getKeyword(), searchDto.getUsername(), searchDto.getState(), pageable);
-                else if(searchDto.getState().equalsIgnoreCase("APPROVED")) {
-                    searchResultPage = articleStateRepository.findMyPagesApprovedArticle(ids, searchDto.getKeyword(), searchDto.getUsername(), searchDto.getState(), pageable);
+                else if(searchDto.getState().equalsIgnoreCase("PUBLISHED")) {
+                    searchResultPage = articleStateRepository.findMyPagesPublishedArticle(ids, searchDto.getKeyword(), searchDto.getUsername(), searchDto.getState(), pageable);
                 }
             } else {
                 searchResultPage = null;
