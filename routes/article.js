@@ -482,7 +482,12 @@ router.post('/getNotification', (req, res) => {
     if (body.keyword == "kosong") {
         return res.send({ error: false, msg: "", data: { list: [], total_read: 0 } });
     }
+    notification.total_unread = Math.ceil(Math.random(100) * 100);
     res.send({ error: false, msg: "", data: notification });
+});
+
+router.post('/updateStatusNotification', (req, res) => {
+    res.send({ error: false, msg: "", data: true });
 });
 
 module.exports = router;
