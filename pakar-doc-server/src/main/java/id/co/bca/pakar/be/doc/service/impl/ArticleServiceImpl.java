@@ -398,30 +398,32 @@ public class ArticleServiceImpl implements ArticleService {
             });
 
             if (isEdit) {
-                // update article edit to open status
-                logger.debug("save user that start editing this article");
-                ArticleEdit articleEdit = articleEditRepository.findByUsername(article.getId(), username);
-                if(articleEdit == null) {
-                    articleEdit = new ArticleEdit();
-                    articleEdit.setCreatedBy(username);
-                } else {
-                    articleEdit.setModifyBy(username);
-                    articleEdit.setModifyDate(new Date());
-                }
-                articleEdit.setArticle(article);
-                articleEdit.setStatus(Boolean.TRUE);
-                articleEdit.setStartTime(new Date());
+                // update article edit to open status if article created <> user login
+                if(!article.getCreatedBy().equalsIgnoreCase(username)) {
+                    logger.debug("save user that start editing this article");
+                    ArticleEdit articleEdit = articleEditRepository.findByUsername(article.getId(), username);
+                    if (articleEdit == null) {
+                        articleEdit = new ArticleEdit();
+                        articleEdit.setCreatedBy(username);
+                    } else {
+                        articleEdit.setModifyBy(username);
+                        articleEdit.setModifyDate(new Date());
+                    }
+                    articleEdit.setArticle(article);
+                    articleEdit.setStatus(Boolean.TRUE);
+                    articleEdit.setStartTime(new Date());
 
-                // get user profile from oauth server
-                ResponseEntity<ApiResponseWrapper.RestResponse<UserProfileDto>> restResponse = null;
-                try {
-                    restResponse = pakarOauthClient.getUser(BEARER + token, username);
-                } catch (Exception e) {
-                    logger.error("call oauth server failed", e);
+                    // get user profile from oauth server
+                    ResponseEntity<ApiResponseWrapper.RestResponse<UserProfileDto>> restResponse = null;
+                    try {
+                        restResponse = pakarOauthClient.getUser(BEARER + token, username);
+                    } catch (Exception e) {
+                        logger.error("call oauth server failed", e);
+                    }
+                    articleEdit.setEditorName(restResponse.getBody().getData().getFullname());
+                    articleEdit.setUsername(restResponse.getBody().getData().getUsername());
+                    articleEditRepository.save(articleEdit);
                 }
-                articleEdit.setEditorName(restResponse.getBody().getData().getFullname());
-                articleEdit.setUsername(restResponse.getBody().getData().getUsername());
-                articleEditRepository.save(articleEdit);
             }
 
             if(article.getArticleState().equalsIgnoreCase("NEW"))
