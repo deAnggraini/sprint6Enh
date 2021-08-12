@@ -340,6 +340,7 @@ public class ArticleServiceImpl implements ArticleService {
             articleDto.setShortDescription(article.getShortDescription());
             articleDto.setVideoLink(article.getVideoLink());
             Iterable<ArticleContent> articleContents = articleContentRepository.findByArticleId(article.getId());
+            logger.debug("article contents >>>>>>>>>>>>>>>>>>> {}", articleContents);
             List<ArticleContentDto> articleContentDtos = new TreeArticleContents().menuTree(mapToListArticleContentDto(articleContents));
             articleDto.setContents(articleContentDtos);
             Iterable<SkRefference> skRefferenceList = skReffRepository.findByArticleId(id);
@@ -479,9 +480,9 @@ public class ArticleServiceImpl implements ArticleService {
             }
 
             /**** save article content *****/
-            articleDto.getContents()
-                    .forEach(e ->
-                            new ArticleContentHelper().verifyUpdateAndSaveContent(e, articleDto.getUsername()));
+//            articleDto.getContents()
+//                    .forEach(e ->
+//                            new ArticleContentHelper().verifyUpdateAndSaveContent(e, articleDto.getUsername()));
 
             /*******************************/
 
@@ -1051,13 +1052,17 @@ public class ArticleServiceImpl implements ArticleService {
             contentDto.setTopicContent(content.getTopicContent());
             listOfContents.add(contentDto);
         }
+
         // sorting article content
-        Collections.sort(listOfContents, new Comparator<ArticleContentDto>() {
-            @Override
-            public int compare(ArticleContentDto o1, ArticleContentDto o2) {
-                return o1.getOrder().intValue() - o2.getOrder().intValue();
-            }
-        });
+        logger.debug("prepare article content list with total element {}", listOfContents.size());
+        if(listOfContents.size() > 0) {
+            Collections.sort(listOfContents, new Comparator<ArticleContentDto>() {
+                @Override
+                public int compare(ArticleContentDto o1, ArticleContentDto o2) {
+                    return o1.getOrder().intValue() - o2.getOrder().intValue();
+                }
+            });
+        }
         return listOfContents;
     }
 
@@ -1377,6 +1382,7 @@ public class ArticleServiceImpl implements ArticleService {
      */
     private class ArticleContentHelper {
         public void verifyUpdateAndSaveContent(ArticleContentDto dto, String username) {
+            dto.getBreadcumbArticleContentDtos().clear();
             Optional<ArticleContent> entity = articleContentRepository.findById(dto.getId());
             if(entity.isEmpty()) {
                 logger.info("save new article content {}", dto.toString());
