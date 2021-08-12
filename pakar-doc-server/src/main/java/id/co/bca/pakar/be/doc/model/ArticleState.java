@@ -26,11 +26,11 @@ public class ArticleState extends EntityBase {
     @Column(name = "receiver_state")
     private String receiverState;
 
-    @Column(name = "pic")
-    private String pic;
-
-    @Column(name = "state")
-    private String state;
+//    @Column(name = "pic")
+//    private String pic;
+//
+//    @Column(name = "state")
+//    private String state;
 
     public Long getId() {
         return id;
@@ -80,19 +80,19 @@ public class ArticleState extends EntityBase {
         this.receiverState = receiverState;
     }
 
-    public String getPic() {
-        return pic;
-    }
-
-    public void setPic(String pic) {
-        this.pic = pic;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
+//    public String getPic() {
+//        return pic;
+//    }
+//
+//    public void setPic(String pic) {
+//        this.pic = pic;
+//    }
+//
+//    public String getState() {
+//        return state;
+//    }
+//
+//    public void setState(String state) {
+//        this.state = state;
+//    }
 }

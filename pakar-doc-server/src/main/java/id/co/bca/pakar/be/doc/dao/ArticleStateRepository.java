@@ -24,18 +24,31 @@ public interface ArticleStateRepository extends CrudRepository<ArticleState, Lon
     @Query("SELECT m.article FROM ArticleState m WHERE m.article.id IN (:ids) " +
             "AND m.deleted IS FALSE " +
             "AND m.receiverState = :state " +
+            "AND m.receiver=:username " +
             "AND (LOWER(m.article.judulArticle) LIKE CONCAT('%',LOWER(:keyword),'%') " +
             "       OR LOWER(m.article.fullNameModifier) LIKE CONCAT('%', LOWER(:keyword), '%') " +
             "       OR LOWER(m.article.structure.location_text) LIKE CONCAT('%',LOWER(:keyword), '%') ) ")
-    Page<Article> findMyPagesDratfArticle(@Param("ids") List<Long> ids, @Param("keyword") String keyword, @Param("state") String state, Pageable pageable);
+    Page<Article> findMyPagesDratfArticle(@Param("ids") List<Long> ids, @Param("keyword") String keyword, @Param("username") String username, @Param("state") String state, Pageable pageable);
 
-    @Query("SELECT m.article FROM ArticleState m WHERE m.article.id IN (:ids) " +
+    @Query("SELECT m.article FROM ArticleState m " +
+            "WHERE m.article.id IN (:ids) " +
             "AND m.deleted IS FALSE " +
             "AND m.senderState = :state " +
+            "AND m.sender=:username " +
             "AND (LOWER(m.article.judulArticle) LIKE CONCAT('%',LOWER(:keyword),'%') " +
             "       OR LOWER(m.article.fullNameModifier) LIKE CONCAT('%', LOWER(:keyword), '%') " +
             "       OR LOWER(m.article.structure.location_text) LIKE CONCAT('%',LOWER(:keyword), '%') ) ")
-    Page<Article> findMyPagesPendingArticle(@Param("ids") List<Long> ids, @Param("keyword") String keyword, @Param("state") String state, Pageable pageable);
+    Page<Article> findMyPagesPendingArticle(@Param("ids") List<Long> ids, @Param("keyword") String keyword, @Param("username") String username, @Param("state") String state, Pageable pageable);
+
+    @Query("SELECT m.article FROM ArticleState m " +
+            "WHERE m.article.id IN (:ids) " +
+            "AND m.deleted IS FALSE " +
+            "AND m.senderState = :state " +
+            "AND m.sender=:username " +
+            "AND (LOWER(m.article.judulArticle) LIKE CONCAT('%',LOWER(:keyword),'%') " +
+            "       OR LOWER(m.article.fullNameModifier) LIKE CONCAT('%', LOWER(:keyword), '%') " +
+            "       OR LOWER(m.article.structure.location_text) LIKE CONCAT('%',LOWER(:keyword), '%') ) ")
+    Page<Article> findMyPagesApprovedArticle(@Param("ids") List<Long> ids, @Param("keyword") String keyword, @Param("username") String username, @Param("state") String state, Pageable pageable);
 
     @Query("select rs.location_text from Structure rs where rs.id =:structureId and rs.deleted is false ")
     String findLocation(@Param("structureId") Long structureId);

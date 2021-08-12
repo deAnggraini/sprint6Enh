@@ -529,7 +529,7 @@ public class ArticleServiceImpl implements ArticleService {
                 currentState = restResponse.getBody().getData().getCurrentState();
                 if (currentState != null) {
                     article.setArticleState(currentState);
-                    article.setNewArticle(Boolean.TRUE);
+//                    article.setNewArticle(Boolean.TRUE);
 
                     logger.debug("save article state");
                     articleState = new ArticleState();
@@ -1333,11 +1333,11 @@ public class ArticleServiceImpl implements ArticleService {
 
             if (searchDto.getType().equals(Constant.JenisHalaman.All) || searchDto.getType().equals(Constant.JenisHalaman.Artikel)) {
                 if(searchDto.getState().equalsIgnoreCase("DRAFT"))
-                    searchResultPage = articleStateRepository.findMyPagesDratfArticle(ids, searchDto.getKeyword(), searchDto.getState(), pageable);
+                    searchResultPage = articleStateRepository.findMyPagesDratfArticle(ids, searchDto.getKeyword(), searchDto.getUsername(), searchDto.getState(), pageable);
                 else if(searchDto.getState().equalsIgnoreCase("PENDING"))
-                    searchResultPage = articleStateRepository.findMyPagesPendingArticle(ids, searchDto.getKeyword(), searchDto.getState(), pageable);
+                    searchResultPage = articleStateRepository.findMyPagesPendingArticle(ids, searchDto.getKeyword(), searchDto.getUsername(), searchDto.getState(), pageable);
                 else if(searchDto.getState().equalsIgnoreCase("APPROVED")) {
-                    searchResultPage = null;
+                    searchResultPage = articleStateRepository.findMyPagesApprovedArticle(ids, searchDto.getKeyword(), searchDto.getUsername(), searchDto.getState(), pageable);
                 }
             } else {
                 searchResultPage = null;
