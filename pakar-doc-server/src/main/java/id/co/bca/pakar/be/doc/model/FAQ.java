@@ -8,7 +8,7 @@ import javax.persistence.*;
 public class FAQ extends EntityBase {
     @Id
     @SequenceGenerator(name = "articleFaqSeqGen", sequenceName = "articleFaqSeq", initialValue = 1, allocationSize = 1)
-    @GeneratedValue(generator = "articleFaqGen")
+    @GeneratedValue(generator = "articleFaqSeqGen")
     @Column(name = "id")
     private Long id;
 

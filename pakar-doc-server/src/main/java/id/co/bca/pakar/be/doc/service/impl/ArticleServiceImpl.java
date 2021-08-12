@@ -511,6 +511,7 @@ public class ArticleServiceImpl implements ArticleService {
             String currentState = article.getArticleState();
 
             ArticleState articleState = null;
+            article.setNewArticle(Boolean.FALSE);
             // call to workflow server to set draft, if sendto <> null
             if (currentState.equalsIgnoreCase(NEW)) {
                 logger.info("save draft article using article id {}", article.getId());
@@ -525,6 +526,7 @@ public class ArticleServiceImpl implements ArticleService {
                 currentState = restResponse.getBody().getData().getCurrentState();
                 if (currentState != null) {
                     article.setArticleState(currentState);
+                    article.setNewArticle(Boolean.TRUE);
 
                     logger.debug("save article state");
                     articleState = new ArticleState();
@@ -586,7 +588,6 @@ public class ArticleServiceImpl implements ArticleService {
             article.setModifyDate(new Date());
             article.setShortDescription(articleDto.getDesc());
             article.setVideoLink(articleDto.getVideo());
-            article.setNewArticle(Boolean.FALSE);
             article = articleRepository.save(article);
 
             articleResponseDto.setId(article.getId());
