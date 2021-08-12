@@ -13,13 +13,29 @@ import java.util.List;
 
 @Repository
 public interface ArticleStateRepository extends CrudRepository<ArticleState, Long> {
+//    @Query("SELECT m.article FROM ArticleState m WHERE m.article.id IN (:ids) " +
+//            "AND m.deleted IS FALSE " +
+//            "AND m.state = :state " +
+//            "AND (LOWER(m.article.judulArticle) LIKE CONCAT('%',LOWER(:keyword),'%') " +
+//            "       OR LOWER(m.article.fullNameModifier) LIKE CONCAT('%', LOWER(:keyword), '%') " +
+//            "       OR LOWER(m.article.structure.location_text) LIKE CONCAT('%',LOWER(:keyword), '%') ) ")
+//    Page<Article> findMyPagesArticle(@Param("ids") List<Long> ids, @Param("keyword") String keyword, @Param("state") String state, Pageable pageable);
+
     @Query("SELECT m.article FROM ArticleState m WHERE m.article.id IN (:ids) " +
             "AND m.deleted IS FALSE " +
-            "AND (m.senderState = :state OR m.receiverState = :state) " +
+            "AND m.receiverState = :state " +
             "AND (LOWER(m.article.judulArticle) LIKE CONCAT('%',LOWER(:keyword),'%') " +
             "       OR LOWER(m.article.fullNameModifier) LIKE CONCAT('%', LOWER(:keyword), '%') " +
             "       OR LOWER(m.article.structure.location_text) LIKE CONCAT('%',LOWER(:keyword), '%') ) ")
-    Page<Article> findMyPagesArticle(@Param("ids") List<Long> ids, @Param("keyword") String keyword, @Param("state") String state, Pageable pageable);
+    Page<Article> findMyPagesDratfArticle(@Param("ids") List<Long> ids, @Param("keyword") String keyword, @Param("state") String state, Pageable pageable);
+
+    @Query("SELECT m.article FROM ArticleState m WHERE m.article.id IN (:ids) " +
+            "AND m.deleted IS FALSE " +
+            "AND m.senderState = :state " +
+            "AND (LOWER(m.article.judulArticle) LIKE CONCAT('%',LOWER(:keyword),'%') " +
+            "       OR LOWER(m.article.fullNameModifier) LIKE CONCAT('%', LOWER(:keyword), '%') " +
+            "       OR LOWER(m.article.structure.location_text) LIKE CONCAT('%',LOWER(:keyword), '%') ) ")
+    Page<Article> findMyPagesPendingArticle(@Param("ids") List<Long> ids, @Param("keyword") String keyword, @Param("state") String state, Pageable pageable);
 
     @Query("select rs.location_text from Structure rs where rs.id =:structureId and rs.deleted is false ")
     String findLocation(@Param("structureId") Long structureId);

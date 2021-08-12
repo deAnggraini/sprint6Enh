@@ -97,6 +97,9 @@ public class ArticleServiceImpl implements ArticleService {
     private ArticleStateRepository articleStateRepository;
 
     @Autowired
+    private ArticleNotificationRepository articleNotificationRepository;
+
+    @Autowired
     private PakarOauthClient pakarOauthClient;
 
     @Autowired
@@ -570,8 +573,16 @@ public class ArticleServiceImpl implements ArticleService {
                 articleState.setReceiver(restResponse.getBody().getData().getAssigne());
                 articleState.setReceiverState(restResponse.getBody().getData().getCurrentReceiverState());
                 articleState.setSenderState(restResponse.getBody().getData().getCurrentSenderState());
-
                 articleStateRepository.save(articleState);
+
+                // send notification to receiver
+                ArticleNotification articleNotification = new ArticleNotification();
+                articleNotification.setCreatedBy(articleDto.getUsername());
+                articleNotification.setArticle(article);
+                articleNotification.setSender(restResponse.getBody().getData().getSender());
+                articleNotification.setReceiver(restResponse.getBody().getData().getAssigne());
+
+                articleNotificationRepository.save(articleNotification);
             }
 
             // get user profile from oauth server
@@ -1321,7 +1332,13 @@ public class ArticleServiceImpl implements ArticleService {
             }
 
             if (searchDto.getType().equals(Constant.JenisHalaman.All) || searchDto.getType().equals(Constant.JenisHalaman.Artikel)) {
-                searchResultPage = articleStateRepository.findMyPagesArticle(ids, searchDto.getKeyword(), searchDto.getState(), pageable);
+                if(searchDto.getState().equalsIgnoreCase("DRAFT"))
+                    searchResultPage = articleStateRepository.findMyPagesDratfArticle(ids, searchDto.getKeyword(), searchDto.getState(), pageable);
+                else if(searchDto.getState().equalsIgnoreCase("PENDING"))
+                    searchResultPage = articleStateRepository.findMyPagesPendingArticle(ids, searchDto.getKeyword(), searchDto.getState(), pageable);
+                else if(searchDto.getState().equalsIgnoreCase("APPROVED")) {
+                    searchResultPage = null;
+                }
             } else {
                 searchResultPage = null;
             }
