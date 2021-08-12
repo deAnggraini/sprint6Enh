@@ -72,7 +72,7 @@ public class ArticleNotificationServiceImpl implements ArticleNotificationServic
     public long updateReadNotification(String username, RequestUpdateNotificationDto reqDto) {
         try {
             logger.info("update article notification status to read status");
-            if(reqDto.isAll())
+            if(reqDto.getIsAll())
                 return articleNotificationRepository.updateAllReadStatus(username);
             else
                 return articleNotificationRepository.updateReadStatus(username, reqDto.getIds());
@@ -102,6 +102,7 @@ public class ArticleNotificationServiceImpl implements ArticleNotificationServic
             dto.setBy(entity.getSender());
             dto.setStatus(entity.getStatus());
             dto.setRead(entity.isRead());
+            dto.setType(entity.getDocumentType());
             return dto;
         }
 

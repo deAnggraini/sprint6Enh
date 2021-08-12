@@ -11,11 +11,11 @@ public class RequestUpdateNotificationDto {
     @JsonProperty("id")
     private List<Long> ids;
 
-    public boolean isAll() {
+    public boolean getIsAll() {
         return isAll;
     }
 
-    public void setAll(boolean all) {
+    public void setIsAll(boolean all) {
         isAll = all;
     }
 

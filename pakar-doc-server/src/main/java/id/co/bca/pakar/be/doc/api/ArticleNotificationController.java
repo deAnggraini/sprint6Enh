@@ -69,7 +69,10 @@ public class ArticleNotificationController extends BaseController {
         try {
             logger.info("update notification");
             long ret = articleNotificationService.updateReadNotification(username, reqDto);
-            return createResponse(ret, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, null));
+            if(ret != -1 )
+                return createResponse(ret, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, null));
+            else
+                return createResponse(-1L, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, null));
         } catch (Exception e) {
             logger.error("exception", e);
             return createResponse(-1L, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, null));
