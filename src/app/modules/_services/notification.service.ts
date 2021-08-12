@@ -41,7 +41,7 @@ export class NotificationService {
     })
   }
   list(): Observable<any> {
-    return this.api.post(`${this._base_url}/getNotification`, {}).pipe(
+    return this.api.post(`${this._base_url}/getNotification`, { keyword: '', page: 1, limit: 3 }).pipe(
       map((resp: ResponseNotificationDTO) => {
         if (resp) this.notif$.next(resp);
         return resp;

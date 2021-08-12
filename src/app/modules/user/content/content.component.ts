@@ -123,6 +123,16 @@ export class ContentComponent implements OnInit, OnDestroy {
     return "doc-empty.svg"
   }
 
+  getLabel(type: string) {
+    switch (type.toLowerCase()) {
+      case 'all': return 'Halaman';
+      case 'article': return 'Artikel';
+      case 'virtualpage': return 'Virtual Page';
+      case 'formulir': return 'Formulir';
+    }
+    return "doc-empty.svg"
+  }
+
   setPage(key: string, item: TabDTO, page: number) {
     this.search(key, this.listStatus[key], page);
   }
