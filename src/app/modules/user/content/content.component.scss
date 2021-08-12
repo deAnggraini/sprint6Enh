@@ -1,0 +1,90 @@
+:host ::ng-deep .nav-tabs {
+  border-bottom: none;
+
+  .nav-link.active {
+    border-color: transparent;
+    background-color: transparent;
+    border-bottom: 2px solid #0078D4;
+
+    .fa,
+    .far {
+      color: #0078D4;
+    }
+  }
+
+}
+
+:host ::ng-deep {
+  .sup-new {
+    color: #107C10;
+  }
+
+  .data-item {
+    padding: 5px;
+  }
+
+  .input-group.inner {
+    border: 1px solid #0F5EA9;
+    border-radius: 20px;
+    padding-left: 15px;
+    overflow: hidden;
+    width: 362px;
+    height: 34px;
+
+    .form-control-clear.btn-clean {
+      background-color: transparent;
+      border-color: transparent;
+    }
+
+    input {
+      border: none;
+    }
+
+    .btn {
+      border-color: #0F5EA9;
+      background: #0F5EA9;
+      border-radius: 0;
+
+      .fa {
+        color: white;
+      }
+    }
+
+    .btn:hover {
+      background-color: #ddd;
+      border-color: #ddd;
+
+      .fa {
+        color: #0F5EA9;
+      }
+    }
+
+    .btn-clean:hover {
+      background-color: transparent;
+      border-color: transparent;
+    }
+  }
+
+  .td-dot3 {
+    text-align: center;
+  }
+
+  .dot3 {
+    height: 100%;
+  }
+
+  .my-table {
+
+    &.table tr.is-click td {
+      background-color: #F3F2F1;
+
+      &.td-dot3 {
+        background-color: #C8C6C4 !important;
+      }
+    }
+  }
+
+  div.tab-pane {
+    height: 100%;
+  }
+}

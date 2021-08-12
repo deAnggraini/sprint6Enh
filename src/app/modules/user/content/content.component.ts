@@ -1,21 +1,20 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChildren, QueryList } from '@angular/core';
-import { PaginationModel } from 'src/app/utils/_model/pagination';
-import { ArticleService } from '../../_services/article.service';
+import { Component, OnInit, OnDestroy, ViewChildren, QueryList, ChangeDetectorRef } from '@angular/core';
+import { NgbdSortableHeader, SortEvent } from '../my-pages/sortable.directive';
 import { Subscription } from 'rxjs';
-import { NgbdSortableHeader, SortEvent } from './sortable.directive';
+import { ArticleService } from '../../_services/article.service';
 import { ConfirmService } from 'src/app/utils/_services/confirm.service';
 import { Router } from '@angular/router';
+import { PaginationModel } from 'src/app/utils/_model/pagination';
 
-export declare interface MyPageRowItem {
+export declare interface ContentRowItem {
   type: string,
   id: number,
   title: string,
-  location: string,
-  modified_date: Date,
+  affective_date?: Date,
   modified_by: string,
+  modified_date: Date,
   approved_date?: Date,
   approved_by?: string,
-  affective_date?: Date,
   send_to?: string,
   current_by: string,
   state: string,
@@ -23,28 +22,34 @@ export declare interface MyPageRowItem {
 }
 
 interface TabDTO {
-  dataList: MyPageRowItem[],
+  dataList: ContentRowItem[],
   pagination: PaginationModel,
   sort?: SortEvent
 }
 interface FormBean {
-  approved: TabDTO,
-  pending: TabDTO,
-  draft: TabDTO,
+  all: TabDTO,
+  article: TabDTO,
+  virtualpage: TabDTO,
+  formulir: TabDTO,
 }
 const PAGE_LIMIT = 5;
 const EMPTY_FORM_BEAN: FormBean = {
-  approved: {
+  all: {
     dataList: [],
     pagination: new PaginationModel(1, 0),
     sort: { column: 'modified_date', direction: 'desc' }
   },
-  pending: {
+  article: {
     dataList: [],
     pagination: new PaginationModel(1, 0),
     sort: { column: 'modified_date', direction: 'desc' }
   },
-  draft: {
+  virtualpage: {
+    dataList: [],
+    pagination: new PaginationModel(1, 0),
+    sort: { column: 'modified_date', direction: 'desc' }
+  },
+  formulir: {
     dataList: [],
     pagination: new PaginationModel(1, 0),
     sort: { column: 'modified_date', direction: 'desc' }
@@ -52,25 +57,33 @@ const EMPTY_FORM_BEAN: FormBean = {
 }
 
 @Component({
-  selector: 'app-my-pages',
-  templateUrl: './my-pages.component.html',
-  styleUrls: ['./my-pages.component.scss']
+  selector: 'app-content',
+  templateUrl: './content.component.html',
+  styleUrls: ['./content.component.scss']
 })
-export class MyPagesComponent implements OnInit, OnDestroy {
+export class ContentComponent implements OnInit, OnDestroy {
 
   @ViewChildren(NgbdSortableHeader) headers: QueryList<NgbdSortableHeader>;
 
   subscriptions: Subscription[] = [];
   dataForm: FormBean = JSON.parse(JSON.stringify(EMPTY_FORM_BEAN));
-  activeId: number = 2;
-  listHeader: string[] = ['approved', 'pending', 'draft'];
-  listStatus: string[] = ['PUBLISHED', 'PENDING', 'DRAFT'];
+  activeId: number = 0;
+  listHeader: string[] = ['all', 'article', 'virtualpage', 'formulir'];
+  listStatus: string[] = ['ALL', 'article', 'virtualpage', 'formulir'];
+
+  tabHeader = {
+    all: 'Semua',
+    article: 'Article',
+    virtualpage: 'Virtual Page',
+    formulir: 'Formulir',
+  }
 
   // table
   tableHeader = {
-    draft: ['', 'Judul', 'Lokasi', 'Modifikasi Terakhir', 'Modifikasi Oleh', 'Sedang di Edit Oleh', ''],
-    pending: ['', 'Judul', 'Lokasi', 'Modifikasi Terakhir', 'Reviewer/Publisher', 'Sedang di Edit Oleh', ''],
-    approved: ['', 'Judul', 'Lokasi', 'Tanggal Approve', 'Approver', 'Tanggal Berlaku', ''],
+    all: ['', 'Judul', 'Lokasi', 'Tanggal Berlaku', 'Dimodifikasi Oleh', 'Sedang di Edit Oleh', ''],
+    article: ['', 'Judul', 'Lokasi', 'Tanggal Berlaku', 'Dimodifikasi Oleh', 'Sedang di Edit Oleh', ''],
+    virtualpage: ['', 'Judul', 'Lokasi', 'Tanggal Berlaku', 'Dimodifikasi Oleh', 'Sedang di Edit Oleh', ''],
+    formulir: ['', 'Judul', 'Lokasi', 'Tanggal Berlaku', 'Dimodifikasi Oleh', 'Sedang di Edit Oleh', ''],
   }
   tableColumn = {
     draft: ['type', 'title', 'location', 'modified_date', 'modified_by', 'current_by', ''],
@@ -80,7 +93,6 @@ export class MyPagesComponent implements OnInit, OnDestroy {
 
   // filter component
   keyword: string = '';
-  type: string = 'ALL';
   selectedTr: { key: string, i: number } = { key: null, i: -1 };
 
   constructor(
@@ -112,7 +124,7 @@ export class MyPagesComponent implements OnInit, OnDestroy {
   }
 
   setPage(key: string, item: TabDTO, page: number) {
-    this.search(key, this.listStatus[key], this.type, page);
+    this.search(key, this.listStatus[key], page);
   }
 
   // search data
@@ -121,22 +133,21 @@ export class MyPagesComponent implements OnInit, OnDestroy {
     const key = this.listHeader[activeId];
     const tabDto: TabDTO = this.dataForm[key];
     const paging = tabDto.pagination;
-    this.search(key, this.listStatus[key], this.type, paging.page);
+    this.search(key, this.listStatus[key], paging.page);
   }
   onSearch(e) {
     const status = this.listStatus;
-    const type = this.type;
     this.listHeader.forEach((d, i) => {
-      this.search(d, status[i], type);
+      this.search(d, status[i]);
     });
   }
-  search(key: string, status: string, type: string, page: number = 1, limit: number = 10) {
+  search(key: string, status: string, page: number = 1, limit: number = 10) {
     const tabDto: TabDTO = this.dataForm[key];
     const sort: SortEvent = tabDto.sort;
     this.subscriptions.push(
-      this.articleService.searchMyPages(this.keyword, status, type, page, { column: sort.column, sort: sort.direction }, limit).subscribe(resp => {
+      this.articleService.searchContents(this.keyword, status, page, { column: sort.column, sort: sort.direction }, limit).subscribe(resp => {
         if (resp) {
-          const { totalElements, totalPages, currentPage } = resp;
+          const { totalElements, currentPage } = resp;
           const tabDto: TabDTO = this.dataForm[key];
           tabDto.dataList = resp.list;
           tabDto.pagination = new PaginationModel(currentPage, totalElements, PAGE_LIMIT);
@@ -159,7 +170,7 @@ export class MyPagesComponent implements OnInit, OnDestroy {
     const tabDto: TabDTO = this.dataForm[key];
     const paging = tabDto.pagination;
     tabDto.sort = sort;
-    this.search(key, this.listStatus[key], this.type, paging.page | 1);
+    this.search(key, this.listStatus[key], paging.page | 1);
   }
 
   // table ... event
@@ -176,7 +187,7 @@ export class MyPagesComponent implements OnInit, OnDestroy {
   onClickRevision(item: any, index: number) {
     return false;
   }
-  onClickEdit(item: MyPageRowItem, index: number) {
+  onClickEdit(item: ContentRowItem, index: number) {
     this.confirm.open({
       title: `Ubah Artikel`,
       message: `<p>Apakah Kamu yakin ingin mengubah artikel “<b>${item.title}</b>”?`,
@@ -189,7 +200,7 @@ export class MyPagesComponent implements OnInit, OnDestroy {
     });
     return false;
   }
-  onClickCancel(item: MyPageRowItem, index: number) {
+  onClickCancel(item: ContentRowItem, index: number) {
     this.confirm.open({
       title: `Hapus Artikel`,
       message: `<p>Apakah kamu yakin ingin menghapus artike “<b>${item.title}</b>”?`,
@@ -202,7 +213,7 @@ export class MyPagesComponent implements OnInit, OnDestroy {
     });
     return false;
   }
-  onClickCancelSend(item: MyPageRowItem, index: number) {
+  onClickCancelSend(item: ContentRowItem, index: number) {
     this.confirm.open({
       title: `Batal Kirim`,
       message: `<p>Apakah kamu ingin membatalkan pengiriman artikel “<b>${item.title}</b>”?`,
@@ -215,5 +226,4 @@ export class MyPagesComponent implements OnInit, OnDestroy {
     });
     return false;
   }
-
 }

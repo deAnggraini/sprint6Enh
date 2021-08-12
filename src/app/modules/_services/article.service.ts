@@ -55,10 +55,16 @@ export class ArticleService {
 
   // search my pages
   searchMyPages(keyword: string, state: string = 'DRAFT', type: string = 'ALL', page: number = 1,
-    sorting: { column: string, sort: string }, limit: number = 10,
-    maxPage: number = 99) {
+    sorting: { column: string, sort: string }, limit: number = 10) {
     const params = { keyword, state, type, page, limit, sorting };
     return this.apiService.post(`${this._base_url}/searchMyPages`, params);
+  }
+
+  // search contents
+  searchContents(keyword: string, type: string = 'ALL', page: number = 1,
+    sorting: { column: string, sort: string }, limit: number = 10) {
+    const params = { keyword, type, page, limit, sorting };
+    return this.apiService.post(`${this._base_url}/searchContent`, params);
   }
 
   // search all data [article|faq|pdf]
@@ -98,7 +104,7 @@ export class ArticleService {
   }
 
   getById(id: number, isEdit: boolean) {
-    const params = { id, isEdit : isEdit ? true : false }; // convert isEdit to boolean, js mabok
+    const params = { id, isEdit: isEdit ? true : false }; // convert isEdit to boolean, js mabok
     return this.apiService.post(`${this._base_url}/getArticle`, params);
   }
 
