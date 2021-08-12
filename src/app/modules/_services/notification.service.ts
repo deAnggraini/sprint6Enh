@@ -35,6 +35,11 @@ export class NotificationService {
 
   constructor(private api: ApiService) { }
 
+  refresh() {
+    this.list().subscribe(resp => {
+      console.log('refresh notif', resp);
+    })
+  }
   list(): Observable<any> {
     return this.api.post(`${this._base_url}/getNotification`, {}).pipe(
       map((resp: ResponseNotificationDTO) => {
@@ -51,5 +56,9 @@ export class NotificationService {
 
   getNotif(): BehaviorSubject<ResponseNotificationDTO> {
     return this.notif$;
+  }
+
+  readAll() {
+    return this.api.post(`${this._base_url}/updateStatusNotification`, { id: [], isAll: true });
   }
 }
