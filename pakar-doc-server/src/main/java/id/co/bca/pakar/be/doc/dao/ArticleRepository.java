@@ -37,17 +37,17 @@ public interface ArticleRepository extends CrudRepository<Article, Long> {
     Boolean isPreDraftArticle(@Param("id") Long id);
 
     // find article for contents page role ADMIN
-    @Query(value = "SELECT m FROM Article m WHERE  m.articleState != 'PENDING' AND m.deleted IS FALSE " +
-            "AND (LOWER(m.judulArticle) LIKE CONCAT('%',LOWER(:keyword),'%') " +
-            "OR LOWER(m.fullNameModifier) LIKE CONCAT('%', LOWER(:keyword), '%') " +
-            "OR LOWER(m.structure.location_text) LIKE CONCAT('%',LOWER(:keyword), '%') )")
+    @Query("SELECT m FROM Article m WHERE  m.articleState != 'PENDING' AND m.deleted IS FALSE " +
+            "AND (LOWER(m.judulArticle) LIKE lower(concat('%', :keyword,'%')) " +
+            "OR LOWER(m.fullNameModifier) LIKE lower(concat('%', :keyword,'%')) " +
+            "OR LOWER(m.structure.location_text) LIKE lower(concat('%', :keyword,'%')) )")
     Page<Article> findContentArticleForAdmin(@Param("keyword") String keyword, Pageable pageable);
 
     // find article for contents page role except ADMIN
-    @Query(value = "SELECT m FROM Article m WHERE  m.articleState = 'PUBLISHED' AND m.deleted IS FALSE " +
-            "AND (LOWER(m.judulArticle) LIKE CONCAT('%',LOWER(:keyword),'%') " +
-            "OR LOWER(m.fullNameModifier) LIKE CONCAT('%', LOWER(:keyword), '%') " +
-            "OR LOWER(m.structure.location_text) LIKE CONCAT('%',LOWER(:keyword), '%') ) ")
+    @Query("SELECT m FROM Article m WHERE  m.articleState = 'PUBLISHED' AND m.deleted IS FALSE " +
+            "AND (LOWER(m.judulArticle) LIKE lower(concat('%', :keyword,'%')) " +
+            "OR LOWER(m.fullNameModifier) LIKE lower(concat('%', :keyword,'%')) " +
+            "OR LOWER(m.structure.location_text) LIKE lower(concat('%', :keyword,'%')) ) ")
     Page<Article> findContentArticle(@Param("keyword") String keyword, Pageable pageable);
 
 }

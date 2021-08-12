@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static id.co.bca.pakar.be.doc.common.Constant.Headers.BEARER;
+import static id.co.bca.pakar.be.doc.common.Constant.Roles.ROLE_ADMIN;
 import static id.co.bca.pakar.be.doc.common.Constant.Roles.ROLE_READER;
 
 @Service
@@ -94,7 +95,7 @@ public class ArticleContentServiceImpl implements ArticleContentService {
             Pageable pageable = PageRequest.of(pageNum, searchDto.getSize().intValue(), sort);
 
             if (searchDto.getType().equals(Constant.JenisHalaman.All) || searchDto.getType().equals(Constant.JenisHalaman.Artikel)) {
-                if(role.equals(ROLE_READER)) {
+                if(role.equals(ROLE_ADMIN)) {
                     searchResultPage = articleRepository.findContentArticleForAdmin(searchDto.getKeyword(), pageable);
                 } else if (role.equals(Constant.Roles.ROLE_EDITOR) || role.equals(Constant.Roles.ROLE_PUBLISHER)){
                     searchResultPage = articleRepository.findContentArticle(searchDto.getKeyword(), pageable);
