@@ -480,9 +480,9 @@ public class ArticleServiceImpl implements ArticleService {
             }
 
             /**** save article content *****/
-//            articleDto.getContents()
-//                    .forEach(e ->
-//                            new ArticleContentHelper().verifyUpdateAndSaveContent(e, articleDto.getUsername()));
+            articleDto.getContents()
+                    .forEach(e ->
+                            new ArticleContentHelper().verifyUpdateAndSaveContent(e, articleDto.getUsername()));
 
             /*******************************/
 
