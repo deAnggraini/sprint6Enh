@@ -75,4 +75,11 @@ public class Constant {
 		public static final String Virtual_Pages = "virtual Pages";
 		public static final String All = "ALL";
 	}
+
+	public static final class DocumentType {
+		public static final String Artikel = "article";
+		public static final String Formulir = "formulir";
+		public static final String VirtualPage = "virtualpage";
+		public static final String All = "ALL";
+	}
 }

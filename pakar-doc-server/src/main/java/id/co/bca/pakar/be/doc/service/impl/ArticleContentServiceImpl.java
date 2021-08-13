@@ -90,11 +90,15 @@ public class ArticleContentServiceImpl implements ArticleContentService {
             if (pageNum < 0)
                 throw new MinValuePageNumberException("page number smaller than 0");
             String reqSortColumnName = searchDto.getSorting().getColumn();
+            logger.debug("sort column {}", searchDto.getSorting().getColumn());
             searchDto.getSorting().setColumn(new TodoMapperMyPages().convertColumnNameforSort(reqSortColumnName));
             Sort sort = searchDto.getSorting().getSort().equals("asc") ? Sort.by(searchDto.getSorting().getColumn()).ascending() : Sort.by(searchDto.getSorting().getColumn()).descending();
             Pageable pageable = PageRequest.of(pageNum, searchDto.getSize().intValue(), sort);
 
-            if (searchDto.getType().equals(Constant.JenisHalaman.All) || searchDto.getType().equals(Constant.JenisHalaman.Artikel)) {
+            if (searchDto.getType().equals(Constant.DocumentType.All)
+                    || searchDto.getType().equals(Constant.DocumentType.Artikel)
+                    || searchDto.getType().equals(Constant.DocumentType.VirtualPage)
+                    || searchDto.getType().equals(Constant.DocumentType.Formulir)) {
                 if(role.equals(ROLE_ADMIN)) {
                     searchResultPage = articleRepository.findContentArticleForAdmin(searchDto.getKeyword(), pageable);
                 } else if (role.equals(Constant.Roles.ROLE_EDITOR) || role.equals(Constant.Roles.ROLE_PUBLISHER)){
@@ -156,13 +160,9 @@ public class ArticleContentServiceImpl implements ArticleContentService {
         }
 
         public String convertColumnNameforSort(String reqColumn) {
-            if (reqColumn.equals("title")) {
-                return "judulArticle";
-            } else if (reqColumn.equals("modified_by")) {
-                return "fullNameModifier";
-            } else if (reqColumn.equals("location")) {
-                return "structure.location_text";
-            }
+            if (reqColumn.equals("modified_date")) {
+                return "modifyDate";
+            }  
             return "";
         }
     }
