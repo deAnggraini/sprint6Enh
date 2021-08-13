@@ -177,13 +177,13 @@ $acc-child-margin: 10px;
     &.mat-expansion-panel:last-of-type {
       margin-bottom: 10px;
 
-      & > .mat-expansion-panel-header {
+      &>.mat-expansion-panel-header {
         background-image: url("../../../../assets/media/images/tree-line.png");
         background-position: 0px 50px;
         background-repeat: repeat-y;
       }
 
-      & > .mat-expansion-panel-content {
+      &>.mat-expansion-panel-content {
         background-image: none;
       }
     }
@@ -207,6 +207,14 @@ $acc-child-margin: 10px;
   }
 }
 
+:host ::ng-deep {
+  .content {
+    p {
+      margin-bottom: 0;
+    }
+  }
+}
+
 .drop-area {
   height: 10px;
   visibility: hidden;
@@ -215,12 +223,15 @@ $acc-child-margin: 10px;
 
 .border-bottom-separator {
   border-bottom: 1px solid #c8c6c4;
+
   &.hide-border {
     border-bottom: none;
   }
+
   height: 10px;
+
   &.child-many {
-    height: 1.75rem;
+    // height: 1.75rem;
   }
 }
 

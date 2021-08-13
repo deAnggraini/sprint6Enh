@@ -400,68 +400,88 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // Right icon event
   btnAddClick(e, data: ArticleContentDTO) {
-    if (data == null) {
-      const _contents = this.dataForm.get('contents').value as ArticleContentDTO[];
-      const maxSort: number = this.findMaxSort(_contents);
-      const newNode: ArticleContentDTO = {
-        id: 0,
-        articleId: this.dataForm.value.id,
-        title: '',
-        intro: '',
-        topicContent: '',
-        topicTitle: '',
-        level: 1,
-        parent: 0,
-        sort: maxSort + 1,
-        children: [],
-        expanded: true,
-        listParent: [],
-        no: '',
-        isEdit: false,
-      }
-      this.subscriptions.push(
-        this.article.saveContent(newNode).subscribe(resp => {
-          if (resp) {
-            newNode.id = resp.id;
-            _contents.push(newNode);
-            this.addLog(newNode);
-            this.cdr.detectChanges();
-          }
-        })
-      );
-    } else {
-      this.subscriptions.push(
-        this.article.getContentId().subscribe(resp => {
-          if (resp) {
-            const maxSort: number = this.findMaxSort(data.children);
-            const listParent: ArticleParentDTO[] = JSON.parse(JSON.stringify(data.listParent));
+    // if (data == null) {
+    //   const _contents = this.dataForm.get('contents').value as ArticleContentDTO[];
+    //   const maxSort: number = this.findMaxSort(_contents);
+    //   const newNode: ArticleContentDTO = {
+    //     id: 0,
+    //     articleId: this.dataForm.value.id,
+    //     title: '',
+    //     intro: '',
+    //     topicContent: '',
+    //     topicTitle: '',
+    //     level: 1,
+    //     parent: 0,
+    //     sort: maxSort + 1,
+    //     children: [],
+    //     expanded: true,
+    //     listParent: [],
+    //     no: '',
+    //     isEdit: true,
+    //     isNew: true,
+    //   }
+    //   this.subscriptions.push(
+    //     this.article.saveContent(newNode).subscribe(resp => {
+    //       if (resp) {
+    //         newNode.id = resp.id;
+    //         _contents.push(newNode);
+    //         this.addLog(newNode);
+    //         this.cdr.detectChanges();
+    //       }
+    //     })
+    //   );
+    // } else {
+    this.subscriptions.push(
+      this.article.getContentId().subscribe(resp => {
+        if (resp) {
+          const _contents = this.dataForm.get('contents').value as ArticleContentDTO[];
+          let maxSort: number = 0;
+          let listParent: ArticleParentDTO[] = [];
+          let level: number = 1;
+          let parent: number = 0;
+          let no: string = '';
+          if (data == null) {
+            maxSort = this.findMaxSort(_contents);
+          } else {
+            maxSort = this.findMaxSort(data.children);
+            level = data.level + 1;
+            listParent = JSON.parse(JSON.stringify(data.listParent));
             if (data.level >= 2) {
               listParent.push({ id: 0, no: data.no, title: data.title });
             }
-            const newNode: ArticleContentDTO = {
-              id: resp,
-              articleId: this.dataForm.value.id,
-              title: '',
-              intro: '',
-              topicContent: '',
-              topicTitle: '',
-              level: data.level + 1,
-              parent: data.id,
-              sort: maxSort + 1,
-              children: [],
-              expanded: true,
-              listParent,
-              no: `${data.children.length + 1}`,
-              isEdit: false,
-            }
+            parent = data.id;
+            no = `${data.children.length + 1}`;
+          }
+          const newNode: ArticleContentDTO = {
+            id: resp,
+            articleId: this.dataForm.value.id,
+            title: '',
+            intro: '',
+            topicContent: '',
+            topicTitle: '',
+            level,
+            parent,
+            sort: maxSort + 1,
+            children: [],
+            expanded: true,
+            listParent,
+            no,
+            isEdit: true,
+            isNew: true,
+          }
+          if (data) {
             data.expanded = true;
             data.children.push(newNode);
-            this.addLog(newNode);
-            this.cdr.detectChanges();
+          } else {
+            _contents.push(newNode);
           }
-        })
-      );
-    }
+          console.log({ newNode });
+          this.addLog(newNode);
+          this.cdr.detectChanges();
+        }
+      })
+    );
+    // }
     e.stopPropagation();
     return false;
   }
@@ -483,7 +503,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
         this.subscriptions.push(
           this.article.deleteContent(data.id).subscribe(resp => {
             this.deleteNode(data);
-            this.toast.showSuccess('Hapus Data Accordion Berhasil');
+            // this.toast.showSuccess('Hapus Data Accordion Berhasil');
           })
         );
       }
@@ -596,7 +616,8 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
       this.article.saveContent(content).subscribe(resp => {
         if (resp) {
           content.isEdit = false;
-          this.toast.showSuccess('Simpan Data Accordion Berhasil');
+          content.isNew = false;
+          // this.toast.showSuccess('Simpan Data Accordion Berhasil');
           this.addLog(content);
         }
         this.cdr.detectChanges();
@@ -604,9 +625,14 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
   accCancel(content: ArticleContentDTO) {
-    if (this.logs.has(content.id)) {
+    console.log({ content });
+    if (content.isNew) {
+      // data baru belum pernah simpan, langsung hapus
+      this.deleteNode(content);
+    } else if (this.logs.has(content.id)) {
       const _values: ArticleContentDTO[] = this.logs.get(content.id);
       const _value = _values[_values.length - 1];
+      console.log({ _values });
       content.title = _value.title;
       content.topicTitle = _value.topicTitle;
       content.topicContent = _value.topicContent;
