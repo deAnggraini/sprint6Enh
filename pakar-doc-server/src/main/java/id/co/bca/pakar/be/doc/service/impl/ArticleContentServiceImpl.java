@@ -165,6 +165,8 @@ public class ArticleContentServiceImpl implements ArticleContentService {
                 return "fullNameModifier";
             } else if (reqColumn.equals("location")) {
                 return "structure.location_text";
+            } else if (reqColumn.equals("modified_date")) {
+                return "modifyDate";
             }
             return "";
         }
