@@ -162,7 +162,7 @@ public class ArticleContentServiceImpl implements ArticleContentService {
         public String convertColumnNameforSort(String reqColumn) {
             if (reqColumn.equals("modified_date")) {
                 return "modifyDate";
-            }  
+            }
             return "";
         }
     }

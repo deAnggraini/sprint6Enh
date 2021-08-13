@@ -1375,7 +1375,7 @@ public class ArticleServiceImpl implements ArticleService {
                     searchResultPage = articleStateRepository.findMyPagesPublishedArticle(ids, searchDto.getKeyword(), searchDto.getUsername(), searchDto.getState(), pageable);
                 }
             } else {
-                searchResultPage = null;
+                return new TodoMapperMyPages().emptypage(pageable);
             }
             return new TodoMapperMyPages().mapEntityPageIntoDTOPage(pageable, searchResultPage);
         } catch (MinValuePageNumberException e) {
@@ -1592,6 +1592,11 @@ public class ArticleServiceImpl implements ArticleService {
         public Page<MyPageDto> mapEntityPageIntoDTOPage(Pageable pageRequest, Page<Article> source) {
             List<MyPageDto> dtos = mapEntitiesIntoDTOs(source.getContent());
             return new PageImpl<>(dtos, pageRequest, source.getTotalElements());
+        }
+
+        public Page<MyPageDto> emptypage(Pageable pageRequest) {
+            List<MyPageDto> dtos = new ArrayList<>();
+            return new PageImpl<>(dtos, pageRequest, 0);
         }
 
         public String convertColumnNameforSort(String reqColumn) {

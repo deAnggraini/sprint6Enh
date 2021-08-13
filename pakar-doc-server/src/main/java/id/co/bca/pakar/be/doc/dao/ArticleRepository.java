@@ -37,7 +37,7 @@ public interface ArticleRepository extends CrudRepository<Article, Long> {
 
     // find article for contents page role ADMIN
     @Query("SELECT m FROM Article m " +
-            "WHERE  m.deleted IS FALSE " +
+            "WHERE  m.m.deleted IS FALSE " +
             "AND (LOWER(m.judulArticle) LIKE lower(concat('%', :keyword,'%')) " +
             "OR LOWER(m.fullNameModifier) LIKE lower(concat('%', :keyword,'%')) " +
             "OR LOWER(m.structure.location_text) LIKE lower(concat('%', :keyword,'%')) )")

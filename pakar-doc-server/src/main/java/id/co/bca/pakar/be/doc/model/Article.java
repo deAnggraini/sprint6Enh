@@ -35,7 +35,7 @@ public class Article extends EntityBase {
 	private String videoLink;
 
 	@Column(name = "state", columnDefinition = "VARCHAR(255) default 'PREDRAFT'")
-	private String articleState; // PREDRAFT, DRAFT, PENDING, PUBLISHED, REJECTED
+	private String articleState; // NEW, DRAFT, PENDING, PUBLISHED, REJECTED
 
 	@OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private List<ArticleContent> articleContents = new ArrayList<>();
