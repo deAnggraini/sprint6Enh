@@ -109,9 +109,26 @@ public class MultipartArticleValidator implements Validator {
                     return;
                 }
 
+                if(dto.getIsHasSend()) {
+                    if(contentDto.getTopicTitle().isEmpty()) {
+                        errors.rejectValue("topicTitle", "topic.title.required",  "Judul topik wajib diisi");
+                        return;
+                    }
+
+                    if(contentDto.getTopicContent().isEmpty()) {
+                        errors.rejectValue("topicContent", "topic.content.required",  "Isi topik wajib diisi");
+                        return;
+                    }
+                }
+
                 if (!contentDto.getTopicTitle().isEmpty()) {
                     if (contentDto.getTopicTitle().length() > 150)
                         errors.rejectValue("topicTitle", "maximum.topic.title.reached", new Object[]{150}, "topic title maximum 150 characters");
+                    return;
+                }
+
+                if(contentDto.getSort() < 1) {
+                    errors.rejectValue("sort", "sort.minimum", "minimum sort value 1");
                     return;
                 }
             }

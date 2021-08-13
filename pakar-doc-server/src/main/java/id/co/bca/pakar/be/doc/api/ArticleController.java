@@ -360,7 +360,7 @@ public class ArticleController extends BaseController {
         try {
             logger.info("cancel article process");
             logger.info("received token bearer --- {}", authorization);
-            Boolean status = articleService.cancelArticle(cancelDto.getId(), username, getTokenFromHeader(authorization));
+            Boolean status = articleService.cancelSendArticle(cancelDto.getId(), username, getTokenFromHeader(authorization));
             return createResponse(status, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, Locale.ENGLISH));
         } catch (Exception e) {
             logger.error("exception", e);

@@ -18,6 +18,8 @@ public interface ArticleService {
 
     Boolean cancelArticle(Long id, String username, String token) throws Exception;
 
+    Boolean cancelSendArticle(Long id, String username, String token) throws Exception;
+
     Long getContentId(String username, String token) throws Exception;
 
     ArticleContentDto getContentById(Long id) throws Exception;

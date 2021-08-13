@@ -27,7 +27,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
-import static id.co.bca.pakar.be.doc.common.Constant.ArticleWfState.*;
+import static id.co.bca.pakar.be.doc.common.Constant.ArticleWfState.NEW;
+import static id.co.bca.pakar.be.doc.common.Constant.ArticleWfState.PUBLISHED;
 import static id.co.bca.pakar.be.doc.common.Constant.Headers.BEARER;
 import static id.co.bca.pakar.be.doc.common.Constant.Roles.ROLE_ADMIN;
 import static id.co.bca.pakar.be.doc.common.Constant.Roles.ROLE_READER;
@@ -399,7 +400,7 @@ public class ArticleServiceImpl implements ArticleService {
 
             if (isEdit) {
                 // update article edit to open status if article created <> user login
-                if(!article.getCreatedBy().equalsIgnoreCase(username)) {
+                if (!article.getCreatedBy().equalsIgnoreCase(username)) {
                     logger.debug("save user that start editing this article");
                     ArticleEdit articleEdit = articleEditRepository.findByUsername(article.getId(), username);
                     if (articleEdit == null) {
@@ -426,7 +427,7 @@ public class ArticleServiceImpl implements ArticleService {
                 }
             }
 
-            if(article.getArticleState().equalsIgnoreCase("NEW"))
+            if (article.getArticleState().equalsIgnoreCase("NEW"))
                 articleDto.setNew(Boolean.TRUE.booleanValue());
             else
                 articleDto.setNew(Boolean.FALSE.booleanValue());
@@ -578,7 +579,7 @@ public class ArticleServiceImpl implements ArticleService {
                     article.setArticleState(currentState);
                 }
 
-                if(articleState == null) {
+                if (articleState == null) {
                     articleState = articleStateRepository.findByArticleId(article.getId());
                 }
                 articleState.setCreatedBy(articleDto.getUsername());
@@ -666,7 +667,7 @@ public class ArticleServiceImpl implements ArticleService {
 
             Article article = articleOpt.get();
             if (article.getArticleState().equalsIgnoreCase(PUBLISHED)) {
-                throw new DeletePublishedArticleException("could not delete published article "+article.getJudulArticle());
+                throw new DeletePublishedArticleException("could not delete published article " + article.getJudulArticle());
             }
 
             if (!article.getArticleState().equalsIgnoreCase(PUBLISHED)) {
@@ -698,6 +699,47 @@ public class ArticleServiceImpl implements ArticleService {
         } catch (DeletePublishedArticleException e) {
             logger.error("fail to cancel article", e);
             throw new DeletePublishedArticleException("", e);
+        } catch (DataNotFoundException e) {
+            logger.error("fail to cancel article", e);
+            throw new DataNotFoundException("", e);
+        } catch (Exception e) {
+            logger.error("fail to cancel article", e);
+            throw new Exception(e);
+        }
+    }
+
+    /**
+     * Cancel sent article
+     *
+     * @param id
+     * @param username
+     * @param token
+     * @return
+     * @throws Exception
+     */
+    @Override
+    @Transactional(rollbackFor = {Exception.class, DataNotFoundException.class, DeletePublishedArticleException.class})
+    public Boolean cancelSendArticle(Long id, String username, String token) throws Exception {
+        try {
+            logger.info("cancel article with id {}", id);
+            Optional<Article> articleOpt = articleRepository.findById(id);
+            if (articleOpt.isEmpty()) {
+                logger.info("not article with id {}", id);
+                throw new DataNotFoundException("not found article with id " + id);
+            }
+
+            Article article = articleOpt.get();
+
+            logger.info("get article state with article id {}", article.getId());
+            ArticleState articleState = articleStateRepository.findByArticleId(article.getId());
+            articleState.setModifyBy(username);
+            articleState.setModifyDate(new Date());
+            articleState.setSenderState("DRAFT");
+            articleState.setReceiverState(null);
+            articleState.setReceiver(null);
+            articleStateRepository.save(articleState);
+
+            return Boolean.TRUE;
         } catch (DataNotFoundException e) {
             logger.error("fail to cancel article", e);
             throw new DataNotFoundException("", e);
@@ -1077,7 +1119,7 @@ public class ArticleServiceImpl implements ArticleService {
 
         // sorting article content
         logger.debug("prepare article content list with total element {}", listOfContents.size());
-        if(listOfContents.size() > 0) {
+        if (listOfContents.size() > 0) {
             Collections.sort(listOfContents, new Comparator<ArticleContentDto>() {
                 @Override
                 public int compare(ArticleContentDto o1, ArticleContentDto o2) {
@@ -1371,11 +1413,11 @@ public class ArticleServiceImpl implements ArticleService {
             }
 
             if (searchDto.getType().equals(Constant.JenisHalaman.All) || searchDto.getType().equals(Constant.JenisHalaman.Artikel)) {
-                if(searchDto.getState().equalsIgnoreCase("DRAFT"))
+                if (searchDto.getState().equalsIgnoreCase("DRAFT"))
                     searchResultPage = articleStateRepository.findMyPagesDratfArticle(ids, searchDto.getKeyword(), searchDto.getUsername(), searchDto.getState(), pageable);
-                else if(searchDto.getState().equalsIgnoreCase("PENDING"))
+                else if (searchDto.getState().equalsIgnoreCase("PENDING"))
                     searchResultPage = articleStateRepository.findMyPagesPendingArticle(ids, searchDto.getKeyword(), searchDto.getUsername(), searchDto.getState(), pageable);
-                else if(searchDto.getState().equalsIgnoreCase("PUBLISHED")) {
+                else if (searchDto.getState().equalsIgnoreCase("PUBLISHED")) {
                     searchResultPage = articleStateRepository.findMyPagesPublishedArticle(ids, searchDto.getKeyword(), searchDto.getUsername(), searchDto.getState(), pageable);
                 }
             } else {
@@ -1408,7 +1450,7 @@ public class ArticleServiceImpl implements ArticleService {
         public void verifyUpdateAndSaveContent(ArticleContentDto dto, String username) {
             dto.getBreadcumbArticleContentDtos().clear();
             Optional<ArticleContent> entity = articleContentRepository.findById(dto.getId());
-            if(entity.isEmpty()) {
+            if (entity.isEmpty()) {
                 logger.info("save new article content {}", dto.toString());
                 ArticleContent _entity = new ArticleContent();
                 _entity.setId(dto.getId());
@@ -1580,15 +1622,15 @@ public class ArticleServiceImpl implements ArticleService {
             dto.setLocation(locTemp);
             int i = 0;
             StringBuffer currentEdit = new StringBuffer();
-            for(ArticleEdit articleEdit : articleEdits) {
+            for (ArticleEdit articleEdit : articleEdits) {
                 currentEdit.append(articleEdit.getEditorName());
-                if(i < articleEdits.size() - 1)
+                if (i < articleEdits.size() - 1)
                     currentEdit.append(",");
                 i++;
             }
             dto.setCurrentBy(currentEdit.toString());
             ArticleState articleState = articleStateRepository.findByArticleId(entity.getId());
-            if(articleState != null)
+            if (articleState != null)
                 dto.setSendTo(articleState.getSender());
             return dto;
         }
