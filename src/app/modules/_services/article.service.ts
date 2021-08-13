@@ -132,19 +132,19 @@ export class ArticleService {
     return this.apiService.post(`${this._base_url}/cancelSendArticle`, { id });
   }
 
-  private parseToArray(content: ArticleContentDTO): ArticleContentDTO[] {
+  private parseToArray(content: ArticleContentDTO, index: number): ArticleContentDTO[] {
     let result: ArticleContentDTO[] = [];
     if (content) {
-
       const _c: ArticleContentDTO = JSON.parse(JSON.stringify(Object.assign({}, content, { children: [] })));
       delete _c.expanded;
       delete _c.isEdit;
       delete _c.no;
       delete _c.listParent;
+      _c.sort = index + 1;
 
       result.push(_c);
-      content.children.forEach(d => {
-        result = result.concat(this.parseToArray(d));
+      content.children.forEach((d, i) => {
+        result = result.concat(this.parseToArray(d, i));
       })
     }
     return result;
@@ -152,8 +152,8 @@ export class ArticleService {
   private parseToSingleArray(contents: ArticleContentDTO[]): ArticleContentDTO[] {
     const result: ArticleContentDTO[] = [];
     if (contents.length) {
-      contents.forEach(item => {
-        this.parseToArray(item).forEach(d => result.push(d));
+      contents.forEach((item, i) => {
+        this.parseToArray(item, i).forEach(d => result.push(d));
       })
     }
     return result;

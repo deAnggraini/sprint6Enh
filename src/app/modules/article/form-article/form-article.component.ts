@@ -395,7 +395,8 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     return false;
   }
   btnEditClick(e, data: ArticleContentDTO) {
-    data.isEdit = !data.isEdit;
+    data.isEdit = true;
+    data.expanded = true;
     this.cdr.detectChanges();
     e.stopPropagation();
     return false;
@@ -523,9 +524,11 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     this.subscriptions.push(
       this.article.saveContent(content).subscribe(resp => {
         if (resp) {
+          content.isEdit = false;
           this.toast.showSuccess('Simpan Data Accordion Berhasil');
           this.addLog(content);
         }
+        this.cdr.detectChanges();
       })
     );
   }
@@ -541,6 +544,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
       content.topicTitle = '';
       content.topicContent = '';
     }
+    content.isEdit = false;
     this.cdr.detectChanges();
   }
 
@@ -558,8 +562,9 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
         if (!d.isEdit) d.isEdit = false;
         d.listParent = listParent;
         if (d.level == 1) {
+          d.expanded = true;
           d.no = '';
-          d.sort = 0;
+          d.sort = i + 1;
           this.recalculateChildren(d.children, listParent.concat([]));
         } else {
           d.no = `${i + 1}`;
@@ -751,6 +756,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // CKEDITOR5 function
   public onReady(editor) {
+    console.log({ editor });
     this.finishRender = true;
   }
   public onChange({ editor }: ChangeEvent) {
