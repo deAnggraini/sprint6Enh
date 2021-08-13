@@ -130,6 +130,77 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     wordCount: { maxLimit: 1000 }
   };
 
+  configTopic = {
+    toolbar: {
+      items: [
+        'fontFamily',
+        'fontSize',
+        'fontColor',
+        'fontBackgroundColor',
+        'heading',
+        '|',
+        'undo',
+        'redo',
+        '|',
+        'bold',
+        'italic',
+        'underline',
+        'strikethrough',
+        'alignment',
+        'subscript',
+        'superscript',
+        '|',
+        'bulletedList',
+        'numberedList',
+        'todoList',
+        '|',
+        'outdent',
+        'indent',
+        'findAndReplace',
+        '|',
+        'link',
+        'imageUpload',
+        'blockQuote',
+        'insertTable',
+        'mediaEmbed',
+        '|',
+        'code',
+        'codeBlock',
+        'htmlEmbed',
+        'specialCharacters',
+      ],
+      shouldNotGroupWhenFull: true
+    },
+    language: 'en',
+    image: {
+      toolbar: [
+        'imageTextAlternative',
+        'imageStyle:full',
+        'imageStyle:side',
+        'linkImage'
+      ]
+    },
+    table: {
+      contentToolbar: [
+        'tableColumn',
+        'tableRow',
+        'mergeTableCells',
+        'tableCellProperties',
+        'tableProperties'
+      ]
+    },
+    fontFamily: {
+      options: ['Calibri, sans-serif', 'Arial, Helvetica, sans-serif', 'Segoe UI, Open Sans'],
+      supportAllValues: false
+    },
+    fontSize: {
+      options: [11, 13, 16, 18],
+      supportAllValues: false
+    },
+    wordCount: { maxLimit: 1000 },
+    placeholder: 'Masukkan kalimat pengantar terkait Ketentuan disini.'
+  };
+
   // error manual
   hasError: boolean = false;
   errorMsg: string = '';
@@ -757,7 +828,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   // CKEDITOR5 function
   public onReady(editor, value: string = '') {
     // console.log({ editor, value });
-    if(value) editor.setData(value); // cara paksa isi ckeditor
+    if (value) editor.setData(value); // cara paksa isi ckeditor
     this.finishRender = true;
   }
   public onChange({ editor }: ChangeEvent) {

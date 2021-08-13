@@ -178,8 +178,12 @@ export class PreviewComponent implements OnInit {
   getVideo(event) {
     console.log({ event });
     if (event) {
-      this.videoUrl = this._sanitizer.bypassSecurityTrustResourceUrl(event);
-      this.showVideo = true;
+      // this.videoUrl = this._sanitizer.bypassSecurityTrustResourceUrl(event);
+      // this.showVideo = true;
+
+      // temporary show default image
+      this.showVideo = false;
+      this.noVideoPreview = this.backend_img + '/articles/poster-myvideo.png';
     } else {
       this.showVideo = false;
       this.noVideoPreview = this.backend_img + '/articles/poster-myvideo.png';
