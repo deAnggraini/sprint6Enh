@@ -260,7 +260,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label>Isi Topik <span class="text-danger">*</span></label>
-                                        <ckeditor [editor]="editor" [config]="config" tagName="textarea"
+                                        <ckeditor [editor]="editor" [config]="configTopic" tagName="textarea"
                                             [(ngModel)]="content.topicContent" (ready)="onReady($event, content.topicContent)"
                                             (change)="onChange($event)"></ckeditor>
                                     </div>
