@@ -20,6 +20,7 @@ export class InputWithLengthComponent implements OnInit, ControlValueAccessor {
   @Input() placeholder: string;
   @Input() maxlength: number;
   @Input() hasError: boolean;
+  @Input() disabled: boolean = false;
 
   @Output() onChange = new EventEmitter<any>();
   @ViewChild('theInput', { static: true }) theInput: ElementRef;
@@ -28,7 +29,6 @@ export class InputWithLengthComponent implements OnInit, ControlValueAccessor {
   _onChange: (_) => {};
 
   value: string;
-  disabled: boolean = false;
 
   constructor(private cdr: ChangeDetectorRef) { }
 

@@ -9,6 +9,12 @@
 
   input {
     border: none;
+
+    &:disabled,
+    &[readonly] {
+      background-color: white;
+      // color: #A19F9D;
+    }
   }
 
   &.hasError {

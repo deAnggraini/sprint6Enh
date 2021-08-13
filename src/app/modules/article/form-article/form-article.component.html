@@ -91,6 +91,10 @@
                             <mat-expansion-panel-header [@.disabled]="true">
                                 <mat-panel-title>
                                     <span>{{content.title}}</span>
+                                    <span [inlineSVG]="'./assets/media/svg/bca/icon/info.svg'" cacheSVG="true"
+                                        class="svg-icon svg-tooltip mx-2" placement="right" [ngbTooltip]="tooltips[i]"
+                                        container="body" tooltipClass="my-custom-class fs12">
+                                    </span>
                                 </mat-panel-title>
                                 <ng-container *ngIf="!content.isNew" [ngTemplateOutlet]="rightIcon"
                                     [ngTemplateOutletContext]="{ data: content}">
@@ -105,7 +109,8 @@
                                                 placeholder="Masukkan judul topik disini (maks. 150 karakter)"
                                                 [(ngModel)]="content.topicTitle" maxlength="150"
                                                 (onChange)="content.title = $event"
-                                                [ngModelOptions]="{standalone: true}">
+                                                [ngModelOptions]="{standalone: true}"
+                                                [disabled]="user.roles[0] != 'ADMIN' && user.roles[0] != 'SUPERADMIN'">
                                             </pakar-input-length>
                                         </div>
                                         <div class="form-group">
@@ -200,22 +205,24 @@
                     class="svg-icon svg-icon-sm mr-2"></span>
             </a>
         </ng-container>
+        <!-- Edit -->
+        <a href='#' class="btn-link" (click)="btnEditClick($event, data)">
+            <span [inlineSVG]="'./assets/media/svg/bca/icon/pencil.svg'" cacheSVG="true"
+                class="svg-icon svg-icon-sm mr-2"></span>
+        </a>
+
         <!-- edit & delete -->
         <ng-container *ngIf="data.level == 1 && (user.roles[0] == 'ADMIN' || user.roles[0] == 'SUPERADMIN')">
-            <a href='#' class="btn-link" (click)="btnEditClick($event, data)">
+            <!-- <a href='#' class="btn-link" (click)="btnEditClick($event, data)">
                 <span [inlineSVG]="'./assets/media/svg/bca/icon/pencil.svg'" cacheSVG="true"
                     class="svg-icon svg-icon-sm mr-2"></span>
-            </a>
+            </a> -->
             <a href='#' class="btn-link" (click)="btnDeleteClick($event, data)">
                 <span [inlineSVG]="'./assets/media/svg/bca/icon/trash-bin.svg'" cacheSVG="true"
                     class="svg-icon svg-icon-sm mr-2"></span>
             </a>
         </ng-container>
         <ng-container *ngIf="data.level > 1">
-            <a href='#' class="btn-link" (click)="btnEditClick($event, data)">
-                <span [inlineSVG]="'./assets/media/svg/bca/icon/pencil.svg'" cacheSVG="true"
-                    class="svg-icon svg-icon-sm mr-2"></span>
-            </a>
             <a href='#' class="btn-link" (click)="btnDeleteClick($event, data)">
                 <span [inlineSVG]="'./assets/media/svg/bca/icon/trash-bin.svg'" cacheSVG="true"
                     class="svg-icon svg-icon-sm mr-2"></span>
@@ -242,7 +249,8 @@
                     <mat-expansion-panel-header cdkDragHandle>
                         <mat-panel-title class="text-ellipsis-1">{{numberingFormat(content)}}. {{content.title}}
                         </mat-panel-title>
-                        <ng-container *ngIf="!content.isNew" [ngTemplateOutlet]="rightIcon" [ngTemplateOutletContext]="{ data: content}">
+                        <ng-container *ngIf="!content.isNew" [ngTemplateOutlet]="rightIcon"
+                            [ngTemplateOutletContext]="{ data: content}">
                         </ng-container>
                     </mat-expansion-panel-header>
                     <div class="preview-drag" *cdkDragPreview>{{numberingFormat(content)}}. {{content.title}}

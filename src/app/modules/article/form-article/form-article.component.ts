@@ -400,37 +400,6 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // Right icon event
   btnAddClick(e, data: ArticleContentDTO) {
-    // if (data == null) {
-    //   const _contents = this.dataForm.get('contents').value as ArticleContentDTO[];
-    //   const maxSort: number = this.findMaxSort(_contents);
-    //   const newNode: ArticleContentDTO = {
-    //     id: 0,
-    //     articleId: this.dataForm.value.id,
-    //     title: '',
-    //     intro: '',
-    //     topicContent: '',
-    //     topicTitle: '',
-    //     level: 1,
-    //     parent: 0,
-    //     sort: maxSort + 1,
-    //     children: [],
-    //     expanded: true,
-    //     listParent: [],
-    //     no: '',
-    //     isEdit: true,
-    //     isNew: true,
-    //   }
-    //   this.subscriptions.push(
-    //     this.article.saveContent(newNode).subscribe(resp => {
-    //       if (resp) {
-    //         newNode.id = resp.id;
-    //         _contents.push(newNode);
-    //         this.addLog(newNode);
-    //         this.cdr.detectChanges();
-    //       }
-    //     })
-    //   );
-    // } else {
     this.subscriptions.push(
       this.article.getContentId().subscribe(resp => {
         if (resp) {
@@ -475,13 +444,11 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
           } else {
             _contents.push(newNode);
           }
-          console.log({ newNode });
           this.addLog(newNode);
           this.cdr.detectChanges();
         }
       })
     );
-    // }
     e.stopPropagation();
     return false;
   }
@@ -625,22 +592,21 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
   accCancel(content: ArticleContentDTO) {
-    console.log({ content });
     if (content.isNew) {
       // data baru belum pernah simpan, langsung hapus
       this.deleteNode(content);
-    } else if (this.logs.has(content.id)) {
-      const _values: ArticleContentDTO[] = this.logs.get(content.id);
-      const _value = _values[_values.length - 1];
-      console.log({ _values });
-      content.title = _value.title;
-      content.topicTitle = _value.topicTitle;
-      content.topicContent = _value.topicContent;
-    } else {
-      content.title = '';
-      content.topicTitle = '';
-      content.topicContent = '';
-    }
+    } else
+      if (this.logs.has(content.id)) {
+        const _values: ArticleContentDTO[] = this.logs.get(content.id);
+        const _value = _values[_values.length - 1];
+        content.title = _value.title;
+        content.topicTitle = _value.topicTitle;
+        content.topicContent = _value.topicContent;
+      } else {
+        content.title = '';
+        content.topicTitle = '';
+        content.topicContent = '';
+      }
     content.isEdit = false;
     this.cdr.detectChanges();
   }
@@ -659,7 +625,6 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
         if (!d.isEdit) d.isEdit = false;
         d.listParent = listParent;
         if (d.level == 1) {
-          d.expanded = true;
           d.no = '';
           d.sort = i + 1;
           this.recalculateChildren(d.children, listParent.concat([]));
@@ -669,6 +634,8 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
           const { id, title, no } = d;
           this.recalculateChildren(d.children, listParent.concat([{ id, title, no }]));
         }
+        if (!d.topicTitle && d.title) d.topicTitle = d.title;
+        if (!d.topicContent && d.intro) d.topicContent = d.intro;
       });
     }
   }
@@ -853,7 +820,6 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // CKEDITOR5 function
   public onReady(editor, value: string = '') {
-    // console.log({ editor, value });
     if (value) editor.setData(value); // cara paksa isi ckeditor
     this.finishRender = true;
   }
