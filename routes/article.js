@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const categoryArticle = require('../database/category-article');
-const { sample_empty, sample_basic, sample_non_basic, articles, recommendation, news, popular, suggestion, lastKeyword } = require('../database/articles');
+const { notification, mypages, sample_empty, sample_basic, sample_non_basic, articles, recommendation, news, popular, suggestion, lastKeyword } = require('../database/articles');
 const theme = require('../database/themes');
 const _ = require('lodash');
 const path = require('path');
@@ -24,7 +24,7 @@ router.get('/all', (req, res) => {
 router.post('/keyword', (req, res) => {
     res.send({ error: false, msg: "", data: lastKeyword });
 });
-router.post('/searchAll', (req, res) => {
+router.post('/node-search', (req, res) => {
     const { keyword, page, limit } = req.body;
     console.log('search article', { keyword, page });
     // if (!keyword || keyword == 'kosong') {
@@ -61,7 +61,7 @@ router.post('/searchAll', (req, res) => {
     res.send({ error: false, msg: "", data });
 });
 
-router.post('/suggestion', (req, res) => {
+router.post('/node-suggestion', (req, res) => {
     res.send({ error: false, msg: "", data: suggestion });
 });
 
@@ -362,25 +362,33 @@ router.post('/checkUnique', (req, res) => {
     }
 });
 
-router.post('/skReference', (req, res) => {
+router.post('/searchSkRefference', (req, res) => {
     res.send({ error: false, msg: "", data: sk_reference });
 })
 
-router.post('/searchArticle', (req, res) => {
+router.post('/searchRelatedArticle', (req, res) => {
     const { keyword, page, limit } = req.body;
     console.log('search article', { keyword, page });
-    // if (!keyword || keyword == 'kosong') {
-    //     res.send({
-    //         error: false, msg: "", data: {
-    //             result: {
-    //                 total: 0, length: 0, data: []
-    //             }
-    //         }
-    //     });
-    //     return;
-    // }
     const _articles = articles.filter(d => d.type == 'article');
-    const data = _articles.slice(0, limit);
+    const data = {
+        currentPage: 1,
+        list: _articles.slice(0, limit),
+        totalElements: 100,
+        totalPages: 10
+    };
+    res.send({ error: false, msg: "", data });
+});
+
+router.post('/suggestionArticle', (req, res) => {
+    const { keyword, page, limit } = req.body;
+    console.log('search article', { keyword, page });
+    const _articles = articles.filter(d => d.type == 'article');
+    const data = {
+        currentPage: 1,
+        list: _articles.slice(0, limit),
+        totalElements: 100,
+        totalPages: 10
+    };
     res.send({ error: false, msg: "", data });
 });
 
@@ -390,19 +398,23 @@ router.post('/generateArticle', (req, res) => {
     res.send({ error: false, msg: "", data: sample_empty });
 });
 
-router.get('/getArticle', (req, res) => {
-    // const { body } = ;
-    const { id } = req.query;
-    console.log({ id, sample_empty });
-    res.send({ error: false, msg: "", data: sample_basic });
+router.post('/getArticle', (req, res) => {
+    const { body } = req;
+    console.log({ body });
+    res.send({ error: false, msg: "", data: sample_empty });
 });
 
 router.get('/getContentId', (req, res) => {
     res.send({ error: false, msg: "", data: Math.ceil(Math.random(10) * 100 + 10) });
 });
 
+router.get('/createContentLevel1', (req, res) => {
+    res.send({ error: false, msg: "", data: { id: Math.ceil(Math.random(10) * 100 + 10) } });
+});
+
 router.post('/saveContent', (req, res) => {
     const { body } = req;
+    if (!body.id) body.id = Math.ceil(Math.random(10) * 100 + 10);
     res.send({ error: false, msg: "", data: body });
 });
 
@@ -412,6 +424,74 @@ router.post('/deleteContent', (req, res) => {
 
 router.post('/cancelArticle', (req, res) => {
     res.send({ error: false, msg: "", data: true });
+});
+
+router.post('/saveArticle', (req, res) => {
+    const { body, files } = req;
+    console.log({ body, files });
+    res.send({ error: false, msg: "", data: body });
+});
+
+router.post('/searchMyPages', (req, res) => {
+    const { body } = req;
+    console.log({ body });
+    const { page, limit, state } = body;
+
+    let list = [];
+    let totalElements = 0, totalPages = 0;
+    if (state == "DRAFT" || state == "PENDING") {
+        totalElements = Math.ceil(Math.random() * 100);
+        list = mypages.slice(0, limit);
+        totalPages = Math.ceil(totalElements / limit);
+    }
+    const data = {
+        totalElements,
+        totalPages,
+        currentPage: page,
+        list,
+    }
+
+    res.send({ error: false, msg: "", data });
+});
+
+router.post('/searchContent', (req, res) => {
+    const { body } = req;
+    console.log({ body });
+    const { page, limit, type } = body;
+
+    let list = [];
+    let totalElements = 0, totalPages = 0;
+    if (type == "ALL" || type == "article") {
+        totalElements = Math.ceil(Math.random() * 100);
+        list = mypages.slice(0, limit);
+        totalPages = Math.ceil(totalElements / limit);
+    }
+    const data = {
+        totalElements,
+        totalPages,
+        currentPage: page,
+        list,
+    }
+
+    res.send({ error: false, msg: "", data });
+});
+
+router.post('/getNotification', (req, res) => {
+    const { body } = req;
+    console.log({ body });
+    if (body.keyword == "kosong") {
+        return res.send({ error: false, msg: "", data: { list: [], total_read: 0 } });
+    }
+    notification.total_unread = Math.ceil(Math.random(100) * 100);
+    res.send({ error: false, msg: "", data: notification });
+});
+
+router.post('/updateStatusNotification', (req, res) => {
+    res.send({ error: false, msg: "", data: true });
+});
+
+router.post('/cancelSendArticle', (req, res) => {
+    res.send({ status: { code: '01', message: 'asd' }, data: true });
 });
 
 module.exports = router;

@@ -88,7 +88,7 @@ const menus_top = [
         menus: [],
         icon: '/menus/content.svg',
         image: '',
-        uri: '/contents',
+        uri: '/user/contents',
         edit: false,
     },
     {
@@ -101,7 +101,7 @@ const menus_top = [
         menus: [],
         icon: '/menus/mypage.svg',
         image: '',
-        uri: '/my-pages',
+        uri: '/user/mypages',
         edit: false,
     }
 ];

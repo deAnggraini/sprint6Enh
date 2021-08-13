@@ -5,7 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const cors = require('cors');
 const fileUpload = require('express-fileupload');
-
+var bodyParser = require('body-parser');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var mod = require('./modules').module;
@@ -17,8 +17,12 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+// app.use(express.json());
+// app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(mod.cors({
@@ -29,7 +33,12 @@ app.use(mod.cookieSession({
   name: 'sess', //name of the cookie containing access token in the //browser
   secret: 'asdfgh',
   httpOnly: true
-}))
+}));
+
+// body parser
+// app.use(bodyParser.urlencoded());
+// app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.json());
 
 app.use(fileUpload());
 app.use('/', indexRouter);

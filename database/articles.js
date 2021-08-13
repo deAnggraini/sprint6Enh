@@ -18,13 +18,14 @@ const sample_empty = {
     related: [],  // {id, title}
     suggestions: [], // {id, title}
     isEmptyTemplate: true,
+    isNew: true
 };
 
 const sample_basic = {
     id: 100,
     title: 'Tahapan',
-    desc: '',
-    image: '',
+    desc: `<p><b>TEBAL</b> <i>MIRING</i></p>`,
+    image: 'a.jpg',
     video: '',
     created_at: new Date(),
     created_by: '',
@@ -62,10 +63,17 @@ const sample_basic = {
             children: [],
         }
     ],
-    references: [], // {id, title, no},
-    related: [],  // {id, title}
-    suggestions: [], // {id, title}
+    references: [
+        { id: 2, title: "Perihal Ketentuan Tahapan 1", no: "025/SKSE/TL/2020" }
+    ], // {id, title, no},
+    related: [
+        { id: 2, title: "Perihal Ketentuan Tahapan 1", no: "025/SKSE/TL/2020" }
+    ],  // {id, title}
+    suggestions: [
+        { id: 2, title: "Perihal Ketentuan Tahapan 1", no: "025/SKSE/TL/2020" }
+    ], // {id, title}
     isEmptyTemplate: false,
+    isNew: true
 };
 
 const sample_non_basic = {
@@ -336,7 +344,7 @@ const sample_non_basic = {
             ],
         },
         {
-            id: 3,
+            id: 31,
             title: 'Formulir Tahapan 2',
             intro: '',
             parent: 0,
@@ -349,6 +357,7 @@ const sample_non_basic = {
     related: [],
     suggestions: [],
     isEmptyTemplate: false,
+    isNew: false
 };
 
 const articles = [
@@ -898,6 +907,194 @@ const lastKeyword = [
     { id: 0, text: 'Pembukaan Rekening Tahapan' },
     { id: 0, text: 'Flazz' },
 ];
+
+module.exports.mypages = [
+    {
+        type: 'article',
+        id: 1,
+        title: 'Host to Host ERP Integration',
+        location: 'Aplikasi dan Mesin > Aplikasi/Mesin Pendukung Transaksi Nasabah > Aplikasi Mesin Pendukung Transaksi Umum',
+        modified_date: new Date(),
+        modified_by: 'Putri Faizatu',
+        approved_date: new Date(),
+        approved_by: 'Diandra Amanda',
+        affective_date: new Date(),
+        send_to: 'Yayopriyo Wibowo',
+        current_by: 'Theresa Theodorus, Anita Rachmat',
+        state: 'DRAFT',
+        isNew: false,
+
+    },
+    {
+        type: 'microinformation',
+        id: 2,
+        title: 'Pembukaan Rekening Join Account',
+        location: 'Virtual Page > Rekening',
+        modified_date: new Date(),
+        modified_by: 'Yayopriyo Wibowo',
+        approved_date: new Date(),
+        approved_by: 'Diandra Amanda',
+        affective_date: new Date(),
+        send_to: 'Yayopriyo Wibowo',
+        current_by: 'Theresa Theodorus, Natasha Debora',
+        state: 'DRAFT',
+        isNew: true
+    },
+    {
+        type: 'formulir',
+        id: 3,
+        title: 'Formulir Pembukaan Rekening',
+        location: 'Formulir > Formulir',
+        modified_date: new Date(),
+        modified_by: 'Anita Rachmat',
+        approved_date: new Date(),
+        approved_by: 'Diandra Amanda',
+        affective_date: new Date(),
+        send_to: 'Yayopriyo Wibowo',
+        current_by: 'Firda Agustriyani',
+        state: 'DRAFT',
+        isNew: false
+    },
+    {
+        type: 'atribut',
+        id: 4,
+        title: 'Ini Adalah Judul Atribut Page',
+        location: 'Virtual Page > Lorem Ipsum Dolor sit Amet',
+        modified_date: new Date(),
+        modified_by: 'Putu Ayu Sruti Permata Sari',
+        approved_date: new Date(),
+        approved_by: 'Diandra Amanda',
+        affective_date: new Date(),
+        send_to: 'Yayopriyo Wibowo',
+        current_by: 'Firda Agustriyani, Kemal Batubara, Indah Permata Sari, Andreas Herawan, Thomas Wibisono, John Doe, Amalia..',
+        state: 'DRAFT',
+        isNew: true
+    },
+
+
+    {
+        type: 'article',
+        id: 5,
+        title: 'Host to Host ERP Integration',
+        location: 'Aplikasi dan Mesin > Aplikasi/Mesin Pendukung Transaksi Nasabah > Aplikasi Mesin Pendukung Transaksi Umum',
+        modified_date: new Date(),
+        modified_by: 'Putri Faizatu',
+        approved_date: new Date(),
+        approved_by: 'Diandra Amanda',
+        affective_date: new Date(),
+        send_to: 'Yayopriyo Wibowo',
+        current_by: 'Theresa Theodorus, Anita Rachmat',
+        state: 'DRAFT',
+        isNew: false,
+
+    },
+    {
+        type: 'microinformation',
+        id: 6,
+        title: 'Pembukaan Rekening Join Account',
+        location: 'Virtual Page > Rekening',
+        modified_date: new Date(),
+        modified_by: 'Yayopriyo Wibowo',
+        approved_date: new Date(),
+        approved_by: 'Diandra Amanda',
+        affective_date: new Date(),
+        send_to: 'Yayopriyo Wibowo',
+        current_by: 'Theresa Theodorus, Natasha Debora',
+        state: 'DRAFT',
+        isNew: true
+    },
+    {
+        type: 'formulir',
+        id: 7,
+        title: 'Formulir Pembukaan Rekening',
+        location: 'Formulir > Formulir',
+        modified_date: new Date(),
+        modified_by: 'Anita Rachmat',
+        approved_date: new Date(),
+        approved_by: 'Diandra Amanda',
+        affective_date: new Date(),
+        send_to: 'Yayopriyo Wibowo',
+        current_by: 'Firda Agustriyani',
+        state: 'DRAFT',
+        isNew: false
+    },
+    {
+        type: 'atribut',
+        id: 8,
+        title: 'Ini Adalah Judul Atribut Page',
+        location: 'Virtual Page > Lorem Ipsum Dolor sit Amet',
+        modified_date: new Date(),
+        modified_by: 'Putu Ayu Sruti Permata Sari',
+        approved_date: new Date(),
+        approved_by: 'Diandra Amanda',
+        affective_date: new Date(),
+        send_to: 'Yayopriyo Wibowo',
+        current_by: 'Firda Agustriyani, Kemal Batubara, Indah Permata Sari, Andreas Herawan, Thomas Wibisono, John Doe, Amalia..',
+        state: 'DRAFT',
+        isNew: true
+    }
+]
+
+module.exports.notification = {
+    // total_notification: 99,
+    total_unread: 50,
+    total_read: 49,
+
+    totalElements: 99,
+    totalPages: 10,
+    list: [
+        {
+            id: 1,
+            status: 'informasi',
+            type: 'Informasi',
+            isRead: true,
+            date: new Date(),
+            by: '',
+            title: 'PAKAR Info',
+            desc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+        },
+        {
+            id: 2,
+            status: 'konflik',
+            type: 'Artikel',
+            isRead: false,
+            date: new Date(),
+            by: 'Thalia Sari Landi',
+            title: 'Tahapan',
+            desc: 'Artikel Tahapan yang sedang kamu ubah sudah rilis versi terbaru. Segera sesuaikan dengan versi terbaru.'
+        },
+        {
+            id: 3,
+            status: 'terima',
+            type: 'Artikel',
+            isRead: true,
+            date: new Date(),
+            by: 'Stacia Marella',
+            title: 'Joint Account',
+            desc: 'Mohon review atas pembuatan Virtual Page.' // sendNote
+        },
+        {
+            id: 4,
+            status: 'publikasi',
+            type: 'Artikel',
+            isRead: false,
+            date: new Date(),
+            by: 'Shinta Dewi',
+            title: 'Time Loan',
+            desc: 'Perubahan PAKAR Time Loan telah disetujui.'
+        },
+        {
+            id: 5,
+            status: 'edit',
+            type: 'Artikel',
+            isRead: true,
+            date: new Date(),
+            by: 'Ni Luh Gede Sri Fajaryani',
+            title: 'BCA Mobile',
+            desc: 'Terdapat editor baru yang melakukan perubahan pada artikel yang sama. Pastikan kamu melakukan perubahan di versi paling baru.'
+        }
+    ]
+}
 
 module.exports.suggestion = [
     {
