@@ -1596,13 +1596,13 @@ public class ArticleServiceImpl implements ArticleService {
 
         public String convertColumnNameforSort(String reqColumn) {
             if (reqColumn.equals("title")) {
-                return "judulArticle";
+                return "article.judulArticle";
             } else if (reqColumn.equals("modified_date")) {
-                return "modifyDate";
+                return "article.modifyDate";
             } else if (reqColumn.equals("modified_by")) {
-                return "modifyBy";
+                return "article.fullNameModifier";
             } else if (reqColumn.equals("location")) {
-                return "structure.location_text";
+                return "article.structure.location_text";
             }
             return "";
         }
