@@ -592,8 +592,12 @@ public class ArticleServiceImpl implements ArticleService {
                 ArticleNotification articleNotification = new ArticleNotification();
                 articleNotification.setCreatedBy(articleDto.getUsername());
                 articleNotification.setArticle(article);
+                articleNotification.setNotifDate(new Date());
+                articleNotification.setSendNote(articleDto.getSendNote());
                 articleNotification.setSender(restResponse.getBody().getData().getSender());
                 articleNotification.setReceiver(restResponse.getBody().getData().getAssigne());
+                articleNotification.setStatus("Terima");
+                articleNotification.setDocumentType("Artikel");
 
                 articleNotificationRepository.save(articleNotification);
             }

@@ -97,7 +97,7 @@ public class ArticleNotificationServiceImpl implements ArticleNotificationServic
             ArticleNotificationDto dto = new ArticleNotificationDto();
             dto.setId(entity.getId());
             dto.setTitle(entity.getArticle().getJudulArticle());
-            dto.setDesc(entity.getArticle().getShortDescription());
+            dto.setDesc(entity.getSendNote());
             dto.setDate(entity.getNotifDate());
             dto.setBy(entity.getSender());
             dto.setStatus(entity.getStatus());

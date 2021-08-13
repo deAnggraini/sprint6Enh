@@ -37,6 +37,9 @@ public class ArticleNotification extends EntityBase {
     @Temporal(TemporalType.TIMESTAMP)
     private Date notifDate;
 
+    @Column(name = "send_note")
+    private String sendNote;
+
     public Long getId() {
         return id;
     }
@@ -107,6 +110,14 @@ public class ArticleNotification extends EntityBase {
 
     public void setNotifDate(Date notifDate) {
         this.notifDate = notifDate;
+    }
+
+    public String getSendNote() {
+        return sendNote;
+    }
+
+    public void setSendNote(String sendNote) {
+        this.sendNote = sendNote;
     }
 
     @Override
