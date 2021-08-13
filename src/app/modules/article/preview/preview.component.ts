@@ -115,7 +115,7 @@ export class PreviewComponent implements OnInit {
     this.skReferences = this.articleDTO.references;
     this.relatedArticle = this.articleDTO.related;
     this.getVideo(this.articleDTO.video);
-
+    this.editable = this.hideTopbar;
     setTimeout(() => {document.getElementById('alert').hidden = true }, 3000);
 
     //user
