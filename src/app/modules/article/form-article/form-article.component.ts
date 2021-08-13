@@ -127,7 +127,78 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
       options: [11, 13, 16, 18],
       supportAllValues: false
     },
-    wordCount: { maxLimit: 100 }
+    wordCount: { maxLimit: 1000 }
+  };
+
+  configTopic = {
+    toolbar: {
+      items: [
+        'fontFamily',
+        'fontSize',
+        'fontColor',
+        'fontBackgroundColor',
+        'heading',
+        '|',
+        'undo',
+        'redo',
+        '|',
+        'bold',
+        'italic',
+        'underline',
+        'strikethrough',
+        'alignment',
+        'subscript',
+        'superscript',
+        '|',
+        'bulletedList',
+        'numberedList',
+        'todoList',
+        '|',
+        'outdent',
+        'indent',
+        'findAndReplace',
+        '|',
+        'link',
+        'imageUpload',
+        'blockQuote',
+        'insertTable',
+        'mediaEmbed',
+        '|',
+        'code',
+        'codeBlock',
+        'htmlEmbed',
+        'specialCharacters',
+      ],
+      shouldNotGroupWhenFull: true
+    },
+    language: 'en',
+    image: {
+      toolbar: [
+        'imageTextAlternative',
+        'imageStyle:full',
+        'imageStyle:side',
+        'linkImage'
+      ]
+    },
+    table: {
+      contentToolbar: [
+        'tableColumn',
+        'tableRow',
+        'mergeTableCells',
+        'tableCellProperties',
+        'tableProperties'
+      ]
+    },
+    fontFamily: {
+      options: ['Calibri, sans-serif', 'Arial, Helvetica, sans-serif', 'Segoe UI, Open Sans'],
+      supportAllValues: false
+    },
+    fontSize: {
+      options: [11, 13, 16, 18],
+      supportAllValues: false
+    },
+    wordCount: { maxLimit: 1000 },
+    placeholder: 'Masukkan kalimat pengantar terkait Ketentuan disini.'
   };
 
   // error manual
@@ -395,7 +466,8 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     return false;
   }
   btnEditClick(e, data: ArticleContentDTO) {
-    data.isEdit = !data.isEdit;
+    data.isEdit = true;
+    data.expanded = true;
     this.cdr.detectChanges();
     e.stopPropagation();
     return false;
@@ -523,9 +595,11 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     this.subscriptions.push(
       this.article.saveContent(content).subscribe(resp => {
         if (resp) {
+          content.isEdit = false;
           this.toast.showSuccess('Simpan Data Accordion Berhasil');
           this.addLog(content);
         }
+        this.cdr.detectChanges();
       })
     );
   }
@@ -541,6 +615,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
       content.topicTitle = '';
       content.topicContent = '';
     }
+    content.isEdit = false;
     this.cdr.detectChanges();
   }
 
@@ -558,8 +633,9 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
         if (!d.isEdit) d.isEdit = false;
         d.listParent = listParent;
         if (d.level == 1) {
+          d.expanded = true;
           d.no = '';
-          d.sort = 0;
+          d.sort = i + 1;
           this.recalculateChildren(d.children, listParent.concat([]));
         } else {
           d.no = `${i + 1}`;
@@ -750,7 +826,9 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   // CKEDITOR5 function
-  public onReady(editor) {
+  public onReady(editor, value: string = '') {
+    // console.log({ editor, value });
+    if (value) editor.setData(value); // cara paksa isi ckeditor
     this.finishRender = true;
   }
   public onChange({ editor }: ChangeEvent) {
