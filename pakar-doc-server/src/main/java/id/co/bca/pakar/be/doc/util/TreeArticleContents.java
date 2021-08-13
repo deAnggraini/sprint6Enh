@@ -25,7 +25,7 @@ public class TreeArticleContents {
         Collections.sort(rootMenus, new Comparator<ArticleContentDto>() {
             @Override
             public int compare(ArticleContentDto o1, ArticleContentDto o2) {
-                return o1.getOrder().intValue() - o2.getOrder().intValue();
+                return o1.getSort().intValue() - o2.getSort().intValue();
             }
         });
 
@@ -36,7 +36,7 @@ public class TreeArticleContents {
             Collections.sort(child, new Comparator<ArticleContentDto>() {
                 @Override
                 public int compare(ArticleContentDto o1, ArticleContentDto o2) {
-                    return o1.getOrder().intValue() - o2.getOrder().intValue();
+                    return o1.getSort().intValue() - o2.getSort().intValue();
                 }
             });
             rootMenu.setChilds(child);
@@ -67,7 +67,7 @@ public class TreeArticleContents {
             Collections.sort(child, new Comparator<ArticleContentDto>() {
                 @Override
                 public int compare(ArticleContentDto o1, ArticleContentDto o2) {
-                    return o1.getOrder().intValue() - o2.getOrder().intValue();
+                    return o1.getSort().intValue() - o2.getSort().intValue();
                 }
             });
             menuDto.setChilds(child);

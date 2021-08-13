@@ -243,7 +243,7 @@ public class ArticleServiceImpl implements ArticleService {
             articleDto.setShortDescription(article.getShortDescription());
             articleDto.setVideoLink(article.getVideoLink());
             articleDto.setNew(article.getNewArticle());
-            Iterable<ArticleContent> articleContents = articleContentRepository.findByArticleId(article.getId());
+            List<ArticleContent> articleContents = articleContentRepository.findByArticleId(article.getId());
             List<ArticleContentDto> articleContentDtos = new TreeArticleContents().menuTree(mapToListArticleContentDto(articleContents));
             articleDto.setContents(articleContentDtos);
             Iterable<SkRefference> skRefferenceList = skReffRepository.findByArticleId(id);
@@ -339,7 +339,7 @@ public class ArticleServiceImpl implements ArticleService {
             articleDto.setTitle(article.getJudulArticle());
             articleDto.setShortDescription(article.getShortDescription());
             articleDto.setVideoLink(article.getVideoLink());
-            Iterable<ArticleContent> articleContents = articleContentRepository.findByArticleId(article.getId());
+            List<ArticleContent> articleContents = articleContentRepository.findByArticleId(article.getId());
             logger.debug("article contents >>>>>>>>>>>>>>>>>>> {}", articleContents);
             List<ArticleContentDto> articleContentDtos = new TreeArticleContents().menuTree(mapToListArticleContentDto(articleContents));
             articleDto.setContents(articleContentDtos);
@@ -775,7 +775,7 @@ public class ArticleServiceImpl implements ArticleService {
             articleContent.setDescription(articleContentDto.getIntro());
             articleContent.setTopicCaption(articleContentDto.getTopicTitle());
             articleContent.setTopicContent(articleContentDto.getTopicContent());
-            articleContent.setSort(articleContentDto.getOrder());
+            articleContent.setSort(articleContentDto.getSort());
             articleContent.setLevel(articleContentDto.getLevel());
 
             if (articleContentDto.getLevel().longValue() != 1) {
@@ -913,7 +913,7 @@ public class ArticleServiceImpl implements ArticleService {
                 articleContent.setModifyBy(username);
                 articleContent.setModifyDate(new Date());
                 articleContent.setLevel(articleContentDto.getLevel());
-                articleContent.setSort(articleContentDto.getOrder());
+                articleContent.setSort(articleContentDto.getSort());
                 articleContent.setParent(articleContentDto.getParent());
 
                 logger.info("save batch content");
@@ -1038,13 +1038,13 @@ public class ArticleServiceImpl implements ArticleService {
     /*
     HELPER METHOD
      */
-    private List<ArticleContentDto> mapToListArticleContentDto(Iterable<ArticleContent> iterable) {
+    private List<ArticleContentDto> mapToListArticleContentDto(List<ArticleContent> iterable) {
         List<ArticleContentDto> listOfContents = new ArrayList<>();
         for (ArticleContent content : iterable) {
             ArticleContentDto contentDto = new ArticleContentDto();
             contentDto.setId(content.getId());
             contentDto.setLevel(content.getLevel());
-            contentDto.setOrder(content.getSort());
+            contentDto.setSort(content.getSort());
             contentDto.setTitle(content.getName());
             if (content.getLevel().intValue() == 1)
                 contentDto.setIntro(content.getDescription());
@@ -1061,7 +1061,9 @@ public class ArticleServiceImpl implements ArticleService {
             Collections.sort(listOfContents, new Comparator<ArticleContentDto>() {
                 @Override
                 public int compare(ArticleContentDto o1, ArticleContentDto o2) {
-                    return o1.getOrder().intValue() - o2.getOrder().intValue();
+                    logger.debug("sort 1 {}", o1.getSort());
+                    logger.debug("sort 2 {}", o2.getSort());
+                    return o1.getSort().intValue() - o2.getSort().intValue();
                 }
             });
         }
@@ -1076,7 +1078,7 @@ public class ArticleServiceImpl implements ArticleService {
         ArticleContentDto contentDto = new ArticleContentDto();
         contentDto.setId(content.getId());
         contentDto.setLevel(content.getLevel());
-        contentDto.setOrder(content.getSort());
+        contentDto.setSort(content.getSort());
         contentDto.setTitle(content.getName());
         if (content.getLevel().intValue() == 1)
             contentDto.setIntro(content.getDescription());
@@ -1394,7 +1396,7 @@ public class ArticleServiceImpl implements ArticleService {
                 _entity.setParent(dto.getParent());
                 Optional<Article> artOpt = articleRepository.findById(dto.getArticleId());
                 _entity.setArticle(artOpt.get());
-                _entity.setSort(dto.getOrder());
+                _entity.setSort(dto.getSort());
                 _entity.setLevel(dto.getLevel());
                 _entity.setName(dto.getTitle());
                 _entity.setTopicCaption(dto.getTopicTitle());
@@ -1449,7 +1451,8 @@ public class ArticleServiceImpl implements ArticleService {
                 _entity.setParent(dto.getParent());
 //                Optional<Article> artOpt = articleRepository.findById(dto.getArticleId());
 //                _entity.setArticle(artOpt.get());
-                _entity.setSort(dto.getOrder());
+                logger.debug("sort data {}", dto.getSort());
+                _entity.setSort(dto.getSort());
                 _entity.setLevel(dto.getLevel());
                 _entity.setName(dto.getTitle());
                 _entity.setTopicCaption(dto.getTopicTitle());

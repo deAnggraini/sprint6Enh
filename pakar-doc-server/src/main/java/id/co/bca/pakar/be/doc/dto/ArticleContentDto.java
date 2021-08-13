@@ -18,7 +18,7 @@ public class ArticleContentDto extends BaseDto {
     @NotNull(message = "sort value is required")
     @Min(value = 1, message = "sort minimum value is 1")
     @JsonProperty("sort")
-    private Long order;
+    private Long sort;
     @NotNull(message = "level is required")
     @Min(value = 1, message = "minimum value is 1")
     @Max(value = 5, message = "maximum value is 5")
@@ -95,12 +95,12 @@ public class ArticleContentDto extends BaseDto {
         this.childs = childs;
     }
 
-    public Long getOrder() {
-        return order;
+    public Long getSort() {
+        return sort;
     }
 
-    public void setOrder(Long order) {
-        this.order = order;
+    public void setSort(Long sort) {
+        this.sort = sort;
     }
 
     public Long getLevel() {
@@ -165,7 +165,7 @@ public class ArticleContentDto extends BaseDto {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", intro='" + intro + '\'' +
-                ", order=" + order +
+                ", sort=" + sort +
                 ", level=" + level +
                 ", topicTitle='" + topicTitle + '\'' +
                 ", topicContent='" + topicContent + '\'' +
