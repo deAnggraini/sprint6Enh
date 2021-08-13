@@ -649,7 +649,7 @@ public class ArticleServiceImpl implements ArticleService {
      * @throws Exception
      */
     @Override
-    @Transactional(rollbackFor = {Exception.class, DataNotFoundException.class})
+    @Transactional(rollbackFor = {Exception.class, DataNotFoundException.class, DeletePublishedArticleException.class})
     public Boolean cancelArticle(Long id, String username, String token) throws Exception {
         try {
             logger.info("cancel article with id {}", id);
@@ -659,25 +659,41 @@ public class ArticleServiceImpl implements ArticleService {
                 throw new DataNotFoundException("not found article with id " + id);
             }
 
+
             Article article = articleOpt.get();
+            if (article.getArticleState().equalsIgnoreCase(PUBLISHED)) {
+                throw new DeletePublishedArticleException("could not delete published article "+article.getJudulArticle());
+            }
+
             if (!article.getArticleState().equalsIgnoreCase(PUBLISHED)) {
-                logger.info("delete related article");
+                logger.info("delete related article with article id {}", article.getId());
                 Iterable<RelatedArticle> relatedArticles = articleRelatedRepository.findRelatedArticleByArticleId(article.getId());
                 relatedArticleRepository.deleteAll(relatedArticles);
 
-                logger.info("delete article sk refference");
+                logger.info("delete article sk refference with article id {}", article.getId());
                 Iterable<ArticleSkReff> articleSkReffs = articleSkReffRepository.findByArticleId(article.getId());
                 articleSkReffRepository.deleteAll(articleSkReffs);
 
-                logger.info("delete article image");
+                logger.info("delete article image with article id {}", article.getId());
                 Iterable<ArticleImage> articleImages = articleImageRepository.findArticleImagesByArticleId(article.getId());
                 articleImageRepository.deleteAll(articleImages);
+
+                logger.info("delete article state with article id {}", article.getId());
+                ArticleState articleState = articleStateRepository.findByArticleId(article.getId());
+                articleStateRepository.delete(articleState);
+
+                logger.info("delete article edit with article id {}", article.getId());
+                List<ArticleEdit> articleEdits = articleEditRepository.findByArticleId(article.getId());
+                articleEditRepository.deleteAll(articleEdits);
 
                 logger.info("delete unpublished article");
 
                 articleRepository.delete(article);
             }
             return Boolean.TRUE;
+        } catch (DeletePublishedArticleException e) {
+            logger.error("fail to cancel article", e);
+            throw new DeletePublishedArticleException("", e);
         } catch (DataNotFoundException e) {
             logger.error("fail to cancel article", e);
             throw new DataNotFoundException("", e);

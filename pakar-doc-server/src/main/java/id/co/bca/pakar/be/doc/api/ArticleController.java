@@ -342,6 +342,12 @@ public class ArticleController extends BaseController {
             logger.info("received token bearer --- {}", authorization);
             Boolean status = articleService.cancelArticle(cancelDto.getId(), username, getTokenFromHeader(authorization));
             return createResponse(status, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, Locale.ENGLISH));
+        } catch (DeletePublishedArticleException e) {
+            logger.error("exception", e);
+            return createResponse(Boolean.TRUE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("published.article.could.not.deleted", null, Locale.ENGLISH));
+        } catch (DataNotFoundException e) {
+            logger.error("exception", e);
+            return createResponse(Boolean.TRUE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, Locale.ENGLISH));
         } catch (Exception e) {
             logger.error("exception", e);
             return createResponse(Boolean.TRUE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, Locale.ENGLISH));

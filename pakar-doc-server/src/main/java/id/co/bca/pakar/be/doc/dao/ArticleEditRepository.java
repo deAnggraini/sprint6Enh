@@ -39,4 +39,9 @@ public interface ArticleEditRepository extends CrudRepository<ArticleEdit, Long>
                     "AND m.deleted IS FALSE "
     )
     ArticleEdit findByUsername(@Param("articleId") Long articleId, @Param("username") String username);
+
+    @Query("SELECT m FROM ArticleEdit m " +
+            "WHERE m.article.id=:articleId " +
+            "AND m.deleted IS FALSE ")
+    List<ArticleEdit> findByArticleId(@Param("articleId") Long articleId);
 }
