@@ -261,7 +261,7 @@
                                     <div class="form-group">
                                         <label>Isi Topik <span class="text-danger">*</span></label>
                                         <ckeditor [editor]="editor" [config]="config" tagName="textarea"
-                                            [(ngModel)]="content.topicContent" (ready)="onReady($event)"
+                                            [(ngModel)]="content.topicContent" (ready)="onReady($event, content.topicContent)"
                                             (change)="onChange($event)"></ckeditor>
                                     </div>
                                     <div class="text-right">

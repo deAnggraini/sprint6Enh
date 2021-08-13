@@ -755,8 +755,9 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   // CKEDITOR5 function
-  public onReady(editor) {
-    console.log({ editor });
+  public onReady(editor, value: string = '') {
+    // console.log({ editor, value });
+    if(value) editor.setData(value); // cara paksa isi ckeditor
     this.finishRender = true;
   }
   public onChange({ editor }: ChangeEvent) {
