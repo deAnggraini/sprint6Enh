@@ -85,15 +85,12 @@ export class TopbarComponent implements OnInit, AfterViewInit {
     });
 
     this.notifService.getNotif().subscribe(resp => {
-      console.log('change notif', resp);
       if (resp) {
         this.unReadNotif = resp.total_unread;
-        console.log('unread', this.unReadNotif);
         this.cdr.detectChanges();
       }
     })
     this.notifService.list().subscribe(resp => {
-      // console.log(resp);
     });
   }
 

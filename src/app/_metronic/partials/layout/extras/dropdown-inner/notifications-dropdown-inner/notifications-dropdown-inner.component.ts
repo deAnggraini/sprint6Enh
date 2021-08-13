@@ -21,7 +21,6 @@ export class NotificationsDropdownInnerComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subscriptions.push(
       this.notifService.getNotif().subscribe(resp => {
-        console.log({ resp });
         if (resp) this.dataList = resp.list.slice(0, 3);
       })
     );
@@ -36,5 +35,14 @@ export class NotificationsDropdownInnerComponent implements OnInit, OnDestroy {
       case 'edit': return 'notif-to-me.svg';
     }
     return 'notif-info.svg';
+  }
+
+  readAll(_) {
+    this.subscriptions.push(
+      this.notifService.readAll().subscribe(_ => {
+        this.notifService.refresh()
+      })
+    );
+    return false;
   }
 }

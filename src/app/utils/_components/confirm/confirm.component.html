@@ -7,6 +7,6 @@
 </div>
 <div class="modal-body py-3" [innerHTML]="message"></div>
 <div class="modal-footer py-3">
-    <button type="button" class="btn btn-light rounded-xl px-7" (click)="decline()">{{btnCancelText}}</button>
+    <button *ngIf="btnCancelText" type="button" class="btn btn-light rounded-xl px-7" (click)="decline()">{{btnCancelText}}</button>
     <button type="button" class="btn btn-primary rounded-xl px-7" (click)="accept()">{{btnOkText}}</button>
 </div>

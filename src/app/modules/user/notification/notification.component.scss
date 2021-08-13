@@ -55,12 +55,16 @@
   }
 
   &.card-notif-body {
-    padding: 15px;
+    padding: 5px;
     padding-bottom: 40px;
 
     .row-item {
-      padding: 5px 0;
+      padding: 10px;
       border-bottom: 1px solid #EDEBE9;
+
+      &.unread {
+        background: #DEECF9;
+      }
 
       .r-info {
         font-size: 13px;

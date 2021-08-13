@@ -1,10 +1,12 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChildren, QueryList } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChildren, QueryList, TemplateRef, ViewChild } from '@angular/core';
 import { PaginationModel } from 'src/app/utils/_model/pagination';
 import { ArticleService } from '../../_services/article.service';
-import { Subscription } from 'rxjs';
+import { Subscription, of } from 'rxjs';
 import { NgbdSortableHeader, SortEvent } from './sortable.directive';
 import { ConfirmService } from 'src/app/utils/_services/confirm.service';
 import { Router } from '@angular/router';
+import { catchError, map } from 'rxjs/operators';
+import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 
 export declare interface MyPageRowItem {
   type: string,
@@ -32,7 +34,7 @@ interface FormBean {
   pending: TabDTO,
   draft: TabDTO,
 }
-const PAGE_LIMIT = 5;
+const PAGE_LIMIT = 10;
 const EMPTY_FORM_BEAN: FormBean = {
   approved: {
     dataList: [],
@@ -59,6 +61,7 @@ const EMPTY_FORM_BEAN: FormBean = {
 export class MyPagesComponent implements OnInit, OnDestroy {
 
   @ViewChildren(NgbdSortableHeader) headers: QueryList<NgbdSortableHeader>;
+  @ViewChild('riwayatVersiModal') riwayatVersiModal: TemplateRef<any>;
 
   subscriptions: Subscription[] = [];
   dataForm: FormBean = JSON.parse(JSON.stringify(EMPTY_FORM_BEAN));
@@ -82,15 +85,23 @@ export class MyPagesComponent implements OnInit, OnDestroy {
   keyword: string = '';
   type: string = 'ALL';
   selectedTr: { key: string, i: number } = { key: null, i: -1 };
+  selectedItem: MyPageRowItem;
 
   constructor(
     private cdr: ChangeDetectorRef,
     private articleService: ArticleService,
     private confirm: ConfirmService,
-    private router: Router) {
+    private router: Router,
+    private modalService: NgbModal,
+    private configModel: NgbModalConfig) {
+
     this.listStatus['approved'] = "PUBLISHED";
     this.listStatus['pending'] = "PENDING";
     this.listStatus['draft'] = "DRAFT";
+
+    this.configModel.backdrop = 'static';
+    this.configModel.keyboard = false;
+
   }
 
   ngOnInit(): void {
@@ -109,6 +120,17 @@ export class MyPagesComponent implements OnInit, OnDestroy {
       case 'formulir': return 'formulir.svg';
     }
     return "doc-empty.svg"
+  }
+
+  getEmptyMessage(key: string) {
+    if (this.keyword) return 'Halaman yang Kamu cari tidak dapat ditemukan';
+    let msg = '';
+    switch (key) {
+      case 'draft': msg = 'edit'; break;
+      case 'pending': msg = 'review'; break;
+      case 'approved': msg = 'publish'; break;
+    }
+    return `Kamu tidak memiliki halaman yang dalam proses <i>${msg}</i>.`;
   }
 
   setPage(key: string, item: TabDTO, page: number) {
@@ -173,7 +195,9 @@ export class MyPagesComponent implements OnInit, OnDestroy {
       _tr.classList.add('is-click');
     }
   }
-  onClickRevision(item: any, index: number) {
+  onClickRevision(item: MyPageRowItem, index: number) {
+    this.selectedItem = item;
+    this.modalService.open(this.riwayatVersiModal, { size: 'xl' });
     return false;
   }
   onClickEdit(item: MyPageRowItem, index: number) {
@@ -192,12 +216,16 @@ export class MyPagesComponent implements OnInit, OnDestroy {
   onClickCancel(item: MyPageRowItem, index: number) {
     this.confirm.open({
       title: `Hapus Artikel`,
-      message: `<p>Apakah kamu yakin ingin menghapus artike “<b>${item.title}</b>”?`,
+      message: `<p>Apakah Kamu yakin ingin menghapus dan membatalkan penambahan artikel “<b>${item.title}</b>”?`,
       btnOkText: 'Hapus',
       btnCancelText: 'Batal'
     }).then((confirmed) => {
       if (confirmed === true) {
-        this.onRefreshTable();
+        this.subscriptions.push(
+          this.articleService.cancelArticle(item.id).subscribe(resp => {
+            if (resp) this.onRefreshTable();
+          })
+        );
       }
     });
     return false;
@@ -210,10 +238,35 @@ export class MyPagesComponent implements OnInit, OnDestroy {
       btnCancelText: 'Batal'
     }).then((confirmed) => {
       if (confirmed === true) {
-        this.onRefreshTable();
+        this.subscriptions.push(
+          this.articleService.cancelSend(item.id)
+            .pipe(
+              catchError((err) => {
+                this.showErrorModal('Gagal Batal Kirim', 'Batal Kirim tidak dapat dilakukan karena halaman tersebut sedang dalam proses review.');
+                return of(null);
+              }),
+              map(resp => resp)
+            )
+            .subscribe(resp => {
+              if (resp) { this.onRefreshTable(); }
+            })
+        )
       }
     });
     return false;
+  }
+
+  showErrorModal(title: string, message: string) {
+    this.confirm.open({
+      title,
+      message,
+      btnOkText: 'OK',
+      btnCancelText: ''
+    }).then((confirmed) => {
+      if (confirmed === true) {
+        // do nothing
+      }
+    });
   }
 
 }

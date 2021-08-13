@@ -94,21 +94,21 @@
                                                     ngbDropdownMenu>
                                                     <ul class="navi">
                                                         <li class="navi-item">
-                                                            <a class="navi-link disabled"
+                                                            <a class="navi-link cursor-pointer"
                                                                 (click)="onClickRevision(item, i); dropDown.close()">
                                                                 <span class="navi-text font-weight-bolder">Riwayat
                                                                     Revisi</span>
                                                             </a>
                                                         </li>
                                                         <li class="navi-item">
-                                                            <a class="navi-link disabled"
+                                                            <a class="navi-link cursor-pointer"
                                                                 (click)="onClickEdit(item, i); dropDown.close()">
                                                                 <span class="navi-text font-weight-bolder">Ubah</span>
                                                             </a>
                                                         </li>
 
                                                         <li class="navi-item">
-                                                            <a class="navi-link disabled"
+                                                            <a class="navi-link cursor-pointer"
                                                                 (click)="onClickCancel(item, i); dropDown.close()">
                                                                 <span class="navi-text font-weight-bolder">Hapus</span>
                                                             </a>
@@ -126,7 +126,39 @@
                                 <span
                                     [inlineSVG]="'./assets/media/svg/bca/icon/'+(keyword ? 'doc-not-found' : 'doc-2-empty')+'.svg'"
                                     class="svg"></span>
-                                <div>Kamu tidak memiliki halaman yang dalam proses review.</div>
+                                <div *ngIf="keyword">{{getLabel(key)}} yang Kamu cari tidak dapat ditemukan.</div>
+
+                                <div *ngIf="key == 'all'">
+                                    <div *ngIf="!keyword">Belum ada Halaman yang tersedia.</div>
+                                </div>
+
+                                <div *ngIf="key == 'article'">
+                                    <div *ngIf="!keyword">Belum ada Artikel yang tersedia.</div>
+                                    <a routerLink="/article/add" class="btn btn-blue mt-3">
+                                        <span [inlineSVG]="'./assets/media/svg/bca/top-bar/note.svg'" cacheSVG="true"
+                                            class="svg-icon svg-icon-xl"></span>
+                                        Tambah Artikel
+                                    </a>
+                                </div>
+
+                                <div *ngIf="key == 'virtualpage'" class="">
+                                    <div *ngIf="!keyword">Belum ada Virtual Page yang tersedia.</div>
+                                    <a routerLink="/virtualpage/add" class="btn btn-blue mt-3">
+                                        <span [inlineSVG]="'./assets/media/svg/bca/top-bar/note.svg'" cacheSVG="true"
+                                            class="svg-icon svg-icon-xl"></span>
+                                        Tambah Virtual Page
+                                    </a>
+                                </div>
+
+                                <div *ngIf="key == 'formulir'" class="mt-3">
+                                    <div *ngIf="!keyword">Belum ada Formulir yang tersedia.</div>
+                                    <a routerLink="/formulir/add" class="btn btn-blue mt-3">
+                                        <span [inlineSVG]="'./assets/media/svg/bca/top-bar/note.svg'" cacheSVG="true"
+                                            class="svg-icon svg-icon-xl"></span>
+                                        Tambah Formulir
+                                    </a>
+                                </div>
+
                             </div>
                             <div *ngIf="dataForm[key].dataList.length"
                                 class="d-flex justify-content-center align-items-center flex-wrap mt-5">
@@ -143,3 +175,28 @@
         </div>
     </div>
 </div>
+
+<ng-template #riwayatVersiModal let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Riwayat Versi - {{selectedItem.title}}</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <i aria-hidden="true">&times;</i>
+        </button>
+    </div>
+    <div class="modal-body pt-0" style="min-height: 400px;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Versi</th>
+                    <th>Modifikasi Oleh</th>
+                    <th>Tanggal Approve</th>
+                    <th>Approver</th>
+                    <th>Referensi Dokumen</th>
+                    <th>Tanggal Berlaku</th>
+                    <th>Catatan</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</ng-template>

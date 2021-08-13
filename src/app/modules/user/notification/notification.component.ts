@@ -12,6 +12,7 @@ export class NotificationComponent implements OnInit, OnDestroy {
 
   keyword: string = '';
   dataList: NotificationDTO[] = [];
+  unread: number = 0;
   subscriptions: Subscription[] = [];
   pagination: PaginationModel = new PaginationModel(1, 0);
 
@@ -43,16 +44,31 @@ export class NotificationComponent implements OnInit, OnDestroy {
   doSearch(value: string) {
     this.onSearch(this.keyword, 1);
   }
-  onSearch(keyword: string, page: number = 1, limit: number = 10) {
+  onSearch(keyword: string, page: number, updateTopBar: boolean = false, limit: number = 10) {
     this.subscriptions.push(
       this.notifService.listNotif(keyword, page, limit).subscribe((resp) => {
         if (resp) {
           this.dataList = resp.list;
+          this.unread = resp.total_unread;
           this.pagination = new PaginationModel(page, resp.totalElements);
+          if (updateTopBar) this.notifService.getNotif().next(resp);
+        } else {
+          this.dataList = [];
+          this.unread = 0;
+          this.pagination = new PaginationModel(page, 0);
         }
         this.cdr.detectChanges();
       })
     );
+  }
+  readAll(_) {
+    this.subscriptions.push(
+      this.notifService.readAll().subscribe(_ => {
+        this.onSearch(this.keyword, this.pagination.page, true);
+        // this.notifService.refresh();
+      })
+    );
+    return false;
   }
 
 }

@@ -1,10 +1,11 @@
-import { Component, OnInit, OnDestroy, ViewChildren, QueryList, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChildren, QueryList, ChangeDetectorRef, TemplateRef, ViewChild } from '@angular/core';
 import { NgbdSortableHeader, SortEvent } from '../my-pages/sortable.directive';
 import { Subscription } from 'rxjs';
 import { ArticleService } from '../../_services/article.service';
 import { ConfirmService } from 'src/app/utils/_services/confirm.service';
 import { Router } from '@angular/router';
 import { PaginationModel } from 'src/app/utils/_model/pagination';
+import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 
 export declare interface ContentRowItem {
   type: string,
@@ -32,7 +33,7 @@ interface FormBean {
   virtualpage: TabDTO,
   formulir: TabDTO,
 }
-const PAGE_LIMIT = 5;
+const PAGE_LIMIT = 10;
 const EMPTY_FORM_BEAN: FormBean = {
   all: {
     dataList: [],
@@ -64,6 +65,7 @@ const EMPTY_FORM_BEAN: FormBean = {
 export class ContentComponent implements OnInit, OnDestroy {
 
   @ViewChildren(NgbdSortableHeader) headers: QueryList<NgbdSortableHeader>;
+  @ViewChild('riwayatVersiModal') riwayatVersiModal: TemplateRef<any>;
 
   subscriptions: Subscription[] = [];
   dataForm: FormBean = JSON.parse(JSON.stringify(EMPTY_FORM_BEAN));
@@ -94,15 +96,22 @@ export class ContentComponent implements OnInit, OnDestroy {
   // filter component
   keyword: string = '';
   selectedTr: { key: string, i: number } = { key: null, i: -1 };
+  selectedItem: ContentRowItem;
 
   constructor(
     private cdr: ChangeDetectorRef,
     private articleService: ArticleService,
     private confirm: ConfirmService,
-    private router: Router) {
+    private router: Router,
+    private modalService: NgbModal,
+    private configModel: NgbModalConfig) {
+
     this.listStatus['approved'] = "PUBLISHED";
     this.listStatus['pending'] = "PENDING";
     this.listStatus['draft'] = "DRAFT";
+
+    this.configModel.backdrop = 'static';
+    this.configModel.keyboard = false;
   }
 
   ngOnInit(): void {
@@ -119,6 +128,16 @@ export class ContentComponent implements OnInit, OnDestroy {
       case 'microinformation': return 'vp-1.svg';
       case 'atribut': return 'vp-2.svg';
       case 'formulir': return 'formulir.svg';
+    }
+    return "doc-empty.svg"
+  }
+
+  getLabel(type: string) {
+    switch (type.toLowerCase()) {
+      case 'all': return 'Halaman';
+      case 'article': return 'Artikel';
+      case 'virtualpage': return 'Virtual Page';
+      case 'formulir': return 'Formulir';
     }
     return "doc-empty.svg"
   }
@@ -185,6 +204,8 @@ export class ContentComponent implements OnInit, OnDestroy {
     }
   }
   onClickRevision(item: any, index: number) {
+    this.selectedItem = item;
+    this.modalService.open(this.riwayatVersiModal, { size: 'xl' });
     return false;
   }
   onClickEdit(item: ContentRowItem, index: number) {
@@ -208,7 +229,11 @@ export class ContentComponent implements OnInit, OnDestroy {
       btnCancelText: 'Batal'
     }).then((confirmed) => {
       if (confirmed === true) {
-        this.onRefreshTable();
+        this.subscriptions.push(
+          this.articleService.cancelArticle(item.id).subscribe(resp => {
+            if (resp) this.onRefreshTable();
+          })
+        );
       }
     });
     return false;

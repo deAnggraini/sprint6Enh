@@ -1,6 +1,6 @@
 import { Injectable, ComponentRef, ComponentFactoryResolver, ApplicationRef, Injector, EmbeddedViewRef } from '@angular/core';
 import { Observable } from 'rxjs';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmComponent } from '../_components/confirm/confirm.component';
 
 @Injectable({
@@ -9,7 +9,11 @@ import { ConfirmComponent } from '../_components/confirm/confirm.component';
 export class ConfirmService {
 
   constructor(
-    private modalService: NgbModal,) { }
+    private modalService: NgbModal,
+    private configModel: NgbModalConfig) {
+    this.configModel.backdrop = 'static';
+    this.configModel.keyboard = false;
+  }
 
   public open(options: any = {
     title: 'title',

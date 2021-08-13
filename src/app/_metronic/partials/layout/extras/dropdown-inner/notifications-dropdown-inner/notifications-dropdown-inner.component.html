@@ -1,13 +1,13 @@
 <!-- <div class="notif-container"> -->
 <div class="card-notif card-notif-head d-flex flex-row justify-content-between">
   <span class="fs20 fb6">Notification</span>
-  <a *ngIf="dataList.length" routerLink="/homepage">
+  <a *ngIf="dataList.length" href="#" (click)="readAll($event)">
     <b>Tandai semua dibaca</b>
   </a>
 </div>
 <div class="card-notif card-notif-body" *ngIf="dataList.length; else emptyData">
-  <div *ngFor="let item of dataList" class="row-item mb-2">
-    <div class="r-info mb-2">
+  <div *ngFor="let item of dataList" class="row-item mb-2" [ngClass]="{unread: !item.isRead}">
+    <div class="r-info mb-2 fs13">
       <span [inlineSVG]="'./assets/media/svg/bca/icon/'+getIcon(item)" cacheSVG="true" class="svg notif-img"></span>
       <span>{{item.type}}</span>
       <span [inlineSVG]="'./assets/media/svg/bca/icon/notif-dot.svg'" cacheSVG="true" class="svg notif-dot"></span>
