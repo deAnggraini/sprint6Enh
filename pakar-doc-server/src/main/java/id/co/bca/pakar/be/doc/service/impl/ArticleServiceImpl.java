@@ -734,9 +734,9 @@ public class ArticleServiceImpl implements ArticleService {
             ArticleState articleState = articleStateRepository.findByArticleId(article.getId());
             articleState.setModifyBy(username);
             articleState.setModifyDate(new Date());
-            articleState.setSenderState("DRAFT");
-            articleState.setReceiverState(null);
-            articleState.setReceiver(null);
+            articleState.setSenderState(null);
+            articleState.setReceiverState("DRAFT");
+            articleState.setReceiver(username);
             articleStateRepository.save(articleState);
 
             return Boolean.TRUE;
