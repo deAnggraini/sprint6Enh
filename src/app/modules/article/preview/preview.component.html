@@ -55,19 +55,21 @@ height: 184px;
                 <!-- on save -->
                 <div class="d-flex flex-row" *ngIf="!onPreview">
                     <!-- Expand & Collapse -->
-                    <div href="" class="btn" *ngIf="!isExpand" (click)="expandCollapse()">
+                    <div href="" class="btn btn-link" *ngIf="!isExpand" (click)="expandCollapse()"
+                        [ngClass]="{'disabled' : articleDTO.contents.length == 0}">
                         <span [inlineSVG]="'./assets/media/svg/bca/icon/expand-topik.svg'" cacheSVG="true"
                             class="svg-icon menu-icon"></span>
                         <span class="font-weight-bold" style="color: #0F5EA9;">Expand Topik</span>
                     </div>
-                    <div href="" class="btn" *ngIf="isExpand" (click)="expandCollapse()">
+                    <div href="" class="btn btn-link" *ngIf="isExpand" (click)="expandCollapse()"
+                        [ngClass]="{'disabled' : articleDTO.contents.length == 0}">
                         <span [inlineSVG]="'./assets/media/svg/bca/icon/collapse-topik.svg'" cacheSVG="true"
                             class="svg-icon menu-icon"></span>
                         <span class="font-weight-bold" style="color: #0F5EA9;">Collapse Topik</span>
                     </div>
 
                     <!-- Ubah Artikel -->
-                    <div href="" class="btn" *ngIf="editable">
+                    <div href="" class="btn btn-link" *ngIf="editable">
                         <span [inlineSVG]="'./assets/media/svg/bca/icon/edit-document-dark.svg'" cacheSVG="true"
                             class="svg-icon menu-icon"></span>
                         <span class="font-weight-bold" style="color: #0F5EA9;">Ubah Artikel</span>
