@@ -51,4 +51,7 @@ public interface ArticleRepository extends CrudRepository<Article, Long> {
             "OR LOWER(m.structure.location_text) LIKE lower(concat('%', :keyword,'%')) ) ")
     Page<Article> findContentArticle(@Param("keyword") String keyword, Pageable pageable);
 
+    // find selain article for contents page
+    @Query("select m from Article m where id not in (select id from Article m ) ")
+    Page<Article> findContentExceptArticle(@Param("keyword") String keyword, Pageable pageable);
 }

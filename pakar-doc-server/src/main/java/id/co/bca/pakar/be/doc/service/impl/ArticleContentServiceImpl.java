@@ -66,11 +66,6 @@ public class ArticleContentServiceImpl implements ArticleContentService {
     public Page<MyPageDto> searchContent(SearchMyPageDto searchDto) throws Exception {
         try {
             logger.info("search Content dto");
-//            ResponseEntity<ApiResponseWrapper.RestResponse<List<String>>> restResponse = pakarOauthClient.getRoles(BEARER + searchDto.getToken(), searchDto.getUsername());
-//            logger.info("restResponse roles ", restResponse);
-//            List<String> roles = restResponse.getBody().getData();
-//            logger.info("get roles ", roles);
-//            String role = roles.get(0);
             String role = apiClient.getRoles(searchDto.getUsername(), searchDto.getToken());
             if (role.equals(ROLE_READER)) {
                 logger.info("role {} has no authorize to see contents", role);
@@ -96,16 +91,15 @@ public class ArticleContentServiceImpl implements ArticleContentService {
             Pageable pageable = PageRequest.of(pageNum, searchDto.getSize().intValue(), sort);
 
             if (searchDto.getType().equals(Constant.DocumentType.All)
-                    || searchDto.getType().equals(Constant.DocumentType.Artikel)
-                    || searchDto.getType().equals(Constant.DocumentType.VirtualPage)
-                    || searchDto.getType().equals(Constant.DocumentType.Formulir)) {
+                    || searchDto.getType().equals(Constant.DocumentType.Artikel)) {
                 if(role.equals(ROLE_ADMIN)) {
                     searchResultPage = articleRepository.findContentArticleForAdmin(searchDto.getKeyword(), pageable);
                 } else if (role.equals(Constant.Roles.ROLE_EDITOR) || role.equals(Constant.Roles.ROLE_PUBLISHER)){
                     searchResultPage = articleRepository.findContentArticle(searchDto.getKeyword(), pageable);
                 }
             } else {
-                searchResultPage = null;
+//                searchResultPage = articleRepository.findContentExceptArticle(searchDto.getKeyword(), pageable);
+                return new TodoMapperMyPages().emptypage(pageable);
             }
 
             return new TodoMapperMyPages().mapEntityPageIntoDTOPage(pageable, searchResultPage);
@@ -129,6 +123,11 @@ public class ArticleContentServiceImpl implements ArticleContentService {
             List<MyPageDto> dtos = new ArrayList<>();
             entities.forEach(e -> dtos.add(mapEntityIntoDTO(e)));
             return dtos;
+        }
+
+        public Page<MyPageDto> emptypage(Pageable pageRequest) {
+            List<MyPageDto> dtos = new ArrayList<>();
+            return new PageImpl<>(dtos, pageRequest, 0);
         }
 
         public MyPageDto mapEntityIntoDTO(Article entity) {
@@ -160,8 +159,12 @@ public class ArticleContentServiceImpl implements ArticleContentService {
         }
 
         public String convertColumnNameforSort(String reqColumn) {
-            if (reqColumn.equals("modified_date")) {
-                return "modifyDate";
+            if (reqColumn.equals("title")) {
+                return "judulArticle";
+            } else if (reqColumn.equals("modified_by")) {
+                return "fullNameModifier";
+            } else if (reqColumn.equals("location")) {
+                return "structure.location_text";
             }
             return "";
         }
