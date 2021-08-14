@@ -63,7 +63,7 @@ $border-color-active: #0F5EA9;
 
   .content-dropdown {
     min-height: 50px;
-    max-height: 186px;
+    max-height: 110px;
     overflow: hidden;
     overflow-y: auto;
   }
@@ -75,6 +75,8 @@ $border-color-active: #0F5EA9;
     margin: 0;
 
     li.li-item {
+      min-height: 20px;
+
       label {
         margin-bottom: 2px;
 
