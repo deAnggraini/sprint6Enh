@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Output, EventEmitter, Input, AfterViewInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -7,7 +7,7 @@ import { AuthService, UserModel } from '../../auth';
 import { StrukturDTO } from '../../_model/struktur.dto';
 import { ArticleService } from '../../_services/article.service';
 import { StrukturService } from '../../_services/struktur.service';
-import { ArticleDTO, ArticleContentDTO } from '../../_model/article.dto';
+import { ArticleDTO, ArticleContentDTO, ArticleParentDTO } from '../../_model/article.dto';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
@@ -15,7 +15,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
   templateUrl: './preview.component.html',
   styleUrls: ['./preview.component.scss']
 })
-export class PreviewComponent implements OnInit {
+export class PreviewComponent implements OnInit, AfterViewInit {
 
   @Input() hideTopbar: boolean = true;
   @Input() alert: boolean = false;
@@ -28,7 +28,6 @@ export class PreviewComponent implements OnInit {
 
   categoryId: number = 0;
   struktur$: BehaviorSubject<StrukturDTO> = new BehaviorSubject<StrukturDTO>(null);
-
 
   hideTable: boolean = true;
   hideFAQ: boolean = true;
@@ -111,12 +110,7 @@ export class PreviewComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadData();
-    console.log("Article DTO >>> ", this.articleDTO);
-    this.skReferences = this.articleDTO.references;
-    this.relatedArticle = this.articleDTO.related;
-    this.getVideo(this.articleDTO.video);
     this.editable = this.hideTopbar;
-    setTimeout(() => {document.getElementById('alert').hidden = true }, 3000);
 
     //user
     this.user$.subscribe(u => {
@@ -133,50 +127,119 @@ export class PreviewComponent implements OnInit {
 
   }
 
+  ngAfterViewInit(): void {
+    // setTimeout(() => { document.getElementById('alert').hidden = true }, 3000);
+  }
+
   private loadData() {
     if (this.articleService.formData != null) {
-      this.articleDTO = this.articleService.formData;
-      this.categoryId = this.articleDTO.structureId;
-
-      // HQ tampilkan gambar disini
-      const { image } = this.articleDTO;
-      console.log({ image });
-      if (image) {
-        if (typeof (image) == "string") { // image string artinya sudah diupload
-          this.imageSrc = image;
-        } else { // image bukan string, kemungkinan object file
-          const reader = new FileReader();
-          reader.readAsDataURL(image);
-          reader.onload = () => {
-            this.imageSrc = reader.result as string;
-          };
-        }
-        this.imageTitle = image.name?.split(".")[0];
-      } else {
-        this.imageSrc = this.backend_img + '/articles/artikel-no-image.jpg';
-        this.imageTitle = "Ini adalah judul dari infografis"
+      this.setArticle(this.articleService.formData);
+      if (this.articleService.formAlert) {
+        this.alert = true;
+        this.alertMessage = this.articleService.formAlert;
+        setTimeout(() => {
+          console.log('trigger hidden alert')
+          document.getElementById('alert').hidden = true;
+          this.articleService.formAlert = null;
+        }, 3000);
       }
-
     } else {
       this.route.params.subscribe(params => {
-        this.categoryId = params.category;
-        // this.loadData();
+        if (params.id) {
+          this.articleService.getById(params.id, false).subscribe(resp => {
+            this.setArticle(resp);
+          })
+        }
       });
     }
+  }
+  private recalculateChildren(children: ArticleContentDTO[], listParent: ArticleParentDTO[]) {
+    if (children && children.length) {
+      children.forEach((d, i) => {
+        if (!d.expanded) d.expanded = false;
+        if (!d.isEdit) d.isEdit = false;
+        d.listParent = listParent;
+        if (d.level == 1) {
+          d.no = '';
+          d.sort = i + 1;
+          this.recalculateChildren(d.children, listParent.concat([]));
+        } else {
+          d.no = `${i + 1}`;
+          d.sort = i + 1;
+          const { id, title, no } = d;
+          this.recalculateChildren(d.children, listParent.concat([{ id, title, no }]));
+        }
+        if (!d.topicTitle && d.title) d.topicTitle = d.title;
+        if (!d.topicContent && d.intro) d.topicContent = d.intro;
+      });
+    }
+  }
+  setArticle(article: ArticleDTO) {
+    this.articleDTO = article;
+    this.categoryId = this.articleDTO.structureId;
+
+    // HQ tampilkan gambar disini
+    const { image } = this.articleDTO;
+    if (image) {
+      if (typeof (image) == "string") { // image string artinya sudah diupload
+        this.imageSrc = image;
+      } else { // image bukan string, kemungkinan object file
+        const reader = new FileReader();
+        reader.readAsDataURL(image);
+        reader.onload = () => {
+          this.imageSrc = reader.result as string;
+        };
+      }
+      this.imageTitle = image.name?.split(".")[0];
+    } else {
+      this.imageSrc = this.backend_img + '/articles/artikel-no-image.jpg';
+      this.imageTitle = "Ini adalah judul dari infografis"
+    }
+
     const node = this.strukturService.findNodeById(this.categoryId);
     this.struktur$.next(node);
-    console.log({ article: this.articleDTO });
+
+    this.skReferences = this.articleDTO.references;
+    this.relatedArticle = this.articleDTO.related;
+    this.getVideo(this.articleDTO.video);
+
+    // HQ, mapping backend ke UI DTO
+    // set expanded default value
+    this.recalculateChildren(article.contents, []);
+
+    // parsing referances to options
+    if (article.references && article.references.length) {
+      article.references.forEach(d => {
+        d.value = d.no;
+        d.text = `${d.no} - ${d.title}`;
+      })
+    }
+
+    // parsing related article to options
+    if (article.related && article.related.length) {
+      article.related.forEach(d => {
+        d.value = `${d.id}`;
+        d.text = `${d.title}`;
+      })
+    }
+
+    // parsing suggestions to options
+    if (article.suggestions && article.suggestions.length) {
+      article.suggestions.forEach(d => {
+        d.value = `${d.id}`;
+        d.text = `${d.title}`;
+      })
+    }
   }
 
   numberingFormat(data: ArticleContentDTO): string {
-    const listParent = data.listParent;
+    const listParent = data.listParent || [];
     const strNoParent = listParent.map(d => d.no);
     strNoParent.push(data.no);
     return strNoParent.join(".");
   }
 
   getVideo(event) {
-    console.log({ event });
     if (event) {
       // this.videoUrl = this._sanitizer.bypassSecurityTrustResourceUrl(event);
       // this.showVideo = true;
@@ -196,15 +259,23 @@ export class PreviewComponent implements OnInit {
     } else {
       this.isExpand = false;
     }
+    this.expandCollapseAccordion(this.articleDTO.contents, this.isExpand);
+  }
+  expandCollapseAccordion(contents: ArticleContentDTO[], expanded: boolean) {
+    if (contents && contents.length) {
+      contents.forEach(d => {
+        d.expanded = expanded;
+        this.expandCollapseAccordion(d.children, expanded);
+      })
+    }
   }
 
   closeAlert() {
-    console.log("masuk close alert");
     // var alert1 = document.getElementById('alerts');
     // var display = document.getElementById('name');
 
     // alert1.innerHTML = "";
-    
+
     this.alert = false;
   }
 

@@ -14,6 +14,7 @@ export class ArticleService {
   // parameter article form add
   public formParam: any = null;
   public formData: ArticleDTO = null;
+  public formAlert: string = null;
 
   private _base_url = `${environment.apiUrl}/doc`;
   private empty_search: any[] = [

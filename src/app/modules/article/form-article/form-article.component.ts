@@ -337,8 +337,12 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
         this.subscriptions.push(
           this.article.saveArticle(_dataForm).subscribe(resp => {
             if (resp) {
-              this.onPreview(true, true, true, 'Artikel berhasil disimpan ke dalam draft.');
-              this.cdr.detectChanges();
+              this.article.formData = _dataForm;
+              this.article.formAlert = 'Artikel berhasil disimpan ke dalam draft.';
+              this.router.navigate(
+                [
+                  `/article/preview/${_dataForm.id}`,
+                ], { replaceUrl: true });
             }
           })
         );
@@ -382,8 +386,14 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
       this.article.saveArticle(_dataForm, true, this.saveAndSend).subscribe(resp => {
         if (resp) {
           this.modalService.dismissAll();
-          this.onPreview(true, true, true, 'Artikel berhasil disimpan dan dikirim.');
-          this.cdr.detectChanges();
+          // this.onPreview(true, true, true, 'Artikel berhasil disimpan dan dikirim.');
+          // this.cdr.detectChanges();
+          this.article.formData = _dataForm;
+          this.article.formAlert = 'Artikel berhasil disimpan dan dikirim.';
+          this.router.navigate(
+            [
+              `/article/preview/${_dataForm.id}`,
+            ], { replaceUrl: true });
         }
       })
     );
