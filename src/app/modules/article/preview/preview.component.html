@@ -13,12 +13,14 @@ height: 184px;
         </a>
     </div>
     <div class="d-flex flex-row align-items-center">
-        <a href="#" class="btn btn-link link text-dark d-flex flex-row" (click)="onSave($event)">
+        <a href="#" class="btn btn-link link text-dark d-flex flex-row" (click)="onSave($event)"
+            [ngClass]="{disabled:!btnSaveEnabled}">
             <div [inlineSVG]="'./assets/media/svg/bca/icon/save.svg'" cacheSVG="true" class="svg-icon"></div>
             <div>Simpan</div>
         </a>
         <div class="separator"></div>
-        <a href="#" class="btn btn-link link text-dark d-flex flex-row" (click)="onSaveSend($event)">
+        <a href="#" class="btn btn-link link text-dark d-flex flex-row" (click)="onSaveSend($event)"
+            [ngClass]="{disabled:!btnSaveSendEnabled}">
             <div [inlineSVG]="'./assets/media/svg/bca/icon/send.svg'" cacheSVG="true" class="svg-icon"></div>
             <div>Simpan & Kirim</div>
         </a>
@@ -69,7 +71,8 @@ height: 184px;
                     </div>
 
                     <!-- Ubah Artikel -->
-                    <div [routerLink]="['/article/form/'+articleDTO.id, {isEdit:true}]" class="btn btn-link" *ngIf="editable">
+                    <div [routerLink]="['/article/form/'+articleDTO.id, {isEdit:true}]" class="btn btn-link"
+                        *ngIf="editable">
                         <span [inlineSVG]="'./assets/media/svg/bca/icon/edit-document-dark.svg'" cacheSVG="true"
                             class="svg-icon menu-icon"></span>
                         <span class="font-weight-bold" style="color: #0F5EA9;">Ubah Artikel</span>
@@ -203,7 +206,8 @@ height: 184px;
                         <label class="font-weight-bolder text-dark mb-2">Informasi Terkait</label>
                         <div>
                             <ul *ngFor="let article of relatedArticle">
-                                <li><a [routerLink]="['/article/'+article.id]" [ngClass]={disabled:!editable}>{{article.text}}</a></li>
+                                <li><a [routerLink]="['/article/'+article.id]"
+                                        [ngClass]={disabled:!editable}>{{article.text}}</a></li>
                             </ul>
                         </div>
                     </div>

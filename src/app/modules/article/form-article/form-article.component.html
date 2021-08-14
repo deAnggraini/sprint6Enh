@@ -12,8 +12,8 @@
             </a>
         </div>
         <div class="d-flex flex-row align-items-center">
+            <!-- [ngClass]="{'disabled' : !this.dataForm.valid || hasError || hasImageError}" -->
             <a href="#" class="btn btn-link link text-dark d-flex flex-row"
-                [ngClass]="{'disabled' : !this.dataForm.valid || hasError || hasImageError}"
                 (click)="onPreview($event)">
                 <div [inlineSVG]="'./assets/media/svg/bca/icon/preview.svg'" cacheSVG="true" class="svg-icon"></div>
                 <div>Preview</div>
@@ -192,7 +192,8 @@
 <ng-template #preview>
     <pakar-article-preview (onCancelCallback)="onPreview(false)" [hideTopbar]="previewHideTopbar"
         [alert]="previewHideTopbar" [alertMessage]="previewAlertMessage" (onSaveCallback)="onSave($event)"
-        (onSaveSendCallback)="onSaveAndSend($event)">
+        (onSaveSendCallback)="onSaveAndSend($event)" [btnSaveEnabled]="dataForm.valid && !hasError && !hasImageError"
+        [btnSaveSendEnabled]="isAllPass()">
     </pakar-article-preview>
 </ng-template>
 

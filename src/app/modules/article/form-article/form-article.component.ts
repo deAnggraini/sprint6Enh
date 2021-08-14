@@ -269,13 +269,13 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     let result: boolean = true;
     contents.forEach(d => {
       if (!result) return;
-      if (d.level > 1) {
-        if (!d.title) result = false;
-        if (!d.topicTitle) result = false;
-        if (!d.topicContent) result = false;
-      } else {
-        // if (!d.intro) result = false;
-      }
+      // if (d.level > 1) {
+      if (!d.title) result = false;
+      if (!d.topicTitle) result = false;
+      if (!d.topicContent) result = false;
+      // } else {
+      // if (!d.intro) result = false;
+      // }
       if (d.children && d.children.length && result)
         result = this.isContentsPass(d.children);
     });

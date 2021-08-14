@@ -19,6 +19,8 @@ export class PreviewComponent implements OnInit, AfterViewInit {
 
   @Input() hideTopbar: boolean = true;
   @Input() alert: boolean = false;
+  @Input() btnSaveEnabled: boolean = false;
+  @Input() btnSaveSendEnabled: boolean = false;
   @Input() alertMessage: string;
   @Output() onCancelCallback = new EventEmitter<any>();
   @Output() onSaveCallback = new EventEmitter<any>();
