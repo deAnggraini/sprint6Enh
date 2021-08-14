@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, forwardRef, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, forwardRef, ViewChild, ElementRef, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Option } from '../../_model/option';
 import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
@@ -53,13 +53,17 @@ export class MultiSelectComponent implements OnInit, ControlValueAccessor, OnDes
         this.search = keyword;
       }),
       switchMap(term => {
-        this.getData.emit(term);
+        if (term) {
+          this.getData.emit(term);
+        } else {
+          this.dataList.next([]);
+        }
         return of([]);
       }
       ),
     )
 
-  constructor() { }
+  constructor(private cdr : ChangeDetectorRef) { }
 
   cancel(item) {
     this.value = this.value.filter(d => d.id != item.id);
@@ -124,6 +128,20 @@ export class MultiSelectComponent implements OnInit, ControlValueAccessor, OnDes
     }
   }
 
+  keyEnter(_) {
+    const _dataList = this.dataList.value;
+    if (_dataList && _dataList.length) {
+      const first = _dataList[0];
+      const found = this.value.find(d => d.id == first.id);
+      if (found) return; // sudah terselect abaikan
+      if (first && this.isMaxSelected()) {
+        // sudah max selected abaikan
+      } else {
+        this.add(first);
+      }
+    }
+  }
+
   ngOnInit(): void {
     if (!this.placeholder) this.placeholder = 'search type here';
     if (!this.dataList) this.dataList = new BehaviorSubject([]);
@@ -132,6 +150,7 @@ export class MultiSelectComponent implements OnInit, ControlValueAccessor, OnDes
       this.dataList.subscribe(resp => {
         this.searching = false;
         if (this.dropDown) this.dropDown.open();
+        this.cdr.detectChanges();
       })
     );
   }
