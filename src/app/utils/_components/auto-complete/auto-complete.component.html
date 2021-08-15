@@ -1,7 +1,8 @@
 <div #autocomplete class="pakar-autocomplete d-flex align-items-center justify-content-between"
     [ngClass]="{ 'is-invalid': hasError, 'disabled' : !disabled}">
     <!-- <div class="text-ellipsis-1" [ngClass]="{'text-muted': !selected.value}">{{selected.value || placeholder}}</div> -->
-    <input #inputText type="text" [placeholder]="placeholder" required autocomplete="off" [value]="selected.text">
+    <input #inputText type="text" [placeholder]="placeholder" required autocomplete="off" [value]="selected.text"
+        (keyup.enter)="keyEnter($event)">
     <button type="button" class="btn btn-xs btn-clean" (click)="$event.stopPropagation(); comboBoxDrop.open();"
         [disabled]="disabled">
         <i class="ki ki-arrow-down icon-xs" [ngClass]="{'text-primary' : !disabled}"></i>
