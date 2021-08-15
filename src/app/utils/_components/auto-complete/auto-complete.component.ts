@@ -52,6 +52,12 @@ export class AutoCompleteComponent implements OnInit, ControlValueAccessor {
       // this._onTouched(this.value);
     }
   }
+  onBlur(text) {
+    this.inputText.nativeElement.value = this.selected.text;
+  }
+  onReset() {
+    this.onSelect({ id: '', text: '', value: '' });
+  }
   onSelect(item: Option) {
     this.selected = item;
     this.onChange.emit(item);
