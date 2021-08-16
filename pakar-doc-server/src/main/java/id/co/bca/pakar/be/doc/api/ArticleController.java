@@ -226,6 +226,9 @@ public class ArticleController extends BaseController {
             generateArticleDto.setToken(getTokenFromHeader(authorization));
             ArticleDto articleDto = articleService.generateArticle(generateArticleDto);
             return createResponse(articleDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
+        } catch (DuplicateTitleException e) {
+            logger.error("exception", e);
+            return createResponse(new ArticleDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("article.title.duplicate", null, new Locale("en", "US")));
         } catch (NotFoundArticleTemplateException e) {
             logger.error("exception", e);
             return createResponse(new ArticleDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("article.templete.not.found", null, new Locale("en", "US")));
