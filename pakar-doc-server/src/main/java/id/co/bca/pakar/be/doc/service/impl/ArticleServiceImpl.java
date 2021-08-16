@@ -130,7 +130,7 @@ public class ArticleServiceImpl implements ArticleService {
      * @return
      */
     @Override
-    @Transactional(rollbackFor = {Exception.class, NotFoundArticleTemplateException.class})
+    @Transactional(rollbackFor = {Exception.class, NotFoundArticleTemplateException.class, DuplicateTitleException.class})
     public ArticleDto generateArticle(GenerateArticleDto generateArticleDto) throws Exception {
         try {
             logger.info("generate article process");
@@ -147,6 +147,13 @@ public class ArticleServiceImpl implements ArticleService {
             } else
                 template = articleTemplateStructure.getArticleTemplate();
 
+            // verify existence article
+            logger.debug("verify existence article with title {} in database", articleDto.getTitle());
+            Boolean duplicateArticle = existArticle(articleDto.getTitle());
+            if(duplicateArticle.booleanValue()) {
+                logger.info("article {} already registered in database", articleDto.getTitle());
+                throw new DuplicateTitleException("article title "+articleDto.getTitle()+" already reagistered in database");
+            }
             logger.info("populate article");
             Article article = new Article();
             article.setCreatedBy(generateArticleDto.getUsername());
@@ -209,11 +216,18 @@ public class ArticleServiceImpl implements ArticleService {
                 }
             }
 
+            /*********** generate sugggestion article *********
+
+            /*************************************************/
+
             articleDto = getArticleById(article.getId());
             return articleDto;
+        } catch (DuplicateTitleException e) {
+            logger.error("", e);
+            throw new DuplicateTitleException("duplicate article title");
         } catch (NotFoundArticleTemplateException e) {
             logger.error("", e);
-            throw new Exception("not found article template");
+            throw new NotFoundArticleTemplateException("not found article template");
         } catch (Exception e) {
             logger.error("", e);
             throw new Exception("generate article failed");
@@ -673,27 +687,32 @@ public class ArticleServiceImpl implements ArticleService {
             if (!article.getArticleState().equalsIgnoreCase(PUBLISHED)) {
                 logger.info("delete related article with article id {}", article.getId());
                 Iterable<RelatedArticle> relatedArticles = articleRelatedRepository.findRelatedArticleByArticleId(article.getId());
-                relatedArticleRepository.deleteAll(relatedArticles);
+                if(relatedArticles != null)
+                    relatedArticleRepository.deleteAll(relatedArticles);
 
                 logger.info("delete article sk refference with article id {}", article.getId());
                 Iterable<ArticleSkReff> articleSkReffs = articleSkReffRepository.findByArticleId(article.getId());
-                articleSkReffRepository.deleteAll(articleSkReffs);
+                if(articleSkReffs != null)
+                    articleSkReffRepository.deleteAll(articleSkReffs);
 
                 logger.info("delete article image with article id {}", article.getId());
                 Iterable<ArticleImage> articleImages = articleImageRepository.findArticleImagesByArticleId(article.getId());
-                articleImageRepository.deleteAll(articleImages);
+                if(articleImages != null)
+                    articleImageRepository.deleteAll(articleImages);
 
                 logger.info("delete article state with article id {}", article.getId());
                 ArticleState articleState = articleStateRepository.findByArticleId(article.getId());
-                articleStateRepository.delete(articleState);
+                if(articleState != null)
+                    articleStateRepository.delete(articleState);
 
                 logger.info("delete article edit with article id {}", article.getId());
                 List<ArticleEdit> articleEdits = articleEditRepository.findByArticleId(article.getId());
-                articleEditRepository.deleteAll(articleEdits);
+                if(articleEdits != null)
+                    articleEditRepository.deleteAll(articleEdits);
 
                 logger.info("delete unpublished article");
-
                 articleRepository.delete(article);
+                logger.info("deleted article {} success", article.getJudulArticle());
             }
             return Boolean.TRUE;
         } catch (DeletePublishedArticleException e) {
