@@ -6,6 +6,7 @@ import javax.persistence.*;
 @Table(name = "t_article_content")
 public class ArticleContent extends CommonArticleContent {
     @Id
+    @Column(name = "id")
     private Long id = 0L;
     @Version
     @Column(name = "optlock", columnDefinition = "integer DEFAULT 0", nullable = false)

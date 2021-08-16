@@ -834,8 +834,10 @@ public class ArticleServiceImpl implements ArticleService {
             /*
             cek level first, if level == 1 then get content id, this content id will use to set content id
              */
-            if (articleContentDto.getLevel().longValue() == 1)
-                articleContentDto.setId(articleContentRepository.getContentId());
+            logger.debug("level action value of content is {}", articleContentDto.getLevel().longValue());
+            logger.debug("parent value {}", articleContentDto.getParent());
+//            if (articleContentDto.getLevel().longValue() == 1)
+//                articleContentDto.setId(articleContentRepository.getContentId());
             logger.info("process save and update content with id {}", articleContentDto.getId());
             articleContentDto.getBreadcumbArticleContentDtos().clear();
             Optional<ArticleContent> articleContentOpt = articleContentRepository.findById(articleContentDto.getId());
@@ -859,14 +861,15 @@ public class ArticleServiceImpl implements ArticleService {
             articleContent.setSort(articleContentDto.getSort());
             articleContent.setLevel(articleContentDto.getLevel());
 
-            if (articleContentDto.getLevel().longValue() != 1) {
+            if (articleContentDto.getLevel().longValue() == 1) {
+                logger.debug("set parent value for for level value {}", articleContentDto.getLevel().longValue());
+                articleContent.setParent(articleContentDto.getParent());
+            } else {
                 Optional<ArticleContent> parentOpt = articleContentRepository.findById(articleContentDto.getParent());
                 if (parentOpt.isEmpty()) {
                     throw new ParentContentNotFoundException("parent article content not found");
                 }
                 articleContent.setParent(parentOpt.get().getId());
-            } else {
-                articleContent.setParent(articleContentDto.getParent());
             }
 
             Optional<Article> articleOpt = articleRepository.findById(articleContentDto.getArticleId());
