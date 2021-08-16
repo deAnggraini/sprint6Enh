@@ -865,6 +865,7 @@ public class ArticleServiceImpl implements ArticleService {
                 logger.debug("set parent value for for level value {}", articleContentDto.getLevel().longValue());
                 articleContent.setParent(articleContentDto.getParent());
             } else {
+                logger.debug("level article content <> 1");
                 Optional<ArticleContent> parentOpt = articleContentRepository.findById(articleContentDto.getParent());
                 if (parentOpt.isEmpty()) {
                     throw new ParentContentNotFoundException("parent article content not found");
