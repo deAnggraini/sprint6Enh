@@ -1,4 +1,5 @@
-<div #multiSelect class="multi-select-search d-flex align-self-center flex-wrap {{class}}" [ngClass]="{hasError : hasError}">
+<div #multiSelect class="multi-select-search d-flex align-self-center flex-wrap {{class}}"
+    [ngClass]="{hasError : hasError}">
     <div class="selected-item d-flex justify-content-between flex-nowrap" *ngFor="let item of value; let i = index">
         <div class="_title">{{item.text}}</div>
         <a href="#" (click)="cancel(item)" class="_close">
@@ -6,9 +7,9 @@
         </a>
     </div>
     <div class="d-flex flex-grow-1">
-        <!-- (ngModelChange)="onChangeKeyword($event)" -->
         <input type="text" class="input-multi-select" [placeholder]="placeholder || ''" required autocomplete="off"
-            [(ngModel)]="search" maxlength="50" [ngbTypeahead]="onChangeKeyword" (click)="onFocusSearch($event)">
+            [(ngModel)]="search" maxlength="50" [ngbTypeahead]="onChangeKeyword" (click)="onFocusSearch($event)"
+            (keyup.enter)="keyEnter($event)">
     </div>
 </div>
 <div ngbDropdown #multiSelectDropDown="ngbDropdown" class="multi-select-drop-down" style="width: 100%;" display="static"

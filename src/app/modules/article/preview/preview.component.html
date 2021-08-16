@@ -13,12 +13,14 @@ height: 184px;
         </a>
     </div>
     <div class="d-flex flex-row align-items-center">
-        <a href="#" class="btn btn-link link text-dark d-flex flex-row" (click)="onSave($event)">
+        <a href="#" class="btn btn-link link text-dark d-flex flex-row" (click)="onSave($event)"
+            [ngClass]="{disabled:!btnSaveEnabled}">
             <div [inlineSVG]="'./assets/media/svg/bca/icon/save.svg'" cacheSVG="true" class="svg-icon"></div>
             <div>Simpan</div>
         </a>
         <div class="separator"></div>
-        <a href="#" class="btn btn-link link text-dark d-flex flex-row" (click)="onSaveSend($event)">
+        <a href="#" class="btn btn-link link text-dark d-flex flex-row" (click)="onSaveSend($event)"
+            [ngClass]="{disabled:!btnSaveSendEnabled}">
             <div [inlineSVG]="'./assets/media/svg/bca/icon/send.svg'" cacheSVG="true" class="svg-icon"></div>
             <div>Simpan & Kirim</div>
         </a>
@@ -45,7 +47,7 @@ height: 184px;
     <div class="back-panel">
         <pakar-breadcrumbs [node]="struktur$"></pakar-breadcrumbs>
     </div>
-    <ng-container>
+    <ng-container *ngIf="articleDTO">
         <div class="pakar-container h-100 p-8 d-flex flex-column flex-column-auto flex-grow"
             style="min-height: initial;">
             <div class="d-flex flex-row justify-content-between">
@@ -69,7 +71,8 @@ height: 184px;
                     </div>
 
                     <!-- Ubah Artikel -->
-                    <div href="" class="btn btn-link" *ngIf="editable">
+                    <div [routerLink]="['/article/form/'+articleDTO.id, {isEdit:true}]" class="btn btn-link"
+                        *ngIf="editable">
                         <span [inlineSVG]="'./assets/media/svg/bca/icon/edit-document-dark.svg'" cacheSVG="true"
                             class="svg-icon menu-icon"></span>
                         <span class="font-weight-bold" style="color: #0F5EA9;">Ubah Artikel</span>
@@ -132,19 +135,17 @@ height: 184px;
                             </tbody>
                         </table>
                     </div>
-                    <div>
+                    <div *ngIf="articleDTO.contents">
                         <mat-accordion [togglePosition]="'before'" multi="true">
                             <mat-expansion-panel class="acc-level acc-level-1"
-                                *ngFor="let content of articleDTO.contents">
+                                *ngFor="let content of articleDTO.contents" [expanded]="content.expanded">
                                 <mat-expansion-panel-header [@.disabled]="true">
                                     <mat-panel-title>
                                         <span>{{content.title}}</span>
                                     </mat-panel-title>
                                 </mat-expansion-panel-header>
-                                <div style="padding-top: 1rem;">
-                                    <span style="padding: 1rem;">
-                                        {{content.intro}}
-                                    </span>
+                                <div class="content">
+                                    <div class="p-3" [innerHTML]="content.topicContent"></div>
                                     <ng-container *ngIf="content.children.length" [ngTemplateOutlet]="accordionChild"
                                         [ngTemplateOutletContext]="{ children: content.children, level:2, parents:[]}">
                                     </ng-container>
@@ -165,39 +166,9 @@ height: 184px;
                                 </a>
                             </div>
                         </div>
-                        <ngx-slick-carousel class="carousel" #slickModal="slick-carousel" [config]="slideConfig"
-                            style="width: 1185px;">
-                            <div ngxSlickItem *ngFor="let item of slides" class="slide my-3">
-                                <div class="mx-2">
-                                    <div class="col rounded-sm" style="border: 1px solid #DDD; box-shadow: 0px 4px 8px 0px #0000001A; 
-                                    height: 134px; display: flex; align-items: center;"
-                                        onmouseover="this.style.border ='1px groove #1995D1';"
-                                        onmouseout="this.style.border ='1px solid #DDD';">
-                                        <div class="row">
-                                            <div class="col p-0 px-2 m-4">
-                                                <div class="mb-2 text-ellipsis-1">
-                                                    <a class="title text-dark font-weight-bolder font-size-h7"
-                                                        routerLink="/article/recommendation">{{item.title | maxLength:
-                                                        35}}</a>
-                                                </div>
-                                                <p class="text-desc mb-1 text-ellipsis-2"
-                                                    style="word-wrap: break-word;">
-                                                    {{item.desc | maxLength: 65}}
-                                                    &nbsp;
-                                                    <a routerLink="/article/recommendation"
-                                                        class="navi-text cursor-pointer font-weight-normal font-size-sm">
-                                                        Selengkapnya >
-                                                    </a>
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </ngx-slick-carousel>
                         <hr>
                     </div>
-                    <div class="sk-referensi mt-6">
+                    <div class="sk-referensi mt-6" *ngIf="skReferences.length">
                         <label class="font-weight-bolder text-dark mb-2">SK/SE Referensi</label>
                         <div>
                             <ul *ngFor="let sk of skReferences">
@@ -231,11 +202,12 @@ height: 184px;
                             style="object-fit: cover; width: 307px; height: 173px;">
                         <hr>
                     </div>
-                    <div class="mx-4 mb-5" style="min-width: 307px;">
+                    <div class="mx-4 mb-5" style="min-width: 307px;" *ngIf="relatedArticle.length">
                         <label class="font-weight-bolder text-dark mb-2">Informasi Terkait</label>
                         <div>
                             <ul *ngFor="let article of relatedArticle">
-                                <li>{{article.text}}</li>
+                                <li><a [routerLink]="['/article/'+article.id]"
+                                        [ngClass]={disabled:!editable}>{{article.text}}</a></li>
                             </ul>
                         </div>
                     </div>
@@ -252,8 +224,8 @@ height: 184px;
     <mat-accordion [togglePosition]="'before'" hideToggle="false" multi="true">
         <ng-container *ngFor="let content of children; let i = index">
             <div class="input-accordion-separator"></div>
-            <mat-expansion-panel [@.disabled]="true" class="acc-level acc-level-{{level}}">
-                <!-- <div class="drag-placeholder"></div> -->
+            <mat-expansion-panel [@.disabled]="true" class="acc-level acc-level-{{level}}"
+                [expanded]="content.expanded">
                 <mat-expansion-panel-header>
                     <mat-panel-title class="text-ellipsis-1">
                         {{numberingFormat(content)}}. {{content.title}}
@@ -266,7 +238,6 @@ height: 184px;
                                 <label><b>{{content.topicTitle}}</b></label>
                             </div>
                             <div>
-                                <!-- <label>{{content.topicContent}}</label> -->
                                 <span [innerHTML]="content.topicContent">&nbsp;</span>
                             </div>
                         </div>
@@ -278,4 +249,38 @@ height: 184px;
             </mat-expansion-panel>
         </ng-container>
     </mat-accordion>
+</ng-template>
+
+<ng-template #carousel>
+    <!-- <ngx-slick-carousel class="carousel" #slickModal="slick-carousel" [config]="slideConfig"
+        style="width: 1185px;">
+        <div ngxSlickItem *ngFor="let item of slides" class="slide my-3">
+            <div class="mx-2">
+                <div class="col rounded-sm" style="border: 1px solid #DDD; box-shadow: 0px 4px 8px 0px #0000001A; 
+                height: 134px; display: flex; align-items: center;"
+                    onmouseover="this.style.border ='1px groove #1995D1';"
+                    onmouseout="this.style.border ='1px solid #DDD';">
+                    <div class="row">
+                        <div class="col p-0 px-2 m-4">
+                            <div class="mb-2 text-ellipsis-1">
+                                <a class="title text-dark font-weight-bolder font-size-h7"
+                                    routerLink="/article/recommendation">
+                                    {{item.title | maxLength: 35}}
+                                </a>
+                            </div>
+                            <p class="text-desc mb-1 text-ellipsis-2"
+                                style="word-wrap: break-word;">
+                                {{item.desc | maxLength: 65}}
+                                &nbsp;
+                                <a routerLink="/article/recommendation"
+                                    class="navi-text cursor-pointer font-weight-normal font-size-sm">
+                                    Selengkapnya >
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ngx-slick-carousel> -->
 </ng-template>

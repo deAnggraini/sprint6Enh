@@ -36,6 +36,7 @@ export class AutoCompleteComponent implements OnInit, ControlValueAccessor {
   selected: Option = { id: '', text: '', value: '' };
   disabled: boolean = false;
   hasError: boolean = false;
+  isEnter: boolean = false;
 
   constructor(private cdr: ChangeDetectorRef) { }
 
@@ -46,34 +47,61 @@ export class AutoCompleteComponent implements OnInit, ControlValueAccessor {
         div.classList.add('focus');
       } else {
         div.classList.remove('focus');
+        this.isEnter = false;
       }
       // this._onTouched(this.value);
     }
+  }
+  onBlur(text) {
+    this.inputText.nativeElement.value = this.selected.text;
+  }
+  onReset() {
+    this.onSelect({ id: '', text: '', value: '' });
   }
   onSelect(item: Option) {
     this.selected = item;
     this.onChange.emit(item);
     this._onChange(item.id);
     this.comboBoxDrop.close();
+    this.cdr.detectChanges();
+  }
+  keyEnter(e) {
+    const _options = this.options;
+    if (_options && _options.length) {
+      this.selected = { id: '', text: '', value: '' };
+      this.onSelect(_options[0]);
+    }
+    // e.preventDefault();
+    // e.stopPropagation();
+    // this.comboBoxDrop.close();
+    return false;
   }
 
   ngOnInit(): void {
     fromEvent(this.inputText.nativeElement, 'keyup')
       .pipe(
         map((event: any) => {
+          if (event.keyCode == 13) {
+            this.isEnter = true;
+            return '';
+          }
           return event.target.value;
         }),
         debounceTime(500),
         distinctUntilChanged()
       )
       .subscribe((text: string) => {
-        this.onSearch.emit(text);
-        this.comboBoxDrop.open();
+        if (this.isEnter) {
+          this.isEnter = false;
+          this.comboBoxDrop.close();
+        } else {
+          this.onSearch.emit(text);
+          this.comboBoxDrop.open();
+        }
       });
   }
 
   writeValue(obj: any): void {
-    console.log('writeValue', { obj });
     this.value = obj;
     if (obj) { this.cdr.detectChanges(); }
   }

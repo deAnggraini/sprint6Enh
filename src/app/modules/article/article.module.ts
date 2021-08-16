@@ -50,7 +50,7 @@ const routes: Routes = [
         }
       },
       {
-        path: 'preview', component: PreviewComponent,
+        path: 'preview/:id', component: PreviewComponent,
         data: {
           allowedRoles: ['SUPERADMIN', 'ADMIN', 'PUBLISHER', 'EDITOR']
         }

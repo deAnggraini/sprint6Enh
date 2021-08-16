@@ -1,7 +1,11 @@
 <div #autocomplete class="pakar-autocomplete d-flex align-items-center justify-content-between"
     [ngClass]="{ 'is-invalid': hasError, 'disabled' : !disabled}">
     <!-- <div class="text-ellipsis-1" [ngClass]="{'text-muted': !selected.value}">{{selected.value || placeholder}}</div> -->
-    <input #inputText type="text" [placeholder]="placeholder" required autocomplete="off" [value]="selected.text">
+    <input #inputText type="text" [placeholder]="placeholder" required autocomplete="off" [value]="selected.text"
+        (keyup.enter)="keyEnter($event)" (blur)="onBlur(selected.text)">
+    <button *ngIf="selected.text" type="button" class="btn btn-xs btn-clean" (click)="onReset();">
+        <i class="ki ki-close icon-xs"></i>
+    </button>
     <button type="button" class="btn btn-xs btn-clean" (click)="$event.stopPropagation(); comboBoxDrop.open();"
         [disabled]="disabled">
         <i class="ki ki-arrow-down icon-xs" [ngClass]="{'text-primary' : !disabled}"></i>
@@ -11,6 +15,9 @@
     (openChange)="openChange($event)" display="static">
     <button style="display: none;" ngbDropdownAnchor (focus)="comboBoxDrop.open()"></button>
     <div ngbDropdownMenu class="combo-box-dropdown">
+        <div *ngIf="options.length < 1" class="px-3">
+            Data tidak ditemukan
+        </div>
         <button type="button" ngbDropdownItem *ngFor="let item of options"
             (click)="onSelect(item)">{{item.text}}</button>
     </div>

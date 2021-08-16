@@ -2,6 +2,7 @@
     [ngClass]="{hasError : hasError}">
     <!-- (change)="onChange.emit(value)" -->
     <input #theInput type="text" class="form-control" [placeholder]="placeholder" required autocomplete="off"
-        [(ngModel)]="value" [maxlength]="maxlength" (ngModelChange)="_onChange($event)" (blur)="_onTouched(value)">
+        [(ngModel)]="value" [maxlength]="maxlength" (ngModelChange)="_onChange($event)" (blur)="_onTouched(value)"
+        [disabled]="disabled">
     <span *ngIf="maxlength && value" class="text-muted">{{value ? value.length : 0}}/{{maxlength}}</span>
 </div>

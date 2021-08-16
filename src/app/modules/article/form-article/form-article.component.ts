@@ -273,13 +273,13 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     let result: boolean = true;
     contents.forEach(d => {
       if (!result) return;
-      if (d.level > 1) {
-        if (!d.title) result = false;
-        if (!d.topicTitle) result = false;
-        if (!d.topicContent) result = false;
-      } else {
-        // if (!d.intro) result = false;
-      }
+      // if (d.level > 1) {
+      if (!d.title) result = false;
+      if (!d.topicTitle) result = false;
+      if (!d.topicContent) result = false;
+      // } else {
+      // if (!d.intro) result = false;
+      // }
       if (d.children && d.children.length && result)
         result = this.isContentsPass(d.children);
     });
@@ -341,8 +341,12 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
         this.subscriptions.push(
           this.article.saveArticle(_dataForm).subscribe(resp => {
             if (resp) {
-              this.onPreview(true, true, true, 'Artikel berhasil disimpan ke dalam draft.');
-              this.cdr.detectChanges();
+              this.article.formData = _dataForm;
+              this.article.formAlert = 'Artikel berhasil disimpan ke dalam draft.';
+              this.router.navigate(
+                [
+                  `/article/preview/${_dataForm.id}`,
+                ], { replaceUrl: true });
             }
           })
         );
@@ -386,8 +390,14 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
       this.article.saveArticle(_dataForm, true, this.saveAndSend).subscribe(resp => {
         if (resp) {
           this.modalService.dismissAll();
-          this.onPreview(true, true, true, 'Artikel berhasil disimpan dan dikirim.');
-          this.cdr.detectChanges();
+          // this.onPreview(true, true, true, 'Artikel berhasil disimpan dan dikirim.');
+          // this.cdr.detectChanges();
+          this.article.formData = _dataForm;
+          this.article.formAlert = 'Artikel berhasil disimpan dan dikirim.';
+          this.router.navigate(
+            [
+              `/article/preview/${_dataForm.id}`,
+            ], { replaceUrl: true });
         }
       })
     );
@@ -404,68 +414,55 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // Right icon event
   btnAddClick(e, data: ArticleContentDTO) {
-    if (data == null) {
-      const _contents = this.dataForm.get('contents').value as ArticleContentDTO[];
-      const maxSort: number = this.findMaxSort(_contents);
-      const newNode: ArticleContentDTO = {
-        id: 0,
-        articleId: this.dataForm.value.id,
-        title: '',
-        intro: '',
-        topicContent: '',
-        topicTitle: '',
-        level: 1,
-        parent: 0,
-        sort: maxSort + 1,
-        children: [],
-        expanded: true,
-        listParent: [],
-        no: '',
-        isEdit: false,
-      }
-      this.subscriptions.push(
-        this.article.saveContent(newNode).subscribe(resp => {
-          if (resp) {
-            newNode.id = resp.id;
-            _contents.push(newNode);
-            this.addLog(newNode);
-            this.cdr.detectChanges();
-          }
-        })
-      );
-    } else {
-      this.subscriptions.push(
-        this.article.getContentId().subscribe(resp => {
-          if (resp) {
-            const maxSort: number = this.findMaxSort(data.children);
-            const listParent: ArticleParentDTO[] = JSON.parse(JSON.stringify(data.listParent));
+    this.subscriptions.push(
+      this.article.getContentId().subscribe(resp => {
+        if (resp) {
+          const _contents = this.dataForm.get('contents').value as ArticleContentDTO[];
+          let maxSort: number = 0;
+          let listParent: ArticleParentDTO[] = [];
+          let level: number = 1;
+          let parent: number = 0;
+          let no: string = '';
+          if (data == null) {
+            maxSort = this.findMaxSort(_contents);
+          } else {
+            maxSort = this.findMaxSort(data.children);
+            level = data.level + 1;
+            listParent = JSON.parse(JSON.stringify(data.listParent));
             if (data.level >= 2) {
               listParent.push({ id: 0, no: data.no, title: data.title });
             }
-            const newNode: ArticleContentDTO = {
-              id: resp,
-              articleId: this.dataForm.value.id,
-              title: '',
-              intro: '',
-              topicContent: '',
-              topicTitle: '',
-              level: data.level + 1,
-              parent: data.id,
-              sort: maxSort + 1,
-              children: [],
-              expanded: true,
-              listParent,
-              no: `${data.children.length + 1}`,
-              isEdit: false,
-            }
+            parent = data.id;
+            no = `${data.children.length + 1}`;
+          }
+          const newNode: ArticleContentDTO = {
+            id: resp,
+            articleId: this.dataForm.value.id,
+            title: '',
+            intro: '',
+            topicContent: '',
+            topicTitle: '',
+            level,
+            parent,
+            sort: maxSort + 1,
+            children: [],
+            expanded: true,
+            listParent,
+            no,
+            isEdit: true,
+            isNew: true,
+          }
+          if (data) {
             data.expanded = true;
             data.children.push(newNode);
-            this.addLog(newNode);
-            this.cdr.detectChanges();
+          } else {
+            _contents.push(newNode);
           }
-        })
-      );
-    }
+          this.addLog(newNode);
+          this.cdr.detectChanges();
+        }
+      })
+    );
     e.stopPropagation();
     return false;
   }
@@ -487,7 +484,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
         this.subscriptions.push(
           this.article.deleteContent(data.id).subscribe(resp => {
             this.deleteNode(data);
-            this.toast.showSuccess('Hapus Data Accordion Berhasil');
+            // this.toast.showSuccess('Hapus Data Accordion Berhasil');
           })
         );
       }
@@ -600,7 +597,8 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
       this.article.saveContent(content).subscribe(resp => {
         if (resp) {
           content.isEdit = false;
-          this.toast.showSuccess('Simpan Data Accordion Berhasil');
+          content.isNew = false;
+          // this.toast.showSuccess('Simpan Data Accordion Berhasil');
           this.addLog(content);
         }
         this.cdr.detectChanges();
@@ -608,17 +606,21 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
   accCancel(content: ArticleContentDTO) {
-    if (this.logs.has(content.id)) {
-      const _values: ArticleContentDTO[] = this.logs.get(content.id);
-      const _value = _values[_values.length - 1];
-      content.title = _value.title;
-      content.topicTitle = _value.topicTitle;
-      content.topicContent = _value.topicContent;
-    } else {
-      content.title = '';
-      content.topicTitle = '';
-      content.topicContent = '';
-    }
+    if (content.isNew) {
+      // data baru belum pernah simpan, langsung hapus
+      this.deleteNode(content);
+    } else
+      if (this.logs.has(content.id)) {
+        const _values: ArticleContentDTO[] = this.logs.get(content.id);
+        const _value = _values[_values.length - 1];
+        content.title = _value.title;
+        content.topicTitle = _value.topicTitle;
+        content.topicContent = _value.topicContent;
+      } else {
+        content.title = '';
+        content.topicTitle = '';
+        content.topicContent = '';
+      }
     content.isEdit = false;
     this.cdr.detectChanges();
   }
@@ -637,7 +639,6 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
         if (!d.isEdit) d.isEdit = false;
         d.listParent = listParent;
         if (d.level == 1) {
-          d.expanded = true;
           d.no = '';
           d.sort = i + 1;
           this.recalculateChildren(d.children, listParent.concat([]));
@@ -647,6 +648,8 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
           const { id, title, no } = d;
           this.recalculateChildren(d.children, listParent.concat([{ id, title, no }]));
         }
+        if (!d.topicTitle && d.title) d.topicTitle = d.title;
+        if (!d.topicContent && d.intro) d.topicContent = d.intro;
       });
     }
   }
@@ -831,7 +834,6 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // CKEDITOR5 function
   public onReady(editor, value: string = '') {
-    // console.log({ editor, value });
     if (value) editor.setData(value); // cara paksa isi ckeditor
     this.finishRender = true;
   }

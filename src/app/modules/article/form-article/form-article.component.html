@@ -12,9 +12,8 @@
             </a>
         </div>
         <div class="d-flex flex-row align-items-center">
-            <a href="#" class="btn btn-link link text-dark d-flex flex-row"
-                [ngClass]="{'disabled' : !this.dataForm.valid || hasError || hasImageError}"
-                (click)="onPreview($event)">
+            <!-- [ngClass]="{'disabled' : !this.dataForm.valid || hasError || hasImageError}" -->
+            <a href="#" class="btn btn-link link text-dark d-flex flex-row" (click)="onPreview($event)">
                 <div [inlineSVG]="'./assets/media/svg/bca/icon/preview.svg'" cacheSVG="true" class="svg-icon"></div>
                 <div>Preview</div>
             </a>
@@ -90,30 +89,50 @@
                             class="acc-level acc-level-1" [(expanded)]="content.expanded">
                             <mat-expansion-panel-header [@.disabled]="true">
                                 <mat-panel-title>
-                                    <ng-container *ngIf="content.isEdit">
-                                        <input type="text" class="form-control" [(ngModel)]="content.title"
-                                            [ngModelOptions]="{standalone: true}" (change)="content.isEdit=false"
-                                            (keydown.space)="$event.stopPropagation();"
-                                            (click)="$event.stopPropagation();" maxlength="150"
-                                            placeholder="Masukkan title accordion disini (maks. 150 karakter)">
-                                    </ng-container>
-                                    <ng-container *ngIf="!content.isEdit">
-                                        <span>{{content.title}}</span>
-                                        <span [inlineSVG]="'./assets/media/svg/bca/icon/info.svg'" cacheSVG="true"
-                                            class="svg-icon svg-tooltip mx-2" placement="right"
-                                            [ngbTooltip]="tooltips[i]" container="body"
-                                            tooltipClass="my-custom-class fs12">
-                                        </span>
-                                    </ng-container>
+                                    <span>{{content.title}}</span>
+                                    <span [inlineSVG]="'./assets/media/svg/bca/icon/info.svg'" cacheSVG="true"
+                                        class="svg-icon svg-tooltip mx-2" placement="right" [ngbTooltip]="tooltips[i]"
+                                        container="body" tooltipClass="my-custom-class fs12">
+                                    </span>
                                 </mat-panel-title>
-                                <ng-container [ngTemplateOutlet]="rightIcon"
+                                <ng-container *ngIf="!content.isNew" [ngTemplateOutlet]="rightIcon"
                                     [ngTemplateOutletContext]="{ data: content}">
                                 </ng-container>
                             </mat-expansion-panel-header>
                             <ng-template matExpansionPanelContent>
-                                <div>
-                                    <input type="text" class="txt-desc-lvl1" [(ngModel)]="content.intro"
-                                        [ngModelOptions]="{standalone: true}"
+                                <div class="content">
+                                    <div *ngIf="content.isEdit" class="p-3">
+                                        <div class="form-group">
+                                            <label>Judul Topik <span class="text-danger">*</span></label>
+                                            <pakar-input-length
+                                                placeholder="Masukkan judul topik disini (maks. 150 karakter)"
+                                                [(ngModel)]="content.topicTitle" maxlength="150"
+                                                (onChange)="content.title = $event"
+                                                [ngModelOptions]="{standalone: true}"
+                                                [disabled]="user.roles[0] != 'ADMIN' && user.roles[0] != 'SUPERADMIN'">
+                                            </pakar-input-length>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Isi Topik <span class="text-danger">*</span></label>
+                                            <ckeditor [editor]="editor" [config]="configTopic" tagName="textarea"
+                                                [(ngModel)]="content.topicContent"
+                                                (ready)="onReady($event, content.topicContent)"
+                                                (change)="onChange($event)" [ngModelOptions]="{standalone: true}">
+                                            </ckeditor>
+                                        </div>
+                                        <div class="text-right">
+                                            <button type="button" class="btn btn-outline-light btn-sm button-cancel"
+                                                (click)="accCancel(content)">Batal</button>
+                                            <button type="button" class="btn btn-sm btn-blue button-simpan"
+                                                [disabled]="!content.topicContent"
+                                                (click)="accSaveAddEdit(content)">Simpan</button>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="!content.isEdit && content.topicContent" class="p-3"
+                                        style="padding-bottom: 0px !important;" [innerHTML]="content.topicContent">
+                                    </div>
+                                    <input *ngIf="!content.isEdit && !content.topicContent" type="text"
+                                        class="txt-desc-lvl1" readonly
                                         placeholder="Masukkan kalimat pengantar terkait {{content.title}} disini.">
                                     <ng-container [ngTemplateOutlet]="accordionChild"
                                         [ngTemplateOutletContext]="{ children: content.children, level:2, parents:[{id:content.id, no:content.no}]}">
@@ -125,11 +144,7 @@
                     <button
                         *ngIf="dataForm.get('isEmptyTemplate').value  && (user.roles[0] == 'ADMIN' || user.roles[0] == 'SUPERADMIN')"
                         type="button" class="btn btn-blue-outline btn-sm rounded-sm w-100"
-                        (click)="btnAddClick($event, null)">
-                        <!-- <span [inlineSVG]="'./assets/media/svg/bca/icon/plus.svg'" cacheSVG="true"
-                        class="svg-icon"></span> -->
-                        + Tambah Artikel
-                    </button>
+                        (click)="btnAddClick($event, null)">+ Tambah Topik</button>
                     <button
                         *ngIf="dataForm.get('isEmptyTemplate').value  && !(user.roles[0] == 'ADMIN' || user.roles[0] == 'SUPERADMIN')"
                         type="button" class="btn btn-danger btn-sm rounded-sm w-100" disabled>
@@ -145,7 +160,7 @@
                 </pakar-multi-select>
             </div>
             <div class="form-group col-sm-12 col-lg-11 col-xl-11 col-xxl-11">
-                <label>Artikel Terkait</label>
+                <label>Informasi Terkait</label>
                 <pakar-multi-select formControlName="related"
                     placeholder="Masukkan Artikel terkait lain yang bersangkutan dengan artikel ini"
                     [dataList]="relatedArticle$" (getData)="getDataRelatedArticle($event)" maxSelected="3">
@@ -176,7 +191,8 @@
 <ng-template #preview>
     <pakar-article-preview (onCancelCallback)="onPreview(false)" [hideTopbar]="previewHideTopbar"
         [alert]="previewHideTopbar" [alertMessage]="previewAlertMessage" (onSaveCallback)="onSave($event)"
-        (onSaveSendCallback)="onSaveAndSend($event)">
+        (onSaveSendCallback)="onSaveAndSend($event)" [btnSaveEnabled]="dataForm.valid && !hasError && !hasImageError"
+        [btnSaveSendEnabled]="isAllPass()">
     </pakar-article-preview>
 </ng-template>
 
@@ -189,22 +205,24 @@
                     class="svg-icon svg-icon-sm mr-2"></span>
             </a>
         </ng-container>
+        <!-- Edit -->
+        <a href='#' class="btn-link" (click)="btnEditClick($event, data)">
+            <span [inlineSVG]="'./assets/media/svg/bca/icon/pencil.svg'" cacheSVG="true"
+                class="svg-icon svg-icon-sm mr-2"></span>
+        </a>
+
         <!-- edit & delete -->
         <ng-container *ngIf="data.level == 1 && (user.roles[0] == 'ADMIN' || user.roles[0] == 'SUPERADMIN')">
-            <a href='#' class="btn-link" (click)="btnEditClick($event, data)">
+            <!-- <a href='#' class="btn-link" (click)="btnEditClick($event, data)">
                 <span [inlineSVG]="'./assets/media/svg/bca/icon/pencil.svg'" cacheSVG="true"
                     class="svg-icon svg-icon-sm mr-2"></span>
-            </a>
+            </a> -->
             <a href='#' class="btn-link" (click)="btnDeleteClick($event, data)">
                 <span [inlineSVG]="'./assets/media/svg/bca/icon/trash-bin.svg'" cacheSVG="true"
                     class="svg-icon svg-icon-sm mr-2"></span>
             </a>
         </ng-container>
         <ng-container *ngIf="data.level > 1">
-            <a href='#' class="btn-link" (click)="btnEditClick($event, data)">
-                <span [inlineSVG]="'./assets/media/svg/bca/icon/pencil.svg'" cacheSVG="true"
-                    class="svg-icon svg-icon-sm mr-2"></span>
-            </a>
             <a href='#' class="btn-link" (click)="btnDeleteClick($event, data)">
                 <span [inlineSVG]="'./assets/media/svg/bca/icon/trash-bin.svg'" cacheSVG="true"
                     class="svg-icon svg-icon-sm mr-2"></span>
@@ -229,18 +247,10 @@
                     [cdkDragData]="content" [(expanded)]="content.expanded">
                     <div class="drag-placeholder" *cdkDragPlaceholder></div>
                     <mat-expansion-panel-header cdkDragHandle>
-                        <mat-panel-title class="text-ellipsis-1">{{numberingFormat(content)}}.
-                            <!-- <ng-container *ngIf="content.isEdit">
-                                <input type="text" class="form-control" [(ngModel)]="content.title"
-                                    (change)="content.isEdit=false" (keydown.space)="$event.stopPropagation();"
-                                    (click)="$event.stopPropagation();" maxlength="150"
-                                    placeholder="Masukkan title accordion disini (maks. 150 karakter)">
-                            </ng-container> -->
-                            <!-- <ng-container *ngIf="!content.isEdit"> -->
-                            {{content.title}}
-                            <!-- </ng-container> -->
+                        <mat-panel-title class="text-ellipsis-1">{{numberingFormat(content)}}. {{content.title}}
                         </mat-panel-title>
-                        <ng-container [ngTemplateOutlet]="rightIcon" [ngTemplateOutletContext]="{ data: content}">
+                        <ng-container *ngIf="!content.isNew" [ngTemplateOutlet]="rightIcon"
+                            [ngTemplateOutletContext]="{ data: content}">
                         </ng-container>
                     </mat-expansion-panel-header>
                     <div class="preview-drag" *cdkDragPreview>{{numberingFormat(content)}}. {{content.title}}
@@ -263,7 +273,7 @@
                                         <label>Isi Topik <span class="text-danger">*</span></label>
                                         <ckeditor [editor]="editor" [config]="configTopic" tagName="textarea"
                                             [(ngModel)]="content.topicContent"
-                                            (ready)="onReady($event, content.topicContent)" (change)="onChange($event)"></ckeditor>
+                                            (ready)="onReady($event, content.topicContent)" (change)="onChange($event)">
                                         </ckeditor>
                                     </div>
                                     <div class="text-right">
@@ -274,7 +284,7 @@
                                             (click)="accSaveAddEdit(content)">Simpan</button>
                                     </div>
                                 </div>
-                                <div *ngIf="!content.isEdit" class="form-group"
+                                <div *ngIf="!content.isEdit"
                                     [innerHTML]="sanitizeHtml(content.topicContent) || '&nbsp;'"></div>
                             </div>
                             <ng-container [ngTemplateOutlet]="accordionChild"
