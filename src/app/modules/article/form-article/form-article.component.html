@@ -12,8 +12,9 @@
             </a>
         </div>
         <div class="d-flex flex-row align-items-center">
-            <a href="#" class="btn btn-link link text-dark d-flex flex-row" 
-                [ngClass]="{'disabled' : !this.dataForm.valid || hasError || hasImageError}" (click)="onPreview($event)">
+            <a href="#" class="btn btn-link link text-dark d-flex flex-row"
+                [ngClass]="{'disabled' : !this.dataForm.valid || hasError || hasImageError}"
+                (click)="onPreview($event)">
                 <div [inlineSVG]="'./assets/media/svg/bca/icon/preview.svg'" cacheSVG="true" class="svg-icon"></div>
                 <div>Preview</div>
             </a>
@@ -261,8 +262,9 @@
                                     <div class="form-group">
                                         <label>Isi Topik <span class="text-danger">*</span></label>
                                         <ckeditor [editor]="editor" [config]="configTopic" tagName="textarea"
-                                            [(ngModel)]="content.topicContent" (ready)="onReady($event, content.topicContent)"
-                                            (change)="onChange($event)"></ckeditor>
+                                            [(ngModel)]="content.topicContent"
+                                            (ready)="onReady($event, content.topicContent)" (change)="onChange($event)"></ckeditor>
+                                        </ckeditor>
                                     </div>
                                     <div class="text-right">
                                         <button type="button" class="btn btn-outline-light btn-sm button-cancel"
@@ -273,7 +275,7 @@
                                     </div>
                                 </div>
                                 <div *ngIf="!content.isEdit" class="form-group"
-                                    [innerHTML]="content.topicContent || '&nbsp;'"></div>
+                                    [innerHTML]="sanitizeHtml(content.topicContent) || '&nbsp;'"></div>
                             </div>
                             <ng-container [ngTemplateOutlet]="accordionChild"
                                 [ngTemplateOutletContext]="{ children: content.children, level : level+1, parents: parents.concat({id:content.id, no:content.no})}">
