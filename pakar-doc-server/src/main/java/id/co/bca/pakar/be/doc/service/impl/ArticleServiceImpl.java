@@ -148,8 +148,8 @@ public class ArticleServiceImpl implements ArticleService {
                 template = articleTemplateStructure.getArticleTemplate();
 
             // verify existence article
-            logger.debug("verify existence article with title {} in database", articleDto.getTitle());
-            Boolean duplicateArticle = existArticle(articleDto.getTitle());
+            logger.debug("verify existence article with title {} in database", generateArticleDto.getTitle());
+            Boolean duplicateArticle = existArticle(generateArticleDto.getTitle());
             if(duplicateArticle.booleanValue()) {
                 logger.info("article {} already registered in database", articleDto.getTitle());
                 throw new DuplicateTitleException("article title "+articleDto.getTitle()+" already reagistered in database");
