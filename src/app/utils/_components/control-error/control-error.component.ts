@@ -43,7 +43,6 @@ export class ControlErrorComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('ControlErrorComponent onChange', changes);
   }
 
 }

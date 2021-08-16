@@ -823,7 +823,18 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
   getDataSuggestionArticle(keyword: string) {
-    const exclude = [this.dataForm.value.id];
+    const exclude = [this.dataForm.value.id].concat(this.dataForm.value.suggestions.map(d => d.id));
+    const structureId = this.dataForm.value.structureId;
+    this.subscriptions.push(
+      this.article.suggestionArticle(keyword, structureId, exclude).subscribe(resp => {
+        if (resp) this.suggestionArticle$.next(this.convertArticleToOption(resp.list));
+      })
+    );
+  }
+  onSelectSuggestionArticle(arg: { item: any, keyword: string }) {
+    // console.log('onSelectSuggestionArticle', { arg });
+    const { keyword, item } = arg;
+    const exclude = [this.dataForm.value.id].concat(this.dataForm.value.suggestions.map(d => d.id)).concat([item.id]);
     const structureId = this.dataForm.value.structureId;
     this.subscriptions.push(
       this.article.suggestionArticle(keyword, structureId, exclude).subscribe(resp => {

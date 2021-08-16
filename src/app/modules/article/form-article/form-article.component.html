@@ -172,6 +172,7 @@
                     <pakar-multi-select formControlName="suggestions"
                         placeholder="Masukkan Nomor Referensi atau Judul SKSE dari Artikel ini"
                         [dataList]="suggestionArticle$" (getData)="getDataSuggestionArticle($event)" maxSelected="5"
+                        (onSelect)="onSelectSuggestionArticle($event)"
                         class="border-less">
                     </pakar-multi-select>
                 </div>

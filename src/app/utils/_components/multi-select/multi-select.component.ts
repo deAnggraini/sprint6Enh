@@ -30,6 +30,7 @@ export class MultiSelectComponent implements OnInit, ControlValueAccessor, OnDes
   @Input() dataList: BehaviorSubject<Option[]>;
   @Output() onChange = new EventEmitter<any>();
   @Output() getData = new EventEmitter<any>();
+  @Output() onSelect = new EventEmitter<any>();
 
   // ControlValueAccessor propogate
   _onTouched: (_) => {};
@@ -63,7 +64,7 @@ export class MultiSelectComponent implements OnInit, ControlValueAccessor, OnDes
       ),
     )
 
-  constructor(private cdr : ChangeDetectorRef) { }
+  constructor(private cdr: ChangeDetectorRef) { }
 
   cancel(item) {
     this.value = this.value.filter(d => d.id != item.id);
@@ -79,8 +80,10 @@ export class MultiSelectComponent implements OnInit, ControlValueAccessor, OnDes
     return result;
   }
   private add(item) {
+    console.log('add or onSelect', item);
     this.value.push(item);
     this._onChange(this.value);
+    this.onSelect.emit({ item, keyword: this.search });
     return false;
   }
 
