@@ -285,7 +285,7 @@
                                     </div>
                                 </div>
                                 <div *ngIf="!content.isEdit"
-                                    [innerHTML]="sanitizeHtml(content.topicContent) || '&nbsp;'"></div>
+                                    [innerHTML]="(content.topicContent || '&nbsp;') | sanitizeHtml"></div>
                             </div>
                             <ng-container [ngTemplateOutlet]="accordionChild"
                                 [ngTemplateOutletContext]="{ children: content.children, level : level+1, parents: parents.concat({id:content.id, no:content.no})}">

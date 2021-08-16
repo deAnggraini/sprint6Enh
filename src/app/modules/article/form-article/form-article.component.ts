@@ -16,7 +16,6 @@ import { ConfirmService } from 'src/app/utils/_services/confirm.service';
 import { ToastService } from 'src/app/utils/_services/toast.service';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { UserService } from '../../_services/user.service';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 const TOOL_TIPS = [
   'Berisi aturan/kaidah/ketetapan/syarat/kriteria atas produk/aplikasi yang harus dipahami pembaca sebelum melakukan prosedur atas produk/aplikasi tersebut; dapat dituangkan dalam bentuk kalimat ataupun tabel.',
@@ -247,8 +246,6 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.allIds
   }
 
-  safeHtml: SafeHtml;
-
   constructor(
     private cdr: ChangeDetectorRef,
     private article: ArticleService,
@@ -262,8 +259,8 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     private toast: ToastService,
     private modalService: NgbModal,
     private configModel: NgbModalConfig,
-    private userService: UserService,
-    private _sanitizer: DomSanitizer) {
+    private userService: UserService
+    ) {
     this.configModel.backdrop = 'static';
     this.configModel.keyboard = false;
   }
@@ -838,10 +835,6 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     this.finishRender = true;
   }
   public onChange({ editor }: ChangeEvent) {
-  }
-
-  sanitizeHtml(html: string) {
-    return this._sanitizer.bypassSecurityTrustHtml(html);
   }
 
   // Angular
