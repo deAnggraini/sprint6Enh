@@ -92,7 +92,7 @@ height: 184px;
             <div class="row d-flex flex-wrap justify-content-between">
                 <!-- left side -->
                 <div class="col">
-                    <span class="pakar-text-header-desc" [innerHTML]="articleDTO.desc">&nbsp;</span>
+                    <span class="pakar-text-header-desc" [innerHTML]="(articleDTO.desc || '&nbsp;') | sanitizeHtml">&nbsp;</span>
                     <div class="my-3" *ngIf="!hideTable">
                         <table class="table table-bordered">
                             <thead class="thead-light">
@@ -145,7 +145,7 @@ height: 184px;
                                     </mat-panel-title>
                                 </mat-expansion-panel-header>
                                 <div class="content">
-                                    <div class="p-3" [innerHTML]="content.topicContent"></div>
+                                    <div class="p-3" [innerHTML]="(content.topicContent || '&nbsp;') | sanitizeHtml"></div>
                                     <ng-container *ngIf="content.children.length" [ngTemplateOutlet]="accordionChild"
                                         [ngTemplateOutletContext]="{ children: content.children, level:2, parents:[]}">
                                     </ng-container>
@@ -235,10 +235,7 @@ height: 184px;
                     <div class="content">
                         <div class="p-3">
                             <div>
-                                <label><b>{{content.topicTitle}}</b></label>
-                            </div>
-                            <div>
-                                <span [innerHTML]="content.topicContent">&nbsp;</span>
+                                <span [innerHTML]="(content.topicContent || '&nbsp;') | sanitizeHtml">&nbsp;</span>
                             </div>
                         </div>
                         <ng-container [ngTemplateOutlet]="accordionChild"

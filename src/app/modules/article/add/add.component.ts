@@ -90,7 +90,7 @@ export class AddComponent implements OnInit, OnDestroy {
       this.subscriptions.push(
         this.article.generate(params).subscribe((resp: ArticleDTO) => {
           this.article.formData = resp;
-          this.router.navigate([`/article/form/${resp.id}`]);
+          this.router.navigate([`/article/form/${resp.id}`], { replaceUrl: true });
         })
       );
     } else {
