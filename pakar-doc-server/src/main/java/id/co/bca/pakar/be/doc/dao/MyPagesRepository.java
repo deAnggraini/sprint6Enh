@@ -22,7 +22,7 @@ public interface MyPagesRepository extends CrudRepository<MyPages, Long> {
     Page<MyPages> findMyPagesDratfArticle(@Param("ids") List<Long> ids, @Param("keyword") String keyword, @Param("username") String username, @Param("state") String state, Pageable pageable);
 
     @Query("SELECT m FROM MyPages m " +
-            "WHERE m.article.id IN (:ids) " +
+            "WHERE m.id IN (:ids) " +
             "AND m.deleted IS FALSE " +
             "AND m.senderState = :state " +
             "AND m.sender=:username " +
