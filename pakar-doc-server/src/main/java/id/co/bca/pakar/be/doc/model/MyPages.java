@@ -11,9 +11,6 @@ public class MyPages extends EntityBase {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "article_id", nullable = false)
-    private Long article;
-
     @Column(name = "sender")
     private String sender;
 
@@ -71,14 +68,6 @@ public class MyPages extends EntityBase {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getArticle() {
-        return article;
-    }
-
-    public void setArticle(Long article) {
-        this.article = article;
     }
 
     public String getSender() {
