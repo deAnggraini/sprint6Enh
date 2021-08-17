@@ -33,6 +33,8 @@ public class Structure extends EntityBase{
 	// flag to identify structur has article or no, for reader role structur appeared if structure has published structure
 	@Column(name = "has_article")
 	private Boolean isHasArticle = Boolean.FALSE;
+	@Column(name = "breadcumb")
+	private String breadCumb;
 
 	public Long getId() {
 		return id;
@@ -128,5 +130,13 @@ public class Structure extends EntityBase{
 
 	public void setHasArticle(Boolean hasArticle) {
 		isHasArticle = hasArticle;
+	}
+
+	public String getBreadCumb() {
+		return breadCumb;
+	}
+
+	public void setBreadCumb(String breadCumb) {
+		this.breadCumb = breadCumb;
 	}
 }

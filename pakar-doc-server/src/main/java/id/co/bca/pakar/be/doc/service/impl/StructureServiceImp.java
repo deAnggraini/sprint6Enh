@@ -282,27 +282,6 @@ public class StructureServiceImp implements StructureService {
             Structure _structure = structureRepository.save(structure);
 
             // set uri value of struckture
-            _structure.setUri("/struktur/list/" + _structure.getId());
-            _structure = structureRepository.save(_structure);
-
-            if (_images != null) {
-                logger.info("saving structure image mapper");
-                StructureImages sim = new StructureImages();
-                sim.setCreatedBy(username);
-                sim.setStructure(_structure);
-                sim.setImages(_images);
-                structureImageRepository.save(sim);
-            }
-
-            if (_icon != null) {
-                logger.info("saving structure icon mapper");
-                StructureIcons sic = new StructureIcons();
-                sic.setCreatedBy(username);
-                sic.setStructure(_structure);
-                sic.setIcons(_icon);
-                structureIconRepository.save(sic);
-            }
-
             // get list parent of new structure
             Long parentId = _structure.getParentStructure();
             boolean parentStatus = Boolean.TRUE;
@@ -332,6 +311,36 @@ public class StructureServiceImp implements StructureService {
                     return o1.getLevel().intValue() - o2.getLevel().intValue();
                 }
             });
+
+            int i = 0;
+            StringBuffer sbfBc = new StringBuffer();
+            for(BreadcumbStructureDto dtoBc : _dto.getBreadcumbStructureDtoList()) {
+                sbfBc.append(dtoBc.getName());
+                if(i != _dto.getBreadcumbStructureDtoList().size() - 1)
+                    sbfBc.append(" > ");
+                i++;
+            }
+
+            _structure.setUri("/struktur/list/" + _structure.getId());
+            _structure = structureRepository.save(_structure);
+
+            if (_images != null) {
+                logger.info("saving structure image mapper");
+                StructureImages sim = new StructureImages();
+                sim.setCreatedBy(username);
+                sim.setStructure(_structure);
+                sim.setImages(_images);
+                structureImageRepository.save(sim);
+            }
+
+            if (_icon != null) {
+                logger.info("saving structure icon mapper");
+                StructureIcons sic = new StructureIcons();
+                sic.setCreatedBy(username);
+                sic.setStructure(_structure);
+                sic.setIcons(_icon);
+                structureIconRepository.save(sic);
+            }
 
             _dto.setId(_structure.getId());
             _dto.setEdit(_structure.getEdit());

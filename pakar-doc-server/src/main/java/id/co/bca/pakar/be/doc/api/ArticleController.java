@@ -50,6 +50,9 @@ public class ArticleController extends BaseController {
     @Autowired
     private MultipartArticleValidator multipartArticleValidator;
 
+    @Autowired
+    private MyPagesService myPagesService;
+
     /**
      *
      * @return
@@ -617,7 +620,7 @@ public class ArticleController extends BaseController {
             logger.info("received token bearer --- {}", authorization);
             searchDto.setUsername(username);
             searchDto.setToken(getTokenFromHeader(authorization));
-            Page<MyPageDto> pageMyPageDto = articleService.searchMyPages2(searchDto);
+            Page<MyPageDto> pageMyPageDto = myPagesService.searchMyPages(searchDto);
             Map<String, Object> maps = new HashMap<String, Object>();
             maps.put("list", pageMyPageDto.getContent());
             maps.put("totalElements", pageMyPageDto.getTotalElements());
