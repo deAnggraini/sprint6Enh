@@ -17,8 +17,14 @@ public class ArticleState extends EntityBase {
     @Column(name = "sender")
     private String sender;
 
+    @Column(name = "fn_sender")
+    private String fnSender;
+
     @Column(name = "receiver")
     private String receiver;
+
+    @Column(name = "fn_receiver")
+    private String fnReceiver;
 
     @Column(name = "sender_state", columnDefinition = "VARCHAR(255) default 'PENDING'")
     private String senderState; // DRAFT, PENDING, APPROVE
@@ -50,12 +56,28 @@ public class ArticleState extends EntityBase {
         this.sender = sender;
     }
 
+    public String getFnSender() {
+        return fnSender;
+    }
+
+    public void setFnSender(String fnSender) {
+        this.fnSender = fnSender;
+    }
+
     public String getReceiver() {
         return receiver;
     }
 
     public void setReceiver(String receiver) {
         this.receiver = receiver;
+    }
+
+    public String getFnReceiver() {
+        return fnReceiver;
+    }
+
+    public void setFnReceiver(String fnReceiver) {
+        this.fnReceiver = fnReceiver;
     }
 
     public String getSenderState() {
