@@ -13,16 +13,14 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #C8C6C4;
+  background-color: #c8c6c4;
   border-radius: 100px;
 }
 
 // Desktop Mode
 @include media-breakpoint-up(lg) {
-
   // Wrapper
   .wrapper {
-
     // Fixed Header
     .header-fixed & {
       padding-top: get($header-config, desktop, fixed, height);
@@ -62,10 +60,8 @@ body {
 
 // Tablet & Mobile Modes
 @include media-breakpoint-down(md) {
-
   // Wrapper
   .wrapper {
-
     // Fixed Header
     .header-mobile-fixed & {
       padding-top: get($header-config, tablet-and-mobile, fixed, height);
@@ -91,6 +87,11 @@ body {
 
 //ckeditor
 .ck[role="textbox"] {
+  font-family: "Calibri" !important;
+  font-size: 11pt !important;
+}
+
+.mat-expansion-panel-content {
   font-family: "Calibri" !important;
   font-size: 11pt !important;
 }
