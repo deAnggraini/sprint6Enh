@@ -26,8 +26,13 @@ public class CommonArticleContent extends EntityBase {
     @Column(name = "topic_caption")
     private String topicCaption;
 
-    @Column(name = "topic_content", columnDefinition = "TEXT", length = 50000)
+    @Lob
+    @Column(name = "topic_content")
     private String topicContent;
+
+//    @Lob
+//    @Column(name = "topic_content_2")
+//    private String topicContent2;
 
     public String getName() {
         return name;
@@ -84,4 +89,12 @@ public class CommonArticleContent extends EntityBase {
     public void setTopicContent(String topicContent) {
         this.topicContent = topicContent;
     }
+
+//    public String getTopicContent2() {
+//        return topicContent2;
+//    }
+//
+//    public void setTopicContent2(String topicContent2) {
+//        this.topicContent2 = topicContent2;
+//    }
 }

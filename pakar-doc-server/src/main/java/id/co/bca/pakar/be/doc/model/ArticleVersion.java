@@ -2,6 +2,7 @@ package id.co.bca.pakar.be.doc.model;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -10,12 +11,13 @@ public class ArticleVersion extends EntityBase {
 	@Id
 	@Column(name = "id")
 	private Long id;
+
 	@Version
 	@Column(name = "optlock", columnDefinition = "integer DEFAULT 0", nullable = false)
 	private Long version;
-	@ManyToOne
-	@JoinColumn(name = "structure_id", nullable = false)
-	private Structure structure;
+
+	@Column(name = "structure_id", nullable = false)
+	private Long structure;
 
 	@Column(name ="article_template_id")
 	private Long articleTemplate;
@@ -32,7 +34,7 @@ public class ArticleVersion extends EntityBase {
 	@Column(name = "video_link")
 	private String videoLink;
 
-	@Column(name = "state", columnDefinition = "VARCHAR(255) default 'PREDRAFT'")
+	@Column(name = "state", columnDefinition = "VARCHAR(255) default 'NEW'")
 	private String articleState; // NEW, DRAFT, PENDING, PUBLISHED, REJECTED
 
 	@OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
@@ -46,6 +48,9 @@ public class ArticleVersion extends EntityBase {
 
 	@Column(name = "fn_modifier")
 	private String fullNameModifier;
+
+	@Column(name = "timestamp_version")
+	private Date timeStamp;
 
 	public Long getId() {
 		return id;
@@ -63,11 +68,11 @@ public class ArticleVersion extends EntityBase {
 		this.version = version;
 	}
 
-	public Structure getStructure() {
+	public Long getStructure() {
 		return structure;
 	}
 
-	public void setStructure(Structure structure) {
+	public void setStructure(Long structure) {
 		this.structure = structure;
 	}
 
@@ -149,5 +154,13 @@ public class ArticleVersion extends EntityBase {
 
 	public void setFullNameModifier(String fullNameModifier) {
 		this.fullNameModifier = fullNameModifier;
+	}
+
+	public Date getTimeStamp() {
+		return timeStamp;
+	}
+
+	public void setTimeStamp(Date timeStamp) {
+		this.timeStamp = timeStamp;
 	}
 }
