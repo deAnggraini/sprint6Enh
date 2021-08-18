@@ -129,7 +129,7 @@
                                         </div>
                                     </div>
                                     <div *ngIf="!content.isEdit && content.topicContent" class="p-3"
-                                        style="padding-bottom: 0px !important;" [innerHTML]="content.topicContent">
+                                        style="padding-bottom: 0px !important;" [innerHTML]="content.topicContent | sanitizeHtml">
                                     </div>
                                     <input *ngIf="!content.isEdit && !content.topicContent" type="text"
                                         class="txt-desc-lvl1" readonly
