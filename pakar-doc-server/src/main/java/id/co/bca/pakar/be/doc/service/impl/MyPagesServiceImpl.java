@@ -11,6 +11,7 @@ import id.co.bca.pakar.be.doc.dto.MyPageDto;
 import id.co.bca.pakar.be.doc.dto.RequestTaskDto;
 import id.co.bca.pakar.be.doc.dto.SearchMyPageDto;
 import id.co.bca.pakar.be.doc.dto.TaskDto;
+import id.co.bca.pakar.be.doc.dto.auth.UserProfileDto;
 import id.co.bca.pakar.be.doc.exception.MinValuePageNumberException;
 import id.co.bca.pakar.be.doc.model.ArticleEdit;
 import id.co.bca.pakar.be.doc.model.ArticleState;
@@ -102,6 +103,7 @@ public class MyPagesServiceImpl implements MyPagesService {
             } else {
                 return new TodoMapperMyPages().emptypage(pageable);
             }
+
             return new TodoMapperMyPages().mapEntityPageIntoDTOPage(pageable, searchResultPage);
         } catch (MinValuePageNumberException e) {
             logger.error("exception", e);
@@ -145,7 +147,7 @@ public class MyPagesServiceImpl implements MyPagesService {
             dto.setCurrentBy(currentEdit.toString());
             ArticleState articleState = articleStateRepository.findByArticleId(entity.getId());
             if (articleState != null)
-                dto.setSendTo(articleState.getReceiver());
+            dto.setSendTo(articleState.getFnReceiver());
             return dto;
         }
 
