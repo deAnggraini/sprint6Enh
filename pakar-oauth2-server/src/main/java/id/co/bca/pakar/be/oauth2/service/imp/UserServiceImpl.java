@@ -7,9 +7,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import id.co.bca.pakar.be.oauth2.dao.UserRoleRepository;
 import id.co.bca.pakar.be.oauth2.dto.ResponseUser;
 import id.co.bca.pakar.be.oauth2.dto.SearchDto;
 import id.co.bca.pakar.be.oauth2.dto.UserDto;
+import id.co.bca.pakar.be.oauth2.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,7 @@ import id.co.bca.pakar.be.oauth2.model.UserProfile;
 import id.co.bca.pakar.be.oauth2.model.UserRole;
 import id.co.bca.pakar.be.oauth2.service.UserService;
 import id.co.bca.pakar.be.oauth2.token.CustomJdbcTokenStore;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author OGYA
@@ -42,6 +45,9 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	private UserProfileRepository userProfileRepository;
+
+	@Autowired
+	private UserRoleRepository userRoleRepository;
 	/*
 	 * get user profile by active token
 	 */
@@ -136,16 +142,80 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<ResponseUser> findUserNotReader(String username, SearchDto searchDto) {
-		List<UserProfile> uRoles = userProfileRepository.findUserNotReader(username, searchDto.getKeyword());
-		List<ResponseUser> user = new ArrayList<ResponseUser>();
-		for(UserProfile ur : uRoles) {
-			ResponseUser userTemp = new ResponseUser();
-			userTemp.setFullname(ur.getFullname());
-			userTemp.setUsername(ur.getUser().getUsername());
-			userTemp.setEmail(ur.getEmail());
-			user.add(userTemp);
+	public List<ResponseUser> findUserNotReader(String username, SearchDto searchDto) throws Exception {
+		try {
+			List<UserProfile> uRoles = userProfileRepository.findUserNotReader(username, searchDto.getKeyword());
+			List<ResponseUser> user = new ArrayList<ResponseUser>();
+			for(UserProfile ur : uRoles) {
+				ResponseUser userTemp = new ResponseUser();
+				userTemp.setFullname(ur.getFullname());
+				userTemp.setUsername(ur.getUser().getUsername());
+				userTemp.setEmail(ur.getEmail());
+				user.add(userTemp);
+			}
+			return user;
+		} catch (Exception e) {
+			logger.error("exception");
+			throw new Exception("exception", e);
 		}
-		return user;
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<UserDto> findUsersByRole(String username, String role, String keyword) throws Exception {
+		try {
+			List<UserProfile> up = userProfileRepository.findUsersByRole(username, role, keyword);
+			return new MapperEntityIntoDto().mapEntitiesIntoDto(up);
+		} catch (Exception e) {
+			logger.error("exception", e);
+			throw new Exception("exception", e);
+		}
+	}
+
+	/**
+	 *
+	 * @param userList
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public List<UserDto> findUsersByListUser(List<String> userList) throws Exception {
+		try {
+			logger.info("load user profile from all user {}", userList);
+			List<UserProfile> userProfiles = userProfileRepository.findUsersByListUser(userList);
+			List<UserDto> userDtos = new ArrayList<UserDto>();
+			for(UserProfile up : userProfiles) {
+				UserDto userDto = new UserDto();
+				userDto.setFullname(up.getFullname());
+				userDto.setLastname(up.getLastname());
+				userDto.setFirstname(up.getFirstname());
+				userDto.setUsername(up.getUser().getUsername());
+				logger.debug("add username {} to list", userDto.getUsername());
+				userDtos.add(userDto);
+			}
+			userDtos.forEach(e-> logger.debug("user in edit article is {}", e.getUsername()));
+//			logger.debug("all user profiles {}", userDtos);
+			return userDtos;
+		} catch (Exception e) {
+			logger.error("exception");
+			throw new Exception("exception", e);
+		}
+	}
+
+	private class MapperEntityIntoDto {
+		public List<UserDto> mapEntitiesIntoDto(List<UserProfile> entities) {
+			List<UserDto> dtos = new ArrayList<>();
+			entities.forEach(e -> dtos.add(mapEntityIntoDto(e)));
+			return dtos;
+		}
+
+		public UserDto mapEntityIntoDto(UserProfile entity) {
+			UserDto userDto = new UserDto();
+			userDto.setUsername(entity.getUser().getUsername());
+			userDto.setEmail(entity.getEmail());
+			userDto.setFullname(entity.getFullname());
+			return userDto;
+		}
 	}
 }

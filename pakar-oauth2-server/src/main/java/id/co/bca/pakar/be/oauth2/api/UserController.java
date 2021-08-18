@@ -1,10 +1,7 @@
 package id.co.bca.pakar.be.oauth2.api;
 
 import id.co.bca.pakar.be.oauth2.common.Constant;
-import id.co.bca.pakar.be.oauth2.dto.LoggedinDto;
-import id.co.bca.pakar.be.oauth2.dto.ResponseUser;
-import id.co.bca.pakar.be.oauth2.dto.SearchDto;
-import id.co.bca.pakar.be.oauth2.dto.UserDto;
+import id.co.bca.pakar.be.oauth2.dto.*;
 import id.co.bca.pakar.be.oauth2.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -96,6 +94,48 @@ public class UserController extends BaseController {
 		} catch (Exception e) {
 			logger.error("exception", e);
 			return this.createResponse(new ArrayList<ResponseUser>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
+		}
+	}
+
+	/**
+	 *
+	 * @param authorization
+	 * @param username
+	 * @param searchDto
+	 * @return
+	 */
+	@PostMapping(value = "/api/auth/getUsersBylRole", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
+			MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<RestResponse<List<UserDto>>> getUsersByRole(@RequestHeader (name="Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username,
+															 @RequestBody SearchUserDto searchDto) {
+		try {
+			logger.info("load all user by role {}", searchDto);
+			List<UserDto> dtos = userService.findUsersByRole(username, searchDto.getRole(), searchDto.getKeyword());
+			return createResponse(dtos, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
+		} catch (Exception e) {
+			logger.error("exception", e);
+			return this.createResponse(new ArrayList<UserDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
+		}
+	}
+
+	/**
+	 *
+	 * @param authorization
+	 * @param username
+	 * @param listUserDto
+	 * @return
+	 */
+	@PostMapping(value = "/api/auth/getListUserProfile", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
+			MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<RestResponse<List<UserDto>>> getListUserProfile(@RequestHeader (name="Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username,
+																	  @RequestBody List<String> listUserDto) {
+		try {
+			logger.info("load all user by collection users {}", listUserDto);
+			List<UserDto> dtos = userService.findUsersByListUser(listUserDto);
+			return createResponse(dtos, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, null));
+		} catch (Exception e) {
+			logger.error("exception", e);
+			return createResponse(new ArrayList<UserDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, null));
 		}
 	}
 }
