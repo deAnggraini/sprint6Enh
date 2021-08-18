@@ -145,7 +145,7 @@ public class MyPagesServiceImpl implements MyPagesService {
             dto.setCurrentBy(currentEdit.toString());
             ArticleState articleState = articleStateRepository.findByArticleId(entity.getId());
             if (articleState != null)
-                dto.setSendTo(articleState.getSender());
+                dto.setSendTo(articleState.getReceiver());
             return dto;
         }
 
