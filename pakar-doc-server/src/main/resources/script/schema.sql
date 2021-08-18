@@ -3,7 +3,7 @@ create table r_article_category (id int8 not null, created_by varchar(255) not n
 --- view my pages
 CREATE OR replace VIEW public.v_my_pages AS
 SELECT tbl2.* FROM (
-	SELECT ta.*, tas.receiver, tas.receiver_state, tas.sender, tas.sender_state,
+	SELECT ta.*, tas.receiver, tas.fn_receiver, tas.receiver_state, tas.sender, tas.fn_sender, tas.sender_state,
 		(SELECT tbl_parent.location FROM
 				(SELECT string_agg(name, ' > ') AS location
 					FROM

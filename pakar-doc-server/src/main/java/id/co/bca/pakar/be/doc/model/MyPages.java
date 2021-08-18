@@ -17,6 +17,12 @@ public class MyPages extends EntityBase {
     @Column(name = "receiver")
     private String receiver;
 
+    @Column(name = "fn_receiver")
+    private String fullNameReceiver;
+
+    @Column(name = "fn_sender")
+    private String fullNameSender;
+
     @Column(name = "sender_state", columnDefinition = "VARCHAR(255) default 'PENDING'")
     private String senderState; // DRAFT, PENDING, APPROVE
 
@@ -204,5 +210,21 @@ public class MyPages extends EntityBase {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getFullNameReceiver() {
+        return fullNameReceiver;
+    }
+
+    public void setFullNameReceiver(String fullNameReceiver) {
+        this.fullNameReceiver = fullNameReceiver;
+    }
+
+    public String getFullNameSender() {
+        return fullNameSender;
+    }
+
+    public void setFullNameSender(String fullNameSender) {
+        this.fullNameSender = fullNameSender;
     }
 }
