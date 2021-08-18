@@ -39,16 +39,14 @@ public interface ArticleVersionRepository extends CrudRepository<ArticleVersion,
     @Query("SELECT m FROM ArticleVersion m " +
             "WHERE m.deleted IS FALSE " +
             "AND (LOWER(m.judulArticle) LIKE lower(concat('%', :keyword,'%')) " +
-            "OR LOWER(m.fullNameModifier) LIKE lower(concat('%', :keyword,'%')) " +
-            "OR LOWER(m.structure.location_text) LIKE lower(concat('%', :keyword,'%')) )")
+            "OR LOWER(m.fullNameModifier) LIKE lower(concat('%', :keyword,'%')) )")
     Page<ArticleVersion> findContentArticleForAdmin(@Param("keyword") String keyword, Pageable pageable);
 
     // find article for contents page role except ADMIN
     @Query("SELECT m FROM ArticleVersion m " +
             "WHERE  m.articleState = 'PUBLISHED' AND m.deleted IS FALSE " +
             "AND (LOWER(m.judulArticle) LIKE lower(concat('%', :keyword,'%')) " +
-            "OR LOWER(m.fullNameModifier) LIKE lower(concat('%', :keyword,'%')) " +
-            "OR LOWER(m.structure.location_text) LIKE lower(concat('%', :keyword,'%')) ) ")
+            "OR LOWER(m.fullNameModifier) LIKE lower(concat('%', :keyword,'%')) ) ")
     Page<ArticleVersion> findContentArticle(@Param("keyword") String keyword, Pageable pageable);
 
     // find selain article for contents page
