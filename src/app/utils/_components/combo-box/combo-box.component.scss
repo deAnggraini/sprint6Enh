@@ -20,6 +20,16 @@
     &.focus {
       border-color: #69b3ff;
     }
+
+    &.disabled {
+      background-color: #F3F2F1;
+
+      &:focus,
+      &:active,
+      &.focus {
+        border-color: #E1E0FF;
+      }
+    }
   }
 
   button:disabled i.ki {

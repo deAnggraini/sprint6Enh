@@ -29,8 +29,7 @@ const routes: Routes = [
     path: '',
     component: ArticleComponent,
     children: [
-      { path: 'list', component: ListComponent, },
-      { path: 'list/:category', component: ListComponent },
+      { path: 'list/:id', component: ListComponent },
       {
         path: 'add', component: AddComponent,
         data: {

@@ -1,3 +1,19 @@
+export interface PaginationSpring {
+    totalElements: number;
+    currentPage: number;
+    totalPages: number;
+    // list: T[],
+    limit?: number
+}
+
+export interface PaginationSpringDTO<T> {
+    totalElements: number;
+    currentPage: number;
+    totalPages: number;
+    list: T[],
+    limit?: number
+}
+
 export interface PaginationDTO {
     totalData: number;
     page: number;
@@ -8,7 +24,7 @@ export interface PaginationDTO {
 
 export class PaginationModel implements PaginationDTO {
     totalData: number;
-    page: number;
+    page: number = 1;
     totalPage: number;
     limit: number
     rowPage: number;
@@ -29,6 +45,10 @@ export class PaginationModel implements PaginationDTO {
 
     public static createEmpty(): PaginationModel {
         return new PaginationModel(1, 0);
+    }
+
+    public static create(resp: PaginationSpring): PaginationModel {
+        return new PaginationModel(resp.currentPage, resp.totalElements);
     }
 
     private calculateListPage() {
@@ -62,8 +82,8 @@ export class PaginationModel implements PaginationDTO {
 
     private calculate() {
         this.totalPage = Math.ceil(this.totalData / this.limit);
-        if (this.page < 0) this.page = 1;
-        if (this.page > this.totalData) this.page = this.totalPage;
+        if (this.page <= 0) this.page = 1;
+        if (this.totalData && this.page > this.totalData) this.page = this.totalPage;
         this.calculateListPage();
     }
 

@@ -15,7 +15,6 @@ export class KategoriMenuComponent implements OnInit {
 
   ngOnInit(): void {
     this.categori.categories$.subscribe(d => {
-      console.log('categories update', d);
       this.listData = d;
       setTimeout(() => this.changeDetectorRef.detectChanges(), 0);
     });

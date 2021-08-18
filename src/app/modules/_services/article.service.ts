@@ -69,9 +69,13 @@ export class ArticleService {
   }
 
   // search all data [article|faq|pdf]
-  search(params: { keyword: string, page: number } = null): Observable<any> {
+  search(params: {
+    keyword: string, page: number, limit: number, sort: { column: string, sort: string },
+    type: string, state: string
+  } = null): Observable<any> {
+    console.log('search service', { params });
     if (params) {
-      return this.apiService.post(`${this._base_url}/node-search`, params);
+      return this.apiService.post(`${this._base_url}/searchArticle`, params);
     } else {
       return of(false);
     }
@@ -194,6 +198,9 @@ export class ArticleService {
     if (typeof (image) == "string") formData.delete('image');
 
     return this.apiService.post(`${this._base_url}/saveArticle`, formData, this.apiService.getHeaders(false));
+  }
+  checkArticleEditing(id: number) {
+    return this.apiService.post(`${this._base_url}/checkArticleEditing`, { id });
   }
 
 }

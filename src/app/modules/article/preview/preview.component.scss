@@ -116,6 +116,18 @@ ul {
     height: 35px;
     border-color: #c8c6c4;
 
+    .accordion-icon {
+      svg {
+        fill: #0F5EA9;
+      }
+
+      &:hover {
+        svg {
+          fill: #605E5C !important;
+        }
+      }
+    }
+
     &.mat-expanded {
       background-color: #E7F2FD !important;
       border-bottom-left-radius: 0;

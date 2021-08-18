@@ -80,7 +80,7 @@
                                                 <span [inlineSVG]="'./assets/media/svg/bca/icon/'+getIcon(item.type)"
                                                     class="svg"></span>
                                             </td>
-                                            <td>{{item.title}}</td>
+                                            <td><a routerLink="/article/list/{{item.id}}">{{item.title}}</a></td>
                                             <td>{{item.location}}</td>
                                             <td>{{item.affective_date | date:'dd/MM/yyyy hh:mm a'}}</td>
                                             <td>{{item.modified_by}}</td>

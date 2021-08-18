@@ -9,6 +9,8 @@ import { ArticleService } from '../../_services/article.service';
 import { StrukturService } from '../../_services/struktur.service';
 import { ArticleDTO, ArticleContentDTO, ArticleParentDTO } from '../../_model/article.dto';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { ConfirmService } from 'src/app/utils/_services/confirm.service';
+import { NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'pakar-article-preview',
@@ -18,7 +20,9 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 export class PreviewComponent implements OnInit, AfterViewInit {
 
   @Input() hideTopbar: boolean = true;
+  @Input() readerView: boolean = false;
   @Input() alert: boolean = false;
+  @Input() isAllowEdit: boolean = false;
   @Input() btnSaveEnabled: boolean = false;
   @Input() btnSaveSendEnabled: boolean = false;
   @Input() alertMessage: string;
@@ -80,8 +84,12 @@ export class PreviewComponent implements OnInit, AfterViewInit {
     private auth: AuthService,
     private articleService: ArticleService,
     private changeDetectorRef: ChangeDetectorRef,
-    private _sanitizer: DomSanitizer
+    private confirm: ConfirmService,
+    private configModel: NgbModalConfig
   ) {
+
+    this.configModel.backdrop = 'static';
+    this.configModel.keyboard = false;
     this.user$ = this.auth.currentUserSubject.asObservable();
   }
 
@@ -107,6 +115,34 @@ export class PreviewComponent implements OnInit, AfterViewInit {
     } else {
       this.router.navigate([`/article/form/${this.articleDTO.id}`]);
     }
+    return false;
+  }
+  onEdit(contentId: number = 0) {
+    const item = this.articleDTO;
+    this.articleService.checkArticleEditing(item.id).subscribe((resp: UserModel[]) => {
+      let editing: UserModel[] = [];
+      let editingMsg: string = '';
+      if (resp) {
+        editingMsg = '<br><br>';
+        editingMsg += `Saat ini artikel sedang di edit juga oleh :
+            <ul>`;
+        resp.forEach(d => {
+          editingMsg += `<li>${d.fullname}</li>`;
+        });
+        editingMsg += '</ul>'
+      }
+
+      this.confirm.open({
+        title: `Ubah Artikel`,
+        message: `<p>Apakah Kamu yakin ingin mengubah artikel “<b>${item.title}</b>”?${editingMsg}`,
+        btnOkText: 'Ubah',
+        btnCancelText: 'Batal'
+      }).then((confirmed) => {
+        if (confirmed === true) {
+          this.router.navigate([`/article/form/${item.id}`, { isEdit: true, contentId }]);
+        }
+      });
+    });
     return false;
   }
 
@@ -147,6 +183,7 @@ export class PreviewComponent implements OnInit, AfterViewInit {
       }
     } else {
       this.route.params.subscribe(params => {
+        console.log('loadData', { params });
         if (params.id) {
           this.articleService.getById(params.id, false).subscribe(resp => {
             this.setArticle(resp);

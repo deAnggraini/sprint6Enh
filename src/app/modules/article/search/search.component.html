@@ -18,10 +18,10 @@
         <ul ngbNav #nav="ngbNav" class="nav-tabs">
             <li [ngbNavItem]="1">
                 <a ngbNavLink>
-                    <i class="fa fa-search mr-2"></i> PAKAR ({{pakar.total}})
+                    <i class="fa fa-search mr-2"></i> PAKAR ({{pakar.paging.totalData}})
                 </a>
                 <ng-template ngbNavContent class="data-item">
-                    <div *ngIf="pakar.data.length == 0">
+                    <div *ngIf="pakar.list.length == 0">
                         <div class="my-5">Pencarian Kamu terkait '<b>{{keyword}}</b>'' tidak dapat ditemukan</div>
                         <div>Saran:</div>
                         <ul>
@@ -29,24 +29,30 @@
                             <li>Coba kata kunci lain yang lebih umum</li>
                         </ul>
                     </div>
-                    <div *ngIf="pakar.data.length">
-                        <div class="mt-3">Hasil Pencarian {{pakar.total}} Informasi terkait</div>
-                        <div class="mt-3" *ngIf="suggestion">
+                    <div *ngIf="pakar.list.length">
+                        <div class="mt-3">Hasil Pencarian {{pakar.paging.totalData}} Informasi terkait</div>
+                        <div class="mt-3" *ngIf="pakar.suggestion">
                             <span>Apakah yang Kamu maksud </span>
-                            <span class="text-suggestion"><i>{{suggestion}}</i></span>
+                            <span class="text-suggestion"><i>{{pakar.suggestion}}</i></span>
                         </div>
-                        <ul class="nav">
-                            <li class="nav-item mt-5 col-xx-lg" style="width: 75%;" *ngFor="let item of pakar.data">
+                        <ul class="nav mt-1">
+                            <li class="nav-item mb-5 col-xx-lg" style="width: 85%;" *ngFor="let item of pakar.list">
                                 <ng-container [ngTemplateOutlet]="tmpRowItem" [ngTemplateOutletContext]="{item:item}">
                                 </ng-container>
+                            </li>
                         </ul>
+
+                        <div class="d-flex justify-content-center align-items-center flex-wrap mt-5"
+                            *ngIf="pakar.list.length">
+                            <app-pagination (onChange)="setPage('pakar', $event)" [paging]="pakar.paging"></app-pagination>
+                        </div>
                     </div>
                 </ng-template>
             </li>
             <li [ngbNavItem]="2">
-                <a ngbNavLink><i class="far fa-question-circle mr-2"></i> FAQ ({{faq.total}})</a>
+                <a ngbNavLink><i class="far fa-question-circle mr-2"></i> FAQ ({{faq.paging.totalData}})</a>
                 <ng-template ngbNavContent class="data-item">
-                    <div *ngIf="pakar.data.length == 0">
+                    <div *ngIf="pakar.list.length == 0">
                         <div class="my-5">Pencarian Kamu terkait '<b>{{keyword}}</b>' tidak dapat ditemukan</div>
                         <div>Saran:</div>
                         <ul>
@@ -54,41 +60,36 @@
                             <li>Coba kata kunci lain yang lebih umum</li>
                         </ul>
                     </div>
-                    <div *ngIf="pakar.data.length">
-                        <div class="mt-3">Hasil Pencarian {{faq.total}} Informasi terkait</div>
+                    <div *ngIf="pakar.list.length">
+                        <div class="mt-3">Hasil Pencarian {{faq.paging.totalData}} Informasi terkait</div>
                         <div class="mt-3" *ngIf="suggestion">
                             <span>Apakah yang Kamu maksud </span>
                             <span class="text-suggestion"><i>{{suggestion}}</i></span>
                         </div>
                         <ul class="nav">
-                            <li class="nav-item mt-5 col-xx-lg" style="width: 75%;" *ngFor="let item of faq.data">
+                            <li class="nav-item mb-5 col-xx-lg" style="width: 75%;" *ngFor="let item of faq.list">
                                 <ng-container [ngTemplateOutlet]="tmpRowItem" [ngTemplateOutletContext]="{item:item}">
                                 </ng-container>
+                            </li>
                         </ul>
                     </div>
                 </ng-template>
             </li>
         </ul>
         <div [ngbNavOutlet]="nav" class="mt-2"></div>
-
-        <div class="d-flex justify-content-center align-items-center flex-wrap mt-5" *ngIf="pakar.data.length">
-            <app-pagination (onChange)="setPage($event)" [paging]="paging"></app-pagination>
-        </div>
-
     </div>
-
 </div>
 
 <ng-template #tmpRowItem let-item="item">
-    <li class="nav-item mt-5 col-xx-lg" style="width: 80%;">
-        <a class="nav-link active cursor-pointer">
+    <div class="col-xx-lg">
+        <a class="nav-link active" routerLink="/article/list/{{item.id}}">
             <span class="svg mr-2" [inlineSVG]="'./assets/media/svg/bca/icon/'+item.type+'.svg'" cacheSVG="true"></span>
             <span class="nav-text-article">{{item.title}}</span>
         </a>
-        <div class="text-muted mb-2 font-size-sm" [innerHTML]="formatterCategory(item.category) | sanitizeHtml">&nbsp;
+        <div class="text-muted mb-1 font-size-sm" [innerHTML]="formatterCategory(item.category) | sanitizeHtml">&nbsp;
         </div>
         <div class="text-desc">{{item.desc}}</div>
-    </li>
+    </div>
 </ng-template>
 
 <ng-template #tmpEmptyData>

@@ -1,10 +1,11 @@
 <div #comboBox class="combo-box d-flex align-items-center justify-content-between"
-    [ngClass]="{ 'is-invalid': hasError}">
+    [ngClass]="{ 'is-invalid': hasError, 'disabled': disabled}" (click)="toogleDropdown($event)">
     <!-- <div class="text-ellipsis-1" [ngClass]="{'text-muted': !selected.value}">{{selected.value || placeholder}}</div> -->
-    <input type="text" [placeholder]="placeholder" class="input-show" [value]="selected.value" readonly>
+    <input type="text" [placeholder]="placeholder" class="input-show" [value]="selected.value" readonly
+        [disabled]="disabled">
     <input type="text" [placeholder]="placeholder" required autocomplete="off" [value]="selected.text"
         style="display: none;">
-    <button type="button" class="btn btn-xs btn-clean" (click)="$event.stopPropagation(); comboBoxDrop.open();">
+    <button type="button" class="btn btn-xs btn-clean" (click)="toogleDropdown($event)" [disabled]="disabled">
         <i class="ki ki-arrow-down text-primary icon-xs"></i>
     </button>
 </div>

@@ -52,10 +52,10 @@
                 </ng-container>
             </div>
             <div class="form-group col-sm-11 col-lg-9 col-xl-9 col-xxl-9">
-                <label>Lokasi Artikel <span class="text-danger">*</span></label>
+                <label>Lokasi Artikel <span class="text-danger">*</span>{{isEdit}}</label>
                 <pakar-combo-box-accordion formControlName="structureOption" [options]="locationOptions"
                     (onChange)="changeLocation($event)"
-                    placeholder="Pilih lokasi yang tepat untuk artikel yang ingin ditambahkan">
+                    placeholder="Pilih lokasi yang tepat untuk artikel yang ingin ditambahkan" [disabled]="isEdit">
                 </pakar-combo-box-accordion>
             </div>
             <div class="form-group col-sm-11 col-lg-9 col-xl-9 col-xxl-9">
@@ -172,8 +172,7 @@
                     <pakar-multi-select formControlName="suggestions"
                         placeholder="Masukkan Nomor Referensi atau Judul SKSE dari Artikel ini"
                         [dataList]="suggestionArticle$" (getData)="getDataSuggestionArticle($event)" maxSelected="5"
-                        (onSelect)="onSelectSuggestionArticle($event)"
-                        class="border-less">
+                        (onSelect)="onSelectSuggestionArticle($event)" class="border-less">
                     </pakar-multi-select>
                 </div>
             </div>

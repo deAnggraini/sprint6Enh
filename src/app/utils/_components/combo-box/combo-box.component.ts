@@ -61,7 +61,7 @@ export class ComboBoxComponent implements OnInit, OnDestroy, ControlValueAccesso
 
   @Input() options: BehaviorSubject<Option[]>;
   @Input() placeholder: string;
-  // @Input() class: string;
+  @Input() disabled: boolean = false;
   @Output() onChange = new EventEmitter<any>();
 
   @ViewChild('comboBoxDrop') comboBoxDrop: NgbDropdown;
@@ -76,6 +76,13 @@ export class ComboBoxComponent implements OnInit, OnDestroy, ControlValueAccesso
 
   constructor() {
     this.tree_id = `#tree-cbx-${this.randomId}`;
+  }
+
+  toogleDropdown(e) {
+    if (!this.disabled) {
+      e.stopPropagation();
+      this.comboBoxDrop.open();
+    }
   }
 
   openChange(open: boolean) {
@@ -202,36 +209,5 @@ export class ComboBoxComponent implements OnInit, OnDestroy, ControlValueAccesso
   setDisabledState?(isDisabled: boolean): void {
     throw new Error("Method not implemented.");
   }
-
-  // formControl
-  // validate(control: AbstractControl): ValidationErrors {
-  //   if (!this.comboBox) return null;
-  //   const div = this.comboBox.nativeElement;
-  //   const { touched, errors, dirty, value } = control;
-  //   if (control.touched) {
-  //     div.classList.add('ng-touched');
-  //     div.classList.remove('ng-untouched');
-  //   } else {
-  //     div.classList.add('ng-untouched');
-  //   }
-  //   if (control.dirty) {
-  //     div.classList.add('ng-dirty');
-  //   } else {
-  //     div.classList.remove('ng-dirty');
-  //   }
-  //   if (value) {
-  //     div.classList.add('ng-valid');
-  //     div.classList.remove('ng-invalid');
-  //   } else {
-  //     div.classList.remove('ng-valid');
-  //     div.classList.add('ng-invalid');
-  //   }
-  //   this.cdr.detectChanges();
-  //   return null;
-  // }
-  // private _onChange?: () => void;
-  // registerOnValidatorChange?(fn: () => void): void {
-  //   this._onChange = fn;
-  // }
 
 }

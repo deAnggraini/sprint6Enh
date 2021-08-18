@@ -57,26 +57,39 @@ height: 184px;
                 <!-- on save -->
                 <div class="d-flex flex-row" *ngIf="!onPreview">
                     <!-- Expand & Collapse -->
-                    <div href="" class="btn btn-link" *ngIf="!isExpand" (click)="expandCollapse()"
+                    <div class="btn btn-link" *ngIf="!isExpand" (click)="expandCollapse()"
                         [ngClass]="{'disabled' : articleDTO.contents.length == 0}">
                         <span [inlineSVG]="'./assets/media/svg/bca/icon/expand-topik.svg'" cacheSVG="true"
                             class="svg-icon menu-icon"></span>
                         <span class="font-weight-bold" style="color: #0F5EA9;">Expand Topik</span>
                     </div>
-                    <div href="" class="btn btn-link" *ngIf="isExpand" (click)="expandCollapse()"
+                    <div class="btn btn-link" *ngIf="isExpand" (click)="expandCollapse()"
                         [ngClass]="{'disabled' : articleDTO.contents.length == 0}">
                         <span [inlineSVG]="'./assets/media/svg/bca/icon/collapse-topik.svg'" cacheSVG="true"
                             class="svg-icon menu-icon"></span>
                         <span class="font-weight-bold" style="color: #0F5EA9;">Collapse Topik</span>
                     </div>
-
                     <!-- Ubah Artikel -->
-                    <div [routerLink]="['/article/form/'+articleDTO.id, {isEdit:true}]" class="btn btn-link"
+                    <div (click)="onEdit()" class="btn btn-link"
                         *ngIf="editable">
                         <span [inlineSVG]="'./assets/media/svg/bca/icon/edit-document-dark.svg'" cacheSVG="true"
                             class="svg-icon menu-icon"></span>
                         <span class="font-weight-bold" style="color: #0F5EA9;">Ubah Artikel</span>
                     </div>
+                    <ng-container *ngIf="readerView && isAllowEdit">
+                        <div [routerLink]="['/article/form/'+articleDTO.id, {isEdit:true}]" class="btn btn-link"
+                            *ngIf="editable">
+                            <span [inlineSVG]="'./assets/media/svg/bca/icon/share.svg'" cacheSVG="true"
+                                class="svg-icon menu-icon"></span>
+                            <span class="font-weight-bold" style="color: #0F5EA9;">Bagikan</span>
+                        </div>
+                        <div [routerLink]="['/article/form/'+articleDTO.id, {isEdit:true}]" class="btn btn-link"
+                            *ngIf="editable">
+                            <span [inlineSVG]="'./assets/media/svg/bca/icon/bookmark-add.svg'" cacheSVG="true"
+                                class="svg-icon menu-icon"></span>
+                            <span class="font-weight-bold" style="color: #0F5EA9;">Bookmark</span>
+                        </div>
+                    </ng-container>
                 </div>
             </div>
             <span class="pakar-text-header-desc my-4" style="color: #605E5C;">Terakhir diubah oleh
@@ -92,7 +105,8 @@ height: 184px;
             <div class="row d-flex flex-wrap justify-content-between">
                 <!-- left side -->
                 <div class="col">
-                    <span class="pakar-text-header-desc" [innerHTML]="(articleDTO.desc || '&nbsp;') | sanitizeHtml">&nbsp;</span>
+                    <span class="pakar-text-header-desc"
+                        [innerHTML]="(articleDTO.desc || '&nbsp;') | sanitizeHtml">&nbsp;</span>
                     <div class="my-3" *ngIf="!hideTable">
                         <table class="table table-bordered">
                             <thead class="thead-light">
@@ -143,9 +157,13 @@ height: 184px;
                                     <mat-panel-title>
                                         <span>{{content.title}}</span>
                                     </mat-panel-title>
+                                    <ng-container *ngIf="readerView && isAllowEdit" [ngTemplateOutlet]="rightIcon"
+                                        [ngTemplateOutletContext]="{ data: content}">
+                                    </ng-container>
                                 </mat-expansion-panel-header>
                                 <div class="content">
-                                    <div class="p-3" [innerHTML]="(content.topicContent || '&nbsp;') | sanitizeHtml"></div>
+                                    <div class="p-3" [innerHTML]="(content.topicContent || '&nbsp;') | sanitizeHtml">
+                                    </div>
                                     <ng-container *ngIf="content.children.length" [ngTemplateOutlet]="accordionChild"
                                         [ngTemplateOutletContext]="{ children: content.children, level:2, parents:[]}">
                                     </ng-container>
@@ -228,8 +246,11 @@ height: 184px;
                 [expanded]="content.expanded">
                 <mat-expansion-panel-header>
                     <mat-panel-title class="text-ellipsis-1">
-                        {{numberingFormat(content)}}. {{content.title}}
+                        {{numberingFormat(content)}}. {{content.title}} [ {{readerView}} - {{isAllowEdit}}]
                     </mat-panel-title>
+                    <ng-container *ngIf="readerView && isAllowEdit" [ngTemplateOutlet]="rightIcon"
+                        [ngTemplateOutletContext]="{ data: content}">
+                    </ng-container>
                 </mat-expansion-panel-header>
                 <ng-template matExpansionPanelContent>
                     <div class="content">
@@ -246,6 +267,15 @@ height: 184px;
             </mat-expansion-panel>
         </ng-container>
     </mat-accordion>
+</ng-template>
+
+<ng-template #rightIcon let-data="data">
+    <div class="right-icon d-flex flex-row align-items-center">
+        <a href='#' class="btn-link" (click)="onEdit(data.id)">
+            <span [inlineSVG]="'./assets/media/svg/bca/icon/pencil.svg'" cacheSVG="true"
+                class="svg-icon svg-icon-sm accordion-icon mr-2"></span>
+        </a>
+    </div>
 </ng-template>
 
 <ng-template #carousel>

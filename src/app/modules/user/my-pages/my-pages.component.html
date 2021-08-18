@@ -110,7 +110,8 @@
                                                 <span [inlineSVG]="'./assets/media/svg/bca/icon/'+getIcon(item.type)"
                                                     class="svg"></span>
                                             </td>
-                                            <td>{{item.title}}<sup *ngIf="item.isNew" class="sup-new fb7">(new)</sup>
+                                            <td>
+                                                <a routerLink="/article/list/{{item.id}}">{{item.title}}<sup *ngIf="item.isNew" class="sup-new fb7">(new)</sup></a>
                                             </td>
                                             <td>{{item.location}}</td>
 
