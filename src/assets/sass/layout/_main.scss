@@ -90,9 +90,9 @@ body {
 }
 
 //ckeditor
-.ck.editor[role="textbox"] {
-  font-family: "Calibri";
-  font-size: 11pt;
+.ck[role="textbox"] {
+  font-family: "Calibri" !important;
+  font-size: 11pt !important;
 }
 
 .ck-placeholder {
