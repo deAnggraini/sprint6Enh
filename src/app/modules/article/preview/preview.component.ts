@@ -26,6 +26,8 @@ export class PreviewComponent implements OnInit, AfterViewInit {
   @Input() btnSaveEnabled: boolean = false;
   @Input() btnSaveSendEnabled: boolean = false;
   @Input() alertMessage: string;
+  @Input() showVideo: boolean = false;
+
   @Output() onCancelCallback = new EventEmitter<any>();
   @Output() onSaveCallback = new EventEmitter<any>();
   @Output() onSaveSendCallback = new EventEmitter<any>();
@@ -37,7 +39,6 @@ export class PreviewComponent implements OnInit, AfterViewInit {
 
   hideTable: boolean = true;
   hideFAQ: boolean = true;
-  showVideo: boolean = false;
   noVideoPreview: string;
   videoUrl: SafeResourceUrl;
   imageTitle: string;
@@ -85,7 +86,8 @@ export class PreviewComponent implements OnInit, AfterViewInit {
     private articleService: ArticleService,
     private changeDetectorRef: ChangeDetectorRef,
     private confirm: ConfirmService,
-    private configModel: NgbModalConfig
+    private configModel: NgbModalConfig,
+    private _sanitizer: DomSanitizer
   ) {
 
     this.configModel.backdrop = 'static';
@@ -221,7 +223,7 @@ export class PreviewComponent implements OnInit, AfterViewInit {
     const { image } = this.articleDTO;
     if (image) {
       if (typeof (image) == "string") { // image string artinya sudah diupload
-        this.imageSrc = image;
+        this.imageSrc = `${environment.backend_img}/${image}`;
       } else { // image bukan string, kemungkinan object file
         const reader = new FileReader();
         reader.readAsDataURL(image);
@@ -278,16 +280,12 @@ export class PreviewComponent implements OnInit, AfterViewInit {
     return strNoParent.join(".");
   }
 
-  getVideo(event) {
-    if (event) {
-      // this.videoUrl = this._sanitizer.bypassSecurityTrustResourceUrl(event);
-      // this.showVideo = true;
-
-      // temporary show default image
-      this.showVideo = false;
+  getVideo(videoUrl) {
+    if (this.showVideo && videoUrl) {
+      this.videoUrl = this._sanitizer.bypassSecurityTrustResourceUrl(videoUrl);
+    } else if (videoUrl) {
       this.noVideoPreview = this.backend_img + '/articles/poster-myvideo.png';
     } else {
-      this.showVideo = false;
       this.noVideoPreview = this.backend_img + '/articles/poster-myvideo.png';
     }
   }
