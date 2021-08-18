@@ -11,6 +11,7 @@ import id.co.bca.pakar.be.doc.dto.wf.WfArticleDto;
 import id.co.bca.pakar.be.doc.exception.*;
 import id.co.bca.pakar.be.doc.model.*;
 import id.co.bca.pakar.be.doc.service.ArticleService;
+import id.co.bca.pakar.be.doc.service.ArticleVersionService;
 import id.co.bca.pakar.be.doc.util.FileUploadUtil;
 import id.co.bca.pakar.be.doc.util.TreeArticleContents;
 import org.slf4j.Logger;
@@ -99,6 +100,9 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Autowired
     private ArticleNotificationRepository articleNotificationRepository;
+
+    @Autowired
+    private ArticleVersionService articleVersionService;
 
     @Autowired
     private PakarOauthClient pakarOauthClient;
@@ -337,7 +341,9 @@ public class ArticleServiceImpl implements ArticleService {
      * @throws Exception
      */
     @Override
-    @Transactional(rollbackFor = {Exception.class, StructureNotFoundException.class, ArticleNotFoundException.class})
+    @Transactional(rollbackFor = {Exception.class
+            , StructureNotFoundException.class
+            , ArticleNotFoundException.class})
     public ArticleDto getArticleById(Long id, boolean isEdit, String username, String token) throws Exception {
         try {
             Optional<Article> articleOpt = articleRepository.findById(id);
@@ -463,7 +469,9 @@ public class ArticleServiceImpl implements ArticleService {
      * @return
      */
     @Override
-    @Transactional(rollbackFor = {Exception.class, DataNotFoundException.class})
+    @Transactional(rollbackFor = {Exception.class
+            , DataNotFoundException.class
+            , SavingArticleVersionException.class})
     public ArticleResponseDto saveArticle(MultipartArticleDto articleDto) throws Exception {
         ArticleResponseDto articleResponseDto = new ArticleResponseDto();
         try {
@@ -474,6 +482,9 @@ public class ArticleServiceImpl implements ArticleService {
                 throw new DataNotFoundException("data not found ");
             }
 
+            // TODO validate existence of structure (RMTM create article 3.4 Tambah Artikel - Edit Accordion Level 1)
+//            logger.info("validate location/structure");
+//            structureRepository.findStructure(articleDto.ge.getId())
             Article article = articleOpt.get();
 
             for (SkReffDto skReffDto : articleDto.getReferences()) {
@@ -651,6 +662,17 @@ public class ArticleServiceImpl implements ArticleService {
             article.setVideoLink(articleDto.getVideo());
             article = articleRepository.save(article);
 
+            /*
+            save article to article version
+             */
+            logger.info("save to article version");
+            ArticleVersion av = articleVersionService.saveArticle(article);
+            if(av == null) {
+                logger.error("could not save article version");
+                throw new SavingArticleVersionException("could not save article version");
+            }
+            /**********************************************/
+
             articleResponseDto.setId(article.getId());
             articleResponseDto.setVideo(article.getVideoLink());
             for (BaseArticleDto dto : articleDto.getRelated()) {
@@ -668,7 +690,10 @@ public class ArticleServiceImpl implements ArticleService {
             articleResponseDto.setDesc(article.getShortDescription());
             articleResponseDto.setTitle(article.getJudulArticle());
             return articleResponseDto;
-        } catch (DataNotFoundException e) {
+        } catch (SavingArticleVersionException e) {
+            logger.error("", e);
+            throw new SavingArticleVersionException("exception", e);
+        }  catch (DataNotFoundException e) {
             logger.error("", e);
             throw new DataNotFoundException("exception", e);
         } catch (Exception e) {

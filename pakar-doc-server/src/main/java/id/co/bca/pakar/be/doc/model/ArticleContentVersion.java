@@ -8,12 +8,14 @@ public class ArticleContentVersion extends CommonArticleContent {
     @Id
     @Column(name = "id")
     private Long id = 0L;
+
     @Version
     @Column(name = "optlock", columnDefinition = "integer DEFAULT 0", nullable = false)
     private Long version;
+
     @ManyToOne
     @JoinColumn(name = "article_version_id")
-    private ArticleVersion article;
+    private ArticleVersion articleVersion;
 
     public Long getId() {
         return id;
@@ -23,12 +25,12 @@ public class ArticleContentVersion extends CommonArticleContent {
         this.id = id;
     }
 
-    public ArticleVersion getArticle() {
-        return article;
+    public ArticleVersion getArticleVersion() {
+        return articleVersion;
     }
 
-    public void setArticle(ArticleVersion article) {
-        this.article = article;
+    public void setArticleVersion(ArticleVersion articleVersion) {
+        this.articleVersion = articleVersion;
     }
 
     public Long getVersion() {

@@ -8,6 +8,8 @@ import java.util.List;
 @Table(name = "t_article_version")
 public class ArticleVersion extends EntityBase {
     @Id
+	@SequenceGenerator(name = "articleVersionSeqGen", sequenceName = "articleVersionSeq", initialValue = 1, allocationSize = 1)
+	@GeneratedValue(generator = "articleVersionSeqGen")
     @Column(name = "id")
     private Long id;
 
@@ -30,7 +32,8 @@ public class ArticleVersion extends EntityBase {
     @Column(name = "article_used_by")
     private String articleUsedBy;
 
-    @Column(name = "short_desc", columnDefinition = "TEXT", length = 1000, nullable = false)
+    @Lob
+    @Column(name = "short_desc")
     private String shortDescription = new String();
 
     @Column(name = "video_link")
@@ -40,7 +43,7 @@ public class ArticleVersion extends EntityBase {
     private String articleState; // NEW, DRAFT, PENDING, PUBLISHED, REJECTED
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<ArticleContent> articleContents = new ArrayList<>();
+    private List<ArticleContentVersion> articleContents = new ArrayList<>();
 
     @Column(name = "use_empty_template", columnDefinition = "BOOLEAN DEFAULT FALSE")
     private Boolean useEmptyTemplate = Boolean.FALSE;
@@ -121,15 +124,15 @@ public class ArticleVersion extends EntityBase {
         this.shortDescription = shortDescription;
     }
 
-    public List<ArticleContent> getArticleContents() {
-        return articleContents;
-    }
+	public List<ArticleContentVersion> getArticleContents() {
+		return articleContents;
+	}
 
-    public void setArticleContents(List<ArticleContent> articleContents) {
-        this.articleContents = articleContents;
-    }
+	public void setArticleContents(List<ArticleContentVersion> articleContents) {
+		this.articleContents = articleContents;
+	}
 
-    public String getVideoLink() {
+	public String getVideoLink() {
         return videoLink;
     }
 
