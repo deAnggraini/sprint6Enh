@@ -169,7 +169,7 @@ public class MyPagesServiceImpl implements MyPagesService {
             } else if (reqColumn.equals("location")) {
                 return "location";
             }
-            return "";
+            return "judulArticle";
         }
     }
 }
