@@ -42,7 +42,7 @@ public class ArticleVersion extends EntityBase {
     @Column(name = "state", columnDefinition = "VARCHAR(255) default 'NEW'")
     private String articleState; // NEW, DRAFT, PENDING, PUBLISHED, REJECTED
 
-    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "articleVersion", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ArticleContentVersion> articleContents = new ArrayList<>();
 
     @Column(name = "use_empty_template", columnDefinition = "BOOLEAN DEFAULT FALSE")
