@@ -1,6 +1,7 @@
 create table r_article_category (id int8 not null, created_by varchar(255) not null, created_date timestamp not null, deleted boolean not null, modify_by varchar(255), modify_date timestamp, description varchar(255), title varchar(255) not null, primary key (id));
 
 --- view my pages
+DROP VIEW IF EXISTS public.v_my_pages CASCADE;
 CREATE OR replace VIEW public.v_my_pages AS
 SELECT tbl2.* FROM (
 	SELECT ta.*, tas.receiver, tas.fn_receiver, tas.receiver_state, tas.sender, tas.fn_sender, tas.sender_state,
