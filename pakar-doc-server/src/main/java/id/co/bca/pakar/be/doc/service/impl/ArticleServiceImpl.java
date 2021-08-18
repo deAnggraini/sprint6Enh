@@ -563,7 +563,16 @@ public class ArticleServiceImpl implements ArticleService {
                     articleState = new ArticleState();
                     articleState.setCreatedBy(articleDto.getUsername());
                     articleState.setSender(restResponse.getBody().getData().getSender());
+                    ResponseEntity<ApiResponseWrapper.RestResponse<List<UserProfileDto>>> restResponseUp = pakarOauthClient
+                            .getListUserProfile(BEARER + articleDto.getToken(), articleDto.getUsername(), Arrays.asList(new String[]{articleState.getSender()}));
+                    List<UserProfileDto> userProfileDtos = restResponseUp.getBody().getData();
+                    articleState.setFnSender(userProfileDtos != null ? userProfileDtos.get(0) != null ? userProfileDtos.get(0).getFullname() : "" : "");
                     articleState.setReceiver(restResponse.getBody().getData().getAssigne());
+                    restResponseUp = pakarOauthClient
+                            .getListUserProfile(BEARER + articleDto.getToken(), articleDto.getUsername(), Arrays.asList(new String[]{articleState.getReceiver()}));
+                    userProfileDtos.clear();
+                    userProfileDtos = restResponseUp.getBody().getData();
+                    articleState.setFnReceiver(userProfileDtos != null ? userProfileDtos.get(0) != null ? userProfileDtos.get(0).getFullname() : "" : "");
                     articleState.setReceiverState(restResponse.getBody().getData().getCurrentReceiverState());
                     articleState.setSenderState(restResponse.getBody().getData().getCurrentSenderState());
                     articleState.setArticle(article);
@@ -598,7 +607,16 @@ public class ArticleServiceImpl implements ArticleService {
                 }
                 articleState.setCreatedBy(articleDto.getUsername());
                 articleState.setSender(restResponse.getBody().getData().getSender());
+                ResponseEntity<ApiResponseWrapper.RestResponse<List<UserProfileDto>>> restResponseUp = pakarOauthClient
+                        .getListUserProfile(BEARER + articleDto.getToken(), articleDto.getUsername(), Arrays.asList(new String[]{articleState.getSender()}));
+                List<UserProfileDto> userProfileDtos = restResponseUp.getBody().getData();
+                articleState.setFnSender(userProfileDtos != null ? userProfileDtos.get(0) != null ? userProfileDtos.get(0).getFullname() : "" : "");
                 articleState.setReceiver(restResponse.getBody().getData().getAssigne());
+                restResponseUp = pakarOauthClient
+                        .getListUserProfile(BEARER + articleDto.getToken(), articleDto.getUsername(), Arrays.asList(new String[]{articleState.getReceiver()}));
+                userProfileDtos.clear();
+                userProfileDtos = restResponseUp.getBody().getData();
+                articleState.setFnReceiver(userProfileDtos != null ? userProfileDtos.get(0) != null ? userProfileDtos.get(0).getFullname() : "" : "");
                 articleState.setReceiverState(restResponse.getBody().getData().getCurrentReceiverState());
                 articleState.setSenderState(restResponse.getBody().getData().getCurrentSenderState());
                 articleStateRepository.save(articleState);
