@@ -677,4 +677,54 @@ public class ArticleController extends BaseController {
             return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, null));
         }
     }
+
+    /**
+     * get user still editing for some article
+     * @param authorization
+     * @param username
+     * @return
+     */
+    @PostMapping(value = "/api/doc/getArticleEditing", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
+            MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<RestResponse<List<UserArticleEditingDto>>> getArticleEditing(@RequestHeader("Authorization") String authorization,
+                                                               @RequestHeader(name = "X-USERNAME") String username,
+                                                               @RequestBody GetArticleDto dto) {
+        try {
+            logger.info("search Contents process");
+            logger.info("received token bearer --- {}", authorization);
+            List<UserArticleEditingDto> articleEditingDtos = articleService.findUserArticleEditings(username, getTokenFromHeader(authorization), dto.getId());
+            return createResponse(articleEditingDtos, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, null));
+        } catch(Exception e) {
+            logger.error("exception", e);
+            return createResponse(new ArrayList<UserArticleEditingDto>() , Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, null));
+        }
+    }
+
+    /**
+     * get article version history
+     * @param authorization
+     * @param username
+     * @return
+     */
+    @PostMapping(value = "/api/doc/getVersionHistoryArticle", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
+            MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<RestResponse<Map>> getArticleEditing(@RequestHeader("Authorization") String authorization,
+                                                               @RequestHeader(name = "X-USERNAME") String username) {
+        try {
+            logger.info("search Contents process");
+            logger.info("received token bearer --- {}", authorization);
+//            searchDto.setUsername(username);
+//            searchDto.setToken(getTokenFromHeader(authorization));
+//            Page<MyPageDto> pageMyPageDto = articleContentService.searchContent(searchDto);
+//            Map<String, Object> maps = new HashMap<String, Object>();
+//            maps.put("list", pageMyPageDto.getContent());
+//            maps.put("totalElements", pageMyPageDto.getTotalElements());
+//            maps.put("totalPages", pageMyPageDto.getTotalPages());
+//            maps.put("currentPage", searchDto.getPage());
+            return createResponse(new HashMap(), Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, null));
+        } catch(Exception e) {
+            logger.error("exception", e);
+            return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, null));
+        }
+    }
 }

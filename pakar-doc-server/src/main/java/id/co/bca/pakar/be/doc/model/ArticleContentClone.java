@@ -1,0 +1,42 @@
+package id.co.bca.pakar.be.doc.model;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "t_article_content_clone")
+public class ArticleContentClone extends CommonArticleContent {
+    @Id
+    @Column(name = "id")
+    private Long id = 0L;
+    @Version
+    @Column(name = "optlock", columnDefinition = "integer DEFAULT 0", nullable = false)
+    private Long version;
+    @ManyToOne
+    @JoinColumn(name = "article_clone_id")
+    private ArticleClone article;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public ArticleClone getArticle() {
+        return article;
+    }
+
+    public void setArticle(ArticleClone article) {
+        this.article = article;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
+}

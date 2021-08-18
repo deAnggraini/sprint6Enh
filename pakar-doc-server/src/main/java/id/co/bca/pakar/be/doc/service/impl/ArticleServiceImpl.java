@@ -150,9 +150,9 @@ public class ArticleServiceImpl implements ArticleService {
             // verify existence article
             logger.debug("verify existence article with title {} in database", generateArticleDto.getTitle());
             Boolean duplicateArticle = existArticle(generateArticleDto.getTitle());
-            if(duplicateArticle.booleanValue()) {
+            if (duplicateArticle.booleanValue()) {
                 logger.info("article {} already registered in database", generateArticleDto.getTitle());
-                throw new DuplicateTitleException("article title "+generateArticleDto.getTitle()+" already reagistered in database");
+                throw new DuplicateTitleException("article title " + generateArticleDto.getTitle() + " already reagistered in database");
             }
             logger.info("populate article");
             Article article = new Article();
@@ -218,7 +218,7 @@ public class ArticleServiceImpl implements ArticleService {
 
             /*********** generate sugggestion article *********
 
-            /*************************************************/
+             /*************************************************/
 
             articleDto = getArticleById(article.getId());
             return articleDto;
@@ -687,27 +687,27 @@ public class ArticleServiceImpl implements ArticleService {
             if (!article.getArticleState().equalsIgnoreCase(PUBLISHED)) {
                 logger.info("delete related article with article id {}", article.getId());
                 Iterable<RelatedArticle> relatedArticles = articleRelatedRepository.findRelatedArticleByArticleId(article.getId());
-                if(relatedArticles != null)
+                if (relatedArticles != null)
                     relatedArticleRepository.deleteAll(relatedArticles);
 
                 logger.info("delete article sk refference with article id {}", article.getId());
                 Iterable<ArticleSkReff> articleSkReffs = articleSkReffRepository.findByArticleId(article.getId());
-                if(articleSkReffs != null)
+                if (articleSkReffs != null)
                     articleSkReffRepository.deleteAll(articleSkReffs);
 
                 logger.info("delete article image with article id {}", article.getId());
                 Iterable<ArticleImage> articleImages = articleImageRepository.findArticleImagesByArticleId(article.getId());
-                if(articleImages != null)
+                if (articleImages != null)
                     articleImageRepository.deleteAll(articleImages);
 
                 logger.info("delete article state with article id {}", article.getId());
                 ArticleState articleState = articleStateRepository.findByArticleId(article.getId());
-                if(articleState != null)
+                if (articleState != null)
                     articleStateRepository.delete(articleState);
 
                 logger.info("delete article edit with article id {}", article.getId());
                 List<ArticleEdit> articleEdits = articleEditRepository.findByArticleId(article.getId());
-                if(articleEdits != null)
+                if (articleEdits != null)
                     articleEditRepository.deleteAll(articleEdits);
 
                 logger.info("delete unpublished article");
@@ -1450,6 +1450,60 @@ public class ArticleServiceImpl implements ArticleService {
         } catch (MinValuePageNumberException e) {
             logger.error("exception", e);
             throw new MinValuePageNumberException("exception", e);
+        } catch (Exception e) {
+            logger.error("exception", e);
+            throw new Exception("exception", e);
+        }
+    }
+
+    /**
+     * @param username
+     * @param token
+     * @param articleId
+     * @return
+     * @throws Exception
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<UserArticleEditingDto> findUserArticleEditings(String username, String token, Long articleId) throws Exception {
+        try {
+            logger.info("find users that editing article id {}", articleId);
+            List<ArticleEdit> articleEdits = articleEditRepository.findArticleInEditingStatus(articleId);
+            if (articleEdits == null)
+                throw new NotFoundUserArticleEditingException("no user found that editing article id {}");
+            if (articleEdits.isEmpty())
+                throw new NotFoundUserArticleEditingException("no user found that editing article id {}");
+
+            List<String> userList = new ArrayList<>();
+            articleEdits.forEach(e -> userList.add(e.getUsername()));
+            logger.debug("list of user that editing article id {} ---> {}", articleId, userList);
+
+            // get user profile from oauth server
+            ResponseEntity<ApiResponseWrapper.RestResponse<List<UserProfileDto>>> restResponse = null;
+            try {
+                restResponse = pakarOauthClient.getListUserProfile(BEARER + token, username, userList);
+                logger.debug("response data getListUserProfile {}", restResponse);
+            } catch (Exception e) {
+                logger.error("call remote list user profile failed", e);
+                throw new OauthApiClientException("failed call oauth api client");
+            }
+            List<UserArticleEditingDto> userArticleEditingDtos = new ArrayList<>();
+            List<UserProfileDto> userProfileDtos = restResponse.getBody().getData();
+            userProfileDtos.forEach(e-> {
+                UserArticleEditingDto dto_ = new UserArticleEditingDto();
+                dto_.setFirstname(e.getFirstname());
+                dto_.setFullname(e.getFullname());
+                dto_.setLastname(e.getLastname());
+                dto_.setUsername(e.getUsername());
+                userArticleEditingDtos.add(dto_);
+            });
+            return userArticleEditingDtos;
+        } catch (NotFoundUserArticleEditingException e) {
+            logger.error("exception", e);
+            throw new NotFoundUserArticleEditingException("exception", e);
+        } catch (OauthApiClientException e) {
+            logger.error("exception", e);
+            throw new OauthApiClientException("exception", e);
         } catch (Exception e) {
             logger.error("exception", e);
             throw new Exception("exception", e);

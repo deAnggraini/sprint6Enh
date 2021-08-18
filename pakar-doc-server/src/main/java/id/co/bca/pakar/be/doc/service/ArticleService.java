@@ -39,4 +39,6 @@ public interface ArticleService {
     Page<MyPageDto> searchMyPages(SearchMyPageDto searchDto) throws Exception;
 
     Page<MyPageDto> searchMyPages2(SearchMyPageDto searchDto) throws Exception;
+
+    List<UserArticleEditingDto> findUserArticleEditings(String username, String token, Long articleId) throws Exception;
 }
