@@ -115,8 +115,8 @@ export class ArticleService {
     return this.apiService.post(`${this._base_url}/checkUnique`, { title }, this.apiService.getHeaders(true), false);
   }
 
-  getById(id: number, isEdit: boolean) {
-    const params = { id, isEdit: isEdit ? true : false }; // convert isEdit to boolean, js mabok
+  getById(id: any, isEdit: boolean) {
+    const params = { id: parseInt(id), isEdit: isEdit ? true : false }; // convert isEdit to boolean, js mabok
     return this.apiService.post(`${this._base_url}/getArticle`, params);
   }
 

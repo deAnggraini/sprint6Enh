@@ -141,7 +141,7 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.article.search(params).subscribe(resp => {
       resp.list.forEach(d => {
         const _item = {
-          id: d.id * 1000,
+          id: d.id,
           title: d.title,
           level: 100,
         };
