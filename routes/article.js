@@ -24,38 +24,29 @@ router.get('/all', (req, res) => {
 router.post('/keyword', (req, res) => {
     res.send({ error: false, msg: "", data: lastKeyword });
 });
-router.post('/node-search', (req, res) => {
-    const { keyword, page, limit } = req.body;
+router.post('/searchArticle', (req, res) => {
+    const { keyword, page, limit, type } = req.body;
     console.log('search article', { keyword, page });
-    // if (!keyword || keyword == 'kosong') {
-    //     res.send({
-    //         error: false, msg: "", data: {
-    //             result: {
-    //                 total: 0, length: 0, data: []
-    //             }
-    //         }
-    //     });
-    //     return;
-    // }
-    const keys = _.uniq(articles.map(d => d.type));
-    const grouping = _.groupBy(articles, 'type');
-    const group = {};
-    for (let k of keys) {
-        group[k] = {
-            total: Math.floor(Math.random() * 100 + 10),
-            length: grouping[k].length,
-            data: grouping[k]
-        }
+
+    if (keyword == 'kosong' || type == "faq") {
+        res.send({
+            error: false,
+            msg: "",
+            data: {
+                list: [],
+                totalElements: 0,
+                totalPages: 0,
+                currentPage: 1
+            }
+        });
+        return;
     }
+
     const data = {
-        result: {
-            data: articles,
-            total: Math.floor(Math.random() * 100 + 10),
-            length: articles.length,
-            page,
-        },
-        keys,
-        group,
+        list: articles.slice(0, limit),
+        totalPages: Math.ceil(articles.length / limit),
+        totalElements: articles.length,
+        currentPage: page,
         suggestion: 'Pengajuan Time Loan SME'
     }
     res.send({ error: false, msg: "", data });
@@ -401,7 +392,7 @@ router.post('/generateArticle', (req, res) => {
 router.post('/getArticle', (req, res) => {
     const { body } = req;
     console.log({ body });
-    res.send({ error: false, msg: "", data: sample_empty });
+    res.send({ error: false, msg: "", data: sample_non_basic });
 });
 
 router.get('/getContentId', (req, res) => {
@@ -440,7 +431,7 @@ router.post('/searchMyPages', (req, res) => {
     let list = [];
     let totalElements = 0, totalPages = 0;
     if (state == "DRAFT" || state == "PENDING") {
-        totalElements = Math.ceil(Math.random() * 100);
+        totalElements = 11;// Math.ceil(Math.random() * 100);
         list = mypages.slice(0, limit);
         totalPages = Math.ceil(totalElements / limit);
     }
@@ -461,7 +452,7 @@ router.post('/searchContent', (req, res) => {
 
     let list = [];
     let totalElements = 0, totalPages = 0;
-    if (type == "ALL" || type == "article") {
+    if (type == "ALL" || type == "") {
         totalElements = Math.ceil(Math.random() * 100);
         list = mypages.slice(0, limit);
         totalPages = Math.ceil(totalElements / limit);
@@ -492,6 +483,46 @@ router.post('/updateStatusNotification', (req, res) => {
 
 router.post('/cancelSendArticle', (req, res) => {
     res.send({ status: { code: '01', message: 'asd' }, data: true });
+});
+router.post('/getArticleEditing', (req, res) => {
+    const data = [
+        {
+            "username": "saifulhq",
+            "email": "saifulhq@gmail.com",
+            "fullname": "Saiful Haqqi",
+            "firstname": "Saiful",
+            "lastname": "Haqqi",
+        },
+        {
+            "username": "aflahAhlam",
+            "email": "aflahahlam@gmail.com",
+            "fullname": "Putu Ayu Sruti Permata Sari",
+            "firstname": "Aflah",
+            "lastname": "Ahlam",
+        },
+        {
+            "username": "aflahAhlam",
+            "email": "aflahahlam@gmail.com",
+            "fullname": "Thalia Sari Landi",
+            "firstname": "Thalia",
+            "lastname": "Landi",
+        },
+        {
+            "username": "aflahAhlam",
+            "email": "aflahahlam@gmail.com",
+            "fullname": "Thalia Sari Landi",
+            "firstname": "Thalia",
+            "lastname": "Landi",
+        },
+        {
+            "username": "aflahAhlam",
+            "email": "aflahahlam@gmail.com",
+            "fullname": "Febrian Alaska Christian",
+            "firstname": "Febrian",
+            "lastname": "Christian",
+        }
+    ]
+    res.send({ status: { code: '00', message: 'asd' }, data });
 });
 
 module.exports = router;

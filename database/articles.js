@@ -38,7 +38,7 @@ const sample_basic = {
         {
             id: 1,
             title: 'Ketentuan Tahapan',
-            intro: '',
+            intro: '<p><b>Test bold</b></p>',
             parent: 0,
             level: 1,
             sort: 1,
@@ -47,7 +47,7 @@ const sample_basic = {
         {
             id: 2,
             title: 'Prosedur Tahapan',
-            intro: '',
+            intro: '<p><i>Test Italic</i></p>',
             parent: 0,
             level: 1,
             sort: 2,
@@ -56,7 +56,7 @@ const sample_basic = {
         {
             id: 3,
             title: 'Formulir Tahapan',
-            intro: '',
+            intro: '<p><u>Test Strike</u></p>',
             parent: 0,
             level: 1,
             sort: 2,
@@ -65,13 +65,13 @@ const sample_basic = {
     ],
     references: [
         { id: 2, title: "Perihal Ketentuan Tahapan 1", no: "025/SKSE/TL/2020" }
-    ], // {id, title, no},
+    ],
     related: [
         { id: 2, title: "Perihal Ketentuan Tahapan 1", no: "025/SKSE/TL/2020" }
-    ],  // {id, title}
+    ],
     suggestions: [
         { id: 2, title: "Perihal Ketentuan Tahapan 1", no: "025/SKSE/TL/2020" }
-    ], // {id, title}
+    ],
     isEmptyTemplate: false,
     isNew: true
 };
@@ -80,9 +80,10 @@ const sample_non_basic = {
     id: 101,
     title: 'Tahapan 2',
     structureId: 2,
-    desc: '',
-    image: '',
-    video: '',
+    desc: '<p>H Q </p>',
+    image: '/articles/tapres.jpeg',
+    video: 'https://www.youtube.com/embed/oDZ-mIg2-Dk',
+    // video: null,
     created_at: new Date(),
     created_by: '',
     location: 2,
@@ -95,6 +96,7 @@ const sample_non_basic = {
             id: 1,
             title: 'Ketentuan Tahapan 2',
             intro: '',
+            topicContent: '<p><strong>bold</strong></p><p><i>miring</i></p>',
             parent: 0,
             level: 1,
             sort: 1,
@@ -102,8 +104,8 @@ const sample_non_basic = {
                 {
                     id: 3,
                     title: 'Rekening Tahapan 2',
-                    topicTitle: '',
-                    topicContent: '',
+                    topicTitle: 'Rekening Tahapan 2',
+                    topicContent: '<p>test isi</>',
                     parent: 1,
                     level: 2,
                     sort: 1,
@@ -353,9 +355,15 @@ const sample_non_basic = {
             children: [],
         }
     ],
-    references: [],
-    related: [],
-    suggestions: [],
+    references: [
+        { id: 20, title: "Perihal Ketentuan Tahapan 1", no: "025/SKSE/TL/2020" }
+    ],
+    related: [
+        { id: 20, title: "Perihal Ketentuan Tahapan 1", no: "025/SKSE/TL/2020" }
+    ],
+    suggestions: [
+        { id: 20, title: "Perihal Ketentuan Tahapan 1", no: "025/SKSE/TL/2020" }
+    ],
     isEmptyTemplate: false,
     isNew: false
 };
