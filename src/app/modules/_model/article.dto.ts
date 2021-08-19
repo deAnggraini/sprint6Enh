@@ -34,9 +34,10 @@ export declare interface ArticleContentDTO {
     parent: number,
     children: ArticleContentDTO[],
     listParent?: ArticleParentDTO[],
+    parentsId?: number[],
     expanded?: boolean,
     isEdit?: boolean,
-    isNew?:boolean,
+    isNew?: boolean,
 }
 
 export declare interface ArticleDTO {

@@ -119,12 +119,11 @@ export class PreviewComponent implements OnInit, AfterViewInit {
     }
     return false;
   }
-  onEdit(contentId: number = 0) {
+  onEdit(e, contentId: number = 0) {
     const item = this.articleDTO;
     this.articleService.checkArticleEditing(item.id).subscribe((resp: UserModel[]) => {
-      let editing: UserModel[] = [];
       let editingMsg: string = '';
-      if (resp) {
+      if (resp && resp.length) {
         editingMsg = '<br><br>';
         editingMsg += `Saat ini artikel sedang di edit juga oleh :
             <ul>`;
@@ -141,10 +140,12 @@ export class PreviewComponent implements OnInit, AfterViewInit {
         btnCancelText: 'Batal'
       }).then((confirmed) => {
         if (confirmed === true) {
+          console.log(`/article/form/${item.id}`);
           this.router.navigate([`/article/form/${item.id}`, { isEdit: true, contentId }]);
         }
       });
     });
+    e.stopPropagation();
     return false;
   }
 
@@ -185,10 +186,11 @@ export class PreviewComponent implements OnInit, AfterViewInit {
       }
     } else {
       this.route.params.subscribe(params => {
-        console.log('loadData', { params });
+        // console.log('loadData', { params });
         if (params.id) {
           this.articleService.getById(params.id, false).subscribe(resp => {
             this.setArticle(resp);
+            this.changeDetectorRef.detectChanges();
           })
         }
       });
@@ -284,8 +286,10 @@ export class PreviewComponent implements OnInit, AfterViewInit {
     if (this.showVideo && videoUrl) {
       this.videoUrl = this._sanitizer.bypassSecurityTrustResourceUrl(videoUrl);
     } else if (videoUrl) {
+      this.showVideo = false;
       this.noVideoPreview = this.backend_img + '/articles/poster-myvideo.png';
     } else {
+      this.showVideo = false;
       this.noVideoPreview = this.backend_img + '/articles/poster-myvideo.png';
     }
   }

@@ -70,7 +70,7 @@ height: 184px;
                         <span class="font-weight-bold" style="color: #0F5EA9;">Collapse Topik</span>
                     </div>
                     <!-- Ubah Artikel -->
-                    <div (click)="onEdit()" class="btn btn-link" *ngIf="editable">
+                    <div (click)="onEdit($event)" class="btn btn-link" *ngIf="editable">
                         <span [inlineSVG]="'./assets/media/svg/bca/icon/edit-document-dark.svg'" cacheSVG="true"
                             class="svg-icon menu-icon"></span>
                         <span class="font-weight-bold" style="color: #0F5EA9;">Ubah Artikel</span>
@@ -209,7 +209,6 @@ height: 184px;
                         <hr>
                     </div>
                     <div class="video mx-4 mb-5" style="min-width: 307px;">
-                        {{showVideo}}
                         <iframe seamless frameborder=0 allowfullscreen webkitallowfullscreen mozallowfullscreen
                             *ngIf="showVideo" [src]="videoUrl" width="307" height="173">
                         </iframe>
@@ -245,7 +244,7 @@ height: 184px;
                 [expanded]="content.expanded">
                 <mat-expansion-panel-header>
                     <mat-panel-title class="text-ellipsis-1">
-                        {{numberingFormat(content)}}. {{content.title}} [ {{readerView}} - {{isAllowEdit}}]
+                        {{numberingFormat(content)}}. {{content.title}}
                     </mat-panel-title>
                     <ng-container *ngIf="readerView && isAllowEdit" [ngTemplateOutlet]="rightIcon"
                         [ngTemplateOutletContext]="{ data: content}">
@@ -270,7 +269,7 @@ height: 184px;
 
 <ng-template #rightIcon let-data="data">
     <div class="right-icon d-flex flex-row align-items-center">
-        <a href='#' class="btn-link" (click)="onEdit(data.id)">
+        <a href='#' class="btn-link" (click)="onEdit($event, data.id)">
             <span [inlineSVG]="'./assets/media/svg/bca/icon/pencil.svg'" cacheSVG="true"
                 class="svg-icon svg-icon-sm accordion-icon mr-2"></span>
         </a>

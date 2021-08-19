@@ -200,7 +200,7 @@ export class ArticleService {
     return this.apiService.post(`${this._base_url}/saveArticle`, formData, this.apiService.getHeaders(false));
   }
   checkArticleEditing(id: number) {
-    return this.apiService.post(`${this._base_url}/checkArticleEditing`, { id });
+    return this.apiService.post(`${this._base_url}/getArticleEditing`, { id });
   }
 
 }

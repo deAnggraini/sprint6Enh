@@ -191,6 +191,9 @@ export class ContentComponent implements OnInit, OnDestroy {
     tabDto.sort = sort;
     this.search(key, this.listStatus[key], paging.page | 1);
   }
+  showArticle(id: number) {
+    if (id) this.router.navigate([`/article/list/${id}`]);
+  }
 
   // table ... event
   onOpenChangeDropdown(isOpen: boolean, key: string, i: number) {

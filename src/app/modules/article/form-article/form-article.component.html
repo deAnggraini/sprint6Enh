@@ -12,7 +12,8 @@
             </a>
         </div>
         <div class="d-flex flex-row align-items-center">
-            <!-- [ngClass]="{'disabled' : !this.dataForm.valid || hasError || hasImageError}" -->
+            <ng-container *ngIf="listUserEditing.length" [ngTemplateOutlet]="editingOnline">
+            </ng-container>
             <a href="#" class="btn btn-link link text-dark d-flex flex-row" (click)="onPreview($event)">
                 <div [inlineSVG]="'./assets/media/svg/bca/icon/preview.svg'" cacheSVG="true" class="svg-icon"></div>
                 <div>Preview</div>
@@ -52,7 +53,7 @@
                 </ng-container>
             </div>
             <div class="form-group col-sm-11 col-lg-9 col-xl-9 col-xxl-9">
-                <label>Lokasi Artikel <span class="text-danger">*</span>{{isEdit}}</label>
+                <label>Lokasi Artikel <span class="text-danger">*</span></label>
                 <pakar-combo-box-accordion formControlName="structureOption" [options]="locationOptions"
                     (onChange)="changeLocation($event)"
                     placeholder="Pilih lokasi yang tepat untuk artikel yang ingin ditambahkan" [disabled]="isEdit">
@@ -212,11 +213,8 @@
         </a>
 
         <!-- edit & delete -->
-        <ng-container *ngIf="data.level == 1 && (user.roles[0] == 'ADMIN' || user.roles[0] == 'SUPERADMIN')">
-            <!-- <a href='#' class="btn-link" (click)="btnEditClick($event, data)">
-                <span [inlineSVG]="'./assets/media/svg/bca/icon/pencil.svg'" cacheSVG="true"
-                    class="svg-icon svg-icon-sm mr-2"></span>
-            </a> -->
+        <ng-container
+            *ngIf="dataForm.value.isEmptyTemplate && data.level == 1 && (user.roles[0] == 'ADMIN' || user.roles[0] == 'SUPERADMIN')">
             <a href='#' class="btn-link" (click)="btnDeleteClick($event, data)">
                 <span [inlineSVG]="'./assets/media/svg/bca/icon/trash-bin.svg'" cacheSVG="true"
                     class="svg-icon svg-icon-sm mr-2"></span>
@@ -324,5 +322,13 @@
         <button type="button" class="btn btn-sm btn-blue rounded-lg px-5"
             [disabled]="!(saveAndSend.sendTo.username && saveAndSend.sendNote)"
             (click)="doSaveAndSend($event)">Kirim</button>
+    </div>
+</ng-template>
+
+<ng-template #editingOnline>
+    <div class="d-flex flex-row">
+        <div *ngFor="let user of listUserEditing; let i=index;" class="d-flex flex-center ak ak-{{i+1}} rounded-xl fs10 fb6 mr-1">{{user.alias}}</div>
+        <!-- <div class="d-flex flex-center ak ak-2 rounded-xl fs10 fb6 mr-1">AK</div>
+        <div class="d-flex flex-center ak ak-3 rounded-xl fs10 fb6 mr-1">AF</div> -->
     </div>
 </ng-template>
