@@ -55,8 +55,18 @@ public interface ArticleVersionRepository extends CrudRepository<ArticleVersion,
 
     @Query("SELECT m FROM ArticleVersion m " +
             "WHERE  m.articleState = 'PUBLISHED' " +
+            "AND m.structure = :structureId " +
             "AND m.deleted IS FALSE " +
             "AND (LOWER(m.judulArticle) LIKE lower(concat('%', :keyword,'%')) " +
-            "OR LOWER(m.fullNameModifier) LIKE lower(concat('%', :keyword,'%')) ) ")
-    Page<ArticleVersion> findPublishedArticles(@Param("keyword") String keyword, Pageable pageable);
+            "OR LOWER(m.fullNameModifier) LIKE lower(concat('%', :keyword,'%')) ) " +
+            "ORDER BY m.modifyDate ")
+    Page<ArticleVersion> findPublishedArticles(@Param("structureId") Long structureId, @Param("keyword") String keyword, Pageable pageable);
+
+    @Query("SELECT m FROM ArticleVersion m " +
+            "WHERE  m.articleState = 'PUBLISHED' " +
+            "AND m.deleted IS FALSE " +
+            "AND (LOWER(m.judulArticle) LIKE lower(concat('%', :keyword,'%')) " +
+            "OR LOWER(m.fullNameModifier) LIKE lower(concat('%', :keyword,'%')) ) " +
+            "ORDER BY m.modifyDate ")
+    Page<ArticleVersion> findPublishedArticles(Pageable pageable);
 }

@@ -7,6 +7,8 @@ public class SearchPublishedArticleDto extends PageDto {
     private String keyword;
     @JsonProperty("isLatest")
     private Boolean latest;
+    @JsonProperty("structureId")
+    private Long structureId;
     @JsonProperty("sorting")
     private SortingPageDto sorting;
 
@@ -24,6 +26,14 @@ public class SearchPublishedArticleDto extends PageDto {
 
     public void setLatest(Boolean latest) {
         this.latest = latest;
+    }
+
+    public Long getStructureId() {
+        return structureId;
+    }
+
+    public void setStructureId(Long structureId) {
+        this.structureId = structureId;
     }
 
     public SortingPageDto getSorting() {

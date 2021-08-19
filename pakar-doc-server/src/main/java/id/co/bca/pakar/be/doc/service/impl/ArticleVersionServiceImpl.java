@@ -52,6 +52,7 @@ public class ArticleVersionServiceImpl implements ArticleVersionService {
     }
 
     /**
+     * search published article from article version
      * @param searchDto
      * @return
      * @throws Exception
@@ -60,7 +61,7 @@ public class ArticleVersionServiceImpl implements ArticleVersionService {
     @Transactional(readOnly = true)
     public Page<ArticleDto> searchPublishedArticle(SearchPublishedArticleDto searchDto) throws Exception {
         try {
-            logger.info("search my page dto");
+            logger.info("search published article");
             Page<ArticleVersion> searchResultPage = null;
             if (searchDto.getPage() == null) {
                 searchDto.setPage(0L);
@@ -77,7 +78,12 @@ public class ArticleVersionServiceImpl implements ArticleVersionService {
             searchDto.getSorting().setColumn(new ArticleVersionHelper().convertColumnNameforSort(reqSortColumnName));
             Sort sort = searchDto.getSorting().getSort().equals("asc") ? Sort.by(searchDto.getSorting().getColumn()).ascending() : Sort.by(searchDto.getSorting().getColumn()).descending();
             Pageable pageable = PageRequest.of(pageNum, searchDto.getSize().intValue(), sort);
-            searchResultPage = articleVersionRepository.findPublishedArticles(searchDto.getKeyword(), pageable);
+            if(!searchDto.getIsLatest().booleanValue())
+                searchResultPage = articleVersionRepository.findPublishedArticles(searchDto.getStructureId(), searchDto.getKeyword(), pageable);
+            else {
+                logger.info("get latests published article ");
+                searchResultPage = articleVersionRepository.findPublishedArticles(pageable);
+            }
             return new ArticleVersionHelper().mapEntityPageIntoDTOPage(pageable, searchResultPage);
         } catch (MinValuePageNumberException e) {
             logger.error("exception", e);
