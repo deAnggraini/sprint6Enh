@@ -52,4 +52,11 @@ public interface ArticleVersionRepository extends CrudRepository<ArticleVersion,
     // find selain article for contents page
     @Query("select m from ArticleVersion m where id not in (select id from Article m ) ")
     Page<ArticleVersion> findContentExceptArticle(@Param("keyword") String keyword, Pageable pageable);
+
+    @Query("SELECT m FROM ArticleVersion m " +
+            "WHERE  m.articleState = 'PUBLISHED' " +
+            "AND m.deleted IS FALSE " +
+            "AND (LOWER(m.judulArticle) LIKE lower(concat('%', :keyword,'%')) " +
+            "OR LOWER(m.fullNameModifier) LIKE lower(concat('%', :keyword,'%')) ) ")
+    Page<ArticleVersion> findPublishedArticles(@Param("keyword") String keyword, Pageable pageable);
 }

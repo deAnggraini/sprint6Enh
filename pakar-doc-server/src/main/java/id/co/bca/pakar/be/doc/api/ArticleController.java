@@ -53,6 +53,21 @@ public class ArticleController extends BaseController {
     @Autowired
     private MyPagesService myPagesService;
 
+    @Autowired
+    private ArticleVersionService articleVersionService;
+
+    private Locale DEFAULT_LOCALE = null;
+
+    private Locale locale = DEFAULT_LOCALE;
+
+    public Locale getLocale() {
+        return locale;
+    }
+
+    public void setLocale(Locale locale) {
+        this.locale = locale;
+    }
+
     /**
      *
      * @return
@@ -177,6 +192,40 @@ public class ArticleController extends BaseController {
         logger.info("json input value " + jsonString);
 
         return createResponse(list, "00", "SUCCESS");
+    }
+
+    /**
+     *
+     * @param authorization
+     * @param username
+     * @param searchDto
+     * @return
+     */
+    @PostMapping(value = "/api/doc/searchArticle", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
+            MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<RestResponse<Map<String, Object>>> searchArticle(@RequestHeader("Authorization") String authorization, @RequestHeader(name = "X-USERNAME") String username, @RequestBody SearchPublishedArticleDto searchDto) {
+        try {
+            logger.info("search article");
+            Page<ArticleDto> pageArticleDto = articleVersionService.searchPublishedArticle(searchDto);
+            Map<String, Object> maps = new HashMap<String, Object>();
+            maps.put("list", pageArticleDto.getContent());
+            maps.put("totalElements", pageArticleDto.getTotalElements());
+            maps.put("totalPages", pageArticleDto.getTotalPages());
+            maps.put("currentPage", searchDto.getPage());
+            return createResponse(maps, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));
+        }  catch (MinValuePageNumberException e) {
+            logger.error("exception", e);
+            return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("paging.minimum.invalid", null, getLocale()));
+        }  catch (Exception e) {
+            logger.error("exception", e);
+            return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
+        }
+    }
+
+    @PostMapping(value = "/api/doc/revertArticleVersion", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
+            MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<RestResponse<Long>> revertArticleVersion(@RequestHeader("Authorization") String authorization, @RequestHeader(name = "X-USERNAME") String username) {
+        return null;
     }
 
     /**

@@ -1,6 +1,10 @@
 package id.co.bca.pakar.be.doc.service.impl;
 
+import id.co.bca.pakar.be.doc.common.Constant;
 import id.co.bca.pakar.be.doc.dao.ArticleVersionRepository;
+import id.co.bca.pakar.be.doc.dto.ArticleDto;
+import id.co.bca.pakar.be.doc.dto.SearchPublishedArticleDto;
+import id.co.bca.pakar.be.doc.exception.MinValuePageNumberException;
 import id.co.bca.pakar.be.doc.exception.SavingArticleVersionException;
 import id.co.bca.pakar.be.doc.model.Article;
 import id.co.bca.pakar.be.doc.model.ArticleContent;
@@ -10,6 +14,7 @@ import id.co.bca.pakar.be.doc.service.ArticleVersionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,17 +37,54 @@ public class ArticleVersionServiceImpl implements ArticleVersionService {
             List<ArticleContentVersion> articleContentVersions = new ArticleVersionHelper().populateArticleContentVersion(article.getArticleContents(), av);
             av.setArticleContents(articleContentVersions);
             av = articleVersionRepository.save(av);
-            if(av == null) {
+            if (av == null) {
                 logger.error("could not save article version");
                 throw new SavingArticleVersionException("could not save article version");
             }
             return av;
         } catch (SavingArticleVersionException e) {
-            logger.error("exception",e);
+            logger.error("exception", e);
             throw new SavingArticleVersionException("", e);
         } catch (Exception e) {
-            logger.error("exception",e);
+            logger.error("exception", e);
             throw new Exception(e);
+        }
+    }
+
+    /**
+     * @param searchDto
+     * @return
+     * @throws Exception
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Page<ArticleDto> searchPublishedArticle(SearchPublishedArticleDto searchDto) throws Exception {
+        try {
+            logger.info("search my page dto");
+            Page<ArticleVersion> searchResultPage = null;
+            if (searchDto.getPage() == null) {
+                searchDto.setPage(0L);
+            }
+
+            if (searchDto.getPage() == 0) {
+                searchDto.setPage(0L);
+            }
+
+            int pageNum = searchDto.getPage().intValue() - 1;
+            if (pageNum < 0)
+                throw new MinValuePageNumberException("page number smaller than 0");
+            String reqSortColumnName = searchDto.getSorting().getColumn();
+            searchDto.getSorting().setColumn(new ArticleVersionHelper().convertColumnNameforSort(reqSortColumnName));
+            Sort sort = searchDto.getSorting().getSort().equals("asc") ? Sort.by(searchDto.getSorting().getColumn()).ascending() : Sort.by(searchDto.getSorting().getColumn()).descending();
+            Pageable pageable = PageRequest.of(pageNum, searchDto.getSize().intValue(), sort);
+            searchResultPage = articleVersionRepository.findPublishedArticles(searchDto.getKeyword(), pageable);
+            return new ArticleVersionHelper().mapEntityPageIntoDTOPage(pageable, searchResultPage);
+        } catch (MinValuePageNumberException e) {
+            logger.error("exception", e);
+            throw new MinValuePageNumberException("exception", e);
+        } catch (Exception e) {
+            logger.error("exception", e);
+            throw new Exception("exception", e);
         }
     }
 
@@ -71,13 +113,14 @@ public class ArticleVersionServiceImpl implements ArticleVersionService {
 
         /**
          * populate list of article content
+         *
          * @param contents
          * @return
          */
         List<ArticleContentVersion> populateArticleContentVersion(List<ArticleContent> contents, ArticleVersion articleVersion) {
             logger.info("populate article content to article content version");
             List<ArticleContentVersion> articleContentVersions = new ArrayList<>();
-            contents.forEach(e->  {
+            contents.forEach(e -> {
                 ArticleContentVersion articleContentVersion = new ArticleContentVersion();
                 articleContentVersion.setId(e.getId());
                 articleContentVersion.setArticleVersion(articleVersion);
@@ -97,6 +140,48 @@ public class ArticleVersionServiceImpl implements ArticleVersionService {
             });
 
             return articleContentVersions;
+        }
+
+        public List<ArticleDto> mapEntitiesIntoDTOs(Iterable<ArticleVersion> entities) {
+            List<ArticleDto> dtos = new ArrayList<>();
+            entities.forEach(e -> dtos.add(mapEntityIntoDTO(e)));
+            return dtos;
+        }
+
+        public ArticleDto mapEntityIntoDTO(ArticleVersion entity) {
+            ArticleDto dto = new ArticleDto();
+            dto.setId(entity.getId());
+            dto.setTitle(entity.getJudulArticle());
+            dto.setShortDescription(entity.getShortDescription());
+            dto.setVideoLink(entity.getVideoLink());
+            dto.setStructureId(entity.getStructure());
+            dto.setPublished(entity.getArticleState().equalsIgnoreCase(Constant.ArticleWfState.PUBLISHED) ? Boolean.TRUE : Boolean.FALSE);
+            return dto;
+        }
+
+        public Page<ArticleDto> mapEntityPageIntoDTOPage(Pageable pageRequest, Page<ArticleVersion> source) {
+            List<ArticleDto> dtos = mapEntitiesIntoDTOs(source.getContent());
+            return new PageImpl<>(dtos, pageRequest, source.getTotalElements());
+        }
+
+        public Page<ArticleDto> emptypage(Pageable pageRequest) {
+            List<ArticleDto> dtos = new ArrayList<>();
+            return new PageImpl<>(dtos, pageRequest, 0);
+        }
+
+        public String convertColumnNameforSort(String reqColumn) {
+            if (reqColumn.equals("title")) {
+                return "judulArticle";
+            } else if (reqColumn.equals("modified_date")) {
+                return "modifyDate";
+            } else if (reqColumn.equals("modified_by")) {
+                return "fullNameModifier";
+            } else if (reqColumn.equals("location")) {
+                return "location";
+            } else if (reqColumn.equals("approved_date")) {
+                return "approvedDate";
+            }
+            return "judulArticle";
         }
     }
 }

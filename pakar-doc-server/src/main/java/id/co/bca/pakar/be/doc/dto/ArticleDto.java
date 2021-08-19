@@ -46,11 +46,14 @@ public class ArticleDto extends BaseArticleDto {
     @JsonProperty("isNew")
     private boolean isNew = true;
 
+    @JsonProperty("releaseVersion")
     private String releaseVersion;
 
+    @JsonProperty("timestampVersion")
     private String timestampVersion;
 
-    private boolean isPublished = false;
+    @JsonProperty("isPublished")
+    private Boolean published = Boolean.FALSE;
 
     public String getShortDescription() {
         return shortDescription;
@@ -172,11 +175,11 @@ public class ArticleDto extends BaseArticleDto {
         this.timestampVersion = timestampVersion;
     }
 
-    public boolean isPublished() {
-        return isPublished;
+    public Boolean getIsPublished() {
+        return published;
     }
 
-    public void setPublished(boolean published) {
-        isPublished = published;
+    public void setPublished(Boolean published) {
+        this.published = published;
     }
 }

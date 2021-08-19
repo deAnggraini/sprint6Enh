@@ -372,6 +372,7 @@ public class ArticleServiceImpl implements ArticleService {
             articleDto.setRelated(mapToRelatedArticleDto(relatedArticles));
             articleDto.setEmptyTemplate(article.getUseEmptyTemplate());
             articleDto.setStructureId(article.getStructure().getId());
+            articleDto.setPublished(article.getArticleState().equalsIgnoreCase(PUBLISHED) ? true : false);
 
             // get current structure
             Optional<Structure> currStructOpt = structureRepository.findById(article.getStructure().getId());
