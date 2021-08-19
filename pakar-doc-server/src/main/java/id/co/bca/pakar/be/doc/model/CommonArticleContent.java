@@ -28,7 +28,7 @@ public class CommonArticleContent extends EntityBase {
 
 //    @Lob
 //    @Column(name = "topic_content", columnDefinition= "TEXT")
-    @Column(name = "topic_content", columnDefinition = "TEXT", length = 50000)
+    @Column(name = "topic_content", columnDefinition = "TEXT", length = Integer.MAX_VALUE)
     private String topicContent;
 
     public String getName() {
