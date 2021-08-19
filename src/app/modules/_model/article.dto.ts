@@ -57,6 +57,7 @@ export declare interface ArticleDTO {
     related: ArticleRelatedDTO[],
     suggestions: ArticleRelatedDTO[],
     isNew?: boolean,
+    isPublished?: boolean,
 
     // save & send
     isHasSend: boolean,

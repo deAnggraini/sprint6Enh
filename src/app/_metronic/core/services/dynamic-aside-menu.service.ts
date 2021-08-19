@@ -180,20 +180,12 @@ export class DynamicAsideMenuService {
   // Here you able to load your menu from server/data-base/localStorage
   // Default => from DynamicAsideMenuConfig
   private loadMenu(_server) {
-    // const config = DynamicAsideMenuConfig;  
-    // const items = [].concat(config.items)
-    //   .concat(this.menuByRoles())
-    //   .concat(_server)
-    //   .concat(config.footer)
-    //   .concat({ section: ' ' }) // agar menu tidak terlalu mepet kebawah
-    //   ;
 
     const items = [].concat(_server);
     this.setMenu({ items });
   }
 
   public setMenu(menuConfig) {
-    console.log({ menuConfig });
     this.menuConfigSubject.next(menuConfig);
   }
 

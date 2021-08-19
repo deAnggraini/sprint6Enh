@@ -81,7 +81,6 @@ export class ArticleService {
 
   // search all data [article|faq|pdf]
   search(params: SearchArticleParam = null): Observable<any> {
-    console.log('search service', { params });
     if (params) {
       return this.apiService.post(`${this._base_url}/searchArticle`, params);
     } else {
