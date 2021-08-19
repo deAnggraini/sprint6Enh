@@ -18,7 +18,8 @@ const sample_empty = {
     related: [],  // {id, title}
     suggestions: [], // {id, title}
     isEmptyTemplate: true,
-    isNew: true
+    isNew: true,
+    isPublished: false,
 };
 
 const sample_basic = {
@@ -73,7 +74,8 @@ const sample_basic = {
         { id: 2, title: "Perihal Ketentuan Tahapan 1", no: "025/SKSE/TL/2020" }
     ],
     isEmptyTemplate: false,
-    isNew: true
+    isNew: true,
+    isPublished: false,
 };
 
 const sample_non_basic = {
@@ -365,7 +367,8 @@ const sample_non_basic = {
         { id: 20, title: "Perihal Ketentuan Tahapan 1", no: "025/SKSE/TL/2020" }
     ],
     isEmptyTemplate: false,
-    isNew: false
+    isNew: false,
+    isPublished: false,
 };
 
 const articles = [
@@ -390,7 +393,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        image: 'tahapan-berjangka.JPG',
+        image: '/articles/tahapan-berjangka.JPG',
         attactments: [
             {
                 file: '',
@@ -427,7 +430,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        image: 'time-loan.jpeg',
+        image: '/articles/time-loan.jpeg',
         attactments: [
             {
                 file: '',
@@ -464,7 +467,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        image: 'giro.jpeg',
+        image: '/articles/giro.jpeg',
         attactments: [
             {
                 file: '',
@@ -501,7 +504,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        image: 'kredit-lokal-sme.jpeg',
+        image: '/articles/kredit-lokal-sme.jpeg',
         attactments: [
             {
                 file: '',
@@ -538,7 +541,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        image: 'tahapan.jpeg',
+        image: '/articles/tahapan.jpeg',
         attactments: [
             {
                 file: '',
@@ -572,7 +575,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        image: 'welma.png',
+        image: '/articles/welma.png',
         attactments: [
             {
                 file: '',
@@ -607,7 +610,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        image: 'deposito.jpeg',
+        image: '/articles/deposito.jpeg',
         attactments: [
             {
                 file: '',
@@ -641,7 +644,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        image: 'simpanan-pelajar.jpeg',
+        image: '/articles/simpanan-pelajar.jpeg',
         attactments: [
             {
                 file: '',
@@ -677,7 +680,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        image: 'tahapan-xpresi.jpeg',
+        image: '/articles/tahapan-xpresi.jpeg',
         attactments: [
             {
                 file: '',
@@ -713,7 +716,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        image: 'tabunganku.jpeg',
+        image: '/articles/tabunganku.jpeg',
         attactments: [
             {
                 file: '',
@@ -748,7 +751,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        image: 'tapres.jpeg',
+        image: '/articles/tapres.jpeg',
         attactments: [
             {
                 file: '',
@@ -783,7 +786,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        image: 'duitt.jpeg',
+        image: '/articles/duitt.jpeg',
         attactments: [
             {
                 file: '',
@@ -818,7 +821,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        image: 'deposito.jpeg',
+        image: '/articles/deposito.jpeg',
         attactments: [
             {
                 file: '',
@@ -853,7 +856,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        image: 'kredit-lokal-sme.jpeg',
+        image: '/articles/kredit-lokal-sme.jpeg',
         attactments: [
             {
                 file: '',
@@ -888,7 +891,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        image: 'duitt.jpeg',
+        image: '/articles/duitt.jpeg',
         attactments: [
             {
                 file: '',
