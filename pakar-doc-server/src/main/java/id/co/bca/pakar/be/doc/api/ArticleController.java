@@ -745,7 +745,7 @@ public class ArticleController extends BaseController {
             return createResponse(articleEditingDtos, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));
         } catch(NotFoundUserArticleEditingException e) {
             logger.info("theres is no user edit article id {}", dto.getId());
-            return createResponse(new ArrayList<UserArticleEditingDto>() , Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("none.user.edit.article", new Object[] {dto.getId()}, getLocale()));
+            return createResponse(new ArrayList<UserArticleEditingDto>() , Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("none.user.edit.article", new Object[]{dto.getId()}, getLocale()));
         } catch(Exception e) {
             logger.error("exception", e);
             return createResponse(new ArrayList<UserArticleEditingDto>() , Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
