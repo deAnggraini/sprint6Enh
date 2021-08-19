@@ -8,12 +8,10 @@ import javax.persistence.*;
  */
 @MappedSuperclass
 public class CommonArticleContent extends EntityBase {
-    @Lob
-    @Column(name = "name", columnDefinition="TEXT")
+    @Column(name = "name")
     private String name;
 
-    @Lob
-    @Column(name = "description", columnDefinition="TEXT")
+    @Column(name = "description")
     private String description = new String();
 
     @Column(name = "sort", columnDefinition = "integer DEFAULT 1")
@@ -28,8 +26,9 @@ public class CommonArticleContent extends EntityBase {
     @Column(name = "topic_caption")
     private String topicCaption;
 
-    @Lob
-    @Column(name = "topic_content", columnDefinition="TEXT")
+//    @Lob
+//    @Column(name = "topic_content", columnDefinition="TEXT")
+    @Column(name = "topic_content", columnDefinition = "TEXT", length = 50000)
     private String topicContent;
 
     public String getName() {

@@ -30,8 +30,10 @@ public class Article extends EntityBase {
 	@Column(name = "article_used_by")
 	private String articleUsedBy;
 
-	@Lob
-	@Column(name = "short_desc", columnDefinition="TEXT", nullable = false)
+//	@Lob
+//	@Column(name = "short_desc", columnDefinition="TEXT", nullable = false)
+//	private String shortDescription = new String();
+	@Column(name = "short_desc", columnDefinition="TEXT", length = 1000, nullable = false)
 	private String shortDescription = new String();
 
 	@Column(name = "video_link")
