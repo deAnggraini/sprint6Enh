@@ -104,7 +104,7 @@ public class UserController extends BaseController {
 	 * @param searchDto
 	 * @return
 	 */
-	@PostMapping(value = "/api/auth/getUsersBylRole", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
+	@PostMapping(value = "/api/auth/getUsersByRole", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<RestResponse<List<UserDto>>> getUsersByRole(@RequestHeader (name="Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username,
 															 @RequestBody SearchUserDto searchDto) {
