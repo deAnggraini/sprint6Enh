@@ -12,9 +12,6 @@ import java.util.Optional;
 
 @Repository
 public interface ArticleVersionRepository extends CrudRepository<ArticleVersion, Long> {
-    @Query("SELECT CASE WHEN COUNT(m) > 0 THEN TRUE ELSE FALSE END FROM ArticleVersion m WHERE LOWER(TRIM(m.judulArticle))=LOWER(TRIM(:title)) AND m.deleted IS FALSE")
-    Boolean existByArticleTitle(@Param("title") String title);
-
     @Query("SELECT m FROM ArticleVersion m " +
             "WHERE m.id=:id " +
             "AND m.deleted IS FALSE ")
