@@ -75,6 +75,7 @@ public class ArticleVersionServiceImpl implements ArticleVersionService {
             if (pageNum < 0)
                 throw new MinValuePageNumberException("page number smaller than 0");
             String reqSortColumnName = searchDto.getSorting().getColumn();
+            logger.debug("column name for approved date {}", reqSortColumnName);
             searchDto.getSorting().setColumn(new ArticleVersionHelper().convertColumnNameforSort(reqSortColumnName));
             Sort sort = searchDto.getSorting().getSort().equals("asc") ? Sort.by(searchDto.getSorting().getColumn()).ascending() : Sort.by(searchDto.getSorting().getColumn()).descending();
             Pageable pageable = PageRequest.of(pageNum, searchDto.getSize().intValue(), sort);
