@@ -145,10 +145,12 @@ public class MyPagesServiceImpl implements MyPagesService {
             dto.setCurrentBy(currentEdit.toString());
             dto.setSendTo(entity.getFullNameReceiver());
 
-            if(entity.getSenderState().equalsIgnoreCase(Constant.ArticleWfState.PUBLISHED)) {
-                dto.setApproved_by(entity.getFullNameReceiver());
+            if(entity.getSenderState() != null) {
+                if (entity.getSenderState().equalsIgnoreCase(Constant.ArticleWfState.PUBLISHED)) {
+                    dto.setApproved_by(entity.getFullNameReceiver());
 //                dto.setApprovedDate(entity.getModifyDate());
 //                dto.setEffectiveDate();
+                }
             }
 
             return dto;
