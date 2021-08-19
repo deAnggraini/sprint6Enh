@@ -8,9 +8,11 @@ public class ArticleContent extends CommonArticleContent {
     @Id
     @Column(name = "id")
     private Long id = 0L;
+
     @Version
     @Column(name = "optlock", columnDefinition = "integer DEFAULT 0", nullable = false)
     private Long version;
+
     @ManyToOne
     @JoinColumn(name = "article_id")
     private Article article;

@@ -12,9 +12,11 @@ public class Article extends EntityBase {
 	@GeneratedValue(generator = "articleSeqGen")
 	@Column(name = "id")
 	private Long id;
+
 	@Version
 	@Column(name = "optlock", columnDefinition = "integer DEFAULT 0", nullable = false)
 	private Long version;
+
 	@ManyToOne
 	@JoinColumn(name = "structure_id", nullable = false)
 	private Structure structure;
@@ -29,7 +31,7 @@ public class Article extends EntityBase {
 	private String articleUsedBy;
 
 	@Lob
-	@Column(name = "short_desc", nullable = false)
+	@Column(name = "short_desc", columnDefinition="TEXT", nullable = false)
 	private String shortDescription = new String();
 
 	@Column(name = "video_link")
