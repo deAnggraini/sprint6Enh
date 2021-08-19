@@ -33,7 +33,7 @@ public class ArticleVersion extends EntityBase {
     private String articleUsedBy;
 
     @Lob
-    @Column(name = "short_desc")
+    @Column(name = "short_desc", columnDefinition = "TEXT")
     private String shortDescription = new String();
 
     @Column(name = "video_link")
