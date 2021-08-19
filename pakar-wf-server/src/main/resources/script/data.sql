@@ -71,3 +71,8 @@ VALUES(2, 'system', now()::DATE, false, NULL, NULL, 'EDITOR', 'ARTICLE_REVIEW');
 INSERT INTO public.r_wf_group(id, created_by, created_date, deleted, modify_by, modify_date, "name", process_id)
 VALUES(3, 'system', now()::DATE, false, NULL, NULL, 'PUBLISHER', 'ARTICLE_REVIEW');
 
+INSERT INTO public.r_wf_person_state(code, created_by, created_date, deleted, modify_by, modify_date, "name" ,optlock ,process_id)
+VALUES('DRAFT', 'system', now()::DATE, false, NULL, NULL, 'STATE IN RECEIVER FOR PERSON',0, 'ARTICLE_REVIEW');
+INSERT INTO public.r_wf_person_state(code, created_by, created_date, deleted, modify_by, modify_date, "name" ,optlock ,process_id)
+VALUES('PENDING', 'system', now()::DATE, false, NULL, NULL, 'STATE THAT PRESENT OF SENDER',0, 'ARTICLE_REVIEW');
+
