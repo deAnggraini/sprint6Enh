@@ -40,7 +40,7 @@ export class ListComponent implements OnInit, OnDestroy {
     if (!this.categoryId) return;
     this.listArticle = [];
     const params: SearchArticleParam = {
-      keyword: '', page: 1, limit: 10, sort: { column: 'approved_date', sort: 'asc' },
+      keyword: '', page: 1, limit: 10, sorting: { column: 'approved_date', sort: 'asc' },
       type: 'article', state: 'PUBLISHED', structureId: this.categoryId, isLatest: false
     };
     this.subscriptions.push(this.article.search(params).subscribe(resp => {

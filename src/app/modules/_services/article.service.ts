@@ -10,7 +10,7 @@ export interface SearchArticleParam {
   keyword: string,
   page: number,
   limit: number,
-  sort: { column: string, sort: string },
+  sorting: { column: string, sort: string },
   type: string,
   state: string,
   structureId?: number,

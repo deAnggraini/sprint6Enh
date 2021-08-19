@@ -135,7 +135,7 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
   checkArticle(e, item: any) {
     if (!item.submenu) item.submenu = [];
     const params: SearchArticleParam = {
-      keyword: '', page: 1, limit: 10, sort: { column: 'approved_date', sort: 'asc' },
+      keyword: '', page: 1, limit: 10, sorting: { column: 'approved_date', sort: 'asc' },
       type: 'article', state: 'PUBLISHED', structureId: item.id, isLatest: false
     };
     this.subscriptions.push(this.article.search(params).subscribe(resp => {
