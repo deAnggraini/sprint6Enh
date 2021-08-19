@@ -4,7 +4,18 @@ import { environment } from 'src/environments/environment';
 import { of, BehaviorSubject, Observable } from 'rxjs';
 import * as moment from 'moment';
 import { ArticleDTO, ArticleContentDTO } from '../_model/article.dto';
-import { jsonToFormData, toFormData } from './../../utils/_helper/parser';
+import { toFormData } from './../../utils/_helper/parser';
+
+export interface SearchArticleParam {
+  keyword: string,
+  page: number,
+  limit: number,
+  sort: { column: string, sort: string },
+  type: string,
+  state: string,
+  structureId?: number,
+  isLatest?: boolean
+}
 
 @Injectable({
   providedIn: 'root'
@@ -69,10 +80,7 @@ export class ArticleService {
   }
 
   // search all data [article|faq|pdf]
-  search(params: {
-    keyword: string, page: number, limit: number, sort: { column: string, sort: string },
-    type: string, state: string
-  } = null): Observable<any> {
+  search(params: SearchArticleParam = null): Observable<any> {
     console.log('search service', { params });
     if (params) {
       return this.apiService.post(`${this._base_url}/searchArticle`, params);

@@ -16,7 +16,6 @@ import { ConfirmService } from 'src/app/utils/_services/confirm.service';
 import { ToastService } from 'src/app/utils/_services/toast.service';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { UserService } from '../../_services/user.service';
-import { PlatformLocation } from '@angular/common';
 
 const TOOL_TIPS = [
   'Berisi aturan/kaidah/ketetapan/syarat/kriteria atas produk/aplikasi yang harus dipahami pembaca sebelum melakukan prosedur atas produk/aplikasi tersebut; dapat dituangkan dalam bentuk kalimat ataupun tabel.',

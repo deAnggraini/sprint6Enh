@@ -192,7 +192,8 @@ export class DynamicAsideMenuService {
     this.setMenu({ items });
   }
 
-  private setMenu(menuConfig) {
+  public setMenu(menuConfig) {
+    console.log({ menuConfig });
     this.menuConfigSubject.next(menuConfig);
   }
 
@@ -201,7 +202,6 @@ export class DynamicAsideMenuService {
   }
 
   updateMenu(item: any) {
-    // const found = this.categories.find(d => d.id == item.data.id);
     const found = this.menus.find(d => d.id == item.data.id);
     if (found) {
       found.showLess = !found.showLess;
