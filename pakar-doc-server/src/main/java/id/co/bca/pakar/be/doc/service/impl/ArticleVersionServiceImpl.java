@@ -157,11 +157,12 @@ public class ArticleVersionServiceImpl implements ArticleVersionService {
 
         public ArticleDto mapEntityIntoDTO(ArticleVersion entity) {
             ArticleDto dto = new ArticleDto();
-            dto.setId(entity.getId());
+            dto.setId(entity.getArticleId());
             dto.setTitle(entity.getJudulArticle());
             dto.setShortDescription(entity.getShortDescription());
             dto.setVideoLink(entity.getVideoLink());
             dto.setStructureId(entity.getStructure());
+            //dto.setImage(entity.getArt);
             dto.setPublished(entity.getArticleState().equalsIgnoreCase(Constant.ArticleWfState.PUBLISHED) ? Boolean.TRUE : Boolean.FALSE);
             return dto;
         }
