@@ -56,10 +56,10 @@ public class ArticleVersion extends EntityBase {
     private String fullNameModifier;
 
     @Column(name = "release_version")
-    private String timeStampVersion;
+    private String releaseVersion;
 
     @Column(name = "timestamp_version")
-    private String releaseVersion;
+    private String timeStampVersion;
 
     @Column(name = "username")
     private String username;

@@ -83,11 +83,11 @@ public class ArticleController extends BaseController {
 
             logger.info("themeDto" + themeDto);
 
-            return this.createResponse(themeDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
+            return this.createResponse(themeDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));
 
         } catch (Exception e) {
             logger.error("exception", e);
-            return this.createResponse(new ThemeDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
+            return this.createResponse(new ThemeDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
         }
 
     }
@@ -119,11 +119,11 @@ public class ArticleController extends BaseController {
                 logger.info("themeDto" + themeDto.toString());
             }
 
-            return this.createResponse(themeDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
+            return this.createResponse(themeDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));
 
         } catch (Exception e) {
             logger.error("exception", e);
-            return this.createResponse(new ThemeDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
+            return this.createResponse(new ThemeDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
         }
 
     }
@@ -238,10 +238,10 @@ public class ArticleController extends BaseController {
             logger.info("received token bearer --- " + authorization);
             logger.info("get article templates by structure id {}", requestTemplateDto.getStructureId());
             List<ArticleTemplateDto> templates = articleTemplateService.findTemplates(getTokenFromHeader(authorization), username);
-            return createResponse(templates, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
+            return createResponse(templates, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));
         } catch (Exception e) {
             logger.error("exception", e);
-            return createResponse(new ArrayList<ArticleTemplateDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
+            return createResponse(new ArrayList<ArticleTemplateDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
         }
     }
 
@@ -254,11 +254,11 @@ public class ArticleController extends BaseController {
         try {
             logger.info("verify article title {} exist in database ", articleTitleDto.getTitle());
             Boolean exist = articleService.existArticle(articleTitleDto.getTitle());
-            return exist.booleanValue() ? createResponse(exist, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("title.article.exist", null, new Locale("en", "US"))) :
-                    createResponse(exist, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
+            return exist.booleanValue() ? createResponse(exist, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("title.article.exist", null, getLocale())) :
+                    createResponse(exist, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));
         } catch (Exception e) {
             logger.error("", e);
-            return createResponse(Boolean.FALSE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
+            return createResponse(Boolean.FALSE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
         }
     }
 
@@ -277,16 +277,16 @@ public class ArticleController extends BaseController {
             generateArticleDto.setUsername(username);
             generateArticleDto.setToken(getTokenFromHeader(authorization));
             ArticleDto articleDto = articleService.generateArticle(generateArticleDto);
-            return createResponse(articleDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
+            return createResponse(articleDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));
         } catch (DuplicateTitleException e) {
             logger.error("exception", e);
-            return createResponse(new ArticleDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("article.title.duplicate", null, new Locale("en", "US")));
+            return createResponse(new ArticleDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("article.title.duplicate", null, getLocale()));
         } catch (NotFoundArticleTemplateException e) {
             logger.error("exception", e);
-            return createResponse(new ArticleDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("article.templete.not.found", null, new Locale("en", "US")));
+            return createResponse(new ArticleDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("article.templete.not.found", null, getLocale()));
         } catch (Exception e) {
             logger.error("exception", e);
-            return createResponse(new ArticleDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
+            return createResponse(new ArticleDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
         }
     }
 
@@ -304,16 +304,16 @@ public class ArticleController extends BaseController {
             logger.info("generate article process");
             logger.info("received token bearer ---> {}", authorization);
             ArticleDto articleDto = articleService.getArticleById(requestDto.getId(), requestDto.getIsEdit(), username, getTokenFromHeader(authorization));
-            return createResponse(articleDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, Locale.ENGLISH));
+            return createResponse(articleDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));
         } catch (ArticleNotFoundException e) {
             logger.error("exception", e);
-            return createResponse(new ArticleDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("article.not.found", null, Locale.ENGLISH));
+            return createResponse(new ArticleDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("article.not.found", null, getLocale()));
         } catch (StructureNotFoundException e) {
             logger.error("exception", e);
-            return createResponse(new ArticleDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("structure.not.found", null, Locale.ENGLISH));
+            return createResponse(new ArticleDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("structure.not.found", null, getLocale()));
         } catch (Exception e) {
             logger.error("exception", e);
-            return createResponse(new ArticleDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, Locale.ENGLISH));
+            return createResponse(new ArticleDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
         }
     }
 
@@ -340,13 +340,13 @@ public class ArticleController extends BaseController {
             maps.put("totalElements", pageArticleDto.getTotalElements());
             maps.put("totalPages", pageArticleDto.getTotalPages());
             maps.put("currentPage", searchDto.getPage());
-            return createResponse(maps, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
+            return createResponse(maps, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));
         } catch (DataNotFoundException e) {
             logger.error("exception", e);
-            return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, new Locale("en", "US")));
+            return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, getLocale()));
         } catch (Exception e) {
             logger.error("exception", e);
-            return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
+            return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
         }
     }
 
@@ -371,7 +371,7 @@ public class ArticleController extends BaseController {
                 for (Object object : bindingResult.getAllErrors()) {
                     if(object instanceof FieldError) {
                         FieldError fieldError = (FieldError) object;
-                        errorMessage = messageSource.getMessage(fieldError.getCode(),null, Locale.ENGLISH);
+                        errorMessage = messageSource.getMessage(fieldError.getCode(),null, getLocale());
                     }
                 }
                 return createResponse(new ArticleResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], errorMessage);
@@ -379,13 +379,13 @@ public class ArticleController extends BaseController {
             articleDto.setUsername(username);
             articleDto.setToken(getTokenFromHeader(authorization));
             ArticleResponseDto _articleDto = articleService.saveArticle(articleDto);
-            return createResponse(_articleDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, Locale.ENGLISH));
+            return createResponse(_articleDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));
         } catch (DataNotFoundException e) {
             logger.error("exception", e);
-            return createResponse(new ArticleResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("article.not.found", null, Locale.ENGLISH));
+            return createResponse(new ArticleResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("article.not.found", null, getLocale()));
         } catch (Exception e) {
             logger.error("exception", e);
-            return createResponse(new ArticleResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, Locale.ENGLISH));
+            return createResponse(new ArticleResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
         }
     }
 
@@ -396,16 +396,16 @@ public class ArticleController extends BaseController {
             logger.info("cancel article process");
             logger.info("received token bearer --- {}", authorization);
             Boolean status = articleService.cancelArticle(cancelDto.getId(), username, getTokenFromHeader(authorization));
-            return createResponse(status, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, Locale.ENGLISH));
+            return createResponse(status, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));
         } catch (DeletePublishedArticleException e) {
             logger.error("exception", e);
-            return createResponse(Boolean.TRUE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("published.article.could.not.deleted", null, Locale.ENGLISH));
+            return createResponse(Boolean.TRUE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("published.article.could.not.deleted", null, getLocale()));
         } catch (DataNotFoundException e) {
             logger.error("exception", e);
-            return createResponse(Boolean.TRUE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, Locale.ENGLISH));
+            return createResponse(Boolean.TRUE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, getLocale()));
         } catch (Exception e) {
             logger.error("exception", e);
-            return createResponse(Boolean.TRUE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, Locale.ENGLISH));
+            return createResponse(Boolean.TRUE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
         }
     }
 
@@ -416,10 +416,10 @@ public class ArticleController extends BaseController {
             logger.info("cancel article process");
             logger.info("received token bearer --- {}", authorization);
             Boolean status = articleService.cancelSendArticle(cancelDto.getId(), username, getTokenFromHeader(authorization));
-            return createResponse(status, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, Locale.ENGLISH));
+            return createResponse(status, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));
         } catch (Exception e) {
             logger.error("exception", e);
-            return createResponse(Boolean.TRUE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, Locale.ENGLISH));
+            return createResponse(Boolean.TRUE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
         }
     }
 
@@ -437,13 +437,13 @@ public class ArticleController extends BaseController {
             logger.info("get content id");
             logger.info("received token bearer --- {}", authorization);
             Long contentId = articleService.getContentId(username, getTokenFromHeader(authorization));
-            return createResponse(contentId, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
+            return createResponse(contentId, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));
         } catch (AccesDeniedDeleteContentException e) {
             logger.error("exception", e);
-            return createResponse(0L, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("access.denied.delete.content", new Object[]{username}, Locale.ENGLISH));
+            return createResponse(0L, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("access.denied.delete.content", new Object[]{username}, getLocale()));
         } catch (Exception e) {
             logger.error("exception", e);
-            return createResponse(0L, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
+            return createResponse(0L, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
         }
     }
 
@@ -464,13 +464,13 @@ public class ArticleController extends BaseController {
             baseDto.setUsername(username);
             baseDto.setToken(getTokenFromHeader(authorization));
             ArticleContentDto articleContentDto = articleService.getContentById(baseDto.getId());
-            return createResponse(articleContentDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, Locale.ENGLISH));
+            return createResponse(articleContentDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));
         } catch (AccesDeniedDeleteContentException e) {
             logger.error("exception", e);
-            return createResponse(new ArticleContentDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("access.denied.delete.content", new Object[]{username}, Locale.ENGLISH));
+            return createResponse(new ArticleContentDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("access.denied.delete.content", new Object[]{username}, getLocale()));
         } catch (Exception e) {
             logger.error("exception", e);
-            return createResponse(new ArticleContentDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, Locale.ENGLISH));
+            return createResponse(new ArticleContentDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
         }
     }
 
@@ -490,16 +490,16 @@ public class ArticleController extends BaseController {
             articleContentDto.setUsername(username);
             articleContentDto.setToken(getTokenFromHeader(authorization));
             articleContentDto = articleService.saveContent(articleContentDto);
-            return createResponse(articleContentDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, Locale.ENGLISH));
+            return createResponse(articleContentDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));
         } catch (ParentContentNotFoundException e) {
             logger.error("exception", e);
-            return createResponse(new ArticleContentDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("content.parent.not.found", null, Locale.ENGLISH));
+            return createResponse(new ArticleContentDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("content.parent.not.found", null, getLocale()));
         } catch (ArticleNotFoundException e) {
             logger.error("exception", e);
-            return createResponse(new ArticleContentDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("article.not.found", null, Locale.ENGLISH));
+            return createResponse(new ArticleContentDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("article.not.found", null, getLocale()));
         } catch (Exception e) {
             logger.error("exception", e);
-            return createResponse(new ArticleContentDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, Locale.ENGLISH));
+            return createResponse(new ArticleContentDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
         }
     }
 
@@ -524,22 +524,22 @@ public class ArticleController extends BaseController {
                 for (Object object : bindingResult.getAllErrors()) {
                     if (object instanceof FieldError) {
                         FieldError fieldError = (FieldError) object;
-                        errorMessage = messageSource.getMessage(fieldError.getCode(), null, new Locale("en", "US"));
+                        errorMessage = messageSource.getMessage(fieldError.getCode(), null, getLocale());
                     }
                 }
                 return createResponse(new ArrayList<ArticleContentDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], errorMessage);
             }
             articleService.saveBatchContents(articleContentDtos, username, getTokenFromHeader(authorization));
-            return createResponse(articleContentDtos, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, Locale.ENGLISH));
+            return createResponse(articleContentDtos, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));
         } catch (DataNotFoundException e) {
             logger.error("exception", e);
-            return createResponse(new ArrayList<ArticleContentDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, Locale.ENGLISH));
+            return createResponse(new ArrayList<ArticleContentDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, getLocale()));
         } catch (InvalidLevelException e) {
             logger.error("exception", e);
-            return createResponse(new ArrayList<ArticleContentDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("level.article.content.invalid", null, Locale.ENGLISH));
+            return createResponse(new ArrayList<ArticleContentDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("level.article.content.invalid", null, getLocale()));
         } catch (Exception e) {
             logger.error("exception", e);
-            return createResponse(new ArrayList<ArticleContentDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, Locale.ENGLISH));
+            return createResponse(new ArrayList<ArticleContentDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
         }
     }
 
@@ -552,19 +552,19 @@ public class ArticleController extends BaseController {
             deleteContentDto.setUsername(username);
             deleteContentDto.setToken(getTokenFromHeader(authorization));
             Boolean status = articleService.deleteContent(deleteContentDto);
-            return createResponse(status, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, Locale.ENGLISH));
+            return createResponse(status, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));
         } catch (DataNotFoundException e) {
             logger.error("exception", e);
-            return createResponse(Boolean.FALSE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, Locale.ENGLISH));
+            return createResponse(Boolean.FALSE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, getLocale()));
         } catch (ArticleContentNotFoundException e) {
             logger.error("exception", e);
-            return createResponse(Boolean.FALSE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("article.content.not.found", new Object[] {deleteContentDto.getContentId()}, Locale.ENGLISH));
+            return createResponse(Boolean.FALSE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("article.content.not.found", new Object[] {deleteContentDto.getContentId()}, getLocale()));
         } catch (AccesDeniedDeleteContentException e) {
             logger.error("exception", e);
-            return createResponse(Boolean.FALSE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("access.denied.delete.content", new Object[]{username}, Locale.ENGLISH));
+            return createResponse(Boolean.FALSE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("access.denied.delete.content", new Object[]{username}, getLocale()));
         } catch (Exception e) {
             logger.error("exception", e);
-            return createResponse(Boolean.FALSE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, Locale.ENGLISH));
+            return createResponse(Boolean.FALSE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
         }
     }
 
@@ -585,16 +585,16 @@ public class ArticleController extends BaseController {
             deleteContentDto.setUsername(username);
             deleteContentDto.setToken(getTokenFromHeader(authorization));
             Boolean status = articleService.deleteContent(deleteContentDto);
-            return createResponse(status, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, Locale.ENGLISH));
+            return createResponse(status, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));
         } catch (DataNotFoundException e) {
             logger.error("exception", e);
-            return createResponse(Boolean.FALSE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, Locale.ENGLISH));
+            return createResponse(Boolean.FALSE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, getLocale()));
         } catch (AccesDeniedDeleteContentException e) {
             logger.error("exception", e);
-            return createResponse(Boolean.FALSE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("access.denied.delete.content", new Object[]{username}, Locale.ENGLISH));
+            return createResponse(Boolean.FALSE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("access.denied.delete.content", new Object[]{username}, getLocale()));
         } catch (Exception e) {
             logger.error("exception", e);
-            return createResponse(Boolean.FALSE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, Locale.ENGLISH));
+            return createResponse(Boolean.FALSE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
         }
     }
 
@@ -610,13 +610,13 @@ public class ArticleController extends BaseController {
         try {
             logger.info("find FAQ");
             List<FaqDto> listFaq = articleService.findFaq(requestFAQDto.getId());
-            return createResponse(listFaq, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, Locale.ENGLISH));
+            return createResponse(listFaq, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));
         } catch (DataNotFoundException e) {
             logger.error("exception", e);
-            return createResponse(new ArrayList<FaqDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, Locale.ENGLISH));
+            return createResponse(new ArrayList<FaqDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, getLocale()));
         } catch (Exception e) {
             logger.error("exception", e);
-            return createResponse(new ArrayList<FaqDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, Locale.ENGLISH));
+            return createResponse(new ArrayList<FaqDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, getLocale()));
         }
     }
 
@@ -641,13 +641,13 @@ public class ArticleController extends BaseController {
             maps.put("totalElements", pageArticleDto.getTotalElements());
             maps.put("totalPages", pageArticleDto.getTotalPages());
             maps.put("currentPage", searchDto.getPage());
-            return createResponse(maps, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
+            return createResponse(maps, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));
         } catch (DataNotFoundException e) {
             logger.error("exception", e);
-            return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, new Locale("en", "US")));
+            return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, getLocale()));
         } catch(Exception e) {
             logger.error("exception", e);
-            return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
+            return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
         }
     }
 
@@ -675,16 +675,16 @@ public class ArticleController extends BaseController {
             maps.put("totalElements", pageMyPageDto.getTotalElements());
             maps.put("totalPages", pageMyPageDto.getTotalPages());
             maps.put("currentPage", searchDto.getPage());
-            return createResponse(maps, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, null));
+            return createResponse(maps, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));
         } catch (MinValuePageNumberException e) {
             logger.error("exception", e);
-            return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("paging.minimum.invalid", null, null));
+            return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("paging.minimum.invalid", null, getLocale()));
         } catch (DataNotFoundException e) {
             logger.error("exception", e);
-            return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, null));
+            return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, getLocale()));
         } catch(Exception e) {
             logger.error("exception", e);
-            return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, null));
+            return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
         }
     }
 
@@ -711,19 +711,19 @@ public class ArticleController extends BaseController {
             maps.put("totalElements", pageMyPageDto.getTotalElements());
             maps.put("totalPages", pageMyPageDto.getTotalPages());
             maps.put("currentPage", searchDto.getPage());
-            return createResponse(maps, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, null));
+            return createResponse(maps, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));
         } catch (MinValuePageNumberException e) {
             logger.error("exception", e);
-            return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("paging.minimum.invalid", null, null));
+            return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("paging.minimum.invalid", null, getLocale()));
         } catch (DataNotFoundException e) {
             logger.error("exception", e);
-            return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, null));
+            return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, getLocale()));
         } catch (AccesDeniedViewContentsException e) {
             logger.error("exception", e);
-            return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("contents.article.not.for.reader", null, null));
+            return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("contents.article.not.for.reader", null, getLocale()));
         } catch(Exception e) {
             logger.error("exception", e);
-            return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, null));
+            return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
         }
     }
 
@@ -742,10 +742,13 @@ public class ArticleController extends BaseController {
             logger.info("search Contents process");
             logger.info("received token bearer --- {}", authorization);
             List<UserArticleEditingDto> articleEditingDtos = articleService.findUserArticleEditings(username, getTokenFromHeader(authorization), dto.getId());
-            return createResponse(articleEditingDtos, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, null));
+            return createResponse(articleEditingDtos, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));
+        } catch(NotFoundUserArticleEditingException e) {
+            logger.info("theres is no user edit article id {}", dto.getId());
+            return createResponse(new ArrayList<UserArticleEditingDto>() , Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("none.user.edit.article", new Object[] {dto.getId()}, getLocale()));
         } catch(Exception e) {
             logger.error("exception", e);
-            return createResponse(new ArrayList<UserArticleEditingDto>() , Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, null));
+            return createResponse(new ArrayList<UserArticleEditingDto>() , Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
         }
     }
 
