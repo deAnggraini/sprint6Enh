@@ -66,7 +66,7 @@ export class SearchComponent implements OnInit, OnDestroy {
       keyword: this.keyword,
       page: paging.page,
       limit: paging.limit,
-      sort: { column: 'title', sort: 'asc' },
+      sorting: { column: 'title', sort: 'asc' },
       type,
       state: 'PUBLISHED'
     }
