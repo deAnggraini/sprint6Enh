@@ -16,6 +16,7 @@ import { ConfirmService } from 'src/app/utils/_services/confirm.service';
 import { ToastService } from 'src/app/utils/_services/toast.service';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { UserService } from '../../_services/user.service';
+import { PlatformLocation } from '@angular/common';
 
 const TOOL_TIPS = [
   'Berisi aturan/kaidah/ketetapan/syarat/kriteria atas produk/aplikasi yang harus dipahami pembaca sebelum melakukan prosedur atas produk/aplikasi tersebut; dapat dituangkan dalam bentuk kalimat ataupun tabel.',
@@ -255,10 +256,16 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     private toast: ToastService,
     private modalService: NgbModal,
     private configModel: NgbModalConfig,
-    private userService: UserService
+    private userService: UserService,
+    // private platformLocation: PlatformLocation
   ) {
     this.configModel.backdrop = 'static';
     this.configModel.keyboard = false;
+    // this.platformLocation.onPopState(() => {
+    //   console.log('PopState called');
+    //   this.modalService.dismissAll();
+    //   return false;
+    // });
   }
 
   // validation

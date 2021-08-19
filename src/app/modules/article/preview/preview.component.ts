@@ -10,7 +10,8 @@ import { StrukturService } from '../../_services/struktur.service';
 import { ArticleDTO, ArticleContentDTO, ArticleParentDTO } from '../../_model/article.dto';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ConfirmService } from 'src/app/utils/_services/confirm.service';
-import { NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { PlatformLocation } from '@angular/common';
 
 @Component({
   selector: 'pakar-article-preview',
@@ -87,12 +88,21 @@ export class PreviewComponent implements OnInit, AfterViewInit {
     private changeDetectorRef: ChangeDetectorRef,
     private confirm: ConfirmService,
     private configModel: NgbModalConfig,
-    private _sanitizer: DomSanitizer
+    private _sanitizer: DomSanitizer,
+    private modalService: NgbModal,
+    private platformLocation: PlatformLocation,
   ) {
-
     this.configModel.backdrop = 'static';
     this.configModel.keyboard = false;
     this.user$ = this.auth.currentUserSubject.asObservable();
+
+    history.pushState(null, null, window.location.href);
+    this.platformLocation.onPopState(() => {
+      if (this.modalService.hasOpenModals()) {
+        history.pushState(null, null, window.location.href);
+        this.modalService.dismissAll();
+      }
+    });
   }
 
   onCancel(e) {
