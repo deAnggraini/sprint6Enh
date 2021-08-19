@@ -19,7 +19,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ArticleVersionServiceImpl implements ArticleVersionService {
@@ -114,7 +116,8 @@ public class ArticleVersionServiceImpl implements ArticleVersionService {
             articleVersion.setArticleTemplate(article.getArticleTemplate());
             articleVersion.setStructure(article.getStructure().getId());
             articleVersion.setVideoLink(article.getVideoLink());
-
+            articleVersion.setReleaseVersion(UUID.randomUUID().toString());
+            articleVersion.setTimeStampVersion(new Date());
             return articleVersion;
         }
 

@@ -58,8 +58,9 @@ public class ArticleVersion extends EntityBase {
     @Column(name = "release_version")
     private String releaseVersion;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "timestamp_version")
-    private String timeStampVersion;
+    private Date timeStampVersion;
 
     @Column(name = "username")
     private String username;
@@ -180,11 +181,11 @@ public class ArticleVersion extends EntityBase {
         this.fullNameModifier = fullNameModifier;
     }
 
-    public String getTimeStampVersion() {
+    public Date getTimeStampVersion() {
         return timeStampVersion;
     }
 
-    public void setTimeStampVersion(String timeStampVersion) {
+    public void setTimeStampVersion(Date timeStampVersion) {
         this.timeStampVersion = timeStampVersion;
     }
 
