@@ -32,28 +32,6 @@ public class ArticleProcessController extends BaseController {
     @Autowired
     private ArticleWorkflowService articleWorkflowService;
 
-//    @PostMapping(value = "/api/wf/start", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
-//            MediaType.APPLICATION_JSON_VALUE})
-//    public String startProcess(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username) {
-//        return "";
-//    }
-
-//    @PostMapping(value="/api/ps/submit", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
-//            MediaType.APPLICATION_JSON_VALUE})
-//    public void submit(@RequestBody Article article) {
-////        service.startProcess(article);
-//    }
-//
-//    @GetMapping("/api/ps/tasks")
-//    public List<Article> getTasks(@RequestParam String assignee) {
-////        return service.getTasks(assignee);
-//    }
-//
-//    @PostMapping("/api/ps/review")
-//    public void review(@RequestBody Approval approval) {
-////        service.submitReview(approval);
-//    }
-
     /**
      * start workflow request
      *
