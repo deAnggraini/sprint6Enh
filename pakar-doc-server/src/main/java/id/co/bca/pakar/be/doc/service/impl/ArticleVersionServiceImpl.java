@@ -61,7 +61,7 @@ public class ArticleVersionServiceImpl implements ArticleVersionService {
     @Transactional(readOnly = true)
     public Page<ArticleDto> searchPublishedArticle(SearchPublishedArticleDto searchDto) throws Exception {
         try {
-            logger.info("search published article");
+            logger.info("search published article ");
             Page<ArticleVersion> searchResultPage = null;
             if (searchDto.getPage() == null) {
                 searchDto.setPage(0L);

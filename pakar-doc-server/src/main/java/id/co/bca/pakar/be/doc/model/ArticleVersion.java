@@ -2,6 +2,7 @@ package id.co.bca.pakar.be.doc.model;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -62,6 +63,10 @@ public class ArticleVersion extends EntityBase {
 
     @Column(name = "username")
     private String username;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "approved_date")
+    private Date approvedDate;
 
     public Long getId() {
         return id;
@@ -197,5 +202,13 @@ public class ArticleVersion extends EntityBase {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public Date getApprovedDate() {
+        return approvedDate;
+    }
+
+    public void setApprovedDate(Date approvedDate) {
+        this.approvedDate = approvedDate;
     }
 }
