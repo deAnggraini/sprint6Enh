@@ -1,8 +1,9 @@
 package id.co.bca.pakar.be.doc.model;
 
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "v_my_pages")
@@ -10,6 +11,12 @@ public class MyPages extends EntityBase {
     @Id
     @Column(name = "id")
     private Long id;
+
+    @Column(name = "article_template_id")
+    private Long articleTemplate;
+
+    @Column(name = "article_used_by")
+    private String articleUsedBy;
 
     @Column(name = "sender")
     private String sender;
@@ -35,27 +42,19 @@ public class MyPages extends EntityBase {
     @Column(name = "structure_id", nullable = false)
     private Long structure;
 
-    @Column(name ="article_template_id")
-    private Long articleTemplate;
-
     @Column(name = "title", unique = true, nullable = false)
     private String judulArticle;
 
-    @Column(name = "article_used_by")
-    private String articleUsedBy;
-
-    @Lob
-    @Column(name = "short_desc")
+    //    @Lob
+//    @Column(name = "short_desc")
+    @Column(name = "short_desc", columnDefinition = "TEXT", length = 1000, nullable = false)
     private String shortDescription = new String();
 
     @Column(name = "video_link")
     private String videoLink;
 
-    @Column(name = "state", columnDefinition = "VARCHAR(255) default 'PREDRAFT'")
+    @Column(name = "state")
     private String articleState; // NEW, DRAFT, PENDING, PUBLISHED, REJECTED
-
-    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<ArticleContent> articleContents = new ArrayList<>();
 
     @Column(name = "use_empty_template", columnDefinition = "BOOLEAN DEFAULT FALSE")
     private Boolean useEmptyTemplate = Boolean.FALSE;
@@ -171,14 +170,6 @@ public class MyPages extends EntityBase {
 
     public void setArticleState(String articleState) {
         this.articleState = articleState;
-    }
-
-    public List<ArticleContent> getArticleContents() {
-        return articleContents;
-    }
-
-    public void setArticleContents(List<ArticleContent> articleContents) {
-        this.articleContents = articleContents;
     }
 
     public Boolean getUseEmptyTemplate() {
