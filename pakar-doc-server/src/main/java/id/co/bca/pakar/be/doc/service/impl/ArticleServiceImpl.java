@@ -87,9 +87,6 @@ public class ArticleServiceImpl implements ArticleService {
     private ImageRepository imageRepository;
 
     @Autowired
-    private ArticleHistoryRepository articleHistoryRepository;
-
-    @Autowired
     private ArticleMyPagesRepository articleMyPagesRepository;
 
     @Autowired
@@ -667,7 +664,7 @@ public class ArticleServiceImpl implements ArticleService {
              */
             logger.info("save to article version");
             ArticleVersion av = articleVersionService.saveArticle(article);
-            if(av == null) {
+            if (av == null) {
                 logger.error("could not save article version");
                 throw new SavingArticleVersionException("could not save article version");
             }
@@ -693,7 +690,7 @@ public class ArticleServiceImpl implements ArticleService {
         } catch (SavingArticleVersionException e) {
             logger.error("", e);
             throw new SavingArticleVersionException("exception", e);
-        }  catch (DataNotFoundException e) {
+        } catch (DataNotFoundException e) {
             logger.error("", e);
             throw new DataNotFoundException("exception", e);
         } catch (Exception e) {
@@ -925,10 +922,10 @@ public class ArticleServiceImpl implements ArticleService {
             logger.info("save article content to db");
             articleContent = articleContentRepository.save(articleContent);
 
-            if (!article.getArticleState().equalsIgnoreCase(NEW)) {
-                // save to history
-                new ArticleHistoryHelper().populateArticleHistory();
-            }
+//            if (!article.getArticleState().equalsIgnoreCase(NEW)) {
+//                // save to history
+//                new ArticleHistoryHelper().populateArticleHistory();
+//            }
 
             // reset list parent
             logger.info("get list parent article content");
@@ -1111,10 +1108,10 @@ public class ArticleServiceImpl implements ArticleService {
                     articleContentRepository.save(content);
                 }
                 // save to history
-                logger.info("save to history");
-                ArticleHistory articleHistory = new ArticleHistory();
-                articleHistory.setCreatedBy(deleteContentDto.getUsername());
-                articleHistoryRepository.save(articleHistory);
+//                logger.info("save to history");
+//                ArticleHistory articleHistory = new ArticleHistory();
+//                articleHistory.setCreatedBy(deleteContentDto.getUsername());
+//                articleHistoryRepository.save(articleHistory);
             } else {
                 // delete from row in db
                 logger.debug("delete from db current id and children");
@@ -1532,7 +1529,7 @@ public class ArticleServiceImpl implements ArticleService {
             }
             List<UserArticleEditingDto> userArticleEditingDtos = new ArrayList<>();
             List<UserProfileDto> userProfileDtos = restResponse.getBody().getData();
-            userProfileDtos.forEach(e-> {
+            userProfileDtos.forEach(e -> {
                 UserArticleEditingDto dto_ = new UserArticleEditingDto();
                 dto_.setFirstname(e.getFirstname());
                 dto_.setFullname(e.getFullname());
@@ -1553,15 +1550,15 @@ public class ArticleServiceImpl implements ArticleService {
         }
     }
 
-    private class ArticleHistoryHelper {
-        public ArticleHistory populateArticleHistory() {
-            return new ArticleHistory();
-        }
-
-        public ArticleContentHistory populateArticleContentHistory() {
-            return new ArticleContentHistory();
-        }
-    }
+//    private class ArticleHistoryHelper {
+//        public ArticleHistory populateArticleHistory() {
+//            return new ArticleHistory();
+//        }
+//
+//        public ArticleContentHistory populateArticleContentHistory() {
+//            return new ArticleContentHistory();
+//        }
+//    }
 
     /**
      * private class to handle article content

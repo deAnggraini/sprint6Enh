@@ -60,6 +60,9 @@ public class ArticleVersion extends EntityBase {
     @Column(name = "timestamp_version")
     private String releaseVersion;
 
+    @Column(name = "username")
+    private String username;
+
     public Long getId() {
         return id;
     }
@@ -186,5 +189,13 @@ public class ArticleVersion extends EntityBase {
 
     public void setReleaseVersion(String releaseVersion) {
         this.releaseVersion = releaseVersion;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

@@ -12,7 +12,7 @@ public class ArticleContentInReview extends CommonArticleContent {
     @Column(name = "optlock", columnDefinition = "integer DEFAULT 0", nullable = false)
     private Long version;
     @ManyToOne
-    @JoinColumn(name = "article_in_reiview_id")
+    @JoinColumn(name = "article_in_review_id")
     private ArticleInReview article;
 
     public Long getId() {

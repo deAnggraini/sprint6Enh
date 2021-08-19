@@ -13,9 +13,12 @@ public class ArticleClone extends EntityBase {
 	@Version
 	@Column(name = "optlock", columnDefinition = "integer DEFAULT 0", nullable = false)
 	private Long version;
-	@ManyToOne
-	@JoinColumn(name = "structure_id", nullable = false)
-	private Structure structure;
+
+	@Column(name = "article_id")
+	private Long articleId;
+
+	@Column(name = "structure_id", nullable = false)
+	private Long structure;
 
 	@Column(name ="article_template_id")
 	private Long articleTemplate;
@@ -26,17 +29,18 @@ public class ArticleClone extends EntityBase {
 	@Column(name = "article_used_by")
 	private String articleUsedBy;
 
-	@Column(name = "short_desc", columnDefinition="TEXT", length = 1000, nullable = false)
+	@Lob
+	@Column(name = "short_desc")
 	private String shortDescription = new String();
 
 	@Column(name = "video_link")
 	private String videoLink;
 
-	@Column(name = "state", columnDefinition = "VARCHAR(255) default 'PREDRAFT'")
+	@Column(name = "state")
 	private String articleState; // NEW, DRAFT, PENDING, PUBLISHED, REJECTED
 
 	@OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-	private List<ArticleContent> articleContents = new ArrayList<>();
+	private List<ArticleContentClone> articleContents = new ArrayList<>();
 
 	@Column(name = "use_empty_template", columnDefinition = "BOOLEAN DEFAULT FALSE")
 	private Boolean useEmptyTemplate = Boolean.FALSE;
@@ -66,11 +70,19 @@ public class ArticleClone extends EntityBase {
 		this.version = version;
 	}
 
-	public Structure getStructure() {
+	public Long getArticleId() {
+		return articleId;
+	}
+
+	public void setArticleId(Long articleId) {
+		this.articleId = articleId;
+	}
+
+	public Long getStructure() {
 		return structure;
 	}
 
-	public void setStructure(Structure structure) {
+	public void setStructure(Long structure) {
 		this.structure = structure;
 	}
 
@@ -106,11 +118,11 @@ public class ArticleClone extends EntityBase {
 		this.shortDescription = shortDescription;
 	}
 
-	public List<ArticleContent> getArticleContents() {
+	public List<ArticleContentClone> getArticleContents() {
 		return articleContents;
 	}
 
-	public void setArticleContents(List<ArticleContent> articleContents) {
+	public void setArticleContents(List<ArticleContentClone> articleContents) {
 		this.articleContents = articleContents;
 	}
 
@@ -152,5 +164,13 @@ public class ArticleClone extends EntityBase {
 
 	public void setFullNameModifier(String fullNameModifier) {
 		this.fullNameModifier = fullNameModifier;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
 }
