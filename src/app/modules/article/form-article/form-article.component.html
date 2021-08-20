@@ -5,6 +5,14 @@
                 <div [inlineSVG]="'./assets/media/svg/bca/icon/cancel.svg'" cacheSVG="true" class="svg-icon"></div>
                 <div>Batal</div>
             </a>
+            <ng-container *ngIf="isEdit">
+                <div class="separator"></div>
+                <a href="#" class="link text-dark d-flex flex-row flex-center" (click)="onVersionHistory($event)">
+                    <div [inlineSVG]="'./assets/media/svg/bca/icon/version-history.svg'" cacheSVG="true"
+                        class="svg-icon"></div>
+                    <div>Riwayat Versi</div>
+                </a>
+            </ng-container>
             <div class="separator"></div>
             <a class="link text-dark d-flex flex-row">
                 <div [inlineSVG]="'./assets/media/svg/bca/icon/comment.svg'" cacheSVG="true" class="svg-icon"></div>
@@ -61,8 +69,8 @@
             </div>
             <div class="form-group col-sm-11 col-lg-9 col-xl-9 col-xxl-9">
                 <label>Deskripsi Singkat <span class="text-danger">*</span></label>
-                <ckeditor #editorDesc [editor]="editor" [config]="config" tagName="textarea" (ready)="onReady($event)"
-                    (change)="onChange($event)" formControlName="desc"></ckeditor>
+                <ckeditor #editorDesc [editor]="editor" [config]="config" tagName="textarea"
+                    (ready)="onReadyDesc($event)" (change)="onChange($event)" formControlName="desc"></ckeditor>
             </div>
             <div class="form-group col-sm-11 col-lg-6 col-xl-6 col-xxl-6">
                 <label>Gambar Artikel <span class="text-danger">*</span></label>
@@ -86,10 +94,11 @@
                 <label>Content Artikel <span class="text-danger">*</span></label>
                 <div class="border border-light rounded-sm p-3">
                     <mat-accordion [togglePosition]="'before'" multi="true">
-                        <mat-expansion-panel *ngFor="let content of dataForm.get('contents').value; let i=index;"
+                        <mat-expansion-panel [id]="'acc-id-'+content.id"
+                            *ngFor="let content of dataForm.get('contents').value; let i=index;"
                             class="acc-level acc-level-1" [(expanded)]="content.expanded">
                             <mat-expansion-panel-header [@.disabled]="true">
-                                <mat-panel-title>
+                                <mat-panel-title [id]="'acc-title-'+content.id">
                                     <span>{{content.title}}</span>
                                     <span [inlineSVG]="'./assets/media/svg/bca/icon/info.svg'" cacheSVG="true"
                                         class="svg-icon svg-tooltip mx-2" placement="right" [ngbTooltip]="tooltips[i]"
@@ -130,7 +139,8 @@
                                         </div>
                                     </div>
                                     <div *ngIf="!content.isEdit && content.topicContent" class="p-3"
-                                        style="padding-bottom: 0px !important;" [innerHTML]="content.topicContent | sanitizeHtml">
+                                        style="padding-bottom: 0px !important;"
+                                        [innerHTML]="content.topicContent | sanitizeHtml">
                                     </div>
                                     <input *ngIf="!content.isEdit && !content.topicContent" type="text"
                                         class="txt-desc-lvl1" readonly
@@ -242,7 +252,7 @@
             <ng-container *ngFor="let content of children; let i = index">
                 <div class="input-accordion-separator"></div>
                 <mat-expansion-panel [@.disabled]="true" class="acc-level acc-level-{{level}}" cdkDrag
-                    [cdkDragData]="content" [(expanded)]="content.expanded">
+                    [cdkDragData]="content" [(expanded)]="content.expanded" [id]="'acc-id-'+content.id">
                     <div class="drag-placeholder" *cdkDragPlaceholder></div>
                     <mat-expansion-panel-header cdkDragHandle>
                         <mat-panel-title class="text-ellipsis-1">{{numberingFormat(content)}}. {{content.title}}
@@ -327,8 +337,21 @@
 
 <ng-template #editingOnline>
     <div class="d-flex flex-row">
-        <div *ngFor="let user of listUserEditing; let i=index;" class="d-flex flex-center ak ak-{{i+1}} rounded-xl fs10 fb6 mr-1">{{user.alias}}</div>
-        <!-- <div class="d-flex flex-center ak ak-2 rounded-xl fs10 fb6 mr-1">AK</div>
-        <div class="d-flex flex-center ak ak-3 rounded-xl fs10 fb6 mr-1">AF</div> -->
+        <div *ngFor="let user of listUserEditing | slice:0:5;; let i=index;"
+            class="d-flex flex-center ak ak-{{i+1}} rounded-xl fs10 fb6 mr-1" placement="bottom"
+            [ngbTooltip]="tooltipUser" container="body" tooltipClass="fs12" triggers="manual" #t1="ngbTooltip"
+            (mouseover)="toggleTooltip(t1, user, i, true)" (mouseout)="toggleTooltip(t1, user, i, false)">{{user.alias}}
+        </div>
+
+        <div *ngIf="listUserEditing.length > 5" class="d-flex flex-center ak ak-other rounded-xl fs10 fb6 mr-1">
+            +{{listUserEditing.length-5}}
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #tooltipUser let-user="user" let-i="i">
+    <div class="d-flex flex-row flex-center">
+        <div class="d-flex flex-center ak ak-{{i+1}} rounded-xl fs10 fb6 mr-1">{{user.alias}}</div>
+        <div>{{user.fullname}}</div>
     </div>
 </ng-template>

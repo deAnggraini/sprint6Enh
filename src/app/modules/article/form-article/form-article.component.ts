@@ -11,11 +11,11 @@ import { AuthService, UserModel } from '../../auth';
 import { ArticleDTO, ArticleContentDTO, ArticleParentDTO } from '../../_model/article.dto';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { StrukturService } from '../../_services/struktur.service';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, first } from 'rxjs/operators';
 import { ConfirmService } from 'src/app/utils/_services/confirm.service';
-import { ToastService } from 'src/app/utils/_services/toast.service';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { UserService } from '../../_services/user.service';
+import { ViewportScroller } from '@angular/common';
 
 const TOOL_TIPS = [
   'Berisi aturan/kaidah/ketetapan/syarat/kriteria atas produk/aplikasi yang harus dipahami pembaca sebelum melakukan prosedur atas produk/aplikasi tersebut; dapat dituangkan dalam bentuk kalimat ataupun tabel.',
@@ -235,6 +235,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   isAccEdit: boolean = false;
   editContentId: number = 0;
   editContentParent: number[] = [];
+  openFragment: string = '';
 
   //cdk drag and drop
   allIds: Array<string> = []
@@ -252,19 +253,13 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     private fb: FormBuilder,
     private struktur: StrukturService,
     private confirm: ConfirmService,
-    private toast: ToastService,
     private modalService: NgbModal,
     private configModel: NgbModalConfig,
     private userService: UserService,
-    // private platformLocation: PlatformLocation
+    private viewportScroller: ViewportScroller
   ) {
     this.configModel.backdrop = 'static';
     this.configModel.keyboard = false;
-    // this.platformLocation.onPopState(() => {
-    //   console.log('PopState called');
-    //   this.modalService.dismissAll();
-    //   return false;
-    // });
   }
 
   // validation
@@ -323,7 +318,6 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // article action button
   onSave(e) {
-    console.log(this.dataForm.value);
     this.confirm.open({
       title: `Simpan`,
       message: `<p>Apakah Kamu yakin ingin menyimpan halaman ini? Halaman akan tersimpan kedalam draft Kamu`,
@@ -360,9 +354,16 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
         this.subscriptions.push(
           this.article.cancelArticle(this.dataForm.value.id).subscribe(resp => {
             if (resp) {
-              this.article.formParam = null;
-              this.article.formData = null;
-              this.router.navigate(['/homepage'], { replaceUrl: true });
+              if (this.isEdit) {
+                let currentUrl = this.router.url;
+                this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+                  this.router.navigate([currentUrl]);
+                });
+              } else {
+                this.article.formParam = null;
+                this.article.formData = null;
+                this.router.navigate(['/homepage'], { replaceUrl: true });
+              }
             }
           })
         );
@@ -404,6 +405,9 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     this.previewAlert = alert;
     this.previewAlertMessage = msg;
     this.isPreview = show;
+    return false;
+  }
+  onVersionHistory(e) {
     return false;
   }
 
@@ -499,6 +503,14 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     this.dataForm.get('contents').setValue(_contents);
     this.removeLog(data);
     this.cdr.detectChanges();
+  }
+
+  toggleTooltip(tooltip, user, i, show: boolean) {
+    if (!show) {
+      tooltip.close();
+    } else {
+      tooltip.open({ user, i });
+    }
   }
 
   checkUniq(value) {
@@ -887,9 +899,29 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
+  scroll(id) {
+    if (!id) return;
+    const elmnt = document.getElementById(id);
+    if (elmnt) {
+      setTimeout(() => {
+        elmnt.scrollIntoView({ behavior: "auto", block: "start", inline: "start" });
+        const top = window.scrollY;
+        setTimeout(() => {
+          window.scrollTo(0, top - 110);
+        }, 100);
+      }, 10);
+    } else {
+      setTimeout(() => {
+        this.scroll(this.openFragment);
+      }, 100);
+    }
+  }
   // CKEDITOR5 function
   public onReady(editor, value: string = '') {
     if (value) editor.setData(value); // cara paksa isi ckeditor
+    this.finishRender = true;
+  }
+  public onReadyDesc(editor) {
     this.finishRender = true;
   }
   public onChange({ editor }: ChangeEvent) {
@@ -939,6 +971,14 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   ngAfterViewInit(): void {
     this.finishRender = true;
+    this.route.fragment
+      .pipe(first())
+      .subscribe((fragment) => {
+        if (fragment) {
+          this.openFragment = fragment;
+          this.scroll(this.openFragment);
+        }
+      });
   }
 
 }

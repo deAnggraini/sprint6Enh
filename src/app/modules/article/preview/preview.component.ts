@@ -151,7 +151,7 @@ export class PreviewComponent implements OnInit, AfterViewInit {
       }).then((confirmed) => {
         if (confirmed === true) {
           console.log(`/article/form/${item.id}`);
-          this.router.navigate([`/article/form/${item.id}`, { isEdit: true, contentId }]);
+          this.router.navigate([`/article/form/${item.id}`, { isEdit: true, contentId }], {fragment:`acc-id-${contentId}`});
         }
       });
     });

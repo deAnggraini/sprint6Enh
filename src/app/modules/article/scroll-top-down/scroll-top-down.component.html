@@ -1,0 +1,10 @@
+<div class="scroll-top-down d-flex flex-column">
+    <div class="btn btn-success mb-1" [ngClass]="{disabled: disableTopBtn}"
+        (click)="goTop()">
+        <span class="ki ki-arrow-up"></span>
+    </div>
+    <div class="btn btn-success" [ngClass]="{disabled: disableBotBtn}"
+        (click)="goDown()">
+        <span class="ki ki-arrow-down"></span>
+    </div>
+</div>

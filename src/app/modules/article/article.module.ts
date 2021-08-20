@@ -23,6 +23,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatExpansionModule } from "@angular/material/expansion";
 import { PreviewComponent } from './preview/preview.component';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
+import { ScrollTopDownComponent } from './scroll-top-down/scroll-top-down.component';
 
 const routes: Routes = [
   {
@@ -75,6 +76,7 @@ const routes: Routes = [
     TerbaruComponent,
     FormArticleComponent,
     PreviewComponent,
+    ScrollTopDownComponent,
   ],
   imports: [
     CommonModule,
