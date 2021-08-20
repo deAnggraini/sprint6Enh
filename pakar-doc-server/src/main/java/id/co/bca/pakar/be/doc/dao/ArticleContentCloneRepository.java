@@ -1,6 +1,7 @@
 package id.co.bca.pakar.be.doc.dao;
 
 import id.co.bca.pakar.be.doc.model.ArticleContentClone;
+import id.co.bca.pakar.be.doc.model.Structure;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -65,4 +66,40 @@ public interface ArticleContentCloneRepository extends CrudRepository<ArticleCon
             "ASC ",
             nativeQuery = true)
     List<ArticleContentClone> findChildsIncludeParent(@Param("parentId") Long parentId);
+
+    @Query(value = "SELECT rs3.* FROM (  " +
+            " WITH RECURSIVE rec AS ( " +
+            "     SELECT rs.* " +
+            "                           FROM t_article_content_clone rs " +
+            "                          WHERE rs.id = (select rs2.parent from t_article_content_clone rs2 where rs2.id= :id) " +
+            "                        UNION ALL " +
+            "                         SELECT rs.* " +
+            "                           FROM rec rec1, " +
+            "                            t_article_content_clone rs " +
+            "                          WHERE rs.id = rec1.parent " +
+            "                        ) " +
+            "                 SELECT rec.* " +
+            "                 FROM rec " +
+            "                 ORDER BY rec.level " +
+            " ) rs3",
+            nativeQuery = true)
+    List<ArticleContentClone>  findParentListById(@Param("id") Long id);
+
+    @Query(value = "SELECT rs3.* FROM (  " +
+            " WITH RECURSIVE rec AS ( " +
+            "     SELECT tacc.* " +
+            "                           FROM t_article_content_clone tacc " +
+            "                          WHERE tacc.id = :id " +
+            "                        UNION ALL " +
+            "                         SELECT tacc.* " +
+            "                           FROM rec rec1, " +
+            "                            t_article_content_clone tacc " +
+            "                          WHERE tacc.id = rec1.parent " +
+            "                        ) " +
+            "                 SELECT rec.* " +
+            "                 FROM rec " +
+            "                 ORDER BY rec.level " +
+            " ) rs3",
+            nativeQuery = true)
+    List<ArticleContentClone>  findBreadcumbById(@Param("id") Long id);
 }

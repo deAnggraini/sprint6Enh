@@ -954,41 +954,46 @@ public class ArticleServiceImpl implements ArticleService {
 //            articleContent = articleContentRepository.save(articleContent);
             articleContent = articleCloneService.saveContent(articleContent);
 
-//            if (!article.getArticleState().equalsIgnoreCase(NEW)) {
-//                // save to history
-//                new ArticleHistoryHelper().populateArticleHistory();
-//            }
+//            // reset list parent
+//            logger.info("get list parent article content");
+//            // get list parent of articleContent
+//            Long parentId = articleContent.getParent();
+//            boolean parentStatus = Boolean.TRUE;
+//            do {
+//                logger.debug("find article content with parent id {}", parentId);
+////                Optional<ArticleContent> parentContent = articleContentRepository.findById(parentId);
+//                ArticleContentClone parentContent = articleCloneService.findById(parentId, articleContentDto.getUsername());
+//                if (parentContent == null) {
+////                    ArticleContentClone _parent = parentContent.get();
+//                    ArticleContentClone _parent = parentContent;
+//                    parentId = _parent.getParent();
+//                    BreadcumbArticleContentDto bcDto = new BreadcumbArticleContentDto();
+//                    bcDto.setId(_parent.getId());
+//                    bcDto.setName(_parent.getName());
+//                    bcDto.setLevel(_parent.getLevel());
+//                    articleContentDto.getBreadcumbArticleContentDtos().add(bcDto);
+//                    logger.debug("copy list parent object id:name ---> {}:{} has level value {}", new Object[]{bcDto.getId()
+//                            , bcDto.getName(),
+//                            bcDto.getLevel()});
+//                    if (parentId == null)
+//                        parentStatus = Boolean.FALSE;
+//                    else if (parentId.longValue() == 0)
+//                        parentStatus = Boolean.FALSE;
+//                } else {
+//                    logger.debug("article content with parent id {} not found, break loop", parentId);
+//                    parentStatus = Boolean.FALSE;
+//                }
+//            } while (parentStatus);
 
-            // reset list parent
-            logger.info("get list parent article content");
-            // get list parent of articleContent
-            Long parentId = articleContent.getParent();
-            boolean parentStatus = Boolean.TRUE;
-            do {
-                logger.debug("find article content with parent id {}", parentId);
-//                Optional<ArticleContent> parentContent = articleContentRepository.findById(parentId);
-                ArticleContentClone parentContent = articleCloneService.findById(parentId, articleContentDto.getUsername());
-                if (parentContent == null) {
-//                    ArticleContentClone _parent = parentContent.get();
-                    ArticleContentClone _parent = parentContent;
-                    parentId = _parent.getParent();
-                    BreadcumbArticleContentDto bcDto = new BreadcumbArticleContentDto();
-                    bcDto.setId(_parent.getId());
-                    bcDto.setName(_parent.getName());
-                    bcDto.setLevel(_parent.getLevel());
-                    articleContentDto.getBreadcumbArticleContentDtos().add(bcDto);
-                    logger.debug("copy list parent object id:name ---> {}:{} has level value {}", new Object[]{bcDto.getId()
-                            , bcDto.getName(),
-                            bcDto.getLevel()});
-                    if (parentId == null)
-                        parentStatus = Boolean.FALSE;
-                    else if (parentId.longValue() == 0)
-                        parentStatus = Boolean.FALSE;
-                } else {
-                    logger.debug("article content with parent id {} not found, break loop", parentId);
-                    parentStatus = Boolean.FALSE;
-                }
-            } while (parentStatus);
+            logger.debug("get article content parent for article content id {}", articleContent.getId());
+            List<ArticleContentClone> breadcumbs = articleContentCloneRepository.findParentListById(articleContent.getId());
+            breadcumbs.forEach(e-> {
+                BreadcumbArticleContentDto bcDto = new BreadcumbArticleContentDto();
+                bcDto.setId(e.getId());
+                bcDto.setName(e.getName());
+                bcDto.setLevel(e.getLevel());
+                articleContentDto.getBreadcumbArticleContentDtos().add(bcDto);
+            });
 
             logger.debug("sorted list parent content");
             // sorting bread crumb
