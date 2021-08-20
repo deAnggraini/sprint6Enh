@@ -3,6 +3,7 @@ package id.co.bca.pakar.be.doc.service.impl;
 import id.co.bca.pakar.be.doc.client.ApiResponseWrapper;
 import id.co.bca.pakar.be.doc.client.PakarOauthClient;
 import id.co.bca.pakar.be.doc.client.PakarWfClient;
+import id.co.bca.pakar.be.doc.common.Constant;
 import id.co.bca.pakar.be.doc.dao.*;
 import id.co.bca.pakar.be.doc.dto.*;
 import id.co.bca.pakar.be.doc.dto.auth.UserProfileDto;
@@ -182,7 +183,7 @@ public class ArticleServiceImpl implements ArticleService {
             }
 
             /*
-            copy article template to main article content
+            copy article template to clone article content
              */
             logger.info("populate article contents clone");
             Iterable<ArticleTemplateContent> templateContents = articleTemplateContentRepository.findByTemplateId(template.getId());
@@ -190,7 +191,8 @@ public class ArticleServiceImpl implements ArticleService {
                 logger.debug("articleTemplateContent.getName() value {}", e.getName());
                 logger.debug("param key {}", generateArticleDto.getParamKey());
                 logger.debug("param value {}", generateArticleDto.getParamValue());
-                ArticleContent articleContent = new ArticleContent();
+                ArticleContentClone articleContent = new ArticleContentClone();
+                // get sequence content id
                 Long seqContentId = articleContentRepository.getContentId();
                 logger.info("get sequence content id {}", seqContentId);
                 articleContent.setId(seqContentId);
@@ -200,56 +202,14 @@ public class ArticleServiceImpl implements ArticleService {
                 articleContent.setSort(e.getSort());
                 articleContent.setTopicCaption(e.getTopicCaption());
                 articleContent.setTopicContent(e.getTopicContent());
-                article.getArticleContents().add(articleContent);
-                articleContent.setArticle(article);
-            }
-
-            /*
-            copy article content to article content clone
-             */
-            logger.info("clone article contents");
-            for (ArticleContent e : article.getArticleContents()) {
-                ArticleContentClone articleContent = new ArticleContentClone();
-                articleContent.setId(e.getId());
-                articleContent.setCreatedBy(e.getCreatedBy());
-                articleContent.setName(e.getName());
-                articleContent.setLevel(e.getLevel());
-                articleContent.setSort(e.getSort());
-                articleContent.setTopicCaption(e.getTopicCaption());
-                articleContent.setTopicContent(e.getTopicContent());
                 article.getArticleContentClones().add(articleContent);
                 articleContent.setArticle(article);
             }
 
-            logger.info("save article");
+            logger.info("save article and content clone");
             article = articleRepository.save(article);
             logger.info("generate article success");
-
-            // reset parent for article content
-            for (ArticleContent articleContent : article.getArticleContents()) {
-                for (ArticleTemplateContent articleTemplateContent : templateContents) {
-                    if (articleContent.getName().equals(replaceTextByParams(articleTemplateContent.getName(), generateArticleDto.getParamKey(), generateArticleDto.getParamValue()))) {
-                        if (articleTemplateContent.getParent() == null) {
-                            articleContent.setParent(0L);
-                            articleContentRepository.save(articleContent);
-                            break;
-                        } else {
-                            Optional<ArticleTemplateContent> parent = articleTemplateContentRepository.findById(articleTemplateContent.getId());
-                            if (!parent.isEmpty()) {
-                                ArticleTemplateContent _parent = parent.get();
-                                for (ArticleContent articleContent1 : article.getArticleContents()) {
-                                    if (articleContent1.getName().equals(replaceTextByParams(_parent.getName(), generateArticleDto.getParamKey(), generateArticleDto.getParamValue()))) {
-                                        articleContent.setParent(articleContent1.getId());
-                                        articleContentRepository.save(articleContent);
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
+            
             // reset parent for article content clone
             for (ArticleContentClone articleContent : article.getArticleContentClones()) {
                 for (ArticleTemplateContent articleTemplateContent : templateContents) {
@@ -334,40 +294,6 @@ public class ArticleServiceImpl implements ArticleService {
             articleDto.setEmptyTemplate(article.getUseEmptyTemplate());
             articleDto.setStructureId(article.getStructure().getId());
 
-            // get current structure
-//            Optional<Structure> currStructOpt = structureRepository.findById(article.getStructure().getId());
-//            if (currStructOpt.isEmpty()) {
-//                throw new StructureNotFoundException("not found structure id ---> " + article.getStructure().getId());
-//            }
-//            Structure currStruct = currStructOpt.get();
-//            BreadcumbStructureDto bcDto = new BreadcumbStructureDto();
-//            bcDto.setId(currStruct.getId());
-//            bcDto.setName(currStruct.getStructureName());
-//            bcDto.setLevel(currStruct.getLevel());
-//            articleDto.getStructureParentList().add(bcDto);
-
-            // get list parent of new structure
-//            Long parentId = article.getStructure().getParentStructure();
-//            boolean parentStatus = Boolean.TRUE;
-//            do {
-//                Optional<Structure> parentStructure = structureRepository.findById(parentId);
-//                if (!parentStructure.isEmpty()) {
-//                    Structure _parent = parentStructure.get();
-//                    parentId = _parent.getParentStructure();
-//                    bcDto = new BreadcumbStructureDto();
-//                    bcDto.setId(_parent.getId());
-//                    bcDto.setName(_parent.getStructureName());
-//                    bcDto.setLevel(_parent.getLevel());
-//                    articleDto.getStructureParentList().add(bcDto);
-//                    if (parentId == null)
-//                        parentStatus = Boolean.FALSE;
-//                    else if (parentId.longValue() == 0)
-//                        parentStatus = Boolean.FALSE;
-//                } else {
-//                    parentStatus = Boolean.FALSE;
-//                }
-//            } while (parentStatus);
-
             logger.debug("get parent structure of structure id {}", article.getStructure().getId());
             List<Structure> breadcumbs = structureRepository.findBreadcumbById(article.getStructure().getId());
             breadcumbs.forEach(e-> {
@@ -448,39 +374,6 @@ public class ArticleServiceImpl implements ArticleService {
             articleDto.setStructureId(article.getStructure().getId());
             articleDto.setPublished(article.getArticleState().equalsIgnoreCase(PUBLISHED) ? Boolean.TRUE : Boolean.FALSE);
 
-            // get current structure
-//            Optional<Structure> currStructOpt = structureRepository.findById(article.getStructure().getId());
-//            if (currStructOpt.isEmpty()) {
-//                throw new StructureNotFoundException("not found structure id ---> " + article.getStructure().getId());
-//            }
-//            Structure currStruct = currStructOpt.get();
-//            BreadcumbStructureDto bcDto = new BreadcumbStructureDto();
-//            bcDto.setId(currStruct.getId());
-//            bcDto.setName(currStruct.getStructureName());
-//            bcDto.setLevel(currStruct.getLevel());
-//            articleDto.getStructureParentList().add(bcDto);
-//
-//            // get list parent of new structure
-//            Long parentId = article.getStructure().getParentStructure();
-//            boolean parentStatus = Boolean.TRUE;
-//            do {
-//                Optional<Structure> parentStructure = structureRepository.findById(parentId);
-//                if (!parentStructure.isEmpty()) {
-//                    Structure _parent = parentStructure.get();
-//                    parentId = _parent.getParentStructure();
-//                    bcDto = new BreadcumbStructureDto();
-//                    bcDto.setId(_parent.getId());
-//                    bcDto.setName(_parent.getStructureName());
-//                    bcDto.setLevel(_parent.getLevel());
-//                    articleDto.getStructureParentList().add(bcDto);
-//                    if (parentId == null)
-//                        parentStatus = Boolean.FALSE;
-//                    else if (parentId.longValue() == 0)
-//                        parentStatus = Boolean.FALSE;
-//                } else {
-//                    parentStatus = Boolean.FALSE;
-//                }
-//            } while (parentStatus);
             logger.debug("get parent structure of structure id {}", article.getStructure().getId());
             List<Structure> breadcumbs = structureRepository.findBreadcumbById(article.getStructure().getId());
             breadcumbs.forEach(e-> {
@@ -533,10 +426,10 @@ public class ArticleServiceImpl implements ArticleService {
             }
 
             // clone article content
-            logger.debug("clone article id {}", article.getId());
+            logger.debug("clone article id {} with username {}", article.getId(), username);
             articleCloneService.cloneArticleContent(article, username);
 
-            if (article.getArticleState().equalsIgnoreCase("NEW"))
+            if (article.getArticleState().equalsIgnoreCase(NEW))
                 articleDto.setNew(Boolean.TRUE.booleanValue());
             else
                 articleDto.setNew(Boolean.FALSE.booleanValue());
@@ -845,6 +738,9 @@ public class ArticleServiceImpl implements ArticleService {
                 articleRepository.delete(article);
                 logger.info("deleted article {} success", article.getJudulArticle());
             } else {
+                /*
+                if article has been saved, and then user cancel article then delete clone of article contents related with username and article id
+                 */
                 logger.debug("delete from tabel t_article_content_clone with article id {} and username {} ", article.getId(), username);
                 Iterable<ArticleContentClone> contents = articleContentCloneRepository.findsByArticleId(article.getId(), username);
                 articleContentCloneRepository.deleteAll(contents);
