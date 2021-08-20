@@ -463,7 +463,7 @@ public class ArticleController extends BaseController {
             logger.info("received token bearer --- {}", authorization);
             baseDto.setUsername(username);
             baseDto.setToken(getTokenFromHeader(authorization));
-            ArticleContentDto articleContentDto = articleService.getContentById(baseDto.getId());
+            ArticleContentDto articleContentDto = articleService.getContentById(baseDto.getId(), baseDto.getUsername());
             return createResponse(articleContentDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));
         } catch (AccesDeniedDeleteContentException e) {
             logger.error("exception", e);

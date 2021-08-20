@@ -53,16 +53,39 @@ public interface StructureRepository extends CrudRepository<Structure, Long>{
     @Query(value = "SELECT m FROM Structure m WHERE m.id=:id AND m.deleted IS FALSE ")
     Structure findStructure(@Param("id") Long id);
 
-    @Query(value = "with recursive structure_parent (id, parent_id) AS (" +
-            "  SELECT structure.id, structure.parent, structure.name " +
-            "  FROM r_structure structure " +
-            "  WHERE id = :id " +
-            "  UNION ALL " +
-            "  SELECT structure2.id, structure2.parent, structure2.name " +
-            "  FROM r_structure structure2 INNER JOIN r_structure structure3 " +
-            "  ON structure2.id = structure3.parent " +
-            ") " +
-            "SELECT structp.* FROM structure_parent structp group by structp.id, structp.parent_id, structp.name",
+    @Query(value = "SELECT rs3.* FROM (  " +
+            " WITH RECURSIVE rec AS ( " +
+            "     SELECT rs.* " +
+            "                           FROM r_structure rs " +
+            "                          WHERE rs.id = (select rs2.parent from r_structure rs2 where rs2.id= :id) " +
+            "                        UNION ALL " +
+            "                         SELECT rs.* " +
+            "                           FROM rec rec1, " +
+            "                            r_structure rs " +
+            "                          WHERE rs.id = rec1.parent " +
+            "                        ) " +
+            "                 SELECT rec.* " +
+            "                 FROM rec " +
+            "                 ORDER BY rec.level " +
+            " ) rs3",
             nativeQuery = true)
-    List<Structure>  findStructureParentsById(@Param("id") Long id);
+    List<Structure>  findParentListById(@Param("id") Long id);
+
+    @Query(value = "SELECT rs3.* FROM (  " +
+            " WITH RECURSIVE rec AS ( " +
+            "     SELECT rs.* " +
+            "                           FROM r_structure rs " +
+            "                          WHERE rs.id = :id " +
+            "                        UNION ALL " +
+            "                         SELECT rs.* " +
+            "                           FROM rec rec1, " +
+            "                            r_structure rs " +
+            "                          WHERE rs.id = rec1.parent " +
+            "                        ) " +
+            "                 SELECT rec.* " +
+            "                 FROM rec " +
+            "                 ORDER BY rec.level " +
+            " ) rs3",
+            nativeQuery = true)
+    List<Structure>  findBreadcumbById(@Param("id") Long id);
 }

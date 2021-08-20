@@ -2,6 +2,7 @@ package id.co.bca.pakar.be.doc.model;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -29,8 +30,7 @@ public class ArticleClone extends EntityBase {
 	@Column(name = "article_used_by")
 	private String articleUsedBy;
 
-	@Lob
-	@Column(name = "short_desc", columnDefinition = "TEXT")
+	@Column(name = "short_desc", columnDefinition = "TEXT", length = Integer.MAX_VALUE)
 	private String shortDescription = new String();
 
 	@Column(name = "video_link")
@@ -53,6 +53,17 @@ public class ArticleClone extends EntityBase {
 
 	@Column(name = "username")
 	private String username;
+
+	@Column(name = "release_version")
+	private String releaseVersion;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "timestamp_version")
+	private Date timeStampVersion;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "approved_date")
+	private Date approvedDate;
 
 	public Long getId() {
 		return id;
@@ -172,5 +183,29 @@ public class ArticleClone extends EntityBase {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public String getReleaseVersion() {
+		return releaseVersion;
+	}
+
+	public void setReleaseVersion(String releaseVersion) {
+		this.releaseVersion = releaseVersion;
+	}
+
+	public Date getTimeStampVersion() {
+		return timeStampVersion;
+	}
+
+	public void setTimeStampVersion(Date timeStampVersion) {
+		this.timeStampVersion = timeStampVersion;
+	}
+
+	public Date getApprovedDate() {
+		return approvedDate;
+	}
+
+	public void setApprovedDate(Date approvedDate) {
+		this.approvedDate = approvedDate;
 	}
 }

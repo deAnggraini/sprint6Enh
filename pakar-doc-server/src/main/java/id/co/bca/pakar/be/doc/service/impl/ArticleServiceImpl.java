@@ -3,13 +3,13 @@ package id.co.bca.pakar.be.doc.service.impl;
 import id.co.bca.pakar.be.doc.client.ApiResponseWrapper;
 import id.co.bca.pakar.be.doc.client.PakarOauthClient;
 import id.co.bca.pakar.be.doc.client.PakarWfClient;
-import id.co.bca.pakar.be.doc.common.Constant;
 import id.co.bca.pakar.be.doc.dao.*;
 import id.co.bca.pakar.be.doc.dto.*;
 import id.co.bca.pakar.be.doc.dto.auth.UserProfileDto;
 import id.co.bca.pakar.be.doc.dto.wf.WfArticleDto;
 import id.co.bca.pakar.be.doc.exception.*;
 import id.co.bca.pakar.be.doc.model.*;
+import id.co.bca.pakar.be.doc.service.ArticleCloneService;
 import id.co.bca.pakar.be.doc.service.ArticleService;
 import id.co.bca.pakar.be.doc.service.ArticleVersionService;
 import id.co.bca.pakar.be.doc.util.FileUploadUtil;
@@ -19,7 +19,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -102,6 +105,12 @@ public class ArticleServiceImpl implements ArticleService {
     private ArticleVersionService articleVersionService;
 
     @Autowired
+    private ArticleCloneService articleCloneService;
+
+    @Autowired
+    private ArticleContentCloneRepository articleContentCloneRepository;
+
+    @Autowired
     private PakarOauthClient pakarOauthClient;
 
     @Autowired
@@ -148,7 +157,9 @@ public class ArticleServiceImpl implements ArticleService {
             } else
                 template = articleTemplateStructure.getArticleTemplate();
 
-            // verify existence article
+            /*
+             verify existence article
+             */
             logger.debug("verify existence article with title {} in database", generateArticleDto.getTitle());
             Boolean duplicateArticle = existArticle(generateArticleDto.getTitle());
             if (duplicateArticle.booleanValue()) {
@@ -168,23 +179,43 @@ public class ArticleServiceImpl implements ArticleService {
                 article.setUseEmptyTemplate(Boolean.TRUE);
             }
 
-            logger.info("populate article contents");
+            /*
+            copy article template to main article content
+             */
+            logger.info("populate article contents clone");
             Iterable<ArticleTemplateContent> templateContents = articleTemplateContentRepository.findByTemplateId(template.getId());
             for (ArticleTemplateContent articleTemplateContent : templateContents) {
+                logger.debug("articleTemplateContent.getName() value {}", articleTemplateContent.getName());
+                logger.debug("param key {}", generateArticleDto.getParamKey());
+                logger.debug("param value {}", generateArticleDto.getParamValue());
                 ArticleContent articleContent = new ArticleContent();
                 Long seqContentId = articleContentRepository.getContentId();
                 logger.info("get sequence content id {}", seqContentId);
                 articleContent.setId(seqContentId);
                 articleContent.setCreatedBy(generateArticleDto.getUsername());
-                logger.debug("articleTemplateContent.getName() value {}", articleTemplateContent.getName());
-                logger.debug("param key {}", generateArticleDto.getParamKey());
-                logger.debug("param value {}", generateArticleDto.getParamValue());
                 articleContent.setName(replaceTextByParams(articleTemplateContent.getName(), generateArticleDto.getParamKey(), generateArticleDto.getParamValue()));
                 articleContent.setLevel(articleTemplateContent.getLevel());
                 articleContent.setSort(articleTemplateContent.getSort());
                 articleContent.setTopicCaption(articleTemplateContent.getTopicCaption());
                 articleContent.setTopicContent(articleTemplateContent.getTopicContent());
                 article.getArticleContents().add(articleContent);
+                articleContent.setArticle(article);
+            }
+
+            /*
+            copy article content to article content clone
+             */
+            logger.info("clone article contents");
+            for (ArticleContent e : article.getArticleContents()) {
+                ArticleContentClone articleContent = new ArticleContentClone();
+                articleContent.setId(e.getId());
+                articleContent.setCreatedBy(e.getCreatedBy());
+                articleContent.setName(e.getName());
+                articleContent.setLevel(e.getLevel());
+                articleContent.setSort(e.getSort());
+                articleContent.setTopicCaption(e.getTopicCaption());
+                articleContent.setTopicContent(e.getTopicContent());
+                article.getArticleContentClones().add(articleContent);
                 articleContent.setArticle(article);
             }
 
@@ -217,10 +248,38 @@ public class ArticleServiceImpl implements ArticleService {
                 }
             }
 
-            /*********** generate sugggestion article *********
+            // reset parent for article content clone
+            for (ArticleContentClone articleContent : article.getArticleContentClones()) {
+                for (ArticleTemplateContent articleTemplateContent : templateContents) {
+                    if (articleContent.getName().equals(replaceTextByParams(articleTemplateContent.getName(), generateArticleDto.getParamKey(), generateArticleDto.getParamValue()))) {
+                        if (articleTemplateContent.getParent() == null) {
+                            articleContent.setParent(0L);
+                            articleContentCloneRepository.save(articleContent);
+                            break;
+                        } else {
+                            Optional<ArticleTemplateContent> parent = articleTemplateContentRepository.findById(articleTemplateContent.getId());
+                            if (!parent.isEmpty()) {
+                                ArticleTemplateContent _parent = parent.get();
+                                for (ArticleContentClone articleContent1 : article.getArticleContentClones()) {
+                                    if (articleContent1.getName().equals(replaceTextByParams(_parent.getName(), generateArticleDto.getParamKey(), generateArticleDto.getParamValue()))) {
+                                        articleContent.setParent(articleContent1.getId());
+                                        articleContentCloneRepository.save(articleContent);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 
+            /*********** generate sugggestion article *********
+             // TODO suggestion article
              /*************************************************/
 
+            /*
+            populate generated article to dto
+             */
             articleDto = getArticleById(article.getId());
             return articleDto;
         } catch (DuplicateTitleException e) {
@@ -240,9 +299,8 @@ public class ArticleServiceImpl implements ArticleService {
      * @return
      * @throws Exception
      */
-    @Override
     @Transactional(readOnly = true)
-    public ArticleDto getArticleById(Long id) throws Exception {
+    private ArticleDto getArticleById(Long id) throws Exception {
         try {
             Optional<Article> articleOpt = articleRepository.findById(id);
 
@@ -259,8 +317,8 @@ public class ArticleServiceImpl implements ArticleService {
             articleDto.setShortDescription(article.getShortDescription());
             articleDto.setVideoLink(article.getVideoLink());
             articleDto.setNew(article.getNewArticle());
-            List<ArticleContent> articleContents = articleContentRepository.findByArticleId(article.getId());
-            List<ArticleContentDto> articleContentDtos = new TreeArticleContents().menuTree(mapToListArticleContentDto(articleContents));
+            Iterable<ArticleContentClone> articleContents = articleContentCloneRepository.findsByArticleId(article.getId(), article.getCreatedBy());
+            List<ArticleContentDto> articleContentDtos = new TreeArticleContents().menuTree(mapToListArticleContentCloneDto(articleContents));
             articleDto.setContents(articleContentDtos);
             Iterable<SkRefference> skRefferenceList = skReffRepository.findByArticleId(id);
             articleDto.setSkReff(mapToSkReffDto(skRefferenceList));
@@ -275,38 +333,48 @@ public class ArticleServiceImpl implements ArticleService {
             articleDto.setStructureId(article.getStructure().getId());
 
             // get current structure
-            Optional<Structure> currStructOpt = structureRepository.findById(article.getStructure().getId());
-            if (currStructOpt.isEmpty()) {
-                throw new StructureNotFoundException("not found structure id ---> " + article.getStructure().getId());
-            }
-            Structure currStruct = currStructOpt.get();
-            BreadcumbStructureDto bcDto = new BreadcumbStructureDto();
-            bcDto.setId(currStruct.getId());
-            bcDto.setName(currStruct.getStructureName());
-            bcDto.setLevel(currStruct.getLevel());
-            articleDto.getStructureParentList().add(bcDto);
+//            Optional<Structure> currStructOpt = structureRepository.findById(article.getStructure().getId());
+//            if (currStructOpt.isEmpty()) {
+//                throw new StructureNotFoundException("not found structure id ---> " + article.getStructure().getId());
+//            }
+//            Structure currStruct = currStructOpt.get();
+//            BreadcumbStructureDto bcDto = new BreadcumbStructureDto();
+//            bcDto.setId(currStruct.getId());
+//            bcDto.setName(currStruct.getStructureName());
+//            bcDto.setLevel(currStruct.getLevel());
+//            articleDto.getStructureParentList().add(bcDto);
 
             // get list parent of new structure
-            Long parentId = article.getStructure().getParentStructure();
-            boolean parentStatus = Boolean.TRUE;
-            do {
-                Optional<Structure> parentStructure = structureRepository.findById(parentId);
-                if (!parentStructure.isEmpty()) {
-                    Structure _parent = parentStructure.get();
-                    parentId = _parent.getParentStructure();
-                    bcDto = new BreadcumbStructureDto();
-                    bcDto.setId(_parent.getId());
-                    bcDto.setName(_parent.getStructureName());
-                    bcDto.setLevel(_parent.getLevel());
-                    articleDto.getStructureParentList().add(bcDto);
-                    if (parentId == null)
-                        parentStatus = Boolean.FALSE;
-                    else if (parentId.longValue() == 0)
-                        parentStatus = Boolean.FALSE;
-                } else {
-                    parentStatus = Boolean.FALSE;
-                }
-            } while (parentStatus);
+//            Long parentId = article.getStructure().getParentStructure();
+//            boolean parentStatus = Boolean.TRUE;
+//            do {
+//                Optional<Structure> parentStructure = structureRepository.findById(parentId);
+//                if (!parentStructure.isEmpty()) {
+//                    Structure _parent = parentStructure.get();
+//                    parentId = _parent.getParentStructure();
+//                    bcDto = new BreadcumbStructureDto();
+//                    bcDto.setId(_parent.getId());
+//                    bcDto.setName(_parent.getStructureName());
+//                    bcDto.setLevel(_parent.getLevel());
+//                    articleDto.getStructureParentList().add(bcDto);
+//                    if (parentId == null)
+//                        parentStatus = Boolean.FALSE;
+//                    else if (parentId.longValue() == 0)
+//                        parentStatus = Boolean.FALSE;
+//                } else {
+//                    parentStatus = Boolean.FALSE;
+//                }
+//            } while (parentStatus);
+
+            logger.debug("get parent structure of structure id {}", article.getStructure().getId());
+            List<Structure> breadcumbs = structureRepository.findBreadcumbById(article.getStructure().getId());
+            breadcumbs.forEach(e-> {
+                BreadcumbStructureDto bcDto = new BreadcumbStructureDto();
+                bcDto.setId(e.getId());
+                bcDto.setName(e.getStructureName());
+                bcDto.setLevel(e.getLevel());
+                articleDto.getStructureParentList().add(bcDto);
+            });
 
             // sorting bread crumb
             Collections.sort(articleDto.getStructureParentList(), new Comparator<BreadcumbStructureDto>() {
@@ -317,9 +385,6 @@ public class ArticleServiceImpl implements ArticleService {
             });
 
             return articleDto;
-        } catch (StructureNotFoundException e) {
-            logger.error("exception", e);
-            throw new StructureNotFoundException("not found structure");
         } catch (ArticleNotFoundException e) {
             logger.error("exception", e);
             throw new ArticleNotFoundException("not found article id " + id);
@@ -330,6 +395,11 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     /**
+     * <p>
+     * getting article using article id
+     * isEdit is used as flagging that get article proses will edit article
+     * </p>
+     *
      * @param id
      * @param isEdit
      * @param username
@@ -357,8 +427,10 @@ public class ArticleServiceImpl implements ArticleService {
             articleDto.setTitle(article.getJudulArticle());
             articleDto.setShortDescription(article.getShortDescription());
             articleDto.setVideoLink(article.getVideoLink());
+
+            // get main contents
             List<ArticleContent> articleContents = articleContentRepository.findByArticleId(article.getId());
-            logger.debug("article contents >>>>>>>>>>>>>>>>>>> {}", articleContents);
+            logger.debug("main article contents {}", articleContents);
             List<ArticleContentDto> articleContentDtos = new TreeArticleContents().menuTree(mapToListArticleContentDto(articleContents));
             articleDto.setContents(articleContentDtos);
             Iterable<SkRefference> skRefferenceList = skReffRepository.findByArticleId(id);
@@ -372,41 +444,50 @@ public class ArticleServiceImpl implements ArticleService {
             articleDto.setRelated(mapToRelatedArticleDto(relatedArticles));
             articleDto.setEmptyTemplate(article.getUseEmptyTemplate());
             articleDto.setStructureId(article.getStructure().getId());
-            articleDto.setPublished(article.getArticleState().equalsIgnoreCase(PUBLISHED) ? true : false);
+            articleDto.setPublished(article.getArticleState().equalsIgnoreCase(PUBLISHED) ? Boolean.TRUE : Boolean.FALSE);
 
             // get current structure
-            Optional<Structure> currStructOpt = structureRepository.findById(article.getStructure().getId());
-            if (currStructOpt.isEmpty()) {
-                throw new StructureNotFoundException("not found structure id ---> " + article.getStructure().getId());
-            }
-            Structure currStruct = currStructOpt.get();
-            BreadcumbStructureDto bcDto = new BreadcumbStructureDto();
-            bcDto.setId(currStruct.getId());
-            bcDto.setName(currStruct.getStructureName());
-            bcDto.setLevel(currStruct.getLevel());
-            articleDto.getStructureParentList().add(bcDto);
-
-            // get list parent of new structure
-            Long parentId = article.getStructure().getParentStructure();
-            boolean parentStatus = Boolean.TRUE;
-            do {
-                Optional<Structure> parentStructure = structureRepository.findById(parentId);
-                if (!parentStructure.isEmpty()) {
-                    Structure _parent = parentStructure.get();
-                    parentId = _parent.getParentStructure();
-                    bcDto = new BreadcumbStructureDto();
-                    bcDto.setId(_parent.getId());
-                    bcDto.setName(_parent.getStructureName());
-                    bcDto.setLevel(_parent.getLevel());
-                    articleDto.getStructureParentList().add(bcDto);
-                    if (parentId == null)
-                        parentStatus = Boolean.FALSE;
-                    else if (parentId.longValue() == 0)
-                        parentStatus = Boolean.FALSE;
-                } else {
-                    parentStatus = Boolean.FALSE;
-                }
-            } while (parentStatus);
+//            Optional<Structure> currStructOpt = structureRepository.findById(article.getStructure().getId());
+//            if (currStructOpt.isEmpty()) {
+//                throw new StructureNotFoundException("not found structure id ---> " + article.getStructure().getId());
+//            }
+//            Structure currStruct = currStructOpt.get();
+//            BreadcumbStructureDto bcDto = new BreadcumbStructureDto();
+//            bcDto.setId(currStruct.getId());
+//            bcDto.setName(currStruct.getStructureName());
+//            bcDto.setLevel(currStruct.getLevel());
+//            articleDto.getStructureParentList().add(bcDto);
+//
+//            // get list parent of new structure
+//            Long parentId = article.getStructure().getParentStructure();
+//            boolean parentStatus = Boolean.TRUE;
+//            do {
+//                Optional<Structure> parentStructure = structureRepository.findById(parentId);
+//                if (!parentStructure.isEmpty()) {
+//                    Structure _parent = parentStructure.get();
+//                    parentId = _parent.getParentStructure();
+//                    bcDto = new BreadcumbStructureDto();
+//                    bcDto.setId(_parent.getId());
+//                    bcDto.setName(_parent.getStructureName());
+//                    bcDto.setLevel(_parent.getLevel());
+//                    articleDto.getStructureParentList().add(bcDto);
+//                    if (parentId == null)
+//                        parentStatus = Boolean.FALSE;
+//                    else if (parentId.longValue() == 0)
+//                        parentStatus = Boolean.FALSE;
+//                } else {
+//                    parentStatus = Boolean.FALSE;
+//                }
+//            } while (parentStatus);
+            logger.debug("get parent structure of structure id {}", article.getStructure().getId());
+            List<Structure> breadcumbs = structureRepository.findBreadcumbById(article.getStructure().getId());
+            breadcumbs.forEach(e-> {
+                BreadcumbStructureDto bcDto = new BreadcumbStructureDto();
+                bcDto.setId(e.getId());
+                bcDto.setName(e.getStructureName());
+                bcDto.setLevel(e.getLevel());
+                articleDto.getStructureParentList().add(bcDto);
+            });
 
             // sorting bread crumb
             Collections.sort(articleDto.getStructureParentList(), new Comparator<BreadcumbStructureDto>() {
@@ -416,6 +497,10 @@ public class ArticleServiceImpl implements ArticleService {
                 }
             });
 
+            /*
+            if editor etc will edit article, fe apps will send isEdit to true, then article will signed as edit
+            editing status for one article will save in database t_article_edit with status TRUE
+             */
             if (isEdit) {
                 // update article edit to open status if article created <> user login
                 if (!article.getCreatedBy().equalsIgnoreCase(username)) {
@@ -444,6 +529,10 @@ public class ArticleServiceImpl implements ArticleService {
                     articleEditRepository.save(articleEdit);
                 }
             }
+
+            // clone article content
+            logger.debug("clone article id {}", article.getId());
+            articleCloneService.cloneArticleContent(article, username);
 
             if (article.getArticleState().equalsIgnoreCase("NEW"))
                 articleDto.setNew(Boolean.TRUE.booleanValue());
@@ -712,20 +801,15 @@ public class ArticleServiceImpl implements ArticleService {
     @Transactional(rollbackFor = {Exception.class, DataNotFoundException.class, DeletePublishedArticleException.class})
     public Boolean cancelArticle(Long id, String username, String token) throws Exception {
         try {
-            logger.info("cancel article with id {}", id);
+            logger.info("cancel article with article id {}", id);
             Optional<Article> articleOpt = articleRepository.findById(id);
             if (articleOpt.isEmpty()) {
                 logger.info("not article with id {}", id);
                 throw new DataNotFoundException("not found article with id " + id);
             }
 
-
             Article article = articleOpt.get();
-            if (article.getArticleState().equalsIgnoreCase(PUBLISHED)) {
-                throw new DeletePublishedArticleException("could not delete published article " + article.getJudulArticle());
-            }
-
-            if (!article.getArticleState().equalsIgnoreCase(PUBLISHED)) {
+            if (article.getArticleState().equalsIgnoreCase(NEW)) {
                 logger.info("delete related article with article id {}", article.getId());
                 Iterable<RelatedArticle> relatedArticles = articleRelatedRepository.findRelatedArticleByArticleId(article.getId());
                 if (relatedArticles != null)
@@ -751,16 +835,21 @@ public class ArticleServiceImpl implements ArticleService {
                 if (articleEdits != null)
                     articleEditRepository.deleteAll(articleEdits);
 
-                logger.info("delete unpublished article");
+                logger.debug("delete from tabel t_article_content_clone with article id {} and username {} ", article.getId(), username);
+                Iterable<ArticleContentClone> contents = articleContentCloneRepository.findsByArticleId(article.getId(), username);
+                articleContentCloneRepository.deleteAll(contents);
+
+                logger.info("delete new article");
                 articleRepository.delete(article);
                 logger.info("deleted article {} success", article.getJudulArticle());
+            } else {
+                logger.debug("delete from tabel t_article_content_clone with article id {} and username {} ", article.getId(), username);
+                Iterable<ArticleContentClone> contents = articleContentCloneRepository.findsByArticleId(article.getId(), username);
+                articleContentCloneRepository.deleteAll(contents);
             }
             return Boolean.TRUE;
-        } catch (DeletePublishedArticleException e) {
-            logger.error("fail to cancel article", e);
-            throw new DeletePublishedArticleException("", e);
         } catch (DataNotFoundException e) {
-            logger.error("fail to cancel article", e);
+            logger.error("not found data article", e);
             throw new DataNotFoundException("", e);
         } catch (Exception e) {
             logger.error("fail to cancel article", e);
@@ -846,12 +935,14 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public ArticleContentDto getContentById(Long id) throws Exception {
         try {
-            Optional<ArticleContent> articleContentOp = articleContentRepository.findById(id);
-            if (articleContentOp.isEmpty()) {
-                throw new DataNotFoundException("data not found");
-            }
-
-            ArticleContent articleContent = articleContentOp.get();
+            logger.info("get article content by id {}", id);
+//            Optional<ArticleContent> articleContentOp = articleContentRepository.findById(id);
+//            if (articleContentOp.isEmpty()) {
+//                throw new DataNotFoundException("data not found");
+//            }
+//
+//            ArticleContentClone articleContent = articleContentOp.get();
+            ArticleContentClone articleContent = articleCloneService.findById(id, null);
             ArticleContentDto articleContentDto = mapToArticleContentDto(articleContent);
             return articleContentDto;
         } catch (DataNotFoundException e) {
@@ -859,6 +950,29 @@ public class ArticleServiceImpl implements ArticleService {
             throw new DataNotFoundException("data not found");
         } catch (Exception e) {
             logger.error("exception", e);
+            throw new Exception(e);
+        }
+    }
+
+    /**
+     * @param id
+     * @param username
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public ArticleContentDto getContentById(Long id, String username) throws Exception {
+        try {
+            logger.info("get article content by id {} and username {}", id, username);
+            if (username == null)
+                return getContentById(id);
+            else {
+                ArticleContentClone articleContent = articleCloneService.findById(id, username);
+                ArticleContentDto articleContentDto = mapToArticleContentDto(articleContent);
+                return articleContentDto;
+            }
+        } catch (Exception e) {
+            logger.error("", e);
             throw new Exception(e);
         }
     }
@@ -877,20 +991,31 @@ public class ArticleServiceImpl implements ArticleService {
              */
             logger.debug("level action value of content is {}", articleContentDto.getLevel().longValue());
             logger.debug("parent value {}", articleContentDto.getParent());
-//            if (articleContentDto.getLevel().longValue() == 1)
-//                articleContentDto.setId(articleContentRepository.getContentId());
             logger.info("process save and update content with id {}", articleContentDto.getId());
             articleContentDto.getBreadcumbArticleContentDtos().clear();
-            Optional<ArticleContent> articleContentOpt = articleContentRepository.findById(articleContentDto.getId());
-            ArticleContent articleContent = null;
-            if (articleContentOpt.isEmpty()) {
+//            Optional<ArticleContent> articleContentOpt = articleContentRepository.findById(articleContentDto.getId());
+//            ArticleContent articleContent = null;
+//            if (articleContentOpt.isEmpty()) {
+//                logger.debug("not found article content with id {}, create new entity", articleContentDto.getId());
+//                articleContent = new ArticleContent();
+//                articleContent.setId(articleContentDto.getId());
+//                articleContent.setCreatedBy(articleContentDto.getUsername());
+//            } else {
+//                logger.debug("article content with id {} has found, update entity", articleContentDto.getId());
+//                articleContent = articleContentOpt.get();
+//                articleContent.setModifyBy(articleContentDto.getUsername());
+//                articleContent.setModifyDate(new Date());
+//            }
+
+            logger.debug("save article content for user {}", articleContentDto.getUsername());
+            ArticleContentClone articleContent = articleCloneService.findById(articleContentDto.getId(), articleContentDto.getUsername());
+            if (articleContent == null) {
                 logger.debug("not found article content with id {}, create new entity", articleContentDto.getId());
-                articleContent = new ArticleContent();
+                articleContent = new ArticleContentClone();
                 articleContent.setId(articleContentDto.getId());
                 articleContent.setCreatedBy(articleContentDto.getUsername());
             } else {
                 logger.debug("article content with id {} has found, update entity", articleContentDto.getId());
-                articleContent = articleContentOpt.get();
                 articleContent.setModifyBy(articleContentDto.getUsername());
                 articleContent.setModifyDate(new Date());
             }
@@ -921,7 +1046,8 @@ public class ArticleServiceImpl implements ArticleService {
             Article article = articleOpt.get();
             articleContent.setArticle(article);
             logger.info("save article content to db");
-            articleContent = articleContentRepository.save(articleContent);
+//            articleContent = articleContentRepository.save(articleContent);
+            articleContent = articleCloneService.saveContent(articleContent);
 
 //            if (!article.getArticleState().equalsIgnoreCase(NEW)) {
 //                // save to history
@@ -935,9 +1061,11 @@ public class ArticleServiceImpl implements ArticleService {
             boolean parentStatus = Boolean.TRUE;
             do {
                 logger.debug("find article content with parent id {}", parentId);
-                Optional<ArticleContent> parentContent = articleContentRepository.findById(parentId);
-                if (!parentContent.isEmpty()) {
-                    ArticleContent _parent = parentContent.get();
+//                Optional<ArticleContent> parentContent = articleContentRepository.findById(parentId);
+                ArticleContentClone parentContent = articleCloneService.findById(parentId, articleContentDto.getUsername());
+                if (parentContent == null) {
+//                    ArticleContentClone _parent = parentContent.get();
+                    ArticleContentClone _parent = parentContent;
                     parentId = _parent.getParent();
                     BreadcumbArticleContentDto bcDto = new BreadcumbArticleContentDto();
                     bcDto.setId(_parent.getId());
@@ -1068,8 +1196,14 @@ public class ArticleServiceImpl implements ArticleService {
     public Boolean deleteContent(DeleteContentDto deleteContentDto) throws Exception {
         try {
             logger.info("delete content with id {}", deleteContentDto.getContentId());
-            Optional<ArticleContent> articleContentOpt = articleContentRepository.findById(deleteContentDto.getContentId());
-            if (articleContentOpt.isEmpty()) {
+//            Optional<ArticleContent> articleContentOpt = articleContentRepository.findById(deleteContentDto.getContentId());
+//            if (articleContentOpt.isEmpty()) {
+//                logger.info("not found article content with id {}", deleteContentDto.getContentId());
+//                throw new ArticleContentNotFoundException(String.format("article content with id %d not found", deleteContentDto.getContentId()));
+//            }
+
+            ArticleContentClone articleContent = articleCloneService.findById(deleteContentDto.getContentId(), deleteContentDto.getUsername());
+            if (articleContent == null) {
                 logger.info("not found article content with id {}", deleteContentDto.getContentId());
                 throw new ArticleContentNotFoundException(String.format("article content with id %d not found", deleteContentDto.getContentId()));
             }
@@ -1077,7 +1211,7 @@ public class ArticleServiceImpl implements ArticleService {
             ResponseEntity<ApiResponseWrapper.RestResponse<List<String>>> restResponse = pakarOauthClient.getRoles(BEARER + deleteContentDto.getToken(), deleteContentDto.getUsername());
             logger.debug("response api request {}", restResponse);
 
-            ArticleContent articleContent = articleContentOpt.get();
+//            ArticleContent articleContent = articleContentOpt.get();
             List<String> roles = restResponse.getBody().getData();
             String role = roles.get(0);
             Long level = articleContent.getLevel();
@@ -1098,30 +1232,31 @@ public class ArticleServiceImpl implements ArticleService {
                 throw new DataNotFoundException("data not found");
             }
 
-            Article _article = articleOpt.get();
-            if (_article.getArticleState().toLowerCase().equalsIgnoreCase(PUBLISHED)) {
-                List<ArticleContent> children = articleContentRepository.findContentChildrenAndOwnRowByParentId(articleContent.getId());
-                for (ArticleContent content : children) {
-                    logger.debug("content level {} and title {}", content.getLevel(), content.getName());
-                    content.setModifyBy(deleteContentDto.getUsername());
-                    content.setModifyDate(new Date());
-                    content.setDeleted(Boolean.TRUE);
-                    articleContentRepository.save(content);
-                }
-                // save to history
-//                logger.info("save to history");
-//                ArticleHistory articleHistory = new ArticleHistory();
-//                articleHistory.setCreatedBy(deleteContentDto.getUsername());
-//                articleHistoryRepository.save(articleHistory);
-            } else {
-                // delete from row in db
-                logger.debug("delete from db current id and children");
-                List<ArticleContent> children = articleContentRepository.findContentChildrenAndOwnRowByParentId(articleContent.getId());
-                for (ArticleContent content : children) {
-                    logger.debug("delete content title ---> id {}", content.getName(), content.getId());
-                    articleContentRepository.delete(content);
-                }
-            }
+//            Article _article = articleOpt.get();
+//            if (_article.getArticleState().toLowerCase().equalsIgnoreCase(PUBLISHED)) {
+//                List<ArticleContent> children = articleContentRepository.findContentChildrenAndOwnRowByParentId(articleContent.getId());
+//                for (ArticleContent content : children) {
+//                    logger.debug("content level {} and title {}", content.getLevel(), content.getName());
+//                    content.setModifyBy(deleteContentDto.getUsername());
+//                    content.setModifyDate(new Date());
+//                    content.setDeleted(Boolean.TRUE);
+//                    articleContentRepository.save(content);
+//                }
+//            } else {
+//                // delete from row in db
+//                logger.debug("delete from db current id and children");
+//                List<ArticleContent> children = articleContentRepository.findContentChildrenAndOwnRowByParentId(articleContent.getId());
+//                for (ArticleContent content : children) {
+//                    logger.debug("delete content title ---> id {}", content.getName(), content.getId());
+//                    articleContentRepository.delete(content);
+//                }
+//            }
+
+            logger.debug("delete from tabel t_article_content_clone current id {} and children", articleContent.getId());
+            List<ArticleContentClone> children = articleContentCloneRepository.findChildsIncludeParent(articleContent.getId(), deleteContentDto.getUsername());
+            List<Long> ids = new ArrayList<>();
+            children.forEach(e -> ids.add(e.getId()));
+            articleContentCloneRepository.deleteByIds(deleteContentDto.getUsername(), ids);
             return Boolean.TRUE;
         } catch (AccesDeniedDeleteContentException e) {
             logger.error("exception", e);
@@ -1196,11 +1331,58 @@ public class ArticleServiceImpl implements ArticleService {
         return listOfContents;
     }
 
+    /*
+    mapper article content clone to article content dto
+     */
+    private List<ArticleContentDto> mapToListArticleContentCloneDto(Iterable<ArticleContentClone> iterable) {
+        List<ArticleContentDto> listOfContents = new ArrayList<>();
+        iterable.forEach(e-> {
+            ArticleContentDto contentDto = new ArticleContentDto();
+            contentDto.setId(e.getId());
+            contentDto.setLevel(e.getLevel());
+            contentDto.setSort(e.getSort());
+            contentDto.setTitle(e.getName());
+            if (e.getLevel().intValue() == 1)
+                contentDto.setIntro(e.getDescription());
+            contentDto.setParent(e.getParent());
+            contentDto.setArticleId(e.getArticle().getId());
+            contentDto.setTopicTitle(e.getTopicCaption());
+            contentDto.setTopicContent(e.getTopicContent());
+            listOfContents.add(contentDto);
+        });
+        // sorting article content
+        logger.debug("prepare article content list with total element {}", listOfContents.size());
+        if (listOfContents.size() > 0) {
+            Collections.sort(listOfContents, new Comparator<ArticleContentDto>() {
+                @Override
+                public int compare(ArticleContentDto o1, ArticleContentDto o2) {
+                    logger.debug("sort 1 {}", o1.getSort());
+                    logger.debug("sort 2 {}", o2.getSort());
+                    return o1.getSort().intValue() - o2.getSort().intValue();
+                }
+            });
+        }
+        return listOfContents;
+    }
+
     /**
      * @param content
      * @return
      */
     private ArticleContentDto mapToArticleContentDto(ArticleContent content) {
+        ArticleContentDto contentDto = new ArticleContentDto();
+        contentDto.setId(content.getId());
+        contentDto.setLevel(content.getLevel());
+        contentDto.setSort(content.getSort());
+        contentDto.setTitle(content.getName());
+        if (content.getLevel().intValue() == 1)
+            contentDto.setIntro(content.getDescription());
+        contentDto.setParent(content.getParent());
+        contentDto.setArticleId(content.getArticle().getId());
+        return contentDto;
+    }
+
+    private ArticleContentDto mapToArticleContentDto(ArticleContentClone content) {
         ArticleContentDto contentDto = new ArticleContentDto();
         contentDto.setId(content.getId());
         contentDto.setLevel(content.getLevel());
@@ -1388,116 +1570,6 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     /**
-     * @param searchDto
-     * @return
-     * @throws Exception
-     */
-    @Override
-    @Transactional(rollbackFor = {Exception.class, MinValuePageNumberException.class})
-    public Page<MyPageDto> searchMyPages(SearchMyPageDto searchDto) throws Exception {
-        try {
-            logger.info("search my page dto");
-            Page<Article> searchResultPage = null;
-            if (searchDto.getPage() == null) {
-                searchDto.setPage(0L);
-            }
-
-            if (searchDto.getPage() == 0) {
-                searchDto.setPage(0L);
-            }
-
-            int pageNum = searchDto.getPage().intValue() - 1;
-            if (pageNum < 0)
-                throw new MinValuePageNumberException("page number smaller than 0");
-            String reqSortColumnName = searchDto.getSorting().getColumn();
-            searchDto.getSorting().setColumn(new TodoMapperMyPages().convertColumnNameforSort(reqSortColumnName));
-            Sort sort = searchDto.getSorting().getSort().equals("asc") ? Sort.by(searchDto.getSorting().getColumn()).ascending() : Sort.by(searchDto.getSorting().getColumn()).descending();
-            Pageable pageable = PageRequest.of(pageNum, searchDto.getSize().intValue(), sort);
-            RequestTaskDto requestTaskDto = new RequestTaskDto();
-            requestTaskDto.setAssigne(searchDto.getUsername());
-            requestTaskDto.setPic(searchDto.getUsername());
-            requestTaskDto.setState(searchDto.getState());
-            ResponseEntity<ApiResponseWrapper.RestResponse<List<TaskDto>>> restResponse = pakarWfClient
-                    .getTasksWithState(BEARER + searchDto.getToken(), searchDto.getUsername(), requestTaskDto);
-            List<Long> ids = new ArrayList<>();
-            for (TaskDto task : restResponse.getBody().getData()) {
-                ids.add(task.getArticleId());
-            }
-
-            if (searchDto.getType().equals(Constant.JenisHalaman.All) || searchDto.getType().equals(Constant.JenisHalaman.Artikel)) {
-                searchResultPage = articleMyPagesRepository.findMyPagesArticle(ids, searchDto.getKeyword(), searchDto.getState(), pageable);
-            } else {
-                searchResultPage = null;
-            }
-            return new TodoMapperMyPages().mapEntityPageIntoDTOPage(pageable, searchResultPage);
-        } catch (MinValuePageNumberException e) {
-            logger.error("exception", e);
-            throw new MinValuePageNumberException("exception", e);
-        } catch (Exception e) {
-            logger.error("exception", e);
-            throw new Exception("exception", e);
-        }
-    }
-
-    /**
-     * @param searchDto
-     * @return
-     * @throws Exception
-     */
-    @Override
-    @Transactional(rollbackFor = {Exception.class, MinValuePageNumberException.class})
-    public Page<MyPageDto> searchMyPages2(SearchMyPageDto searchDto) throws Exception {
-        try {
-            logger.info("search my page dto");
-            Page<Article> searchResultPage = null;
-            if (searchDto.getPage() == null) {
-                searchDto.setPage(0L);
-            }
-
-            if (searchDto.getPage() == 0) {
-                searchDto.setPage(0L);
-            }
-
-            int pageNum = searchDto.getPage().intValue() - 1;
-            if (pageNum < 0)
-                throw new MinValuePageNumberException("page number smaller than 0");
-            String reqSortColumnName = searchDto.getSorting().getColumn();
-            searchDto.getSorting().setColumn(new TodoMapperMyPages().convertColumnNameforSort(reqSortColumnName));
-            Sort sort = searchDto.getSorting().getSort().equals("asc") ? Sort.by(searchDto.getSorting().getColumn()).ascending() : Sort.by(searchDto.getSorting().getColumn()).descending();
-            Pageable pageable = PageRequest.of(pageNum, searchDto.getSize().intValue(), sort);
-            RequestTaskDto requestTaskDto = new RequestTaskDto();
-            requestTaskDto.setAssigne(searchDto.getUsername());
-            requestTaskDto.setPic(searchDto.getUsername());
-            requestTaskDto.setState(searchDto.getState());
-            ResponseEntity<ApiResponseWrapper.RestResponse<List<TaskDto>>> restResponse = pakarWfClient
-                    .getTasksWithState(BEARER + searchDto.getToken(), searchDto.getUsername(), requestTaskDto);
-            List<Long> ids = new ArrayList<>();
-            for (TaskDto task : restResponse.getBody().getData()) {
-                ids.add(task.getArticleId());
-            }
-
-            if (searchDto.getType().equals(Constant.JenisHalaman.All) || searchDto.getType().equals(Constant.JenisHalaman.Artikel)) {
-                if (searchDto.getState().equalsIgnoreCase("DRAFT"))
-                    searchResultPage = articleStateRepository.findMyPagesDratfArticle(ids, searchDto.getKeyword(), searchDto.getUsername(), searchDto.getState(), pageable);
-                else if (searchDto.getState().equalsIgnoreCase("PENDING"))
-                    searchResultPage = articleStateRepository.findMyPagesPendingArticle(ids, searchDto.getKeyword(), searchDto.getUsername(), searchDto.getState(), pageable);
-                else if (searchDto.getState().equalsIgnoreCase("PUBLISHED")) {
-                    searchResultPage = articleStateRepository.findMyPagesPublishedArticle(ids, searchDto.getKeyword(), searchDto.getUsername(), searchDto.getState(), pageable);
-                }
-            } else {
-                return new TodoMapperMyPages().emptypage(pageable);
-            }
-            return new TodoMapperMyPages().mapEntityPageIntoDTOPage(pageable, searchResultPage);
-        } catch (MinValuePageNumberException e) {
-            logger.error("exception", e);
-            throw new MinValuePageNumberException("exception", e);
-        } catch (Exception e) {
-            logger.error("exception", e);
-            throw new Exception("exception", e);
-        }
-    }
-
-    /**
      * @param username
      * @param token
      * @param articleId
@@ -1550,16 +1622,6 @@ public class ArticleServiceImpl implements ArticleService {
             throw new Exception("exception", e);
         }
     }
-
-//    private class ArticleHistoryHelper {
-//        public ArticleHistory populateArticleHistory() {
-//            return new ArticleHistory();
-//        }
-//
-//        public ArticleContentHistory populateArticleContentHistory() {
-//            return new ArticleContentHistory();
-//        }
-//    }
 
     /**
      * private class to handle article content
@@ -1710,70 +1772,6 @@ public class ArticleServiceImpl implements ArticleService {
         public Page<SuggestionArticleDto> mapEntityPageIntoDTOPage(Pageable pageRequest, Page<Article> source) {
             List<SuggestionArticleDto> dtos = mapEntitiesIntoDTOs(source.getContent());
             return new PageImpl<>(dtos, pageRequest, source.getTotalElements());
-        }
-    }
-
-    /**
-     * mapper for my page
-     */
-    private class TodoMapperMyPages {
-        public List<MyPageDto> mapEntitiesIntoDTOs(Iterable<Article> entities) {
-            List<MyPageDto> dtos = new ArrayList<>();
-            entities.forEach(e -> dtos.add(mapEntityIntoDTO(e)));
-            return dtos;
-        }
-
-        public MyPageDto mapEntityIntoDTO(Article entity) {
-            MyPageDto dto = new MyPageDto();
-            String locTemp = articleMyPagesRepository.findLocation(entity.getStructure().getId());
-//            ArticleEdit articleEdit = articleEditRepository.findCurrentEdit(entity.getId());
-            List<ArticleEdit> articleEdits = articleEditRepository.findArticleInEditingStatus(entity.getId());
-
-            dto.setId(entity.getId());
-            dto.setTitle(entity.getJudulArticle());
-            dto.setIsNew(entity.getNewArticle());
-            dto.setState(entity.getArticleState());
-//            dto.setModifiedBy(entity.getModifyBy());
-            dto.setModifiedBy(entity.getFullNameModifier());
-            dto.setModifiedDate(entity.getModifyDate());
-            dto.setType(Constant.JenisHalaman.Artikel);
-            dto.setLocation(locTemp);
-            int i = 0;
-            StringBuffer currentEdit = new StringBuffer();
-            for (ArticleEdit articleEdit : articleEdits) {
-                currentEdit.append(articleEdit.getEditorName());
-                if (i < articleEdits.size() - 1)
-                    currentEdit.append(",");
-                i++;
-            }
-            dto.setCurrentBy(currentEdit.toString());
-            ArticleState articleState = articleStateRepository.findByArticleId(entity.getId());
-            if (articleState != null)
-                dto.setSendTo(articleState.getSender());
-            return dto;
-        }
-
-        public Page<MyPageDto> mapEntityPageIntoDTOPage(Pageable pageRequest, Page<Article> source) {
-            List<MyPageDto> dtos = mapEntitiesIntoDTOs(source.getContent());
-            return new PageImpl<>(dtos, pageRequest, source.getTotalElements());
-        }
-
-        public Page<MyPageDto> emptypage(Pageable pageRequest) {
-            List<MyPageDto> dtos = new ArrayList<>();
-            return new PageImpl<>(dtos, pageRequest, 0);
-        }
-
-        public String convertColumnNameforSort(String reqColumn) {
-            if (reqColumn.equals("title")) {
-                return "article.judulArticle";
-            } else if (reqColumn.equals("modified_date")) {
-                return "article.modifyDate";
-            } else if (reqColumn.equals("modified_by")) {
-                return "article.fullNameModifier";
-            } else if (reqColumn.equals("location")) {
-                return "article.structure.location_text";
-            }
-            return "";
         }
     }
 }

@@ -14,8 +14,8 @@ public class ArticleContentClone extends CommonArticleContent {
     private Long version;
 
     @ManyToOne
-    @JoinColumn(name = "article_clone_id")
-    private ArticleClone article;
+    @JoinColumn(name = "article_id")
+    private Article article;
 
     public Long getId() {
         return id;
@@ -25,11 +25,11 @@ public class ArticleContentClone extends CommonArticleContent {
         this.id = id;
     }
 
-    public ArticleClone getArticle() {
+    public Article getArticle() {
         return article;
     }
 
-    public void setArticle(ArticleClone article) {
+    public void setArticle(Article article) {
         this.article = article;
     }
 
@@ -40,5 +40,4 @@ public class ArticleContentClone extends CommonArticleContent {
     public void setVersion(Long version) {
         this.version = version;
     }
-
 }

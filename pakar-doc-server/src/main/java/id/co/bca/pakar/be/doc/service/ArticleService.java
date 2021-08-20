@@ -10,7 +10,7 @@ public interface ArticleService {
 
     ArticleDto generateArticle(GenerateArticleDto articleDto) throws Exception;
 
-    ArticleDto getArticleById(Long id) throws Exception;
+//    ArticleDto getArticleById(Long id) throws Exception;
 
     ArticleDto getArticleById(Long id, boolean isEdit, String username, String token) throws Exception;
 
@@ -24,6 +24,8 @@ public interface ArticleService {
 
     ArticleContentDto getContentById(Long id) throws Exception;
 
+    ArticleContentDto getContentById(Long id, String username) throws Exception;
+
     ArticleContentDto saveContent(ArticleContentDto articleContentDto) throws Exception;
 
     List<ArticleContentDto> saveBatchContents(List<ArticleContentDto> articleContentDtos, String username, String token) throws Exception;
@@ -36,9 +38,9 @@ public interface ArticleService {
 
     Page<SuggestionArticleDto> searchSuggestion(SearchSuggestionDto searchDto) throws Exception;
 
-    Page<MyPageDto> searchMyPages(SearchMyPageDto searchDto) throws Exception;
-
-    Page<MyPageDto> searchMyPages2(SearchMyPageDto searchDto) throws Exception;
+//    Page<MyPageDto> searchMyPages(SearchMyPageDto searchDto) throws Exception;
+//
+//    Page<MyPageDto> searchMyPages2(SearchMyPageDto searchDto) throws Exception;
 
     List<UserArticleEditingDto> findUserArticleEditings(String username, String token, Long articleId) throws Exception;
 }

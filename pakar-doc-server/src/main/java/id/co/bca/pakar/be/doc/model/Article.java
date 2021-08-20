@@ -30,9 +30,6 @@ public class Article extends EntityBase {
     @Column(name = "article_used_by")
     private String articleUsedBy;
 
-//    @Lob
-//    @Basic(fetch = FetchType.LAZY)
-//    @Column(name = "short_desc")
 	@Column(name = "short_desc", columnDefinition= "TEXT", length = Integer.MAX_VALUE, nullable = false)
     private String shortDescription = new String();
 
@@ -44,6 +41,9 @@ public class Article extends EntityBase {
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ArticleContent> articleContents = new ArrayList<>();
+
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<ArticleContentClone> articleContentClones = new ArrayList<>();
 
     @Column(name = "use_empty_template", columnDefinition = "BOOLEAN DEFAULT FALSE")
     private Boolean useEmptyTemplate = Boolean.FALSE;
@@ -116,6 +116,14 @@ public class Article extends EntityBase {
 
     public void setArticleContents(List<ArticleContent> articleContents) {
         this.articleContents = articleContents;
+    }
+
+    public List<ArticleContentClone> getArticleContentClones() {
+        return articleContentClones;
+    }
+
+    public void setArticleContentClones(List<ArticleContentClone> articleContentClones) {
+        this.articleContentClones = articleContentClones;
     }
 
     public String getVideoLink() {
