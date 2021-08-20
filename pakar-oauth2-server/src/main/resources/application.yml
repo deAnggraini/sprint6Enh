@@ -6,7 +6,7 @@ spring:
       read: 60000
       connection: 60000
   profiles:
-    active: "dev-local"
+    active: "dev-ogya"
   main:
     banner-mode: "off"
   jpa:
