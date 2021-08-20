@@ -44,7 +44,7 @@ public class ArticleDto extends BaseArticleDto {
     private List<BreadcumbStructureDto> structureParentList = new ArrayList<>();
 
     @JsonProperty("isNew")
-    private boolean isNew = true;
+    private Boolean isNew = Boolean.TRUE;
 
     @JsonProperty("releaseVersion")
     private String releaseVersion;
@@ -151,11 +151,11 @@ public class ArticleDto extends BaseArticleDto {
         this.structureParentList = structureParentList;
     }
 
-    public boolean isNew() {
+    public Boolean getIsNew() {
         return isNew;
     }
 
-    public void setNew(boolean aNew) {
+    public void setNew(Boolean aNew) {
         isNew = aNew;
     }
 

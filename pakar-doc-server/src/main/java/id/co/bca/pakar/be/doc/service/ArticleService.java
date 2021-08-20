@@ -10,8 +10,6 @@ public interface ArticleService {
 
     ArticleDto generateArticle(GenerateArticleDto articleDto) throws Exception;
 
-//    ArticleDto getArticleById(Long id) throws Exception;
-
     ArticleDto getArticleById(Long id, boolean isEdit, String username, String token) throws Exception;
 
     ArticleResponseDto saveArticle(MultipartArticleDto articleDto) throws Exception;

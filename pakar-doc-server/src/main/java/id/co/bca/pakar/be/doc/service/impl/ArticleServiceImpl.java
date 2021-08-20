@@ -140,7 +140,9 @@ public class ArticleServiceImpl implements ArticleService {
      * @return
      */
     @Override
-    @Transactional(rollbackFor = {Exception.class, NotFoundArticleTemplateException.class, DuplicateTitleException.class})
+    @Transactional(rollbackFor = {Exception.class
+            , NotFoundArticleTemplateException.class
+            , DuplicateTitleException.class})
     public ArticleDto generateArticle(GenerateArticleDto generateArticleDto) throws Exception {
         try {
             logger.info("generate article process");
@@ -184,8 +186,8 @@ public class ArticleServiceImpl implements ArticleService {
              */
             logger.info("populate article contents clone");
             Iterable<ArticleTemplateContent> templateContents = articleTemplateContentRepository.findByTemplateId(template.getId());
-            for (ArticleTemplateContent articleTemplateContent : templateContents) {
-                logger.debug("articleTemplateContent.getName() value {}", articleTemplateContent.getName());
+            for (ArticleTemplateContent e : templateContents) {
+                logger.debug("articleTemplateContent.getName() value {}", e.getName());
                 logger.debug("param key {}", generateArticleDto.getParamKey());
                 logger.debug("param value {}", generateArticleDto.getParamValue());
                 ArticleContent articleContent = new ArticleContent();
@@ -193,11 +195,11 @@ public class ArticleServiceImpl implements ArticleService {
                 logger.info("get sequence content id {}", seqContentId);
                 articleContent.setId(seqContentId);
                 articleContent.setCreatedBy(generateArticleDto.getUsername());
-                articleContent.setName(replaceTextByParams(articleTemplateContent.getName(), generateArticleDto.getParamKey(), generateArticleDto.getParamValue()));
-                articleContent.setLevel(articleTemplateContent.getLevel());
-                articleContent.setSort(articleTemplateContent.getSort());
-                articleContent.setTopicCaption(articleTemplateContent.getTopicCaption());
-                articleContent.setTopicContent(articleTemplateContent.getTopicContent());
+                articleContent.setName(replaceTextByParams(e.getName(), generateArticleDto.getParamKey(), generateArticleDto.getParamValue()));
+                articleContent.setLevel(e.getLevel());
+                articleContent.setSort(e.getSort());
+                articleContent.setTopicCaption(e.getTopicCaption());
+                articleContent.setTopicContent(e.getTopicContent());
                 article.getArticleContents().add(articleContent);
                 articleContent.setArticle(article);
             }
