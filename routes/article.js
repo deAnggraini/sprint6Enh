@@ -520,6 +520,20 @@ router.post('/getArticleEditing', (req, res) => {
             "fullname": "Febrian Alaska Christian",
             "firstname": "Febrian",
             "lastname": "Christian",
+        },
+        {
+            "username": "nanda",
+            "email": "aflahahlam@gmail.com",
+            "fullname": "Linanda Kristina",
+            "firstname": "Linanda",
+            "lastname": "Kristina",
+        },
+        {
+            "username": "nanda",
+            "email": "aflahahlam@gmail.com",
+            "fullname": "Gerhana Purnama",
+            "firstname": "Gerhana",
+            "lastname": "Purnama",
         }
     ]
     res.send({ status: { code: '00', message: 'asd' }, data });
