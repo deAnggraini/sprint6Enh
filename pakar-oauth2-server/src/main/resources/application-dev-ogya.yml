@@ -1,7 +1,7 @@
 server:
   port: 8080
 spring:
-  profile:dev-ogya
+  profiles: dev-ogya
   rest:
     timeout:
       read: 60000
