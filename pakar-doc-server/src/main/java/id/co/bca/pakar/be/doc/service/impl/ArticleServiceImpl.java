@@ -898,19 +898,6 @@ public class ArticleServiceImpl implements ArticleService {
             logger.debug("parent value {}", articleContentDto.getParent());
             logger.info("process save and update content with id {}", articleContentDto.getId());
             articleContentDto.getBreadcumbArticleContentDtos().clear();
-//            Optional<ArticleContent> articleContentOpt = articleContentRepository.findById(articleContentDto.getId());
-//            ArticleContent articleContent = null;
-//            if (articleContentOpt.isEmpty()) {
-//                logger.debug("not found article content with id {}, create new entity", articleContentDto.getId());
-//                articleContent = new ArticleContent();
-//                articleContent.setId(articleContentDto.getId());
-//                articleContent.setCreatedBy(articleContentDto.getUsername());
-//            } else {
-//                logger.debug("article content with id {} has found, update entity", articleContentDto.getId());
-//                articleContent = articleContentOpt.get();
-//                articleContent.setModifyBy(articleContentDto.getUsername());
-//                articleContent.setModifyDate(new Date());
-//            }
 
             logger.debug("save article content for user {}", articleContentDto.getUsername());
             ArticleContentClone articleContent = articleCloneService.findById(articleContentDto.getId(), articleContentDto.getUsername());
@@ -953,37 +940,6 @@ public class ArticleServiceImpl implements ArticleService {
             logger.info("save article content to db");
 //            articleContent = articleContentRepository.save(articleContent);
             articleContent = articleCloneService.saveContent(articleContent);
-
-//            // reset list parent
-//            logger.info("get list parent article content");
-//            // get list parent of articleContent
-//            Long parentId = articleContent.getParent();
-//            boolean parentStatus = Boolean.TRUE;
-//            do {
-//                logger.debug("find article content with parent id {}", parentId);
-////                Optional<ArticleContent> parentContent = articleContentRepository.findById(parentId);
-//                ArticleContentClone parentContent = articleCloneService.findById(parentId, articleContentDto.getUsername());
-//                if (parentContent == null) {
-////                    ArticleContentClone _parent = parentContent.get();
-//                    ArticleContentClone _parent = parentContent;
-//                    parentId = _parent.getParent();
-//                    BreadcumbArticleContentDto bcDto = new BreadcumbArticleContentDto();
-//                    bcDto.setId(_parent.getId());
-//                    bcDto.setName(_parent.getName());
-//                    bcDto.setLevel(_parent.getLevel());
-//                    articleContentDto.getBreadcumbArticleContentDtos().add(bcDto);
-//                    logger.debug("copy list parent object id:name ---> {}:{} has level value {}", new Object[]{bcDto.getId()
-//                            , bcDto.getName(),
-//                            bcDto.getLevel()});
-//                    if (parentId == null)
-//                        parentStatus = Boolean.FALSE;
-//                    else if (parentId.longValue() == 0)
-//                        parentStatus = Boolean.FALSE;
-//                } else {
-//                    logger.debug("article content with parent id {} not found, break loop", parentId);
-//                    parentStatus = Boolean.FALSE;
-//                }
-//            } while (parentStatus);
 
             logger.debug("get article content parent for article content id {}", articleContent.getId());
             List<ArticleContentClone> breadcumbs = articleContentCloneRepository.findParentListById(articleContent.getId());
@@ -1560,31 +1516,15 @@ public class ArticleServiceImpl implements ArticleService {
                 // reset list parent
                 logger.info("get list parent article content");
                 // get list parent of articleContent
-                Long parentId = _entity.getParent();
-                boolean parentStatus = Boolean.TRUE;
-                do {
-                    logger.debug("find article content with parent id {}", parentId);
-                    Optional<ArticleContent> parentContent = articleContentRepository.findById(parentId);
-                    if (!parentContent.isEmpty()) {
-                        ArticleContent _parent = parentContent.get();
-                        parentId = _parent.getParent();
-                        BreadcumbArticleContentDto bcDto = new BreadcumbArticleContentDto();
-                        bcDto.setId(_parent.getId());
-                        bcDto.setName(_parent.getName());
-                        bcDto.setLevel(_parent.getLevel());
-                        dto.getBreadcumbArticleContentDtos().add(bcDto);
-                        logger.debug("copy list parent object id:name ---> {}:{} has level value {}", new Object[]{bcDto.getId()
-                                , bcDto.getName(),
-                                bcDto.getLevel()});
-                        if (parentId == null)
-                            parentStatus = Boolean.FALSE;
-                        else if (parentId.longValue() == 0)
-                            parentStatus = Boolean.FALSE;
-                    } else {
-                        logger.debug("article content with parent id {} not found, break loop", parentId);
-                        parentStatus = Boolean.FALSE;
-                    }
-                } while (parentStatus);
+                logger.debug("get article content parent for article content id {}", _entity.getId());
+                List<ArticleContent> breadcumbs = articleContentRepository.findParentListById(_entity.getId());
+                breadcumbs.forEach(e-> {
+                    BreadcumbArticleContentDto bcDto = new BreadcumbArticleContentDto();
+                    bcDto.setId(e.getId());
+                    bcDto.setName(e.getName());
+                    bcDto.setLevel(e.getLevel());
+                    dto.getBreadcumbArticleContentDtos().add(bcDto);
+                });
 
                 logger.debug("sorted list parent content");
                 // sorting bread crumb

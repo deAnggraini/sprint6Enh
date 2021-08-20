@@ -1,6 +1,7 @@
 package id.co.bca.pakar.be.doc.dao;
 
 import id.co.bca.pakar.be.doc.model.ArticleContent;
+import id.co.bca.pakar.be.doc.model.ArticleContentClone;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -67,4 +68,22 @@ public interface ArticleContentRepository extends CrudRepository<ArticleContent,
             "WHERE m.article.id=:articleId " +
             "AND m.deleted IS FALSE ")
     List<ArticleContent> findByArticleId(@Param("articleId") Long articleId);
+
+    @Query(value = "SELECT rs3.* FROM (  " +
+            " WITH RECURSIVE rec AS ( " +
+            "     SELECT rs.* " +
+            "                           FROM t_article_content rs " +
+            "                          WHERE rs.id = (select rs2.parent from t_article_content rs2 where rs2.id= :id) " +
+            "                        UNION ALL " +
+            "                         SELECT rs.* " +
+            "                           FROM rec rec1, " +
+            "                            t_article_content rs " +
+            "                          WHERE rs.id = rec1.parent " +
+            "                        ) " +
+            "                 SELECT rec.* " +
+            "                 FROM rec " +
+            "                 ORDER BY rec.level " +
+            " ) rs3",
+            nativeQuery = true)
+    List<ArticleContent>  findParentListById(@Param("id") Long id);
 }

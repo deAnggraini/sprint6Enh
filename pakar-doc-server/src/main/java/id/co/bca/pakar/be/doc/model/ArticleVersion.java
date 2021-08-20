@@ -27,7 +27,7 @@ public class ArticleVersion extends EntityBase {
     @Column(name = "article_template_id")
     private Long articleTemplate;
 
-    @Column(name = "title", unique = true, nullable = false)
+    @Column(name = "title", nullable = false)
     private String judulArticle;
 
     @Column(name = "article_used_by")
