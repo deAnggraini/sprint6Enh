@@ -53,9 +53,29 @@ spring:
 ---
 spring:
   profiles: dev-ogya
+  rest:
+    timeout:
+      read: 60000
+      connection: 60000
+  profiles:
+    active: "dev-local"
+  main:
+    banner-mode: "off"
+  jpa:
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
+    show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQL10Dialect
+    properties:
+      hibernate:
+        dialect:org.hibernate.dialect.PostgreSQL10Dialect
+  login:
+    max-failed-login: 5
+    locking-time-failed-login : 30
   eai:
     ad:
-      loginUri: http://192.168.181.70:12085/ad-gateways/verify1
+      loginUri: http://36.89.25.220:12085/ad-gateways/verify1
       clientId: 8C21EBEEB1AA3FBFE05400144FFBD319
       applicationID: PRJ1
       key: 123456789013245678901234
@@ -73,7 +93,7 @@ spring:
       signingkey: pakar123
   dataSource: 
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://192.168.181.95:5432/pakardb
+    url: jdbc:postgresql://36.89.25.220:5432/pakardb
     username: pakar
     password: pakar123
     hikari:
