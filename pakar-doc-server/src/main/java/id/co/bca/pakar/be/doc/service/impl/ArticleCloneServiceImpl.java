@@ -45,15 +45,19 @@ public class ArticleCloneServiceImpl implements ArticleCloneService {
         }
     }
 
+    /*
+    clone main article content into article content clone
+    - this condiction occured when user reload article
+     */
     @Override
     @Transactional(rollbackFor = {Exception.class})
     public Boolean cloneArticleContent(Article article, String username) throws Exception {
         try {
             logger.info("clone article content of article id {} for user {}", article.getId(), username);
             // validate if article clone is exist
-            Boolean isExistClone = articleCloneRepository.existByArticleId(article.getId());
-            if (isExistClone.booleanValue())
-                return Boolean.FALSE;
+//            Boolean isExistClone = articleCloneRepository.existByArticleId(article.getId());
+//            if (isExistClone.booleanValue())
+//                return Boolean.FALSE;
 
             logger.info("populate and save cloning article content");
             List<ArticleContentClone> clones = new ArticleCloneHelper().populateContent(article.getArticleContents(), article);

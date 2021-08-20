@@ -27,7 +27,7 @@ public interface ArticleContentCloneRepository extends CrudRepository<ArticleCon
             "WHERE m.deleted IS FALSE " +
             "AND m.article.id = :id " +
             "AND m.createdBy = :username")
-    Iterable<ArticleContentClone> findsByArticleId(@Param("id") Long id, @Param("username") String username);
+    Iterable<ArticleContentClone> findsByArticleId(@Param("articleId") Long articleId, @Param("username") String username);
 
     @Modifying
     @Query("DELETE FROM ArticleContentClone m " +

@@ -209,7 +209,7 @@ public class ArticleServiceImpl implements ArticleService {
             logger.info("save article and content clone");
             article = articleRepository.save(article);
             logger.info("generate article success");
-            
+
             // reset parent for article content clone
             for (ArticleContentClone articleContent : article.getArticleContentClones()) {
                 for (ArticleTemplateContent articleTemplateContent : templateContents) {
@@ -357,9 +357,19 @@ public class ArticleServiceImpl implements ArticleService {
             articleDto.setVideoLink(article.getVideoLink());
 
             // get main contents
-            List<ArticleContent> articleContents = articleContentRepository.findByArticleId(article.getId());
-            logger.debug("main article contents {}", articleContents);
-            List<ArticleContentDto> articleContentDtos = new TreeArticleContents().menuTree(mapToListArticleContentDto(articleContents));
+            List<ArticleContentDto> articleContentDtos = new ArrayList<>();
+            if(article.getArticleState().equalsIgnoreCase(NEW)) {
+                // refresh article
+                Iterable<ArticleContentClone> articleContents = articleContentCloneRepository.findsByArticleId(article.getId(), article.getCreatedBy());
+                logger.debug("copy value of article contents to dto", articleContents);
+                articleContentDtos = new TreeArticleContents().menuTree(mapToListArticleContentCloneDto(articleContents));
+            } else {
+                // article already saved
+                List<ArticleContent> articleContents = articleContentRepository.findByArticleId(article.getId());
+                logger.debug("main article contents {}", articleContents);
+                articleContentDtos = new TreeArticleContents().menuTree(mapToListArticleContentDto(articleContents));
+            }
+
             articleDto.setContents(articleContentDtos);
             Iterable<SkRefference> skRefferenceList = skReffRepository.findByArticleId(id);
             articleDto.setSkReff(mapToSkReffDto(skRefferenceList));
@@ -426,17 +436,14 @@ public class ArticleServiceImpl implements ArticleService {
             }
 
             // clone article content
-            logger.debug("clone article id {} with username {}", article.getId(), username);
-            articleCloneService.cloneArticleContent(article, username);
+//            logger.debug("clone article id {} with username {}", article.getId(), username);
+//            articleCloneService.cloneArticleContent(article, username);
 
             if (article.getArticleState().equalsIgnoreCase(NEW))
                 articleDto.setNew(Boolean.TRUE.booleanValue());
             else
                 articleDto.setNew(Boolean.FALSE.booleanValue());
             return articleDto;
-        } catch (StructureNotFoundException e) {
-            logger.error("exception", e);
-            throw new StructureNotFoundException("not found structure");
         } catch (ArticleNotFoundException e) {
             logger.error("exception", e);
             throw new ArticleNotFoundException("not found article id " + id);
