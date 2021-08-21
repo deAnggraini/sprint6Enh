@@ -41,11 +41,14 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: https://login.domain.com/xxx/keys # JSON Web Key URI to use to verify the JWT token.
-          issuer-uri: http://36.89.25.220:13081/api/auth/me
-        token-info-uri: http://36.89.25.220:13081/oauth/check_token
+          jwk-set-uri: http://36.89.25.220:12081/oauth/token_key # JSON Web Key URI to use to verify the JWT token.
+          issuer-uri: http://36.89.25.220:12081/api/auth/me
+        token-info-uri: http://36.89.25.220:12081/oauth/check_token
+        auth-server: http://36.89.25.220:12081
+        doc-server: http://36.89.25.220:12082
+        wf-server: http://36.89.25.220:12083
       server:
-        url: http://36.89.25.220:13081/oauth/token
+        url: http://36.89.25.220:12081
       clientId: 8C21EBEEB1AA3FBFE05400144FFBD319
       clientSecret: da82edc6dcc1af30
     jwt:
