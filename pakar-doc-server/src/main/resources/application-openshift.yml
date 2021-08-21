@@ -36,6 +36,10 @@ spring:
     file-type: image/png,image/jpeg,image/gif,image/avif,image/apng,image/svg+xml,image/bmp,image/x-icon,image/tiff
   article:
     param-tag: "{}|[]"
+    width-article-image: 307
+    height-article-image: 425
+    file-type: image/png,image/jpeg
+    max-size: 700000
   profiles: openshift
   security:
     oauth2:
