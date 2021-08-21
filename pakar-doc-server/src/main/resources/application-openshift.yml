@@ -13,8 +13,6 @@ spring:
     timeout:
       read: 60000
       connection: 60000
-  profiles:
-    active: "openshift"
   main:
     banner-mode: "off"
   jpa:
