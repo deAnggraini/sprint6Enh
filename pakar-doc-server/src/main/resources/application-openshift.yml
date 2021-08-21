@@ -14,7 +14,7 @@ spring:
       read: 60000
       connection: 60000
   profiles:
-    active: "dev-local"
+    active: "openshift"
   main:
     banner-mode: "off"
   jpa:
@@ -38,7 +38,7 @@ spring:
     file-type: image/png,image/jpeg,image/gif,image/avif,image/apng,image/svg+xml,image/bmp,image/x-icon,image/tiff
   article:
     param-tag: "{}|[]"
-  profiles: dev-ogya1
+  profiles: openshift
   security:
     oauth2:
       resourceserver:
