@@ -1,0 +1,62 @@
+server:
+  port: 8080
+upload:
+  path:
+    base: /var/bca/images
+    menu: /menu/
+    category: /structures/
+    theme: /themes/
+    article: /articles/
+    user: /users/
+spring:
+  rest:
+    timeout:
+      read: 60000
+      connection: 60000
+  profiles:
+    active: "dev-local"
+  main:
+    banner-mode: "off"
+  jpa:
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
+    show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQL10Dialect
+    properties:
+      hibernate:
+        dialect:org.hibernate.dialect.PostgreSQL10Dialect
+  # Enable multipart uploads
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 2KB
+      max-file-size: 2MB
+      max-request-size: 10MB
+  multipart:
+    max-size: 2000000
+    file-type: image/png,image/jpeg,image/gif,image/avif,image/apng,image/svg+xml,image/bmp,image/x-icon,image/tiff
+  article:
+    param-tag: "{}|[]"
+  profiles: dev-ogya1
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: https://login.domain.com/xxx/keys # JSON Web Key URI to use to verify the JWT token.
+          issuer-uri: http://36.89.25.220:13081/api/auth/me
+        token-info-uri: http://36.89.25.220:13081/oauth/check_token
+      server:
+        url: http://36.89.25.220:13081/oauth/token
+      clientId: 8C21EBEEB1AA3FBFE05400144FFBD319
+      clientSecret: da82edc6dcc1af30
+    jwt:
+      signingkey: pakar123
+  dataSource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://36.89.25.220:5432/pakardb2
+    username: pakar2
+    password: pakar123
+    hikari:
+      connectionTimeout: 20000
+      maximumPoolSize: 5
