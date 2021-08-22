@@ -1,21 +1,22 @@
-import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy, ChangeDetectorRef, TemplateRef } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy, ChangeDetectorRef, TemplateRef, Inject } from '@angular/core';
 import * as CustomEditor from './../../../ckeditor/build/ckeditor';
 import { ArticleService } from '../../_services/article.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ChangeEvent, CKEditorComponent } from '@ckeditor/ckeditor5-angular';
 import { CdkDragDrop, CdkDragEnter, CdkDragExit, CdkDragMove, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { BehaviorSubject, Subscription, of } from 'rxjs';
+import { BehaviorSubject, Subscription, of, Observable, Subject } from 'rxjs';
 import { Option } from 'src/app/utils/_model/option';
 import { SkReferenceService } from '../../_services/sk-reference.service';
 import { AuthService, UserModel } from '../../auth';
 import { ArticleDTO, ArticleContentDTO, ArticleParentDTO } from '../../_model/article.dto';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { StrukturService } from '../../_services/struktur.service';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, debounceTime, distinctUntilChanged, elementAt, map, tap } from 'rxjs/operators';
 import { ConfirmService } from 'src/app/utils/_services/confirm.service';
 import { ToastService } from 'src/app/utils/_services/toast.service';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { UserService } from '../../_services/user.service';
+import { DOCUMENT } from '@angular/common';
 
 const TOOL_TIPS = [
   'Berisi aturan/kaidah/ketetapan/syarat/kriteria atas produk/aplikasi yang harus dipahami pembaca sebelum melakukan prosedur atas produk/aplikasi tersebut; dapat dituangkan dalam bentuk kalimat ataupun tabel.',
@@ -244,6 +245,9 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   public get allIdConnected(): Array<string> {
     return this.allIds
   }
+  dragMovedSubject = new Subject<any>();
+  idAccordionSelected: string
+  fakeDragAndDropStatus: boolean = false
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -258,8 +262,9 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     private toast: ToastService,
     private modalService: NgbModal,
     private configModel: NgbModalConfig,
-    private userService: UserService
-    ) {
+    private userService: UserService,
+    @Inject(DOCUMENT) private document: Document
+  ) {
     this.configModel.backdrop = 'static';
     this.configModel.keyboard = false;
   }
@@ -527,9 +532,18 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   drop(event: CdkDragDrop<any[]>, levelParent: number, parent) {
-    console.log({ event });
     const level = event.container.data.length === 0 ? levelParent : event.container.data[0].level
-    if ((level - 1) + this.getMaxLevel([event.previousContainer.data[event.previousIndex]]) > 5) {
+    console.log(level, this.getMaxLevel(event.item.data.children))
+    console.log({ event });
+    this.clearFakePlaceholder()
+    if (this.fakeDragAndDropStatus) {
+      this.addArray(this.dataForm.controls.contents.value, this.idAccordionSelected, event.item.data, level, parent)
+      transferArrayItem(event.previousContainer.data, [], event.previousIndex, 0)
+      this.recalculateChildren(event.previousContainer.data, event.previousContainer.data.length > 0 ? event.previousContainer.data[0].listParent : [])
+      this.fakeDragAndDropStatus = false
+      return
+    }
+    if (level + this.getMaxLevel(event.item.data.children) > 5) {
       return
     }
     if (event.previousContainer === event.container) {
@@ -537,8 +551,8 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
       console.log('pindah list');
-      console.log('dari', event.previousContainer.data);
-      console.log('ke', event.container.data);
+      console.log('dari', event.previousContainer.data, event.previousIndex);
+      console.log('ke', event.container.data, event.currentIndex);
       transferArrayItem(event.previousContainer.data,
         event.container.data,
         event.previousIndex,
@@ -548,6 +562,58 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     this.recalculateChildren(event.container.data, event.container.data.filter((x, i) => i !== event.currentIndex)[0] === undefined ? parent : event.container.data.filter((x, i) => i !== event.currentIndex)[0].listParent);
     this.recalculateLevelChildren(event.container.data, level)
   }
+
+  dragMoved(event) {
+    let e = this.document.elementFromPoint(event.pointerPosition.x, event.pointerPosition.y);
+    console.log('e', e)
+    if (!e) {
+      this.clearFakePlaceholder()
+      this.fakeDragAndDropStatus = false
+      return
+    }
+    let container = e.classList.contains("drop-area-accordion") ? e : e.closest(".drop-area-accordion");
+    console.log('container', container)
+    if (!container) {
+      this.clearFakePlaceholder()
+      this.fakeDragAndDropStatus = false
+      return
+    }
+    const id = container.getAttribute("data-id")
+    if (!id) {
+      this.clearFakePlaceholder()
+      this.fakeDragAndDropStatus = false
+      return
+    }
+    this.fakeDragAndDropStatus = true
+    this.document.getElementById('plc' + id).classList.add('fake-drag-placeholder-show')
+    this.document.querySelectorAll('.drag-placeholder').forEach(element => element.classList.add('drag-placeholder-hidden'))
+    this.idAccordionSelected = id
+  }
+
+  addArray(arr, id, value, level, parent) {
+    arr.forEach(element => {
+      if (element.id.toString() === id) {
+        element.children.push(value)
+        console.log(element.children)
+        this.recalculateChildren(element.children, parent)
+        this.recalculateLevelChildren(element.children, level)
+        return
+      }
+      if (element.children.length > 0) {
+        this.addArray(element.children, id, value, level, parent)
+      }
+    });
+  }
+
+  clearFakePlaceholder() {
+    this.document.querySelectorAll('.fake-drag-placeholder').forEach(element => element.classList.remove('fake-drag-placeholder-show'))
+    this.document.querySelectorAll('.drag-placeholder').forEach(element => element.classList.remove('drag-placeholder-hidden'))
+  }
+
+  dragMovedDebounce(event) {
+    this.dragMovedSubject.next(event)
+  }
+
 
   onHidden(panelId) {
     const header = document.getElementById(panelId + "-header");
@@ -915,6 +981,9 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       })
     );
+    this.subscriptions.push(this.dragMovedSubject.pipe(debounceTime(100)).pipe(distinctUntilChanged()).subscribe(event => {
+      this.dragMoved(event)
+    }))
   }
   ngOnDestroy(): void {
     this.subscriptions.forEach(sb => sb.unsubscribe());

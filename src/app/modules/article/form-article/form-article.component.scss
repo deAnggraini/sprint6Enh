@@ -175,13 +175,13 @@ $acc-child-margin: 10px;
     &.mat-expansion-panel:last-of-type {
       margin-bottom: 10px;
 
-      &>.mat-expansion-panel-header {
+      & > .mat-expansion-panel-header {
         background-image: url("../../../../assets/media/images/tree-line.png");
         background-position: 0px 50px;
         background-repeat: repeat-y;
       }
 
-      &>.mat-expansion-panel-content {
+      & > .mat-expansion-panel-content {
         background-image: none;
       }
     }
@@ -189,8 +189,12 @@ $acc-child-margin: 10px;
 
   .drag-placeholder {
     background: #efefef;
+    height: 50px;
     border: dotted 2px #999;
-    min-height: 50px;
+    visibility: visible;
+    &.drag-placeholder-hidden {
+      visibility: hidden;
+    }
     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
   }
 
@@ -221,16 +225,7 @@ $acc-child-margin: 10px;
 
 .border-bottom-separator {
   border-bottom: 1px solid #c8c6c4;
-
-  &.hide-border {
-    border-bottom: none;
-  }
-
   height: 10px;
-
-  &.child-many {
-    // height: 1.75rem;
-  }
 }
 
 .button-cancel {
@@ -270,4 +265,17 @@ $acc-child-margin: 10px;
   flex-direction: row;
   overflow: hidden;
   justify-content: space-between;
+}
+
+.fake-drag-placeholder {
+  background: #efefef;
+  border: none;
+  height: 0px;
+  visibility: hidden;
+  &.fake-drag-placeholder-show {
+    height: 50px;
+    border: dotted 2px #999;
+    visibility: visible;
+  }
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }

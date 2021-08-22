@@ -101,7 +101,8 @@
                             </mat-expansion-panel-header>
                             <ng-template matExpansionPanelContent>
                                 <div class="content">
-                                    <div *ngIf="content.isEdit" class="p-3">
+                                    <div *ngIf="content.isEdit" class="p-3 drop-area-accordion"
+                                        [attr.data-id]="content.id">
                                         <div class="form-group">
                                             <label>Judul Topik <span class="text-danger">*</span></label>
                                             <pakar-input-length
@@ -128,11 +129,12 @@
                                                 (click)="accSaveAddEdit(content)">Simpan</button>
                                         </div>
                                     </div>
-                                    <div *ngIf="!content.isEdit && content.topicContent" class="p-3"
-                                        style="padding-bottom: 0px !important;" [innerHTML]="content.topicContent | sanitizeHtml">
+                                    <div *ngIf="!content.isEdit && content.topicContent" class="p-3 drop-area-accordion"
+                                        style="padding-bottom: 0px !important;"
+                                        [innerHTML]="content.topicContent | sanitizeHtml" [attr.data-id]="content.id">
                                     </div>
                                     <input *ngIf="!content.isEdit && !content.topicContent" type="text"
-                                        class="txt-desc-lvl1" readonly
+                                        class="txt-desc-lvl1 drop-area-accordion" readonly [attr.data-id]="content.id"
                                         placeholder="Masukkan kalimat pengantar terkait {{content.title}} disini.">
                                     <ng-container [ngTemplateOutlet]="accordionChild"
                                         [ngTemplateOutletContext]="{ children: content.children, level:2, parents:[{id:content.id, no:content.no}]}">
@@ -232,21 +234,19 @@
 </ng-template>
 
 <ng-template #accordionChild let-children="children" let-level="level" let-parents="parents">
-    <div class="border-bottom-separator" [class.hide-border]="children.length===0"
-        [class.child-many]="children.length>0"></div>
+    <div class="border-bottom-separator"></div>
     <mat-accordion cdkDropList (cdkDropListDropped)="drop($event,level,parents)" [cdkDropListData]="children"
         [id]="dropListsId(parents)" [cdkDropListConnectedTo]="allIdConnected" [togglePosition]="'before'"
         hideToggle="false" multi="true">
-        <div *ngIf="children.length===0">
-            <div class="drop-area"></div>
-        </div>
+        <div [id]="'plc'+dropListsId(parents)" class="fake-drag-placeholder"></div>
         <div *ngIf="children.length>0">
             <ng-container *ngFor="let content of children; let i = index">
                 <div class="input-accordion-separator"></div>
                 <mat-expansion-panel [@.disabled]="true" class="acc-level acc-level-{{level}}" cdkDrag
-                    [cdkDragData]="content" [(expanded)]="content.expanded">
+                    [cdkDragData]="content" (cdkDragMoved)="dragMovedDebounce($event)" [(expanded)]="content.expanded">
                     <div class="drag-placeholder" *cdkDragPlaceholder></div>
-                    <mat-expansion-panel-header cdkDragHandle>
+                    <mat-expansion-panel-header cdkDragHandle [class.drop-area-accordion]="content.expanded"
+                        [attr.data-id]="content.id">
                         <mat-panel-title class="text-ellipsis-1">{{numberingFormat(content)}}. {{content.title}}
                         </mat-panel-title>
                         <ng-container *ngIf="!content.isNew" [ngTemplateOutlet]="rightIcon"
@@ -259,7 +259,7 @@
                     </div>
                     <ng-template matExpansionPanelContent>
                         <div class="content">
-                            <div class="p-3" style="padding-bottom: 0px !important;">
+                            <div class="p-3 drop-area-accordion" [attr.data-id]="content.id">
                                 <div *ngIf="content.isEdit">
                                     <div class="form-group">
                                         <label>Judul Topik <span class="text-danger">*</span></label>
