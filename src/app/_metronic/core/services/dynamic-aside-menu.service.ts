@@ -180,19 +180,12 @@ export class DynamicAsideMenuService {
   // Here you able to load your menu from server/data-base/localStorage
   // Default => from DynamicAsideMenuConfig
   private loadMenu(_server) {
-    // const config = DynamicAsideMenuConfig;  
-    // const items = [].concat(config.items)
-    //   .concat(this.menuByRoles())
-    //   .concat(_server)
-    //   .concat(config.footer)
-    //   .concat({ section: ' ' }) // agar menu tidak terlalu mepet kebawah
-    //   ;
 
     const items = [].concat(_server);
     this.setMenu({ items });
   }
 
-  private setMenu(menuConfig) {
+  public setMenu(menuConfig) {
     this.menuConfigSubject.next(menuConfig);
   }
 
@@ -201,7 +194,6 @@ export class DynamicAsideMenuService {
   }
 
   updateMenu(item: any) {
-    // const found = this.categories.find(d => d.id == item.data.id);
     const found = this.menus.find(d => d.id == item.data.id);
     if (found) {
       found.showLess = !found.showLess;

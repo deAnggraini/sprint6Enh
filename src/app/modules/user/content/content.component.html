@@ -76,15 +76,15 @@
                                         <tr *ngFor="let item of dataForm[key].dataList; let i = index;" ngbDropdown
                                             #dropDown="ngbDropdown" container="body" placement="bottom-right auto"
                                             class="dot3" (openChange)="onOpenChangeDropdown($event, key, i)">
-                                            <td>
+                                            <td (click)="showArticle(item.id)" class="cursor-pointer">
                                                 <span [inlineSVG]="'./assets/media/svg/bca/icon/'+getIcon(item.type)"
                                                     class="svg"></span>
                                             </td>
-                                            <td><a routerLink="/article/list/{{item.id}}">{{item.title}}</a></td>
-                                            <td>{{item.location}}</td>
-                                            <td>{{item.affective_date | date:'dd/MM/yyyy hh:mm a'}}</td>
-                                            <td>{{item.modified_by}}</td>
-                                            <td>{{item.current_by}}</td>
+                                            <td (click)="showArticle(item.id)" class="cursor-pointer">{{item.title}}</td>
+                                            <td (click)="showArticle(item.id)" class="cursor-pointer">{{item.location}}</td>
+                                            <td (click)="showArticle(item.id)" class="cursor-pointer">{{item.affective_date | date:'dd/MM/yyyy hh:mm a'}}</td>
+                                            <td (click)="showArticle(item.id)" class="cursor-pointer">{{item.modified_by}}</td>
+                                            <td (click)="showArticle(item.id)" class="cursor-pointer">{{item.current_by}}</td>
 
                                             <td class="td-dot3" style="width: 45px;" ngbDropdownToggle>
                                                 <div class="cursor-pointer">

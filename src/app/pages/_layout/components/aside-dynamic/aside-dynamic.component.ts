@@ -5,6 +5,7 @@ import { filter } from 'rxjs/operators';
 import { LayoutService, DynamicAsideMenuService } from '../../../../_metronic/core';
 import { ThemeService } from 'src/app/modules/_services/theme.service';
 import { environment } from 'src/environments/environment';
+import { ArticleService, SearchArticleParam } from 'src/app/modules/_services/article.service';
 
 @Component({
   selector: 'app-aside-dynamic',
@@ -37,7 +38,8 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
     private router: Router,
     private menu: DynamicAsideMenuService,
     private cdr: ChangeDetectorRef,
-    private theme: ThemeService) { }
+    private theme: ThemeService,
+    private article: ArticleService) { }
 
   ngOnInit(): void {
     // load view settings
@@ -113,11 +115,6 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(sb => sb.unsubscribe());
   }
 
-  // asideShow() {
-  //   this.showAside = !this.showAside;
-  //   console.log('showAside', this.showAside);
-  // }
-
   showAside(): boolean {
     if (this.kt_aside_toggle) {
       const hasActiveClass = this.kt_aside_toggle.nativeElement.classList.contains('active');
@@ -127,19 +124,31 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
     // const hasActiveClass = document.getElementById('kt_aside_toggle').classList.contains('active');
   }
 
-  // onRightClick(event) {
-  //   console.log("*** event aside RIGHT >> ", event);
-  //   // event.preventDefault();
-  //   event.stopPropagation();
-  //   return false;
-  // }
-
   externalLink(uri): boolean {
     if (uri.includes("http")) {
       return true;
     } else {
       return false;
     }
+  }
+
+  checkArticle(e, item: any) {
+    if (!item.submenu) item.submenu = [];
+    const params: SearchArticleParam = {
+      keyword: '', page: 1, limit: 10, sorting: { column: 'approved_date', sort: 'asc' },
+      type: 'article', state: 'PUBLISHED', structureId: item.id, isLatest: false
+    };
+    this.subscriptions.push(this.article.search(params).subscribe(resp => {
+      resp.list.forEach(d => {
+        const _item = {
+          id: d.id,
+          title: d.title,
+          level: 100,
+        };
+        item.submenu.push(_item);
+      });
+      this.cdr.detectChanges();
+    }));
   }
 
 }

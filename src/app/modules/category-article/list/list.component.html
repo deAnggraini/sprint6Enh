@@ -24,12 +24,25 @@ height: 184px;
                             <span class="p-3">{{menu.desc}}</span>
                             <ul class="nav flex-column">
                                 <li class="nav-item" *ngFor="let child of menu.menus | slice:0:2">
-                                    <a class="nav-link px-3 pb-3 pt-0" routerLink="/struktur/list/{{child.id}}">{{child.title}}</a>
+                                    <a class="nav-link px-3 pb-3 pt-0"
+                                        routerLink="/struktur/list/{{child.id}}">{{child.title}}</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link px-3 pb-3 pt-0" routerLink="/struktur/list/{{menu.id}}">Lihat Semua</a>
+                                    <a class="nav-link px-3 pb-3 pt-0" routerLink="/struktur/list/{{menu.id}}">Lihat
+                                        Semua</a>
                                 </li>
                             </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-6 col-lg-3 col-xl-3 col-xxl-3 mb-5" *ngFor="let menu of listArticle">
+                    <div class="d-flex flex-column">
+                        <span class="pakar-text-header-18 py-3">{{menu.title}}</span>
+                        <div class="card card-custom">
+                            <div class="image-item" [ngStyle]="{'background-image': image_uri(menu.image)}"></div>
+                            <span class="te-3 px-3" [innerHTML]="menu.desc | maxLength:300"></span>
+                            <a class="nav-link px-3 pb-3 pt-0" routerLink="/article/list/{{menu.id}}">Baca
+                                Selengkapnya></a>
                         </div>
                     </div>
                 </div>

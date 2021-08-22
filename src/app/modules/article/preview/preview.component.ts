@@ -10,7 +10,8 @@ import { StrukturService } from '../../_services/struktur.service';
 import { ArticleDTO, ArticleContentDTO, ArticleParentDTO } from '../../_model/article.dto';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ConfirmService } from 'src/app/utils/_services/confirm.service';
-import { NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { PlatformLocation } from '@angular/common';
 
 @Component({
   selector: 'pakar-article-preview',
@@ -87,12 +88,21 @@ export class PreviewComponent implements OnInit, AfterViewInit {
     private changeDetectorRef: ChangeDetectorRef,
     private confirm: ConfirmService,
     private configModel: NgbModalConfig,
-    private _sanitizer: DomSanitizer
+    private _sanitizer: DomSanitizer,
+    private modalService: NgbModal,
+    private platformLocation: PlatformLocation,
   ) {
-
     this.configModel.backdrop = 'static';
     this.configModel.keyboard = false;
     this.user$ = this.auth.currentUserSubject.asObservable();
+
+    history.pushState(null, null, window.location.href);
+    this.platformLocation.onPopState(() => {
+      if (this.modalService.hasOpenModals()) {
+        history.pushState(null, null, window.location.href);
+        this.modalService.dismissAll();
+      }
+    });
   }
 
   onCancel(e) {
@@ -119,12 +129,11 @@ export class PreviewComponent implements OnInit, AfterViewInit {
     }
     return false;
   }
-  onEdit(contentId: number = 0) {
+  onEdit(e, contentId: number = 0) {
     const item = this.articleDTO;
     this.articleService.checkArticleEditing(item.id).subscribe((resp: UserModel[]) => {
-      let editing: UserModel[] = [];
       let editingMsg: string = '';
-      if (resp) {
+      if (resp && resp.length) {
         editingMsg = '<br><br>';
         editingMsg += `Saat ini artikel sedang di edit juga oleh :
             <ul>`;
@@ -141,10 +150,12 @@ export class PreviewComponent implements OnInit, AfterViewInit {
         btnCancelText: 'Batal'
       }).then((confirmed) => {
         if (confirmed === true) {
-          this.router.navigate([`/article/form/${item.id}`, { isEdit: true, contentId }]);
+          console.log(`/article/form/${item.id}`);
+          this.router.navigate([`/article/form/${item.id}`, { isEdit: true, contentId }], {fragment:`acc-id-${contentId}`});
         }
       });
     });
+    e.stopPropagation();
     return false;
   }
 
@@ -185,10 +196,11 @@ export class PreviewComponent implements OnInit, AfterViewInit {
       }
     } else {
       this.route.params.subscribe(params => {
-        console.log('loadData', { params });
+        // console.log('loadData', { params });
         if (params.id) {
           this.articleService.getById(params.id, false).subscribe(resp => {
             this.setArticle(resp);
+            this.changeDetectorRef.detectChanges();
           })
         }
       });
@@ -284,8 +296,10 @@ export class PreviewComponent implements OnInit, AfterViewInit {
     if (this.showVideo && videoUrl) {
       this.videoUrl = this._sanitizer.bypassSecurityTrustResourceUrl(videoUrl);
     } else if (videoUrl) {
+      this.showVideo = false;
       this.noVideoPreview = this.backend_img + '/articles/poster-myvideo.png';
     } else {
+      this.showVideo = false;
       this.noVideoPreview = this.backend_img + '/articles/poster-myvideo.png';
     }
   }

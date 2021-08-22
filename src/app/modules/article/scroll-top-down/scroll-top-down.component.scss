@@ -1,0 +1,12 @@
+:host ::ng-deep .scroll-top-down {
+  position: fixed;
+  bottom: 10px;
+//   right: 3.75rem;
+  right: 5px;
+
+  .btn.disabled {
+      cursor: not-allowed;
+      background-color: #E1E0FF !important;
+      border-color: #E1E0FF;
+  }
+}

@@ -1,5 +1,4 @@
-import { Injectable, ComponentRef, ComponentFactoryResolver, ApplicationRef, Injector, EmbeddedViewRef } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Injectable } from '@angular/core';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmComponent } from '../_components/confirm/confirm.component';
 

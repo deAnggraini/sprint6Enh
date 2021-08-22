@@ -3,20 +3,20 @@ import * as CustomEditor from './../../../ckeditor/build/ckeditor';
 import { ArticleService } from '../../_services/article.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ChangeEvent, CKEditorComponent } from '@ckeditor/ckeditor5-angular';
-import { CdkDragDrop, CdkDragEnter, CdkDragExit, CdkDragMove, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { BehaviorSubject, Subscription, of, Observable, Subject } from 'rxjs';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { BehaviorSubject, Subscription, of, Subject } from 'rxjs';
 import { Option } from 'src/app/utils/_model/option';
 import { SkReferenceService } from '../../_services/sk-reference.service';
 import { AuthService, UserModel } from '../../auth';
 import { ArticleDTO, ArticleContentDTO, ArticleParentDTO } from '../../_model/article.dto';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { StrukturService } from '../../_services/struktur.service';
-import { catchError, debounceTime, distinctUntilChanged, elementAt, map, tap } from 'rxjs/operators';
+import { catchError, debounceTime, distinctUntilChanged, map, first } from 'rxjs/operators';
 import { ConfirmService } from 'src/app/utils/_services/confirm.service';
-import { ToastService } from 'src/app/utils/_services/toast.service';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { UserService } from '../../_services/user.service';
 import { DOCUMENT } from '@angular/common';
+import { ViewportScroller } from '@angular/common';
 
 const TOOL_TIPS = [
   'Berisi aturan/kaidah/ketetapan/syarat/kriteria atas produk/aplikasi yang harus dipahami pembaca sebelum melakukan prosedur atas produk/aplikasi tersebut; dapat dituangkan dalam bentuk kalimat ataupun tabel.',
@@ -42,11 +42,6 @@ const defaultValue: ArticleDTO = {
   suggestions: [],
   isHasSend: false,
 }
-
-// function alphaNumericValidator(control: FormControl): ValidationErrors | null {
-//   const ALPHA_NUMERIC_REGEX = /^(?:[a-zA-Z0-9\s\-\/]+)?$/;
-//   return ALPHA_NUMERIC_REGEX.test(control.value) ? null : { alphaNumericError: 'Hanya angka dan huruf yang diperbolehkan' };
-// }
 
 @Component({
   selector: 'app-form-article',
@@ -216,6 +211,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   relatedArticle$: BehaviorSubject<Option[]> = new BehaviorSubject([]);
   suggestionArticle$: BehaviorSubject<Option[]> = new BehaviorSubject([]);
   locationOptions: BehaviorSubject<Option[]> = new BehaviorSubject([]);
+  listUserEditing: UserModel[] = [];
 
   // preview property
   isPreview: boolean = false;
@@ -238,7 +234,9 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   selectedAccordion: ArticleContentDTO;
   tooltips = TOOL_TIPS;
   isAccEdit: boolean = false;
-  // accForm: FormGroup;
+  editContentId: number = 0;
+  editContentParent: number[] = [];
+  openFragment: string = '';
 
   //cdk drag and drop
   allIds: Array<string> = []
@@ -259,11 +257,11 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     private fb: FormBuilder,
     private struktur: StrukturService,
     private confirm: ConfirmService,
-    private toast: ToastService,
     private modalService: NgbModal,
     private configModel: NgbModalConfig,
     private userService: UserService,
-    @Inject(DOCUMENT) private document: Document
+    @Inject(DOCUMENT) private document: Document,
+    private viewportScroller: ViewportScroller
   ) {
     this.configModel.backdrop = 'static';
     this.configModel.keyboard = false;
@@ -274,13 +272,9 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     let result: boolean = true;
     contents.forEach(d => {
       if (!result) return;
-      // if (d.level > 1) {
       if (!d.title) result = false;
       if (!d.topicTitle) result = false;
       if (!d.topicContent) result = false;
-      // } else {
-      // if (!d.intro) result = false;
-      // }
       if (d.children && d.children.length && result)
         result = this.isContentsPass(d.children);
     });
@@ -329,7 +323,6 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // article action button
   onSave(e) {
-    console.log(this.dataForm.value);
     this.confirm.open({
       title: `Simpan`,
       message: `<p>Apakah Kamu yakin ingin menyimpan halaman ini? Halaman akan tersimpan kedalam draft Kamu`,
@@ -366,9 +359,16 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
         this.subscriptions.push(
           this.article.cancelArticle(this.dataForm.value.id).subscribe(resp => {
             if (resp) {
-              this.article.formParam = null;
-              this.article.formData = null;
-              this.router.navigate(['/homepage'], { replaceUrl: true });
+              if (this.isEdit) {
+                let currentUrl = this.router.url;
+                this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+                  this.router.navigate([currentUrl]);
+                });
+              } else {
+                this.article.formParam = null;
+                this.article.formData = null;
+                this.router.navigate(['/homepage'], { replaceUrl: true });
+              }
             }
           })
         );
@@ -410,6 +410,9 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     this.previewAlert = alert;
     this.previewAlertMessage = msg;
     this.isPreview = show;
+    return false;
+  }
+  onVersionHistory(e) {
     return false;
   }
 
@@ -505,6 +508,14 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     this.dataForm.get('contents').setValue(_contents);
     this.removeLog(data);
     this.cdr.detectChanges();
+  }
+
+  toggleTooltip(tooltip, user, i, show: boolean) {
+    if (!show) {
+      tooltip.close();
+    } else {
+      tooltip.open({ user, i });
+    }
   }
 
   checkUniq(value) {
@@ -687,6 +698,20 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     this.cdr.detectChanges();
   }
 
+  private populateAliasUser(users: UserModel[]): UserModel[] {
+    if (users && users.length) {
+      users.forEach(d => {
+        d.alias = d.firstname[0];
+        if (d.lastname) d.alias += d.lastname[0];
+      });
+    }
+    return users;
+  }
+  private getUserEditing(id: number) {
+    this.subscriptions.push(this.article.checkArticleEditing(id).subscribe(resp => {
+      if (resp) { this.listUserEditing = this.populateAliasUser(resp); this.cdr.detectChanges() }
+    }))
+  }
   private getArticle(id: number, isEdit: boolean) {
     this.subscriptions.push(
       this.article.getById(id, isEdit).subscribe((resp: ArticleDTO) => {
@@ -700,6 +725,13 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
         if (!d.expanded) d.expanded = false;
         if (!d.isEdit) d.isEdit = false;
         d.listParent = listParent;
+        if (this.editContentId) { // check apakah accordion di edit dari reader view
+          d.expanded = this.editContentParent.find(elm => elm == d.id) ? true : false;
+          if (this.editContentId == d.id) {
+            d.expanded = true;
+            d.isEdit = true;
+          }
+        }
         if (d.level == 1) {
           d.no = '';
           d.sort = i + 1;
@@ -723,9 +755,30 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
       });
     }
   }
+  private getParentsId(id: number, dataList: ArticleContentDTO[], parents: number[]): ArticleContentDTO {
+    let found = null;
+    if (dataList && dataList.length) {
+      found = dataList.find(d => d.id == id);
+      if (found) {
+        found.parentsId = parents
+        return found;
+      }
+      dataList.forEach(d => {
+        if (found) return;
+        found = this.getParentsId(id, d.children, parents.concat(d.id));
+      })
+    }
+    return found;
+  }
+  private setUserEditing(id: number) {
+    this.article.checkArticleEditing(id).subscribe(resp => {
+
+    });
+  }
   private setArticle(article: ArticleDTO) {
     if (article) {
       console.log('setArticle', { article });
+      this.getUserEditing(article.id);
       const { structureParentList, structureId } = article;
       article.structureOption = {
         id: `${structureId}`,
@@ -734,6 +787,13 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
       };
 
       // set expanded default value
+      if (this.editContentId) {
+        const _contents = JSON.parse(JSON.stringify(article.contents));
+        const _found = this.getParentsId(this.editContentId, _contents, []);
+        if (_found) {
+          this.editContentParent = _found.parentsId;
+        }
+      }
       this.recalculateChildren(article.contents, []);
 
       // parsing referances to options
@@ -761,6 +821,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
       }
 
       this.isEdit = !article.isNew;
+      if (this.isEdit) this.setUserEditing(article.id);
       this.dataForm.reset(article);
       this.addLogs(article.contents);
       this.cdr.detectChanges();
@@ -894,7 +955,6 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
   onSelectSuggestionArticle(arg: { item: any, keyword: string }) {
-    // console.log('onSelectSuggestionArticle', { arg });
     const { keyword, item } = arg;
     const exclude = [this.dataForm.value.id].concat(this.dataForm.value.suggestions.map(d => d.id)).concat([item.id]);
     const structureId = this.dataForm.value.structureId;
@@ -905,9 +965,29 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
+  scroll(id) {
+    if (!id) return;
+    const elmnt = document.getElementById(id);
+    if (elmnt) {
+      setTimeout(() => {
+        elmnt.scrollIntoView({ behavior: "auto", block: "start", inline: "start" });
+        const top = window.scrollY;
+        setTimeout(() => {
+          window.scrollTo(0, top - 110);
+        }, 100);
+      }, 10);
+    } else {
+      setTimeout(() => {
+        this.scroll(this.openFragment);
+      }, 100);
+    }
+  }
   // CKEDITOR5 function
   public onReady(editor, value: string = '') {
     if (value) editor.setData(value); // cara paksa isi ckeditor
+    this.finishRender = true;
+  }
+  public onReadyDesc(editor) {
     this.finishRender = true;
   }
   public onChange({ editor }: ChangeEvent) {
@@ -924,63 +1004,33 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
       image: [defaultValue.image],
       video: [defaultValue.video],
       contents: [defaultValue.contents],
-      // contents: this.fb.array([
-      // this.fb.group({
-      //   articleId: [0, Validators.compose([Validators.required])],
-      //   id: [0, Validators.compose([Validators.required])],
-      //   title: ['', Validators.compose([Validators.required])],
-      //   topicTitle: ['', Validators.compose([Validators.required])],
-      //   topicContent: ['', Validators.compose([Validators.required])],
-      //   level: [1, Validators.compose([Validators.required])],
-      //   sort: [1, Validators.compose([Validators.required])],
-      // })
-      // ]),
       references: [defaultValue.references],
       related: [defaultValue.related],
       suggestions: [defaultValue.suggestions],
       isEmptyTemplate: [defaultValue.isEmptyTemplate, Validators.compose([Validators.required])],
     });
-    // this.controls = <FormArray>this.dataForm.controls['contents'];
-    // this.accForm = this.fb.group({
-    //   articleId: [0, Validators.compose([Validators.required])],
-    //   id: [0, Validators.compose([Validators.required])],
-    //   title: ['', Validators.compose([Validators.required])],
-    //   level: [1, Validators.compose([Validators.required])],
-    //   sort: [1, Validators.compose([Validators.required])],
-    // });
   }
   ngOnInit(): void {
     this.initForm();
-
-    // if (this.article.formData == null) {
-    this.subscriptions.push(
-      this.route.params.subscribe(params => {
-        const isEdit: boolean = params.isEdit;
-        if (params['id']) {
-          this.getArticle(parseInt(params['id']), isEdit);
-        } else {
-          this.goBackToAdd('Silahkan tambah artikel terlebih dahulu');
-        }
-      })
-    );
-    // } else {
-    //   this.setArticle(this.article.formData);
-    // }
-
-    this.subscriptions.push(
-      this.auth.currentUserSubject.subscribe((resp: UserModel) => {
-        this.user = resp;
-      })
-    );
-    this.subscriptions.push(
-      this.struktur.categories$.subscribe(resp => {
-        if (resp) {
-          const locationOptions = this.struktur.parseToOptions(resp);
-          this.locationOptions.next(locationOptions);
-          this.cdr.detectChanges();
-        }
-      })
-    );
+    this.subscriptions.push(this.route.params.subscribe(params => {
+      const isEdit: boolean = params.isEdit;
+      if (params.contentId) { this.editContentId = parseInt(params.contentId); }
+      if (params['id']) {
+        this.getArticle(parseInt(params['id']), isEdit);
+      } else {
+        this.goBackToAdd('Silahkan tambah artikel terlebih dahulu');
+      }
+    }));
+    this.subscriptions.push(this.auth.currentUserSubject.subscribe((resp: UserModel) => {
+      this.user = resp;
+    }));
+    this.subscriptions.push(this.struktur.categories$.subscribe(resp => {
+      if (resp) {
+        const locationOptions = this.struktur.parseToOptions(resp);
+        this.locationOptions.next(locationOptions);
+        this.cdr.detectChanges();
+      }
+    }));
     this.subscriptions.push(this.dragMovedSubject.pipe(debounceTime(100)).pipe(distinctUntilChanged()).subscribe(event => {
       this.dragMoved(event)
     }))
@@ -990,6 +1040,14 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   ngAfterViewInit(): void {
     this.finishRender = true;
+    this.route.fragment
+      .pipe(first())
+      .subscribe((fragment) => {
+        if (fragment) {
+          this.openFragment = fragment;
+          this.scroll(this.openFragment);
+        }
+      });
   }
 
 }

@@ -4,7 +4,18 @@ import { environment } from 'src/environments/environment';
 import { of, BehaviorSubject, Observable } from 'rxjs';
 import * as moment from 'moment';
 import { ArticleDTO, ArticleContentDTO } from '../_model/article.dto';
-import { jsonToFormData, toFormData } from './../../utils/_helper/parser';
+import { toFormData } from './../../utils/_helper/parser';
+
+export interface SearchArticleParam {
+  keyword: string,
+  page: number,
+  limit: number,
+  sorting: { column: string, sort: string },
+  type: string,
+  state: string,
+  structureId?: number,
+  isLatest?: boolean
+}
 
 @Injectable({
   providedIn: 'root'
@@ -69,11 +80,7 @@ export class ArticleService {
   }
 
   // search all data [article|faq|pdf]
-  search(params: {
-    keyword: string, page: number, limit: number, sort: { column: string, sort: string },
-    type: string, state: string
-  } = null): Observable<any> {
-    console.log('search service', { params });
+  search(params: SearchArticleParam = null): Observable<any> {
     if (params) {
       return this.apiService.post(`${this._base_url}/searchArticle`, params);
     } else {
@@ -108,8 +115,8 @@ export class ArticleService {
     return this.apiService.post(`${this._base_url}/checkUnique`, { title }, this.apiService.getHeaders(true), false);
   }
 
-  getById(id: number, isEdit: boolean) {
-    const params = { id, isEdit: isEdit ? true : false }; // convert isEdit to boolean, js mabok
+  getById(id: any, isEdit: boolean) {
+    const params = { id: parseInt(id), isEdit: isEdit ? true : false }; // convert isEdit to boolean, js mabok
     return this.apiService.post(`${this._base_url}/getArticle`, params);
   }
 
@@ -200,7 +207,7 @@ export class ArticleService {
     return this.apiService.post(`${this._base_url}/saveArticle`, formData, this.apiService.getHeaders(false));
   }
   checkArticleEditing(id: number) {
-    return this.apiService.post(`${this._base_url}/checkArticleEditing`, { id });
+    return this.apiService.post(`${this._base_url}/getArticleEditing`, { id });
   }
 
 }
