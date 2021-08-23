@@ -826,12 +826,23 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
       if (this.isEdit) {
         this.setUserEditing(article.id);
         this.isCompare = true;
+
       }
+
       this.originArticle = JSON.parse(JSON.stringify(article));
       this.dataForm.reset(article);
+      if (this.isEdit == false && !article.isEmptyTemplate) {
+        this.subscriptions.push(this.dataForm.get('title').valueChanges.subscribe(val => {
+          const contents: ArticleContentDTO[] = this.dataForm.get('contents').value;
+          // TODO : sesuaikan dengan template yg sudah terpilih
+          contents[0].title = contents[0].topicTitle = `Ketentuan ${val}`;
+          contents[1].title = contents[1].topicTitle = `Prosedur ${val}`;
+          contents[2].title = contents[2].topicTitle = `Formulir ${val}`;
+        }));
+      }
+
       this.addLogs(article.contents);
       this.cdr.detectChanges();
-
     } else {
       this.goBackToAdd('Data article tidak valid');
     }

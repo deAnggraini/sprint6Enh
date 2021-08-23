@@ -98,7 +98,7 @@
                             *ngFor="let content of dataForm.get('contents').value; let i=index;"
                             class="acc-level acc-level-1" [(expanded)]="content.expanded">
                             <mat-expansion-panel-header [@.disabled]="true">
-                                <mat-panel-title [id]="'acc-title-'+content.id">
+                                <mat-panel-title class="d-flex flex-row fs16pt" [id]="'acc-title-'+content.id">
                                     <span>{{content.title}}</span>
                                     <span [inlineSVG]="'./assets/media/svg/bca/icon/info.svg'" cacheSVG="true"
                                         class="svg-icon svg-tooltip mx-2" placement="right" [ngbTooltip]="tooltips[i]"
@@ -139,7 +139,7 @@
                                                 (click)="accSaveAddEdit(content)">Simpan</button>
                                         </div>
                                     </div>
-                                    <div *ngIf="!content.isEdit && content.topicContent" class="p-3 drop-area-accordion"
+                                    <div *ngIf="!content.isEdit && content.topicContent" class="fs11pt p-3 drop-area-accordion"
                                         style="padding-bottom: 0px !important;"
                                         [innerHTML]="content.topicContent | sanitizeHtml" [attr.data-id]="content.id">
                                     </div>
@@ -254,7 +254,9 @@
                     <div class="drag-placeholder" *cdkDragPlaceholder></div>
                     <mat-expansion-panel-header cdkDragHandle [class.drop-area-accordion]="content.expanded"
                         [attr.data-id]="content.id">
-                        <mat-panel-title class="text-ellipsis-1">{{numberingFormat(content)}}. {{content.title}}
+                        <mat-panel-title class="d-flex flex-row fs16pt" [id]="'acc-title-'+content.id">
+                            <span class="mr-2">{{numberingFormat(content)}}.</span>
+                            <span [innerHTML]="content.title"></span>
                         </mat-panel-title>
                         <ng-container *ngIf="!content.isNew" [ngTemplateOutlet]="rightIcon"
                             [ngTemplateOutletContext]="{ data: content}">
@@ -291,7 +293,7 @@
                                             (click)="accSaveAddEdit(content)">Simpan</button>
                                     </div>
                                 </div>
-                                <div *ngIf="!content.isEdit"
+                                <div class="fs11pt" *ngIf="!content.isEdit"
                                     [innerHTML]="(content.topicContent || '&nbsp;') | sanitizeHtml"></div>
                             </div>
                             <ng-container [ngTemplateOutlet]="accordionChild"

@@ -54,9 +54,12 @@ $acc-child-margin: 10px;
   box-shadow: none;
 
   .mat-expansion-panel-header {
-    padding: 0.5rem 1rem;
-    height: 35px;
+    padding-left: 1rem;
+    padding-right: 0;
+    min-height: 35px;
+    height: unset;
     border-color: #c8c6c4;
+    font-family: "Segoe UI", "Open Sans";
 
     &.mat-expanded {
       background-color: #f3f2f1 !important;
@@ -115,7 +118,7 @@ $acc-child-margin: 10px;
       padding: 0;
       padding-left: 30px;
       border-color: transparent;
-      height: 37px;
+      min-height: 37px;
       align-items: start;
       background-image: url("../../../../assets/media/images/tree-line.png");
       background-position: 0px -25px;
@@ -128,7 +131,7 @@ $acc-child-margin: 10px;
 
         .mat-expansion-panel-header-title {
           align-items: center;
-          height: 35px;
+          min-height: 35px;
         }
       }
 
