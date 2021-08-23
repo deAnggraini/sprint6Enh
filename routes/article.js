@@ -392,7 +392,7 @@ router.post('/generateArticle', (req, res) => {
 router.post('/getArticle', (req, res) => {
     const { body } = req;
     console.log({ body });
-    res.send({ error: false, msg: "", data: sample_non_basic });
+    res.send({ error: false, msg: "", data: sample_basic });
 });
 
 router.get('/getContentId', (req, res) => {
@@ -534,6 +534,13 @@ router.post('/getArticleEditing', (req, res) => {
             "fullname": "Gerhana Purnama",
             "firstname": "Gerhana",
             "lastname": "Purnama",
+        },
+        {
+            "username": "nanda",
+            "email": "aflahahlam@gmail.com",
+            "fullname": "I Putu Gede Ayu Pramudya Sukma Ningrat",
+            "firstname": "I",
+            "lastname": "",
         }
     ]
     res.send({ status: { code: '00', message: 'asd' }, data });
