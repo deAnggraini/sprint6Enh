@@ -121,6 +121,11 @@ public class ArticleServiceImpl implements ArticleService {
     @Value("${upload.path.base}")
     private String basePath;
 
+    /**
+     * 
+     * @param title
+     * @return
+     */
     @Override
     @Transactional
     public Boolean existArticle(String title) {
