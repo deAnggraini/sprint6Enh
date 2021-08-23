@@ -18,7 +18,8 @@ const sample_empty = {
     related: [],  // {id, title}
     suggestions: [], // {id, title}
     isEmptyTemplate: true,
-    isNew: true
+    isNew: true,
+    isPublished: false,
 };
 
 const sample_basic = {
@@ -38,7 +39,7 @@ const sample_basic = {
         {
             id: 1,
             title: 'Ketentuan Tahapan',
-            intro: '',
+            intro: '<p><b>Test bold</b></p>',
             parent: 0,
             level: 1,
             sort: 1,
@@ -47,7 +48,7 @@ const sample_basic = {
         {
             id: 2,
             title: 'Prosedur Tahapan',
-            intro: '',
+            intro: '<p><i>Test Italic</i></p>',
             parent: 0,
             level: 1,
             sort: 2,
@@ -56,7 +57,7 @@ const sample_basic = {
         {
             id: 3,
             title: 'Formulir Tahapan',
-            intro: '',
+            intro: '<p><u>Test Strike</u></p>',
             parent: 0,
             level: 1,
             sort: 2,
@@ -65,24 +66,26 @@ const sample_basic = {
     ],
     references: [
         { id: 2, title: "Perihal Ketentuan Tahapan 1", no: "025/SKSE/TL/2020" }
-    ], // {id, title, no},
+    ],
     related: [
         { id: 2, title: "Perihal Ketentuan Tahapan 1", no: "025/SKSE/TL/2020" }
-    ],  // {id, title}
+    ],
     suggestions: [
         { id: 2, title: "Perihal Ketentuan Tahapan 1", no: "025/SKSE/TL/2020" }
-    ], // {id, title}
+    ],
     isEmptyTemplate: false,
-    isNew: true
+    isNew: true,
+    isPublished: false,
 };
 
 const sample_non_basic = {
     id: 101,
     title: 'Tahapan 2',
     structureId: 2,
-    desc: '',
-    image: '',
-    video: '',
+    desc: '<p>H Q </p>',
+    image: '/articles/tapres.jpeg',
+    video: 'https://www.youtube.com/embed/oDZ-mIg2-Dk',
+    // video: null,
     created_at: new Date(),
     created_by: '',
     location: 2,
@@ -95,6 +98,7 @@ const sample_non_basic = {
             id: 1,
             title: 'Ketentuan Tahapan 2',
             intro: '',
+            topicContent: '<p><strong>bold</strong></p><p><i>miring</i></p>',
             parent: 0,
             level: 1,
             sort: 1,
@@ -102,8 +106,8 @@ const sample_non_basic = {
                 {
                     id: 3,
                     title: 'Rekening Tahapan 2',
-                    topicTitle: '',
-                    topicContent: '',
+                    topicTitle: 'Rekening Tahapan 2',
+                    topicContent: '<p>test isi</>',
                     parent: 1,
                     level: 2,
                     sort: 1,
@@ -353,11 +357,18 @@ const sample_non_basic = {
             children: [],
         }
     ],
-    references: [],
-    related: [],
-    suggestions: [],
+    references: [
+        { id: 20, title: "Perihal Ketentuan Tahapan 1", no: "025/SKSE/TL/2020" }
+    ],
+    related: [
+        { id: 20, title: "Perihal Ketentuan Tahapan 1", no: "025/SKSE/TL/2020" }
+    ],
+    suggestions: [
+        { id: 20, title: "Perihal Ketentuan Tahapan 1", no: "025/SKSE/TL/2020" }
+    ],
     isEmptyTemplate: false,
-    isNew: false
+    isNew: false,
+    isPublished: false,
 };
 
 const articles = [
@@ -382,7 +393,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        image: 'tahapan-berjangka.JPG',
+        image: '/articles/tahapan-berjangka.JPG',
         attactments: [
             {
                 file: '',
@@ -419,7 +430,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        image: 'time-loan.jpeg',
+        image: '/articles/time-loan.jpeg',
         attactments: [
             {
                 file: '',
@@ -456,7 +467,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        image: 'giro.jpeg',
+        image: '/articles/giro.jpeg',
         attactments: [
             {
                 file: '',
@@ -493,7 +504,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        image: 'kredit-lokal-sme.jpeg',
+        image: '/articles/kredit-lokal-sme.jpeg',
         attactments: [
             {
                 file: '',
@@ -530,7 +541,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        image: 'tahapan.jpeg',
+        image: '/articles/tahapan.jpeg',
         attactments: [
             {
                 file: '',
@@ -564,7 +575,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        image: 'welma.png',
+        image: '/articles/welma.png',
         attactments: [
             {
                 file: '',
@@ -599,7 +610,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        image: 'deposito.jpeg',
+        image: '/articles/deposito.jpeg',
         attactments: [
             {
                 file: '',
@@ -633,7 +644,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        image: 'simpanan-pelajar.jpeg',
+        image: '/articles/simpanan-pelajar.jpeg',
         attactments: [
             {
                 file: '',
@@ -669,7 +680,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        image: 'tahapan-xpresi.jpeg',
+        image: '/articles/tahapan-xpresi.jpeg',
         attactments: [
             {
                 file: '',
@@ -705,7 +716,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        image: 'tabunganku.jpeg',
+        image: '/articles/tabunganku.jpeg',
         attactments: [
             {
                 file: '',
@@ -740,7 +751,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        image: 'tapres.jpeg',
+        image: '/articles/tapres.jpeg',
         attactments: [
             {
                 file: '',
@@ -775,7 +786,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        image: 'duitt.jpeg',
+        image: '/articles/duitt.jpeg',
         attactments: [
             {
                 file: '',
@@ -810,7 +821,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        image: 'deposito.jpeg',
+        image: '/articles/deposito.jpeg',
         attactments: [
             {
                 file: '',
@@ -845,7 +856,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        image: 'kredit-lokal-sme.jpeg',
+        image: '/articles/kredit-lokal-sme.jpeg',
         attactments: [
             {
                 file: '',
@@ -880,7 +891,7 @@ const articles = [
         updating_date: null,
         update_by: '',
         update_date: null,
-        image: 'duitt.jpeg',
+        image: '/articles/duitt.jpeg',
         attactments: [
             {
                 file: '',
