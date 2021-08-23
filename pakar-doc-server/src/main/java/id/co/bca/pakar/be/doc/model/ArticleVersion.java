@@ -211,5 +211,5 @@ public class ArticleVersion extends EntityBase {
     public void setApprovedDate(Date approvedDate) {
         this.approvedDate = approvedDate;
     }
-    
+
 }

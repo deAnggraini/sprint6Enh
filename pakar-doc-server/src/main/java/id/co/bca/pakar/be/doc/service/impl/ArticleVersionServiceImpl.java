@@ -23,6 +23,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * 
+ */
 @Service
 public class ArticleVersionServiceImpl implements ArticleVersionService {
     private Logger logger = LoggerFactory.getLogger(getClass());
