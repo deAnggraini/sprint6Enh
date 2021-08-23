@@ -144,8 +144,8 @@ export class PreviewComponent implements OnInit, AfterViewInit {
       }
 
       this.confirm.open({
-        title: `Ubah Artikel`,
-        message: `<p>Apakah Kamu yakin ingin mengubah artikel “<b>${item.title}</b>”?${editingMsg}`,
+        title: `Ubah ${contentId == 0 ? "Artikel" : "Topik"}`,
+        message: `<p>Apakah Kamu yakin ingin mengubah ${contentId == 0 ? "artikel" : "topik"} “<b>${item.title}</b>”?${editingMsg}`,
         btnOkText: 'Ubah',
         btnCancelText: 'Batal'
       }).then((confirmed) => {
