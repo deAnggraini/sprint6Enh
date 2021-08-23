@@ -543,17 +543,15 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   drop(event: CdkDragDrop<any[]>, levelParent: number, parent) {
-    const level = event.container.data.length === 0 ? levelParent : event.container.data[0].level
-    console.log(level, this.getMaxLevel(event.item.data.children))
-    console.log({ event });
     this.clearFakePlaceholder()
     if (this.fakeDragAndDropStatus) {
-      this.addArray(this.dataForm.controls.contents.value, this.idAccordionSelected, event.item.data, level, parent)
+      this.addArray(this.dataForm.controls.contents.value, this.idAccordionSelected, event.item.data, parent)
       transferArrayItem(event.previousContainer.data, [], event.previousIndex, 0)
       this.recalculateChildren(event.previousContainer.data, event.previousContainer.data.length > 0 ? event.previousContainer.data[0].listParent : [])
       this.fakeDragAndDropStatus = false
       return
     }
+    const level = event.container.data.length === 0 ? levelParent : event.container.data[0].level
     if (level + this.getMaxLevel(event.item.data.children) > 5) {
       return
     }
@@ -576,14 +574,12 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
 
   dragMoved(event) {
     let e = this.document.elementFromPoint(event.pointerPosition.x, event.pointerPosition.y);
-    console.log('e', e)
     if (!e) {
       this.clearFakePlaceholder()
       this.fakeDragAndDropStatus = false
       return
     }
     let container = e.classList.contains("drop-area-accordion") ? e : e.closest(".drop-area-accordion");
-    console.log('container', container)
     if (!container) {
       this.clearFakePlaceholder()
       this.fakeDragAndDropStatus = false
@@ -601,17 +597,21 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     this.idAccordionSelected = id
   }
 
-  addArray(arr, id, value, level, parent) {
+  addArray(arr, id, value, parent) {
     arr.forEach(element => {
       if (element.id.toString() === id) {
+        let listParent = [...element.listParent]
+        let level = element.level + 1
+        if (level > 2) {
+          listParent.push({ id: element.id, title: element.title, no: element.no })
+        }
         element.children.push(value)
-        console.log(element.children)
-        this.recalculateChildren(element.children, parent)
+        this.recalculateChildren(element.children, listParent)
         this.recalculateLevelChildren(element.children, level)
         return
       }
       if (element.children.length > 0) {
-        this.addArray(element.children, id, value, level, parent)
+        this.addArray(element.children, id, value, parent)
       }
     });
   }
