@@ -3,7 +3,6 @@ package id.co.bca.pakar.be.doc.service.impl;
 import id.co.bca.pakar.be.doc.client.ApiResponseWrapper;
 import id.co.bca.pakar.be.doc.client.PakarOauthClient;
 import id.co.bca.pakar.be.doc.client.PakarWfClient;
-import id.co.bca.pakar.be.doc.common.Constant;
 import id.co.bca.pakar.be.doc.dao.*;
 import id.co.bca.pakar.be.doc.dto.*;
 import id.co.bca.pakar.be.doc.dto.auth.UserProfileDto;

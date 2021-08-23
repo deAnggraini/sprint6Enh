@@ -33,23 +33,22 @@ public class ArticleVersion extends EntityBase {
     @Column(name = "article_used_by")
     private String articleUsedBy;
 
-//    @Lob
     @Column(name = "short_desc", columnDefinition = "TEXT", length = Integer.MAX_VALUE)
     private String shortDescription = new String();
 
     @Column(name = "video_link")
     private String videoLink;
 
-    @Column(name = "state", columnDefinition = "VARCHAR(255) default 'NEW'")
+    @Column(name = "state")
     private String articleState; // NEW, DRAFT, PENDING, PUBLISHED, REJECTED
 
     @OneToMany(mappedBy = "articleVersion", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ArticleContentVersion> articleContents = new ArrayList<>();
 
-    @Column(name = "use_empty_template", columnDefinition = "BOOLEAN DEFAULT FALSE")
+    @Column(name = "use_empty_template")
     private Boolean useEmptyTemplate = Boolean.FALSE;
 
-    @Column(name = "new_article", columnDefinition = "BOOLEAN DEFAULT TRUE")
+    @Column(name = "new_article")
     private Boolean newArticle = Boolean.TRUE;
 
     @Column(name = "fn_modifier")

@@ -26,8 +26,6 @@ public class CommonArticleContent extends EntityBase {
     @Column(name = "topic_caption")
     private String topicCaption;
 
-//    @Lob
-//    @Column(name = "topic_content", columnDefinition= "TEXT")
     @Column(name = "topic_content", columnDefinition = "TEXT", length = Integer.MAX_VALUE)
     private String topicContent;
 
