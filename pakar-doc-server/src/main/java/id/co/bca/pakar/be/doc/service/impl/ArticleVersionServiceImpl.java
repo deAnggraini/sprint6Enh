@@ -135,7 +135,8 @@ public class ArticleVersionServiceImpl implements ArticleVersionService {
             List<ArticleContentVersion> articleContentVersions = new ArrayList<>();
             contents.forEach(e -> {
                 ArticleContentVersion articleContentVersion = new ArticleContentVersion();
-                articleContentVersion.setId(e.getId());
+                articleContentVersion.setArticleId(e.getId());
+                articleContentVersion.setOriginArticleContentId(e.getId());
                 articleContentVersion.setArticleVersion(articleVersion);
                 articleContentVersion.setCreatedBy(e.getCreatedBy());
                 articleContentVersion.setCreatedDate(e.getCreatedDate());

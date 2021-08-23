@@ -6,8 +6,13 @@ import javax.persistence.*;
 @Table(name = "t_article_content_version")
 public class ArticleContentVersion extends CommonArticleContent {
     @Id
+    @SequenceGenerator(name = "articleContentVersionSeqGen", sequenceName = "articleContentVersionSeq", initialValue = 1, allocationSize = 1)
+    @GeneratedValue(generator = "articleContentVersionSeqGen")
     @Column(name = "id")
     private Long id = 0L;
+
+    @Column(name = "origin_article_content_id")
+    private Long originArticleContentId;
 
     @Version
     @Column(name = "optlock", columnDefinition = "integer DEFAULT 0", nullable = false)
@@ -16,6 +21,9 @@ public class ArticleContentVersion extends CommonArticleContent {
     @ManyToOne
     @JoinColumn(name = "article_version_id")
     private ArticleVersion articleVersion;
+
+    @Column(name = "origin_article_id")
+    private Long articleId;
 
     public Long getId() {
         return id;
@@ -41,4 +49,19 @@ public class ArticleContentVersion extends CommonArticleContent {
         this.version = version;
     }
 
+    public Long getOriginArticleContentId() {
+        return originArticleContentId;
+    }
+
+    public void setOriginArticleContentId(Long originArticleContentId) {
+        this.originArticleContentId = originArticleContentId;
+    }
+
+    public Long getArticleId() {
+        return articleId;
+    }
+
+    public void setArticleId(Long articleId) {
+        this.articleId = articleId;
+    }
 }
