@@ -213,6 +213,12 @@ $acc-child-margin: 10px;
   }
 }
 
+.line-1 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 ::ng-deep .ak {
   width: 24px;
   height: 24px;

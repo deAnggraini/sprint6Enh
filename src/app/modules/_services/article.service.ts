@@ -43,6 +43,17 @@ export class ArticleService {
 
   constructor(private apiService: ApiService) { }
 
+  _findNode(id, dataList: ArticleContentDTO[]): ArticleContentDTO {
+    let found = dataList.find(d => d.id == id);
+    if (!found) {
+      dataList.forEach(d => {
+        if (found) return;
+        found = this._findNode(id, d.children);
+      });
+    }
+    return found;
+  }
+
   lastKeywords() {
     if (!this.lastTimeGetKeyword || moment(this.lastTimeGetKeyword).diff(moment(), 'd') > 0) {
       this.apiService.post(`${this._base_url}/keyword`, {}).subscribe(

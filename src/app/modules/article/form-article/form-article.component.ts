@@ -213,10 +213,12 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   listUserEditing: UserModel[] = [];
 
   // preview property
+  originArticle: ArticleDTO = null;
   isPreview: boolean = false;
   previewHideTopbar: boolean = false;
   previewAlert: boolean = false;
   previewAlertMessage: string = '';
+  isCompare: boolean = false;
 
   // save and send
   userOptions: Option[] = [];
@@ -755,7 +757,11 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
       }
 
       this.isEdit = !article.isNew;
-      if (this.isEdit) this.setUserEditing(article.id);
+      if (this.isEdit) {
+        this.setUserEditing(article.id);
+        this.isCompare = true;
+      }
+      this.originArticle = JSON.parse(JSON.stringify(article));
       this.dataForm.reset(article);
       this.addLogs(article.contents);
       this.cdr.detectChanges();
