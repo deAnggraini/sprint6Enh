@@ -392,7 +392,7 @@ router.post('/generateArticle', (req, res) => {
 router.post('/getArticle', (req, res) => {
     const { body } = req;
     console.log({ body });
-    res.send({ error: false, msg: "", data: sample_basic });
+    res.send({ error: false, msg: "", data: sample_non_basic });
 });
 
 router.get('/getContentId', (req, res) => {
