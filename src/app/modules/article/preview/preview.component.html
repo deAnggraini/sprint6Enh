@@ -154,7 +154,7 @@ height: 184px;
                             <mat-expansion-panel class="acc-level acc-level-1"
                                 *ngFor="let content of articleDTO.contents" [expanded]="content.expanded">
                                 <mat-expansion-panel-header [@.disabled]="true">
-                                    <mat-panel-title>
+                                    <mat-panel-title class="fs16pt">
                                         <span [innerHTML]="content.title">&nbsp;</span>
                                     </mat-panel-title>
                                     <ng-container *ngIf="readerView && isAllowEdit" [ngTemplateOutlet]="rightIcon"
@@ -245,8 +245,10 @@ height: 184px;
             <mat-expansion-panel [@.disabled]="true" class="acc-level acc-level-{{level}}"
                 [expanded]="content.expanded">
                 <mat-expansion-panel-header>
-                    <mat-panel-title class="text-ellipsis-1"
-                        [innerHTML]="numberingFormat(content) + '. ' + content.title"></mat-panel-title>
+                    <mat-panel-title class="d-flex flex-row fs16pt" [id]="'acc-title-'+content.id">
+                        <span class="mr-2">{{numberingFormat(content)}}.</span>
+                        <span [innerHTML]="content.title"></span>
+                    </mat-panel-title>
                     <ng-container *ngIf="readerView && isAllowEdit" [ngTemplateOutlet]="rightIcon"
                         [ngTemplateOutletContext]="{ data: content}">
                     </ng-container>
