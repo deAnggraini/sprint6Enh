@@ -5,10 +5,10 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { ChangeEvent, CKEditorComponent } from '@ckeditor/ckeditor5-angular';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { BehaviorSubject, Subscription, of, Subject } from 'rxjs';
-import { Option } from 'src/app/utils/_model/option';
+import { Option, craeteEmptyOption } from 'src/app/utils/_model/option';
 import { SkReferenceService } from '../../_services/sk-reference.service';
 import { AuthService, UserModel } from '../../auth';
-import { ArticleDTO, ArticleContentDTO, ArticleParentDTO } from '../../_model/article.dto';
+import { ArticleDTO, ArticleContentDTO, ArticleParentDTO, ArticleSenderDTO } from '../../_model/article.dto';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { StrukturService } from '../../_services/struktur.service';
 import { catchError, debounceTime, distinctUntilChanged, map, first } from 'rxjs/operators';
@@ -41,6 +41,7 @@ const defaultValue: ArticleDTO = {
   related: [],
   suggestions: [],
   isHasSend: false,
+  sender: null
 }
 
 @Component({
@@ -231,6 +232,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     },
     sendNote: ''
   }
+  selectedSaveAndSend: Option = craeteEmptyOption();
 
   // accordion
   selectedAccordion: ArticleContentDTO;
@@ -379,10 +381,15 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     return false;
   }
   onSaveAndSend(e) {
+    const sender: ArticleSenderDTO = this.dataForm.value.sender;
     // reset form
     this.saveAndSend.sendTo.username = '';
     this.saveAndSend.sendTo.email = '';
     this.saveAndSend.sendNote = '';
+    if (sender) {
+      this.saveAndSend.sendTo.username = sender.username;
+      this.saveAndSend.sendTo.email = sender.email;
+    }
 
     this.modalService.open(this.formSaveAndSend);
     return false;
@@ -393,8 +400,6 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
       this.article.saveArticle(_dataForm, true, this.saveAndSend).subscribe(resp => {
         if (resp) {
           this.modalService.dismissAll();
-          // this.onPreview(true, true, true, 'Artikel berhasil disimpan dan dikirim.');
-          // this.cdr.detectChanges();
           this.article.formData = _dataForm;
           this.article.formAlert = 'Artikel berhasil disimpan dan dikirim.';
           this.router.navigate(
@@ -831,6 +836,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.originArticle = JSON.parse(JSON.stringify(article));
       this.dataForm.reset(article);
+
       if (this.isEdit == false && !article.isEmptyTemplate) {
         this.subscriptions.push(this.dataForm.get('title').valueChanges.subscribe(val => {
           const contents: ArticleContentDTO[] = this.dataForm.get('contents').value;
@@ -839,6 +845,11 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
           contents[1].title = contents[1].topicTitle = `Prosedur ${val}`;
           contents[2].title = contents[2].topicTitle = `Formulir ${val}`;
         }));
+      }
+
+      if (article.sender) {
+        const { username, fullname, email } = article.sender;
+        this.selectedSaveAndSend = { id: username, value: email, text: fullname };
       }
 
       this.addLogs(article.contents);
@@ -1025,6 +1036,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
       related: [defaultValue.related],
       suggestions: [defaultValue.suggestions],
       isEmptyTemplate: [defaultValue.isEmptyTemplate, Validators.compose([Validators.required])],
+      sender: [defaultValue.sender]
     });
   }
   ngOnInit(): void {

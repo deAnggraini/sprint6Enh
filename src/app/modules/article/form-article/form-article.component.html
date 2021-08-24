@@ -139,8 +139,8 @@
                                                 (click)="accSaveAddEdit(content)">Simpan</button>
                                         </div>
                                     </div>
-                                    <div *ngIf="!content.isEdit && content.topicContent" class="fs11pt p-3 drop-area-accordion"
-                                        style="padding-bottom: 0px !important;"
+                                    <div *ngIf="!content.isEdit && content.topicContent"
+                                        class="fs11pt p-3 drop-area-accordion" style="padding-bottom: 0px !important;"
                                         [innerHTML]="content.topicContent | sanitizeHtml" [attr.data-id]="content.id">
                                     </div>
                                     <input *ngIf="!content.isEdit && !content.topicContent" type="text"
@@ -250,7 +250,8 @@
             <ng-container *ngFor="let content of children; let i = index">
                 <div class="input-accordion-separator"></div>
                 <mat-expansion-panel [@.disabled]="true" class="acc-level acc-level-{{level}}" cdkDrag
-                    [cdkDragData]="content" [(expanded)]="content.expanded" [id]="'acc-id-'+content.id" (cdkDragMoved)="dragMovedDebounce($event)">
+                    [cdkDragData]="content" [(expanded)]="content.expanded" [id]="'acc-id-'+content.id"
+                    (cdkDragMoved)="dragMovedDebounce($event)">
                     <div class="drag-placeholder" *cdkDragPlaceholder></div>
                     <mat-expansion-panel-header cdkDragHandle [class.drop-area-accordion]="content.expanded"
                         [attr.data-id]="content.id">
@@ -321,11 +322,13 @@
         </div>
         <div class="form-group">
             <label>Kirim Ke <span class="text-danger">*</span></label>
+            {{saveAndSend | json}}
             <pakar-auto-complete [(ngModel)]="saveAndSend.sendTo.username" [options]="userOptions"
-                placeholder="Masukkan Nama" (onSearch)="searchUser($event)" (onChange)="userChange($event)">
+                placeholder="Masukkan Nama" (onSearch)="searchUser($event)" (onChange)="userChange($event)"
+                [selected]="selectedSaveAndSend">
             </pakar-auto-complete>
             <textarea rows="4" class="form-control" placeholder="Catatan" [(ngModel)]="saveAndSend.sendNote"
-                style="margin-top:3px"></textarea>
+                style="margin-top:3px" maxlength="200"></textarea>
         </div>
     </div>
     <div class="modal-footer">
