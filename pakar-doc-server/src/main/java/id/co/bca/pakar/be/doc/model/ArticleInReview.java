@@ -4,8 +4,8 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Table(name = "t_article_in_review")
+//@Entity
+//@Table(name = "t_article_in_review")
 public class ArticleInReview extends EntityBase {
     @Id
     @Column(name = "id")

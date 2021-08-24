@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Entity
-@Table(name = "t_article_clone")
+//@Entity
+//@Table(name = "t_article_clone")
 public class ArticleClone extends EntityBase {
 	@Id
 	@Column(name = "id")

@@ -33,12 +33,12 @@ public class ArticleContentVersion extends CommonArticleContent {
         this.id = id;
     }
 
-    public ArticleVersion getArticleVersion() {
-        return articleVersion;
+    public Long getOriginArticleContentId() {
+        return originArticleContentId;
     }
 
-    public void setArticleVersion(ArticleVersion articleVersion) {
-        this.articleVersion = articleVersion;
+    public void setOriginArticleContentId(Long originArticleContentId) {
+        this.originArticleContentId = originArticleContentId;
     }
 
     public Long getVersion() {
@@ -49,12 +49,12 @@ public class ArticleContentVersion extends CommonArticleContent {
         this.version = version;
     }
 
-    public Long getOriginArticleContentId() {
-        return originArticleContentId;
+    public ArticleVersion getArticleVersion() {
+        return articleVersion;
     }
 
-    public void setOriginArticleContentId(Long originArticleContentId) {
-        this.originArticleContentId = originArticleContentId;
+    public void setArticleVersion(ArticleVersion articleVersion) {
+        this.articleVersion = articleVersion;
     }
 
     public Long getArticleId() {

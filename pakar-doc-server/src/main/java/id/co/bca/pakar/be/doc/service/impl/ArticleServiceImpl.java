@@ -609,13 +609,16 @@ public class ArticleServiceImpl implements ArticleService {
                 if (articleState == null) {
                     articleState = articleStateRepository.findByArticleId(article.getId());
                 }
+
                 articleState.setCreatedBy(articleDto.getUsername());
                 articleState.setSender(restResponse.getBody().getData().getSender());
+                logger.debug("sender from workflow result {}", restResponse.getBody().getData().getSender());
                 ResponseEntity<ApiResponseWrapper.RestResponse<List<UserProfileDto>>> restResponseUp = pakarOauthClient
                         .getListUserProfile(BEARER + articleDto.getToken(), articleDto.getUsername(), Arrays.asList(new String[]{articleState.getSender()}));
                 List<UserProfileDto> userProfileDtos = restResponseUp.getBody().getData();
                 articleState.setFnSender(userProfileDtos != null ? userProfileDtos.get(0) != null ? userProfileDtos.get(0).getFullname() : "" : "");
                 articleState.setReceiver(restResponse.getBody().getData().getAssigne());
+                logger.debug("receiver from workflow result {}", restResponse.getBody().getData().getAssigne());
                 restResponseUp = pakarOauthClient
                         .getListUserProfile(BEARER + articleDto.getToken(), articleDto.getUsername(), Arrays.asList(new String[]{articleState.getReceiver()}));
                 userProfileDtos.clear();

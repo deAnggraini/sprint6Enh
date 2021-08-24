@@ -2,8 +2,8 @@ package id.co.bca.pakar.be.doc.model;
 
 import javax.persistence.*;
 
-@Entity
-@Table(name = "t_article_content_in_review")
+//@Entity
+//@Table(name = "t_article_content_in_review")
 public class ArticleContentInReview extends CommonArticleContent {
     @Id
     @Column(name = "id")
