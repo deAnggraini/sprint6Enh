@@ -108,7 +108,7 @@ public class ArticleWorkflowService {
             requestUserTaskModel.setProposedBy(username);
             requestUserTaskModel.setAssigne(username); // assign to self pic
             Optional<WorkflowStateModel> receiverStateOpt = workflowStateRepository.findById(DRAFT);
-            requestUserTaskModel.setReceiverState(receiverStateOpt.isPresent()? receiverStateOpt.get() : null);
+            requestUserTaskModel.setReceiverState(receiverStateOpt.isPresent() ? receiverStateOpt.get() : null);
 
             workflowRequestUserTaskRepository.save(requestUserTaskModel);
 
@@ -120,7 +120,7 @@ public class ArticleWorkflowService {
             taskDto.setCurrentSenderState(requestUserTaskModel.getSenderState() != null ?
                     requestUserTaskModel.getSenderState().getCode() : null);
             taskDto.setAssigne(requestUserTaskModel.getAssigne());
-            taskDto.setCurrentReceiverState(requestUserTaskModel.getReceiverState() != null? requestUserTaskModel.getReceiverState().getCode() : "");
+            taskDto.setCurrentReceiverState(requestUserTaskModel.getReceiverState() != null ? requestUserTaskModel.getReceiverState().getCode() : "");
 
             return taskDto;
         } catch (UndefinedProcessException e) {
@@ -151,7 +151,7 @@ public class ArticleWorkflowService {
             variables.put(GROUP_PARAM, map.get(GROUP_PARAM));
             variables.put(ARTICLE_ID_PARAM, map.get(ARTICLE_ID_PARAM));
             variables.put(TITLE_PARAM, map.get(TITLE_PARAM));
-            String processKey = (String)map.get(PROCESS_KEY);
+            String processKey = (String) map.get(PROCESS_KEY);
 
             logger.debug("get registered process in system {}", processKey);
             Optional<WorkflowProcessModel> workflowProcessOpt = workflowProcessRepository.findById(processKey);
@@ -198,7 +198,7 @@ public class ArticleWorkflowService {
             requestUserTaskModel.setProposedBy(username);
             requestUserTaskModel.setAssigne(username); // assign to self pic
             Optional<WorkflowStateModel> receiverStateOpt = workflowStateRepository.findById(DRAFT);
-            requestUserTaskModel.setReceiverState(receiverStateOpt.isPresent()? receiverStateOpt.get() : null);
+            requestUserTaskModel.setReceiverState(receiverStateOpt.isPresent() ? receiverStateOpt.get() : null);
 
             logger.info("save request user task model");
             workflowRequestUserTaskRepository.save(requestUserTaskModel);
@@ -215,7 +215,7 @@ public class ArticleWorkflowService {
             taskDto.setCurrentSenderState(requestUserTaskModel.getSenderState() != null ?
                     requestUserTaskModel.getSenderState().getCode() : null);
             taskDto.setAssigne(requestUserTaskModel.getAssigne());
-            taskDto.setCurrentReceiverState(requestUserTaskModel.getReceiverState() != null? requestUserTaskModel.getReceiverState().getCode() : "");
+            taskDto.setCurrentReceiverState(requestUserTaskModel.getReceiverState() != null ? requestUserTaskModel.getReceiverState().getCode() : "");
 
             return taskDto;
         } catch (UndefinedProcessException e) {
@@ -289,11 +289,11 @@ public class ArticleWorkflowService {
             newRequestUserTaskModel.setRequestModel(currentWfRequest);
             newRequestUserTaskModel.setProposedBy(username);
             newRequestUserTaskModel.setAssigne((String) assignDto.get("username"));
-            newRequestUserTaskModel.setNote((String)variables.get("sendNote"));
+            newRequestUserTaskModel.setNote((String) variables.get("sendNote"));
             Optional<WorkflowStateModel> receiverStateOpt = workflowStateRepository.findById("DRAFT");
-            newRequestUserTaskModel.setReceiverState(receiverStateOpt.isPresent()? receiverStateOpt.get() : null);
+            newRequestUserTaskModel.setReceiverState(receiverStateOpt.isPresent() ? receiverStateOpt.get() : null);
             Optional<WorkflowStateModel> senderStateOpt = workflowStateRepository.findById("PENDING");
-            newRequestUserTaskModel.setSenderState(senderStateOpt.isPresent()? senderStateOpt.get() : null);
+            newRequestUserTaskModel.setSenderState(senderStateOpt.isPresent() ? senderStateOpt.get() : null);
             newRequestUserTaskModel = workflowRequestUserTaskRepository.save(newRequestUserTaskModel);
 
             TaskDto taskDto = new TaskDto();
@@ -316,7 +316,6 @@ public class ArticleWorkflowService {
     }
 
     /**
-     *
      * @param username
      * @param token
      * @param body
@@ -335,7 +334,7 @@ public class ArticleWorkflowService {
             variables.put(WORKFLOW_REQ_ID_PARAM, body.get(WORKFLOW_REQ_ID_PARAM));
             variables.put(SEND_NOTE_PARAM, body.get(SEND_NOTE_PARAM));
             String receiverGroup = (String) body.get(RECEIVER_GROUP_PARAM);
-            String processKey = (String)body.get(PROCESS_KEY);
+            String processKey = (String) body.get(PROCESS_KEY);
             String wfReqId = (String) body.get(WORKFLOW_REQ_ID_PARAM);
 
             Optional<WorkflowProcessModel> workflowProcessOpt = workflowProcessRepository.findById(processKey);
@@ -361,14 +360,16 @@ public class ArticleWorkflowService {
             logger.debug("current state is {}", currentState.getCode());
 
             /*
-            get workflow group transtiion
+            get workflow group transition
              */
             WorkflowGroupTransitionModel wfGroupTrans = workflowGroupTransitionRepository.findByReceiverGroup(receiverGroup, currentState.getCode());
+            logger.debug("transition id of receiver group {} and state {} is {}", new Object[]{receiverGroup, currentState.getCode(), wfGroupTrans.getWorkflowTransitionModel().getId()});
 
-            logger.info("get next transition state from start state {} of receiver group", currentState.getCode(), receiverGroup);
+            logger.info("get next transition state from start state {} of receiver group {}", currentState.getCode(), receiverGroup);
             WorkflowTransitionUserTaskModel wfTransUtask = workflowTransitionUserTaskRepository
                     .findTransitionByCurrentStateAndActionType(currentState.getCode()
-                    , new Helper().convertTaskTypeToNumeric((String) body.get(TASK_TYPE_PARAM)), wfGroupTrans.getWorkflowTransitionModel().getId());
+                            , new Helper().convertTaskTypeToNumeric((String) body.get(TASK_TYPE_PARAM))
+                            , wfGroupTrans.getWorkflowTransitionModel().getId());
             WorkflowStateModel nextState = wfTransUtask.getTransition().getNextState();
             logger.debug("next state transition is {}", nextState.getCode());
 
@@ -392,11 +393,11 @@ public class ArticleWorkflowService {
             newRequestUserTaskModel.setRequestModel(currentWfRequest);
             newRequestUserTaskModel.setProposedBy(username);
             newRequestUserTaskModel.setAssigne((String) assignDto.get(USERNAME_PARAM));
-            newRequestUserTaskModel.setNote((String)variables.get(SEND_NOTE_PARAM));
+            newRequestUserTaskModel.setNote((String) variables.get(SEND_NOTE_PARAM));
             Optional<WorkflowStateModel> receiverStateOpt = workflowStateRepository.findById(nextState.getCode());
-            newRequestUserTaskModel.setReceiverState(receiverStateOpt.isPresent()? receiverStateOpt.get() : null);
+            newRequestUserTaskModel.setReceiverState(receiverStateOpt.isPresent() ? receiverStateOpt.get() : null);
             Optional<WorkflowStateModel> senderStateOpt = workflowStateRepository.findById(Constant.ArticleWfState.PENDING);
-            newRequestUserTaskModel.setSenderState(senderStateOpt.isPresent()? senderStateOpt.get() : null);
+            newRequestUserTaskModel.setSenderState(senderStateOpt.isPresent() ? senderStateOpt.get() : null);
             newRequestUserTaskModel = workflowRequestUserTaskRepository.save(newRequestUserTaskModel);
 
             /*
@@ -424,7 +425,6 @@ public class ArticleWorkflowService {
     }
 
     /**
-     *
      * @param assignee
      * @return
      * @throws Exception
@@ -443,7 +443,6 @@ public class ArticleWorkflowService {
     }
 
     /**
-     *
      * @param pic
      * @param state
      * @return
@@ -491,11 +490,11 @@ public class ArticleWorkflowService {
 
     private class Helper {
         Long convertTaskTypeToNumeric(String type) {
-            if (type.equalsIgnoreCase("Approve"))
+            if (type.equalsIgnoreCase("APPROVE"))
                 return 1L;
-            else if (type.equalsIgnoreCase("Deny")) {
+            else if (type.equalsIgnoreCase("DENY")) {
                 return 2L;
-            } else if (type.equalsIgnoreCase("Cancel")) {
+            } else if (type.equalsIgnoreCase("CANCEL")) {
                 return 3L;
             } else {
                 return 0L; // undefined
