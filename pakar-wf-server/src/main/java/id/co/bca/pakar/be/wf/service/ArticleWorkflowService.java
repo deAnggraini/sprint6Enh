@@ -408,7 +408,8 @@ public class ArticleWorkflowService {
              */
             TaskDto taskDto = new TaskDto();
             taskDto.setCurrentState(nextState.getCode());
-            taskDto.setArticleId((Long) body.get(ARTICLE_ID_PARAM));
+            String articleId_ = ""+body.get(ARTICLE_ID_PARAM);
+            taskDto.setArticleId(Long.parseLong(articleId_));
             taskDto.setRequestId(currentWfRequest.getId());
             taskDto.setAssigne((String) assignDto.get(RECEIVER_PARAM));
             taskDto.setSender(newRequestUserTaskModel.getProposedBy());
