@@ -557,10 +557,18 @@ public class ArticleServiceImpl implements ArticleService {
 //                wfArticleDto.setId(articleDto.getId());
 //                wfArticleDto.setTitle(articleDto.getTitle());
 
+                UserWrapperDto userWrapperDto = new UserWrapperDto();
+                userWrapperDto.setUsername(articleDto.getUsername());
+                ResponseEntity<ApiResponseWrapper.RestResponse<List<String>>> restResponserRoles = pakarOauthClient
+                        .getRolesByUser(BEARER + articleDto.getToken(), articleDto.getUsername(), userWrapperDto);
+                List<String> rcvRoles = restResponserRoles.getBody().getData();
+                rcvRoles.forEach(e-> logger.debug("user {} have roles {}", articleDto.getUsername(), rcvRoles.get(0)));
+
                 Map<String, Object> wfRequest = new HashMap<>();
                 wfRequest.put(PROCESS_KEY, ARTICLE_REVIEW_WF);
                 wfRequest.put(TITLE_PARAM, articleDto.getTitle());
                 wfRequest.put(ARTICLE_ID_PARAM, articleDto.getId());
+                wfRequest.put(GROUP_PARAM, rcvRoles.get(0));
 
                 ResponseEntity<ApiResponseWrapper.RestResponse<TaskDto>> restResponse = pakarWfClient
                         .startProcess(BEARER + articleDto.getToken(), articleDto.getUsername(), wfRequest);
