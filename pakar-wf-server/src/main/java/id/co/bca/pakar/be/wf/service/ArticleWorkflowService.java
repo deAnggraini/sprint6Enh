@@ -328,11 +328,6 @@ public class ArticleWorkflowService {
     public TaskDto completeTask(String username, String token, Map<String, Object> body) throws Exception {
         try {
             logger.debug("completing task for user {} and for article {}", username, body.get(ARTICLE_ID_PARAM));
-//            Map<String, Object> variables = new HashMap<>();
-//            variables.put(SEND_TO_PARAM, body.get(SEND_TO_PARAM));
-//            variables.put(ARTICLE_ID_PARAM, body.get(ARTICLE_ID_PARAM));
-//            variables.put(WORKFLOW_REQ_ID_PARAM, body.get(WORKFLOW_REQ_ID_PARAM));
-//            variables.put(SEND_NOTE_PARAM, body.get(SEND_NOTE_PARAM));
             String receiverGroup = (String) body.get(GROUP_PARAM);
             String processKey = (String) body.get(PROCESS_KEY);
             String wfReqId = (String) body.get(WORKFLOW_REQ_ID_PARAM);
@@ -345,13 +340,16 @@ public class ArticleWorkflowService {
             /*
             get assigne user task for certain article id
              */
-            logger.debug("find workflow request by article id {} and workflow request id {}", body.get(ARTICLE_ID_PARAM), wfReqId);
+            logger.debug("find workflow request by article id {} and workflow request id {}, current receiver {}", new Object[] {body.get(ARTICLE_ID_PARAM), wfReqId, username});
             WorkflowRequestUserTaskModel currentWfRequestUt = workflowRequestUserTaskRepository
                     .findWorkflowRequestUserTask(new StringBuffer().append(body.get(ARTICLE_ID_PARAM)).toString(), username, processKey, wfReqId);
 
             /*
             get current workflow state of request
              */
+            if(currentWfRequestUt == null) {
+                logger.info("not found task workflow request {} for receiver {}", wfReqId, username);
+            }
             WorkflowRequestModel currentWfRequest = currentWfRequestUt.getRequestModel();
             logger.debug("current state is {}", currentWfRequest.getCurrentState().getCode());
 
