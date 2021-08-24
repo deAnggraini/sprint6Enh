@@ -1,6 +1,7 @@
 package id.co.bca.pakar.be.oauth2.api;
 
 import java.util.List;
+import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -12,6 +13,26 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public abstract class BaseController {
 	@Autowired
 	protected MessageSource messageSource;
+
+	protected Locale DEFAULT_LOCALE = null;
+
+	protected Locale locale = DEFAULT_LOCALE;
+
+	public Locale getDEFAULT_LOCALE() {
+		return DEFAULT_LOCALE;
+	}
+
+	public void setDEFAULT_LOCALE(Locale DEFAULT_LOCALE) {
+		this.DEFAULT_LOCALE = DEFAULT_LOCALE;
+	}
+
+	public Locale getLocale() {
+		return locale;
+	}
+
+	public void setLocale(Locale locale) {
+		this.locale = locale;
+	}
 
 	protected class RestResponse<T> {
 		@JsonProperty("data")
