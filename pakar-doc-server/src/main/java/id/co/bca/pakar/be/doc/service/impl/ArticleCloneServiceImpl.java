@@ -1,9 +1,7 @@
 package id.co.bca.pakar.be.doc.service.impl;
 
-import id.co.bca.pakar.be.doc.dao.ArticleCloneRepository;
 import id.co.bca.pakar.be.doc.dao.ArticleContentCloneRepository;
 import id.co.bca.pakar.be.doc.model.Article;
-//import id.co.bca.pakar.be.doc.model.ArticleClone;
 import id.co.bca.pakar.be.doc.model.ArticleContent;
 import id.co.bca.pakar.be.doc.model.ArticleContentClone;
 import id.co.bca.pakar.be.doc.service.ArticleCloneService;
@@ -13,14 +11,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+//import id.co.bca.pakar.be.doc.model.ArticleClone;
 
 @Service
 public class ArticleCloneServiceImpl implements ArticleCloneService {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
-    private ArticleCloneRepository articleCloneRepository;
+//    @Autowired
+//    private ArticleCloneRepository articleCloneRepository;
 
     @Autowired
     private ArticleContentCloneRepository articleContentCloneRepository;
@@ -61,7 +63,7 @@ public class ArticleCloneServiceImpl implements ArticleCloneService {
 
             logger.info("populate and save cloning article content");
             List<ArticleContentClone> clones = new ArticleCloneHelper().populateContent(article.getArticleContents(), article);
-            clones.forEach(e-> articleContentCloneRepository.save(e));
+            clones.forEach(e -> articleContentCloneRepository.save(e));
             return Boolean.TRUE;
         } catch (Exception e) {
             logger.error("exception ", e);
@@ -75,7 +77,7 @@ public class ArticleCloneServiceImpl implements ArticleCloneService {
         try {
             logger.debug("find by id {} and username {}", id, username);
             Optional<ArticleContentClone> content = null;
-            if(username == null)
+            if (username == null)
                 content = articleContentCloneRepository.findById(id);
             else
                 content = articleContentCloneRepository.findById(id, username);
