@@ -91,7 +91,7 @@
                 <input type="url" class="form-control" formControlName="video" placeholder="Masukan URL myVideo">
             </div>
             <div class="form-group col-sm-12 col-lg-11 col-xl-11 col-xxl-11">
-                <label>Content Artikel <span class="text-danger">*</span></label>
+                <label>Konten Artikel <span class="text-danger">*</span></label>
                 <div class="border border-light rounded-sm p-3">
                     <mat-accordion [togglePosition]="'before'" multi="true">
                         <mat-expansion-panel [id]="'acc-id-'+content.id"
@@ -322,7 +322,6 @@
         </div>
         <div class="form-group">
             <label>Kirim Ke <span class="text-danger">*</span></label>
-            {{saveAndSend | json}}
             <pakar-auto-complete [(ngModel)]="saveAndSend.sendTo.username" [options]="userOptions"
                 placeholder="Masukkan Nama" (onSearch)="searchUser($event)" (onChange)="userChange($event)"
                 [selected]="selectedSaveAndSend">
