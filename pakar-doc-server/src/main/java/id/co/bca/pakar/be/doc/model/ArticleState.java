@@ -14,6 +14,9 @@ public class ArticleState extends EntityBase {
     @JoinColumn(name = "article_id", nullable = false)
     private Article article;
 
+    @Column(name = "wf_req_id")
+    private String wfReqId;
+
     @Column(name = "sender")
     private String sender;
 
@@ -46,6 +49,14 @@ public class ArticleState extends EntityBase {
 
     public void setArticle(Article article) {
         this.article = article;
+    }
+
+    public String getWfReqId() {
+        return wfReqId;
+    }
+
+    public void setWfReqId(String wfReqId) {
+        this.wfReqId = wfReqId;
     }
 
     public String getSender() {

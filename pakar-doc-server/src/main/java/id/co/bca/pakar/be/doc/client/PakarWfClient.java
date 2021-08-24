@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.util.List;
+import java.util.Map;
 
 @FeignClient(name = "pakar-wf-server", url = "${spring.security.oauth2.resourceserver.wf-server}")
 public interface PakarWfClient {
@@ -20,9 +21,17 @@ public interface PakarWfClient {
             MediaType.APPLICATION_JSON_VALUE})
     ResponseEntity<ApiResponseWrapper.RestResponse<TaskDto>> start(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader, @RequestHeader(Constant.Headers.X_USERNAME) String username, @RequestBody WfArticleDto articleDto);
 
+    @PostMapping(value = "/api/wf/startProcess", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
+            MediaType.APPLICATION_JSON_VALUE})
+    ResponseEntity<ApiResponseWrapper.RestResponse<TaskDto>> startProcess(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader, @RequestHeader(Constant.Headers.X_USERNAME) String username, @RequestBody Map<String,Object> body);
+
     @PostMapping(value = "/api/wf/next", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
             MediaType.APPLICATION_JSON_VALUE})
     ResponseEntity<ApiResponseWrapper.RestResponse<TaskDto>> next(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader, @RequestHeader(Constant.Headers.X_USERNAME) String username, @RequestBody WfArticleDto articleDto);
+
+    @PostMapping(value = "/api/wf/completeTask", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
+            MediaType.APPLICATION_JSON_VALUE})
+    ResponseEntity<ApiResponseWrapper.RestResponse<TaskDto>> completeTask(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader, @RequestHeader(Constant.Headers.X_USERNAME) String username, @RequestBody Map<String,Object> body);
 
     @PostMapping(value = "/api/wf/tasks", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
             MediaType.APPLICATION_JSON_VALUE})

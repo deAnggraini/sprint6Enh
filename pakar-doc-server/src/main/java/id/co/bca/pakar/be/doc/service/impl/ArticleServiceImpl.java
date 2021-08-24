@@ -6,6 +6,7 @@ import id.co.bca.pakar.be.doc.client.PakarWfClient;
 import id.co.bca.pakar.be.doc.dao.*;
 import id.co.bca.pakar.be.doc.dto.*;
 import id.co.bca.pakar.be.doc.dto.auth.UserProfileDto;
+import id.co.bca.pakar.be.doc.dto.auth.UserWrapperDto;
 import id.co.bca.pakar.be.doc.dto.wf.WfArticleDto;
 import id.co.bca.pakar.be.doc.exception.*;
 import id.co.bca.pakar.be.doc.model.*;
@@ -36,6 +37,7 @@ import static id.co.bca.pakar.be.doc.common.Constant.ArticleWfState.PUBLISHED;
 import static id.co.bca.pakar.be.doc.common.Constant.Headers.BEARER;
 import static id.co.bca.pakar.be.doc.common.Constant.Roles.ROLE_ADMIN;
 import static id.co.bca.pakar.be.doc.common.Constant.Roles.ROLE_READER;
+import static id.co.bca.pakar.be.doc.common.Constant.Workflow.*;
 
 @Service
 public class ArticleServiceImpl implements ArticleService {
@@ -122,7 +124,6 @@ public class ArticleServiceImpl implements ArticleService {
     private String basePath;
 
     /**
-     *
      * @param title
      * @return
      */
@@ -300,7 +301,7 @@ public class ArticleServiceImpl implements ArticleService {
 
             logger.debug("get parent structure of structure id {}", article.getStructure().getId());
             List<Structure> breadcumbs = structureRepository.findBreadcumbById(article.getStructure().getId());
-            breadcumbs.forEach(e-> {
+            breadcumbs.forEach(e -> {
                 BreadcumbStructureDto bcDto = new BreadcumbStructureDto();
                 bcDto.setId(e.getId());
                 bcDto.setName(e.getStructureName());
@@ -362,7 +363,7 @@ public class ArticleServiceImpl implements ArticleService {
 
             // get main contents
             List<ArticleContentDto> articleContentDtos = new ArrayList<>();
-            if(article.getArticleState().equalsIgnoreCase(NEW)) {
+            if (article.getArticleState().equalsIgnoreCase(NEW)) {
                 // refresh article
                 Iterable<ArticleContentClone> articleContents = articleContentCloneRepository.findsByArticleId(article.getId(), article.getCreatedBy());
                 logger.debug("copy value of article contents to dto", articleContents);
@@ -390,7 +391,7 @@ public class ArticleServiceImpl implements ArticleService {
 
             logger.debug("get parent structure of structure id {}", article.getStructure().getId());
             List<Structure> breadcumbs = structureRepository.findBreadcumbById(article.getStructure().getId());
-            breadcumbs.forEach(e-> {
+            breadcumbs.forEach(e -> {
                 BreadcumbStructureDto bcDto = new BreadcumbStructureDto();
                 bcDto.setId(e.getId());
                 bcDto.setName(e.getStructureName());
@@ -552,11 +553,17 @@ public class ArticleServiceImpl implements ArticleService {
             if (currentState.equalsIgnoreCase(NEW)) {
                 logger.info("save draft article using article id {}", article.getId());
 
-                WfArticleDto wfArticleDto = new WfArticleDto();
-                wfArticleDto.setId(articleDto.getId());
-                wfArticleDto.setTitle(articleDto.getTitle());
+//                WfArticleDto wfArticleDto = new WfArticleDto();
+//                wfArticleDto.setId(articleDto.getId());
+//                wfArticleDto.setTitle(articleDto.getTitle());
+
+                Map<String, Object> wfRequest = new HashMap<>();
+                wfRequest.put(PROCESS_KEY, ARTICLE_REVIEW_WF);
+                wfRequest.put(TITLE_PARAM, articleDto.getTitle());
+                wfRequest.put(ARTICLE_ID_PARAM, articleDto.getId());
+
                 ResponseEntity<ApiResponseWrapper.RestResponse<TaskDto>> restResponse = pakarWfClient
-                        .start(BEARER + articleDto.getToken(), articleDto.getUsername(), wfArticleDto);
+                        .startProcess(BEARER + articleDto.getToken(), articleDto.getUsername(), wfRequest);
                 logger.debug("response api request {}", restResponse);
                 logger.debug("reponse status code {}", restResponse.getStatusCode());
                 currentState = restResponse.getBody().getData().getCurrentState();
@@ -566,6 +573,7 @@ public class ArticleServiceImpl implements ArticleService {
                     logger.debug("save article state");
                     articleState = new ArticleState();
                     articleState.setCreatedBy(articleDto.getUsername());
+                    articleState.setWfReqId(restResponse.getBody().getData().getRequestId());
                     articleState.setSender(restResponse.getBody().getData().getSender());
                     ResponseEntity<ApiResponseWrapper.RestResponse<List<UserProfileDto>>> restResponseUp = pakarOauthClient
                             .getListUserProfile(BEARER + articleDto.getToken(), articleDto.getUsername(), Arrays.asList(new String[]{articleState.getSender()}));
@@ -589,15 +597,36 @@ public class ArticleServiceImpl implements ArticleService {
                 // send to
                 logger.info("send article to {}", articleDto.getSendTo().getUsername());
                 logger.debug("send note article {}", articleDto.getSendNote());
-                WfArticleDto wfArticleDto = new WfArticleDto();
-                wfArticleDto.setId(articleDto.getId());
-                wfArticleDto.setTitle(articleDto.getTitle());
-                wfArticleDto.setTaskType("Approve");
-                wfArticleDto.setSendTo(articleDto.getSendTo());
-                wfArticleDto.setSendNote(articleDto.getSendNote());
+//                WfArticleDto wfArticleDto = new WfArticleDto();
+//                wfArticleDto.setId(articleDto.getId());
+//                wfArticleDto.setTitle(articleDto.getTitle());
+//                wfArticleDto.setTaskType("Approve");
+//                wfArticleDto.setSendTo(articleDto.getSendTo());
+//                wfArticleDto.setSendNote(articleDto.getSendNote());
+
+                if (articleState == null) {
+                    articleState = articleStateRepository.findByArticleId(article.getId());
+                }
+
+                Map<String, Object> wfRequest = new HashMap<>();
+                wfRequest.put(PROCESS_KEY, ARTICLE_REVIEW_WF);
+                wfRequest.put(TITLE_PARAM, articleDto.getTitle());
+                wfRequest.put(ARTICLE_ID_PARAM, articleDto.getId());
+                wfRequest.put(TASK_TYPE_PARAM, "APPROVE");
+                wfRequest.put(SEND_TO_PARAM, articleDto.getSendTo());
+                wfRequest.put(SEND_NOTE_PARAM, articleDto.getSendNote());
+                wfRequest.put(WORKFLOW_REQ_ID_PARAM, articleState.getWfReqId());
+
+                UserWrapperDto userWrapperDto = new UserWrapperDto();
+                userWrapperDto.setUsername(articleDto.getSendTo().getUsername());
+                logger.debug("get roles of task receiver {}", articleDto.getSendTo().getUsername());
+                ResponseEntity<ApiResponseWrapper.RestResponse<List<String>>> roleSenderResponse = pakarOauthClient
+                        .getRolesByUser(BEARER + articleDto.getToken(), articleDto.getUsername(), userWrapperDto);
+                List<String> roleSender = roleSenderResponse.getBody().getData();
+                roleSender.forEach(e -> logger.debug("task receiver {} has role {}", userWrapperDto.getUsername(), e));
 
                 ResponseEntity<ApiResponseWrapper.RestResponse<TaskDto>> restResponse = pakarWfClient
-                        .next(BEARER + articleDto.getToken(), articleDto.getUsername(), wfArticleDto);
+                        .completeTask(BEARER + articleDto.getToken(), articleDto.getUsername(), wfRequest);
                 logger.debug("response api request sendDraft {}", restResponse);
                 logger.debug("reponse status code {}", restResponse.getStatusCode());
                 currentState = restResponse.getBody().getData().getCurrentState();
@@ -606,9 +635,9 @@ public class ArticleServiceImpl implements ArticleService {
                     article.setArticleState(currentState);
                 }
 
-                if (articleState == null) {
-                    articleState = articleStateRepository.findByArticleId(article.getId());
-                }
+//                if (articleState == null) {
+//                    articleState = articleStateRepository.findByArticleId(article.getId());
+//                }
 
                 articleState.setCreatedBy(articleDto.getUsername());
                 articleState.setSender(restResponse.getBody().getData().getSender());
@@ -950,7 +979,7 @@ public class ArticleServiceImpl implements ArticleService {
 
             logger.debug("get article content parent for article content id {}", articleContent.getId());
             List<ArticleContentClone> breadcumbs = articleContentCloneRepository.findParentListById(articleContent.getId());
-            breadcumbs.forEach(e-> {
+            breadcumbs.forEach(e -> {
                 BreadcumbArticleContentDto bcDto = new BreadcumbArticleContentDto();
                 bcDto.setId(e.getId());
                 bcDto.setName(e.getName());
@@ -1209,7 +1238,7 @@ public class ArticleServiceImpl implements ArticleService {
      */
     private List<ArticleContentDto> mapToListArticleContentCloneDto(Iterable<ArticleContentClone> iterable) {
         List<ArticleContentDto> listOfContents = new ArrayList<>();
-        iterable.forEach(e-> {
+        iterable.forEach(e -> {
             ArticleContentDto contentDto = new ArticleContentDto();
             contentDto.setId(e.getId());
             contentDto.setLevel(e.getLevel());
@@ -1525,7 +1554,7 @@ public class ArticleServiceImpl implements ArticleService {
                 // get list parent of articleContent
                 logger.debug("get article content parent for article content id {}", _entity.getId());
                 List<ArticleContent> breadcumbs = articleContentRepository.findParentListById(_entity.getId());
-                breadcumbs.forEach(e-> {
+                breadcumbs.forEach(e -> {
                     BreadcumbArticleContentDto bcDto = new BreadcumbArticleContentDto();
                     bcDto.setId(e.getId());
                     bcDto.setName(e.getName());

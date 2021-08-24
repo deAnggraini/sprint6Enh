@@ -2,6 +2,7 @@ package id.co.bca.pakar.be.doc.client;
 
 import id.co.bca.pakar.be.doc.common.Constant;
 import id.co.bca.pakar.be.doc.dto.auth.UserProfileDto;
+import id.co.bca.pakar.be.doc.dto.auth.UserWrapperDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -21,6 +22,9 @@ public interface PakarOauthClient {
     @PostMapping(value="/api/auth/getRoles", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
             MediaType.APPLICATION_JSON_VALUE})
     ResponseEntity<ApiResponseWrapper.RestResponse<List<String>>> getRoles(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader, @RequestHeader(Constant.Headers.X_USERNAME) String username);
+    @PostMapping(value="/api/auth/getRolesByUser", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
+            MediaType.APPLICATION_JSON_VALUE})
+    ResponseEntity<ApiResponseWrapper.RestResponse<List<String>>> getRolesByUser(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader, @RequestHeader(Constant.Headers.X_USERNAME) String username, @RequestBody UserWrapperDto userWrapperDto);
     @PostMapping(value="/api/auth/getUser", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
             MediaType.APPLICATION_JSON_VALUE})
     ResponseEntity<ApiResponseWrapper.RestResponse<UserProfileDto>> getUser(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader, @RequestHeader(Constant.Headers.X_USERNAME) String username);
