@@ -61,10 +61,26 @@ public class Constant {
 	}
 
 	public static final class ArticleWfState {
-		public static final String PRE_DRAFT = "PREDRAFT";
+		public static final String NEW = "NEW";
 		public static final String DRAFT = "DRAFT";
 		public static final String PENDING = "PENDING";
 		public static final String PUBLISHED = "PUBLISHED";
 		public static final String REJECTED = "REJECTED";
+	}
+
+	public static final class Workflow {
+		public static final String PROCESS_KEY = "PROCESS_KEY";
+		public static final String ARTICLE_ID = "ARTICLE_ID";
+		public static final String WORKFLOW_REQ_ID_PARAM = "WORKFLOW_REQ_ID_PARAM";
+		public static final String RECEIVER_GROUP_PARAM = "RECEIVER_GROUP_PARAM";
+		public static final String ARTICLE_ID_PARAM = "ARTICLE_ID_PARAM";
+		public static final String TASK_TYPE_PARAM = "TASK_TYPE_PARAM";
+		public static final String SEND_TO_PARAM = "SEND_TO_PARAM";
+		public static final String USERNAME_PARAM = "USERNAME_PARAM";
+		public static final String SEND_NOTE_PARAM = "SEND_NOTE_PARAM";
+		public static final String GROUP_PARAM = "GROUP_PARAM";
+		public static final String TITLE_PARAM = "TITLE_PARAM";
+		public static final String RECEIVER_PARAM = "RECEIVER_PARAM";
+		public static final String SENDER_PARAM = "SENDER_PARAM";
 	}
 }

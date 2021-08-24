@@ -9,10 +9,27 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.Locale;
 
 public abstract class BaseController {
 	@Autowired
 	protected MessageSource messageSource;
+
+	protected Locale DEFAULT_LOCALE = null;
+
+	protected Locale locale = DEFAULT_LOCALE;
+
+	public Locale getDEFAULT_LOCALE() {
+		return DEFAULT_LOCALE;
+	}
+
+	public void setDEFAULT_LOCALE(Locale DEFAULT_LOCALE) {
+		this.DEFAULT_LOCALE = DEFAULT_LOCALE;
+	}
+
+	public Locale getLocale() {
+		return locale;
+	}
 
 	protected class RestResponse<T> {
 		@JsonProperty("data")

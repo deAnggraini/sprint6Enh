@@ -6,9 +6,12 @@ import javax.persistence.*;
 @Table(name = "r_wf_group")
 public class WokrflowGroupModel extends EntityBase {
     @Id
+    @Column(name = "id")
     private Long id;
+
     @Column(name = "name")
     private String name;
+
     @ManyToOne
     @JoinColumn(name = "process_id")
     private WorkflowProcessModel process;

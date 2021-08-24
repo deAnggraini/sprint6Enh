@@ -1,5 +1,6 @@
 package id.co.bca.pakar.be.wf.service;
 
+import id.co.bca.pakar.be.wf.common.Constant;
 import id.co.bca.pakar.be.wf.dao.*;
 import id.co.bca.pakar.be.wf.dto.TaskDto;
 import id.co.bca.pakar.be.wf.exception.UndefinedProcessException;
@@ -12,6 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+
+import static id.co.bca.pakar.be.wf.common.Constant.ArticleWfState.DRAFT;
+import static id.co.bca.pakar.be.wf.common.Constant.Workflow.*;
 
 @Service
 public class ArticleWorkflowService {
@@ -44,6 +48,9 @@ public class ArticleWorkflowService {
 
     @Autowired
     private WorkflowPersonStateRepository workflowPersonStateRepository;
+
+    @Autowired
+    private WorkflowGroupTransitionRepository workflowGroupTransitionRepository;
 
     /**
      * start process workflow article
@@ -100,7 +107,7 @@ public class ArticleWorkflowService {
             requestUserTaskModel.setRequestModel(requestModel);
             requestUserTaskModel.setProposedBy(username);
             requestUserTaskModel.setAssigne(username); // assign to self pic
-            Optional<WorkflowPersonStateModel> receiverStateOpt = workflowPersonStateRepository.findById("DRAFT");
+            Optional<WorkflowStateModel> receiverStateOpt = workflowStateRepository.findById(DRAFT);
             requestUserTaskModel.setReceiverState(receiverStateOpt.isPresent()? receiverStateOpt.get() : null);
 
             workflowRequestUserTaskRepository.save(requestUserTaskModel);
@@ -108,6 +115,102 @@ public class ArticleWorkflowService {
             TaskDto taskDto = new TaskDto();
             taskDto.setCurrentState(initState.getCode());
             taskDto.setArticleId((Long) variables.get("article_id"));
+            taskDto.setRequestId(requestModel.getId());
+            taskDto.setSender(requestUserTaskModel.getProposedBy());
+            taskDto.setCurrentSenderState(requestUserTaskModel.getSenderState() != null ?
+                    requestUserTaskModel.getSenderState().getCode() : null);
+            taskDto.setAssigne(requestUserTaskModel.getAssigne());
+            taskDto.setCurrentReceiverState(requestUserTaskModel.getReceiverState() != null? requestUserTaskModel.getReceiverState().getCode() : "");
+
+            return taskDto;
+        } catch (UndefinedProcessException e) {
+            logger.error("exception", e);
+            throw new UndefinedProcessException("process not found");
+        } catch (UndefinedStartedStateException e) {
+            logger.error("exception", e);
+            throw new UndefinedStartedStateException("start state not found");
+        } catch (Exception e) {
+            logger.error("exception", e);
+            throw new Exception(e);
+        }
+    }
+
+    /**
+     * start process workflow article
+     *
+     * @param username
+     * @param map
+     */
+    @Transactional(rollbackFor = {Exception.class,
+            UndefinedProcessException.class,
+            UndefinedStartedStateException.class})
+    public TaskDto startProcess(String username, String token, Map<String, Object> map) throws Exception {
+        try {
+            logger.debug("start process workflow {} and param received is {}", map.get(PROCESS_KEY), map);
+            Map<String, Object> variables = new HashMap<>();
+            variables.put(SENDER_PARAM, map.get(SENDER_PARAM));
+            variables.put(GROUP_PARAM, map.get(GROUP_PARAM));
+            variables.put(RECEIVER_PARAM, map.get(RECEIVER_PARAM));
+            variables.put(ARTICLE_ID_PARAM, map.get(ARTICLE_ID_PARAM));
+            variables.put(TITLE_PARAM, map.get(TITLE_PARAM));
+            String processKey = (String)map.get(PROCESS_KEY);
+
+            logger.debug("get registered process in system {}", processKey);
+            Optional<WorkflowProcessModel> workflowProcessOpt = workflowProcessRepository.findById(processKey);
+            if (workflowProcessOpt.isEmpty()) {
+                throw new UndefinedProcessException("undefined process " + processKey);
+            }
+
+            WorkflowProcessModel workflowProcessModel = workflowProcessOpt.isPresent() ? workflowProcessOpt.get() : null;
+
+            logger.info("find registered started state process {}", processKey);
+            WorkflowStateModel initState = workflowStateRepository.findStateByStartTypeName(processKey);
+            if (initState == null) {
+                throw new UndefinedStartedStateException(processKey + "not have registered start state");
+            }
+
+            logger.info("create workflow request");
+            WorkflowRequestModel requestModel = new WorkflowRequestModel();
+            requestModel.setCreatedBy(username);
+            Date requestDate = new Date();
+            requestModel.setCreatedDate(requestDate);
+            requestModel.setRequestDate(requestDate);
+            requestModel.setTitle((String) variables.get(TITLE_PARAM));
+            requestModel.setUserid(username);
+            requestModel.setCurrentState(initState);
+            requestModel.setWfprocess(workflowProcessModel);
+
+            logger.info("save request flow");
+            requestModel = workflowRequestRepository.save(requestModel);
+
+            WorkflowRequestDataModel requestDataModel = new WorkflowRequestDataModel();
+            requestDataModel.setCreatedBy(username);
+            requestDataModel.setWfRequest(requestModel);
+            requestDataModel.setName(ARTICLE_ID);
+            requestDataModel.setValue("" + variables.get(ARTICLE_ID_PARAM));
+            requestDataModel = workflowRequestDataRepository.save(requestDataModel);
+
+            /*
+             * assign to sender her self, than if sender self can track task with api tasks
+             */
+            logger.debug("assign to sender self");
+            WorkflowRequestUserTaskModel requestUserTaskModel = new WorkflowRequestUserTaskModel();
+            requestUserTaskModel.setCreatedBy(username);
+            requestUserTaskModel.setRequestModel(requestModel);
+            requestUserTaskModel.setProposedBy(username);
+            requestUserTaskModel.setAssigne(username); // assign to self pic
+            Optional<WorkflowStateModel> receiverStateOpt = workflowStateRepository.findById(DRAFT);
+            requestUserTaskModel.setReceiverState(receiverStateOpt.isPresent()? receiverStateOpt.get() : null);
+
+            logger.info("save request user task model");
+            workflowRequestUserTaskRepository.save(requestUserTaskModel);
+
+            /*
+            populate response dto
+             */
+            TaskDto taskDto = new TaskDto();
+            taskDto.setCurrentState(initState.getCode());
+            taskDto.setArticleId((Long) variables.get(ARTICLE_ID_PARAM));
             taskDto.setRequestId(requestModel.getId());
             taskDto.setSender(requestUserTaskModel.getProposedBy());
             taskDto.setCurrentSenderState(requestUserTaskModel.getSenderState() != null ?
@@ -188,9 +291,9 @@ public class ArticleWorkflowService {
             newRequestUserTaskModel.setProposedBy(username);
             newRequestUserTaskModel.setAssigne((String) assignDto.get("username"));
             newRequestUserTaskModel.setNote((String)variables.get("sendNote"));
-            Optional<WorkflowPersonStateModel> receiverStateOpt = workflowPersonStateRepository.findById("DRAFT");
+            Optional<WorkflowStateModel> receiverStateOpt = workflowStateRepository.findById("DRAFT");
             newRequestUserTaskModel.setReceiverState(receiverStateOpt.isPresent()? receiverStateOpt.get() : null);
-            Optional<WorkflowPersonStateModel> senderStateOpt = workflowPersonStateRepository.findById("PENDING");
+            Optional<WorkflowStateModel> senderStateOpt = workflowStateRepository.findById("PENDING");
             newRequestUserTaskModel.setSenderState(senderStateOpt.isPresent()? senderStateOpt.get() : null);
             newRequestUserTaskModel = workflowRequestUserTaskRepository.save(newRequestUserTaskModel);
 
@@ -213,6 +316,120 @@ public class ArticleWorkflowService {
         }
     }
 
+    /**
+     *
+     * @param username
+     * @param token
+     * @param body
+     * @return
+     * @throws Exception
+     */
+    @Transactional(rollbackFor = {Exception.class,
+            UndefinedProcessException.class,
+            UndefinedStartedStateException.class})
+    public TaskDto completeTask(String username, String token, Map<String, Object> body) throws Exception {
+        try {
+            logger.debug("completing task for user {} and for article {}", username, body.get("id"));
+            Map<String, Object> variables = new HashMap<>();
+            variables.put("sendTo", body.get(SEND_TO_PARAM));
+            variables.put("article_id", body.get(ARTICLE_ID_PARAM));
+            variables.put("wfReqId", body.get(WORKFLOW_REQ_ID_PARAM));
+            variables.put("sendNote", body.get(SEND_NOTE_PARAM));
+            String receiverGroup = (String) body.get(RECEIVER_GROUP_PARAM);
+            String processKey = (String)body.get(PROCESS_KEY);
+            String wfReqId = (String) body.get(WORKFLOW_REQ_ID_PARAM);
+
+            Optional<WorkflowProcessModel> workflowProcessOpt = workflowProcessRepository.findById(processKey);
+            if (workflowProcessOpt.isEmpty()) {
+                throw new UndefinedProcessException("undefined process " + processKey);
+            }
+
+            /*
+            get assigne user task for certain article id
+             */
+            logger.debug("find workflow request by article id {} and workflow request id {}", variables.get(ARTICLE_ID_PARAM), wfReqId);
+            WorkflowRequestUserTaskModel currentWfRequestUt = workflowRequestUserTaskRepository
+                    .findWorkflowRequestUserTask(new StringBuffer().append(variables.get(ARTICLE_ID_PARAM)).toString(), username, processKey, wfReqId);
+
+            /*
+            get current workflow state of request
+             */
+            WorkflowRequestModel currentWfRequest = currentWfRequestUt.getRequestModel();
+            logger.debug("current state is {}", currentWfRequest.getCurrentState().getCode());
+
+            logger.debug("find workflow state by current state ");
+            WorkflowStateModel currentState = workflowStateRepository.findStateByName(currentWfRequest.getCurrentState().getCode(), processKey);
+            logger.debug("current state is {}", currentState.getCode());
+
+            /*
+            get workflow group transtiion
+             */
+            WorkflowGroupTransitionModel wfGroupTrans = workflowGroupTransitionRepository.findByReceiverGroup(receiverGroup, currentState.getCode());
+
+            logger.info("get next transition state from start state {} of receiver group", currentState.getCode(), receiverGroup);
+            WorkflowTransitionUserTaskModel wfTransUtask = workflowTransitionUserTaskRepository
+                    .findTransitionByCurrentStateAndActionType(currentState.getCode()
+                    , new Helper().convertTaskTypeToNumeric((String) body.get(TASK_TYPE_PARAM)), wfGroupTrans.getWorkflowTransitionModel().getId());
+            WorkflowStateModel nextState = wfTransUtask.getTransition().getNextState();
+            logger.debug("next state transition is {}", nextState.getCode());
+
+            logger.debug("update current workflow request user task");
+            currentWfRequestUt.setModifyDate(new Date());
+            currentWfRequestUt.setApprovedDate(new Date());
+            currentWfRequestUt = workflowRequestUserTaskRepository.save(currentWfRequestUt);
+
+            logger.debug("set current state of current workflow request to new state {}", nextState.getCode());
+            currentWfRequest.setCurrentState(nextState);
+            currentWfRequest.setModifyBy(username);
+            currentWfRequest.setModifyDate(new Date());
+
+            logger.debug("save request to db");
+            currentWfRequest = workflowRequestRepository.save(currentWfRequest);
+
+            Map assignDto = (Map) body.get(SEND_TO_PARAM);
+            logger.info("create new task for other user {}", assignDto);
+            WorkflowRequestUserTaskModel newRequestUserTaskModel = new WorkflowRequestUserTaskModel();
+            newRequestUserTaskModel.setCreatedBy(username);
+            newRequestUserTaskModel.setRequestModel(currentWfRequest);
+            newRequestUserTaskModel.setProposedBy(username);
+            newRequestUserTaskModel.setAssigne((String) assignDto.get(USERNAME_PARAM));
+            newRequestUserTaskModel.setNote((String)variables.get(SEND_NOTE_PARAM));
+            Optional<WorkflowStateModel> receiverStateOpt = workflowStateRepository.findById(nextState.getCode());
+            newRequestUserTaskModel.setReceiverState(receiverStateOpt.isPresent()? receiverStateOpt.get() : null);
+            Optional<WorkflowStateModel> senderStateOpt = workflowStateRepository.findById(Constant.ArticleWfState.PENDING);
+            newRequestUserTaskModel.setSenderState(senderStateOpt.isPresent()? senderStateOpt.get() : null);
+            newRequestUserTaskModel = workflowRequestUserTaskRepository.save(newRequestUserTaskModel);
+
+            /*
+            populate response task dto
+             */
+            TaskDto taskDto = new TaskDto();
+            taskDto.setCurrentState(nextState.getCode());
+            taskDto.setArticleId((Long) variables.get(ARTICLE_ID_PARAM));
+            taskDto.setRequestId(currentWfRequest.getId());
+            taskDto.setAssigne((String) assignDto.get(USERNAME_PARAM));
+            taskDto.setSender(newRequestUserTaskModel.getProposedBy());
+            taskDto.setCurrentSenderState(newRequestUserTaskModel.getSenderState().getCode());
+            taskDto.setAssigne(newRequestUserTaskModel.getAssigne());
+            taskDto.setCurrentReceiverState(newRequestUserTaskModel.getReceiverState().getCode());
+
+            logger.info("response task to client {}", taskDto.toString());
+            return taskDto;
+        } catch (UndefinedProcessException e) {
+            logger.error("exception", e);
+            throw new UndefinedProcessException("process not found");
+        } catch (Exception e) {
+            logger.error("exception", e);
+            throw new Exception(e);
+        }
+    }
+
+    /**
+     *
+     * @param assignee
+     * @return
+     * @throws Exception
+     */
     @Transactional(rollbackFor = {Exception.class})
     public List<TaskDto> getTasks(String assignee) throws Exception {
         logger.debug("get all task for assigne {}", assignee);
@@ -246,26 +463,9 @@ public class ArticleWorkflowService {
         }
     }
 
-//    @Transactional
-//    public List<TaskDto> getTaskRequest(String assignee) throws Exception {
-//        logger.debug("get all request task for assigne {}", assignee);
-//        try {
-//            Iterable<WorkflowRequestModel> tasks = workflowRequestRepository.findByAssigne(assignee);
-//            List<TaskDto> dtos = new MapperHelper().mapToTaskDtos(tasks);
-//            return dtos;
-//        } catch (Exception e) {
-//            logger.error("exception", e);
-//            throw new Exception("exception", e);
-//        }
-//    }
-//
-//    @Transactional
-//    public void submitReview(Approval approval) {
-//        Map<String, Object> variables = new HashMap<String, Object>();
-//        variables.put("approved", approval.isStatus());
-//        taskService.complete(approval.getId(), variables);
-//    }
-
+    /**
+     *
+     */
     private class MapperHelper {
         public List<TaskDto> mapToTaskDtos(Iterable<WorkflowRequestUserTaskModel> iterable) {
             List<TaskDto> dtos = new ArrayList<>();
@@ -278,7 +478,7 @@ public class ArticleWorkflowService {
                 dto.setCurrentSenderState(model.getSenderState() != null ? model.getSenderState().getCode() : "");
                 dto.setCurrentReceiverState(model.getReceiverState() != null ? model.getReceiverState().getCode() : "");
                 logger.debug("article id {}", model.getRequestModel().getId());
-                Optional<WorkflowRequestDataModel> requestDataModelOpt = workflowRequestDataRepository.findByNameAndRequestId("ARTICLE_ID", model.getRequestModel().getId());
+                Optional<WorkflowRequestDataModel> requestDataModelOpt = workflowRequestDataRepository.findByNameAndRequestId(ARTICLE_ID, model.getRequestModel().getId());
                 if (requestDataModelOpt.isPresent()) {
                     WorkflowRequestDataModel requestDataModel = requestDataModelOpt.get();
                     logger.debug("article id {}", requestDataModel.getValue());

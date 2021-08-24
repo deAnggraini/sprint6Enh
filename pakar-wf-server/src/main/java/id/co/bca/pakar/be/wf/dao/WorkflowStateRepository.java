@@ -12,6 +12,7 @@ public interface WorkflowStateRepository extends CrudRepository<WorkflowStateMod
             "WHERE m.workflowStateTypeModel.id=1 " +
             "AND m.deleted IS FALSE")
     WorkflowStateModel findDefaultStartStateById();
+
     @Query("SELECT m From WorkflowStateModel m " +
             "WHERE m.workflowStateTypeModel.name='Start' " +
             "AND m.deleted IS FALSE")
@@ -21,6 +22,12 @@ public interface WorkflowStateRepository extends CrudRepository<WorkflowStateMod
             "WHERE m.workflowStateTypeModel.name='Start' " +
             "AND m.deleted IS FALSE")
     WorkflowStateModel findStateByStartTypeName();
+
+    @Query("SELECT m From WorkflowStateModel m " +
+            "WHERE m.workflowStateTypeModel.name='Start' " +
+            "AND m.workflowProcessModel.id = :processKey " +
+            "AND m.deleted IS FALSE")
+    WorkflowStateModel findStateByStartTypeName(@Param("processKey") String processKey);
 
     @Query("SELECT m From WorkflowStateModel m " +
             "WHERE m.code = :state " +

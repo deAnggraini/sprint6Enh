@@ -79,4 +79,17 @@ public class TaskDto {
     public void setCurrentReceiverState(String currentReceiverState) {
         this.currentReceiverState = currentReceiverState;
     }
+
+    @Override
+    public String toString() {
+        return "TaskDto{" +
+                "requestId='" + requestId + '\'' +
+                ", articleId=" + articleId +
+                ", sender='" + sender + '\'' +
+                ", assigne='" + assigne + '\'' +
+                ", currentState='" + currentState + '\'' +
+                ", currentSenderState='" + currentSenderState + '\'' +
+                ", currentReceiverState='" + currentReceiverState + '\'' +
+                '}';
+    }
 }
