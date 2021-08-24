@@ -10,8 +10,8 @@ import org.springframework.stereotype.Repository;
 public interface WorkflowGroupTransitionRepository extends CrudRepository<WorkflowGroupTransitionModel, String> {
     @Query(
             "SELECT m FROM WorkflowGroupTransitionModel m " +
-                    "WHERE m.rcvGroup.id=:group " +
-                    "AND m.workflowTransitionModel.currentState.code=:startState " +
+                    "WHERE m.rcvGroup.name = :group " +
+                    "AND m.workflowTransitionModel.currentState.code = :startState " +
                     "AND m.deleted IS FALSE"
     )
     WorkflowGroupTransitionModel findByReceiverGroup(@Param("group") String group, @Param("startState") String startState);
