@@ -328,12 +328,12 @@ public class ArticleWorkflowService {
     public TaskDto completeTask(String username, String token, Map<String, Object> body) throws Exception {
         try {
             logger.debug("completing task for user {} and for article {}", username, body.get(ARTICLE_ID_PARAM));
-            Map<String, Object> variables = new HashMap<>();
-            variables.put(SEND_TO_PARAM, body.get(SEND_TO_PARAM));
-            variables.put(ARTICLE_ID_PARAM, body.get(ARTICLE_ID_PARAM));
-            variables.put(WORKFLOW_REQ_ID_PARAM, body.get(WORKFLOW_REQ_ID_PARAM));
-            variables.put(SEND_NOTE_PARAM, body.get(SEND_NOTE_PARAM));
-            String receiverGroup = (String) body.get(RECEIVER_GROUP_PARAM);
+//            Map<String, Object> variables = new HashMap<>();
+//            variables.put(SEND_TO_PARAM, body.get(SEND_TO_PARAM));
+//            variables.put(ARTICLE_ID_PARAM, body.get(ARTICLE_ID_PARAM));
+//            variables.put(WORKFLOW_REQ_ID_PARAM, body.get(WORKFLOW_REQ_ID_PARAM));
+//            variables.put(SEND_NOTE_PARAM, body.get(SEND_NOTE_PARAM));
+            String receiverGroup = (String) body.get(GROUP_PARAM);
             String processKey = (String) body.get(PROCESS_KEY);
             String wfReqId = (String) body.get(WORKFLOW_REQ_ID_PARAM);
 
@@ -345,9 +345,9 @@ public class ArticleWorkflowService {
             /*
             get assigne user task for certain article id
              */
-            logger.debug("find workflow request by article id {} and workflow request id {}", variables.get(ARTICLE_ID_PARAM), wfReqId);
+            logger.debug("find workflow request by article id {} and workflow request id {}", body.get(ARTICLE_ID_PARAM), wfReqId);
             WorkflowRequestUserTaskModel currentWfRequestUt = workflowRequestUserTaskRepository
-                    .findWorkflowRequestUserTask(new StringBuffer().append(variables.get(ARTICLE_ID_PARAM)).toString(), username, processKey, wfReqId);
+                    .findWorkflowRequestUserTask(new StringBuffer().append(body.get(ARTICLE_ID_PARAM)).toString(), username, processKey, wfReqId);
 
             /*
             get current workflow state of request
@@ -356,13 +356,16 @@ public class ArticleWorkflowService {
             logger.debug("current state is {}", currentWfRequest.getCurrentState().getCode());
 
             logger.debug("find workflow state by current state ");
-            WorkflowStateModel currentState = workflowStateRepository.findStateByName(currentWfRequest.getCurrentState().getCode(), processKey);
+            WorkflowStateModel currentState = workflowStateRepository
+                    .findStateByName(currentWfRequest.getCurrentState().getCode(), processKey);
             logger.debug("current state is {}", currentState.getCode());
 
             /*
             get workflow group transition
              */
-            WorkflowGroupTransitionModel wfGroupTrans = workflowGroupTransitionRepository.findByReceiverGroup(receiverGroup, currentState.getCode());
+            logger.debug("find workflow group transition using receiver group {} and current state code {}", receiverGroup, currentState.getCode());
+            WorkflowGroupTransitionModel wfGroupTrans = workflowGroupTransitionRepository
+                    .findByReceiverGroup(receiverGroup, currentState.getCode());
             logger.debug("transition id of receiver group {} and state {} is {}", new Object[]{receiverGroup, currentState.getCode(), wfGroupTrans.getWorkflowTransitionModel().getId()});
 
             logger.info("get next transition state from start state {} of receiver group {}", currentState.getCode(), receiverGroup);
@@ -392,8 +395,8 @@ public class ArticleWorkflowService {
             newRequestUserTaskModel.setCreatedBy(username);
             newRequestUserTaskModel.setRequestModel(currentWfRequest);
             newRequestUserTaskModel.setProposedBy(username);
-            newRequestUserTaskModel.setAssigne((String) assignDto.get(USERNAME_PARAM));
-            newRequestUserTaskModel.setNote((String) variables.get(SEND_NOTE_PARAM));
+            newRequestUserTaskModel.setAssigne((String) assignDto.get(RECEIVER_PARAM));
+            newRequestUserTaskModel.setNote((String) body.get(SEND_NOTE_PARAM));
             Optional<WorkflowStateModel> receiverStateOpt = workflowStateRepository.findById(nextState.getCode());
             newRequestUserTaskModel.setReceiverState(receiverStateOpt.isPresent() ? receiverStateOpt.get() : null);
             Optional<WorkflowStateModel> senderStateOpt = workflowStateRepository.findById(Constant.ArticleWfState.PENDING);
@@ -405,9 +408,9 @@ public class ArticleWorkflowService {
              */
             TaskDto taskDto = new TaskDto();
             taskDto.setCurrentState(nextState.getCode());
-            taskDto.setArticleId((Long) variables.get(ARTICLE_ID_PARAM));
+            taskDto.setArticleId((Long) body.get(ARTICLE_ID_PARAM));
             taskDto.setRequestId(currentWfRequest.getId());
-            taskDto.setAssigne((String) assignDto.get(USERNAME_PARAM));
+            taskDto.setAssigne((String) assignDto.get(RECEIVER_PARAM));
             taskDto.setSender(newRequestUserTaskModel.getProposedBy());
             taskDto.setCurrentSenderState(newRequestUserTaskModel.getSenderState().getCode());
             taskDto.setAssigne(newRequestUserTaskModel.getAssigne());

@@ -623,7 +623,10 @@ public class ArticleServiceImpl implements ArticleService {
                 wfRequest.put(TITLE_PARAM, articleDto.getTitle());
                 wfRequest.put(ARTICLE_ID_PARAM, articleDto.getId());
                 wfRequest.put(TASK_TYPE_PARAM, "APPROVE");
-                wfRequest.put(SEND_TO_PARAM, articleDto.getSendTo());
+                wfRequest.put(SENDER_PARAM, articleDto.getUsername());
+                Map<String, String> assignDto = new HashMap();
+                assignDto.put(RECEIVER_PARAM, articleDto.getSendTo().getUsername());
+                wfRequest.put(SEND_TO_PARAM, assignDto);
                 wfRequest.put(SEND_NOTE_PARAM, articleDto.getSendNote());
                 wfRequest.put(GROUP_PARAM, rcvRoles.get(0));
                 wfRequest.put(WORKFLOW_REQ_ID_PARAM, articleState.getWfReqId());

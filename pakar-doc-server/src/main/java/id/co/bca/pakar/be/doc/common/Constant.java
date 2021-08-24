@@ -88,7 +88,7 @@ public class Constant {
 		public static final String PROCESS_KEY = "PROCESS_KEY";
 		public static final String ARTICLE_ID = "ARTICLE_ID";
 		public static final String WORKFLOW_REQ_ID_PARAM = "WORKFLOW_REQ_ID_PARAM";
-		public static final String RECEIVER_GROUP_PARAM = "RECEIVER_GROUP_PARAM";
+//		public static final String RECEIVER_GROUP_PARAM = "RECEIVER_GROUP_PARAM";
 		public static final String ARTICLE_ID_PARAM = "ARTICLE_ID_PARAM";
 		public static final String TASK_TYPE_PARAM = "TASK_TYPE_PARAM";
 		public static final String SEND_TO_PARAM = "SEND_TO_PARAM";
