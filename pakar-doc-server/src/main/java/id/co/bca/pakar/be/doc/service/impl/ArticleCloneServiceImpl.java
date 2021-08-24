@@ -3,7 +3,7 @@ package id.co.bca.pakar.be.doc.service.impl;
 import id.co.bca.pakar.be.doc.dao.ArticleCloneRepository;
 import id.co.bca.pakar.be.doc.dao.ArticleContentCloneRepository;
 import id.co.bca.pakar.be.doc.model.Article;
-import id.co.bca.pakar.be.doc.model.ArticleClone;
+//import id.co.bca.pakar.be.doc.model.ArticleClone;
 import id.co.bca.pakar.be.doc.model.ArticleContent;
 import id.co.bca.pakar.be.doc.model.ArticleContentClone;
 import id.co.bca.pakar.be.doc.service.ArticleCloneService;
@@ -25,25 +25,25 @@ public class ArticleCloneServiceImpl implements ArticleCloneService {
     @Autowired
     private ArticleContentCloneRepository articleContentCloneRepository;
 
-    @Override
-    @Transactional
-    public Boolean clone(Article article, String username) throws Exception {
-        try {
-            logger.info("clone article id {} for user {}", article.getId(), username);
-            // validate if article clone is exist
-            Boolean isExistClone = articleCloneRepository.existByArticleId(article.getId());
-            if (isExistClone.booleanValue())
-                return Boolean.FALSE;
-
-            logger.info("clone article process");
-            ArticleClone clone = new ArticleCloneHelper().populateArticle(article);
-            articleCloneRepository.save(clone);
-            return Boolean.TRUE;
-        } catch (Exception e) {
-            logger.error("exception ", e);
-            throw new Exception(e);
-        }
-    }
+//    @Override
+//    @Transactional
+//    public Boolean clone(Article article, String username) throws Exception {
+//        try {
+//            logger.info("clone article id {} for user {}", article.getId(), username);
+//            // validate if article clone is exist
+//            Boolean isExistClone = articleCloneRepository.existByArticleId(article.getId());
+//            if (isExistClone.booleanValue())
+//                return Boolean.FALSE;
+//
+//            logger.info("clone article process");
+//            ArticleClone clone = new ArticleCloneHelper().populateArticle(article);
+//            articleCloneRepository.save(clone);
+//            return Boolean.TRUE;
+//        } catch (Exception e) {
+//            logger.error("exception ", e);
+//            throw new Exception(e);
+//        }
+//    }
 
     /*
     clone main article content into article content clone
@@ -101,26 +101,26 @@ public class ArticleCloneServiceImpl implements ArticleCloneService {
      * helper class for article version
      */
     private class ArticleCloneHelper {
-        ArticleClone populateArticle(Article article) {
-            logger.info("populate article to article clone");
-            ArticleClone article_ = new ArticleClone();
-            article_.setId(article.getId());
-            article_.setArticleId(article.getId());
-            article_.setCreatedBy(article.getModifyBy());
-            article_.setJudulArticle(article.getJudulArticle());
-            article_.setNewArticle(article.getNewArticle());
-            article_.setFullNameModifier(article.getFullNameModifier());
-            article_.setArticleState(article.getArticleState());
-            article_.setArticleUsedBy(article.getArticleUsedBy());
-            article_.setShortDescription(article.getShortDescription());
-            article_.setUseEmptyTemplate(article.getUseEmptyTemplate());
-            article_.setArticleTemplate(article.getArticleTemplate());
-            article_.setStructure(article.getStructure().getId());
-            article_.setVideoLink(article.getVideoLink());
-            article_.setReleaseVersion(UUID.randomUUID().toString());
-            article_.setTimeStampVersion(new Date());
-            return article_;
-        }
+//        ArticleClone populateArticle(Article article) {
+//            logger.info("populate article to article clone");
+//            ArticleClone article_ = new ArticleClone();
+//            article_.setId(article.getId());
+//            article_.setArticleId(article.getId());
+//            article_.setCreatedBy(article.getModifyBy());
+//            article_.setJudulArticle(article.getJudulArticle());
+//            article_.setNewArticle(article.getNewArticle());
+//            article_.setFullNameModifier(article.getFullNameModifier());
+//            article_.setArticleState(article.getArticleState());
+//            article_.setArticleUsedBy(article.getArticleUsedBy());
+//            article_.setShortDescription(article.getShortDescription());
+//            article_.setUseEmptyTemplate(article.getUseEmptyTemplate());
+//            article_.setArticleTemplate(article.getArticleTemplate());
+//            article_.setStructure(article.getStructure().getId());
+//            article_.setVideoLink(article.getVideoLink());
+//            article_.setReleaseVersion(UUID.randomUUID().toString());
+//            article_.setTimeStampVersion(new Date());
+//            return article_;
+//        }
 
         /**
          * populate list of article content
