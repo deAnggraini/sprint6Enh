@@ -79,7 +79,7 @@ public interface WorkflowRequestUserTaskRepository extends CrudRepository<Workfl
             "LEFT JOIN t_wf_request_data twrd ON twrd.request_id = twr.id " +
             "INNER JOIN r_wf_state rws on rws.code = twr.current_state " +
             "INNER JOIN r_wf_state_type rwst on rwst.id = rws.state_type  " +
-            "INNER JOIN r_wf_process ON rwp.id=twr.process_id " +
+            "INNER JOIN r_wf_process rwp ON rwp.id=twr.process_id " +
             "WHERE twrd.name = 'ARTICLE_ID' " +
             "AND twrd.value = :articleId " +
             "AND twrut.assigne = :assigne " +

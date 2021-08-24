@@ -328,12 +328,12 @@ public class ArticleWorkflowService {
             UndefinedStartedStateException.class})
     public TaskDto completeTask(String username, String token, Map<String, Object> body) throws Exception {
         try {
-            logger.debug("completing task for user {} and for article {}", username, body.get("id"));
+            logger.debug("completing task for user {} and for article {}", username, body.get(ARTICLE_ID_PARAM));
             Map<String, Object> variables = new HashMap<>();
-            variables.put("sendTo", body.get(SEND_TO_PARAM));
-            variables.put("article_id", body.get(ARTICLE_ID_PARAM));
-            variables.put("wfReqId", body.get(WORKFLOW_REQ_ID_PARAM));
-            variables.put("sendNote", body.get(SEND_NOTE_PARAM));
+            variables.put(SEND_TO_PARAM, body.get(SEND_TO_PARAM));
+            variables.put(ARTICLE_ID_PARAM, body.get(ARTICLE_ID_PARAM));
+            variables.put(WORKFLOW_REQ_ID_PARAM, body.get(WORKFLOW_REQ_ID_PARAM));
+            variables.put(SEND_NOTE_PARAM, body.get(SEND_NOTE_PARAM));
             String receiverGroup = (String) body.get(RECEIVER_GROUP_PARAM);
             String processKey = (String)body.get(PROCESS_KEY);
             String wfReqId = (String) body.get(WORKFLOW_REQ_ID_PARAM);

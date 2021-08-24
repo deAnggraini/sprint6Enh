@@ -605,16 +605,18 @@ public class ArticleServiceImpl implements ArticleService {
                 // send to
                 logger.info("send article to {}", articleDto.getSendTo().getUsername());
                 logger.debug("send note article {}", articleDto.getSendNote());
-//                WfArticleDto wfArticleDto = new WfArticleDto();
-//                wfArticleDto.setId(articleDto.getId());
-//                wfArticleDto.setTitle(articleDto.getTitle());
-//                wfArticleDto.setTaskType("Approve");
-//                wfArticleDto.setSendTo(articleDto.getSendTo());
-//                wfArticleDto.setSendNote(articleDto.getSendNote());
 
                 if (articleState == null) {
                     articleState = articleStateRepository.findByArticleId(article.getId());
                 }
+
+                UserWrapperDto userWrapperDto = new UserWrapperDto();
+                userWrapperDto.setUsername(articleDto.getSendTo().getUsername());
+                logger.debug("get roles of task receiver {}", articleDto.getSendTo().getUsername());
+                ResponseEntity<ApiResponseWrapper.RestResponse<List<String>>> roleSenderResponse = pakarOauthClient
+                        .getRolesByUser(BEARER + articleDto.getToken(), articleDto.getUsername(), userWrapperDto);
+                List<String> rcvRoles = roleSenderResponse.getBody().getData();
+                rcvRoles.forEach(e -> logger.debug("task receiver {} has role {}", userWrapperDto.getUsername(), e));
 
                 Map<String, Object> wfRequest = new HashMap<>();
                 wfRequest.put(PROCESS_KEY, ARTICLE_REVIEW_WF);
@@ -623,15 +625,8 @@ public class ArticleServiceImpl implements ArticleService {
                 wfRequest.put(TASK_TYPE_PARAM, "APPROVE");
                 wfRequest.put(SEND_TO_PARAM, articleDto.getSendTo());
                 wfRequest.put(SEND_NOTE_PARAM, articleDto.getSendNote());
+                wfRequest.put(GROUP_PARAM, rcvRoles.get(0));
                 wfRequest.put(WORKFLOW_REQ_ID_PARAM, articleState.getWfReqId());
-
-                UserWrapperDto userWrapperDto = new UserWrapperDto();
-                userWrapperDto.setUsername(articleDto.getSendTo().getUsername());
-                logger.debug("get roles of task receiver {}", articleDto.getSendTo().getUsername());
-                ResponseEntity<ApiResponseWrapper.RestResponse<List<String>>> roleSenderResponse = pakarOauthClient
-                        .getRolesByUser(BEARER + articleDto.getToken(), articleDto.getUsername(), userWrapperDto);
-                List<String> roleSender = roleSenderResponse.getBody().getData();
-                roleSender.forEach(e -> logger.debug("task receiver {} has role {}", userWrapperDto.getUsername(), e));
 
                 ResponseEntity<ApiResponseWrapper.RestResponse<TaskDto>> restResponse = pakarWfClient
                         .completeTask(BEARER + articleDto.getToken(), articleDto.getUsername(), wfRequest);
