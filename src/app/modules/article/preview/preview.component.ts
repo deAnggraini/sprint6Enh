@@ -1,6 +1,6 @@
-import { ChangeDetectorRef, Component, OnInit, Output, EventEmitter, Input, AfterViewInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Output, EventEmitter, Input, AfterViewInit, OnDestroy } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, NavigationEnd, NavigationStart } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { AuthService, UserModel } from '../../auth';
@@ -12,13 +12,14 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ConfirmService } from 'src/app/utils/_services/confirm.service';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PlatformLocation } from '@angular/common';
+import DiffMatchPatch from 'diff-match-patch';
 
 @Component({
   selector: 'pakar-article-preview',
   templateUrl: './preview.component.html',
   styleUrls: ['./preview.component.scss']
 })
-export class PreviewComponent implements OnInit, AfterViewInit {
+export class PreviewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Input() hideTopbar: boolean = true;
   @Input() readerView: boolean = false;
@@ -28,6 +29,8 @@ export class PreviewComponent implements OnInit, AfterViewInit {
   @Input() btnSaveSendEnabled: boolean = false;
   @Input() alertMessage: string;
   @Input() showVideo: boolean = false;
+  @Input() isCompare: boolean = false;
+  @Input() originArticle: ArticleDTO = null;
 
   @Output() onCancelCallback = new EventEmitter<any>();
   @Output() onSaveCallback = new EventEmitter<any>();
@@ -59,6 +62,8 @@ export class PreviewComponent implements OnInit, AfterViewInit {
   isExpand: boolean = false;
   editable: boolean = true;
 
+  diff = new DiffMatchPatch();
+  popstate: boolean = false;
 
   //faq carousel
   slides = [];
@@ -78,6 +83,11 @@ export class PreviewComponent implements OnInit, AfterViewInit {
       }
     ]
   };
+
+  // scroll 
+  scrollLevels: { [navigationId: number]: number } = {};
+  lastId = 0;
+  restoredId: number;
 
   constructor(
     private router: Router,
@@ -157,8 +167,7 @@ export class PreviewComponent implements OnInit, AfterViewInit {
         btnCancelText: 'Batal'
       }).then((confirmed) => {
         if (confirmed === true) {
-          console.log(`/article/form/${item.id}`);
-          this.router.navigate([`/article/form/${item.id}`, { isEdit: true, contentId }], {fragment:`acc-id-${contentId}`});
+          this.router.navigate([`/article/form/${item.id}`, { isEdit: true, contentId }], { fragment: `acc-id-${contentId}` });
         }
       });
     });
@@ -186,7 +195,7 @@ export class PreviewComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    // setTimeout(() => { document.getElementById('alert').hidden = true }, 3000);
+    console.log('ngAfterViewInit called');
   }
 
   private loadData() {
@@ -196,14 +205,12 @@ export class PreviewComponent implements OnInit, AfterViewInit {
         this.alert = true;
         this.alertMessage = this.articleService.formAlert;
         setTimeout(() => {
-          console.log('trigger hidden alert')
           document.getElementById('alert').hidden = true;
           this.articleService.formAlert = null;
         }, 3000);
       }
     } else {
       this.route.params.subscribe(params => {
-        // console.log('loadData', { params });
         if (params.id) {
           this.articleService.getById(params.id, false).subscribe(resp => {
             this.setArticle(resp);
@@ -234,8 +241,88 @@ export class PreviewComponent implements OnInit, AfterViewInit {
       });
     }
   }
+  private compareContent(contents: ArticleContentDTO[]): boolean {
+    if (!contents) return;
+    let result: boolean = false;
+    contents.forEach(d => {
+      const old = this.articleService._findNode(d.id, this.originArticle.contents);
+      const { text, hasNew } = this.compareDesc(old.topicContent, d.topicContent);
+      if (hasNew) {
+        result = true;
+        d.title = d.topicTitle = `<span class="bg-new">${d.title} <sup class="fb7 fs10 txt-new">(new)</sup></span>`;
+        d.topicContent = text;
+      }
+
+      const childHasNew = this.compareContent(d.children);
+      if (childHasNew) {
+        result = true;
+        d.title = d.topicTitle = `<span class="bg-new">${d.title} <sup class="fb7 fs10 txt-new">(new)</sup></span>`;
+      }
+    })
+    return result;
+  }
+  private removeHTMLTag(value: string): string {
+    return value.replace(/(<([^>]+)>)/gi, "");
+  }
+  private splitParagraph(value: string): string[] {
+    const result = [];
+
+    let _value = value.slice();
+    _value = _value.replace(/<ul/gi, '<p><ul');
+    _value = _value.replace(/<\/ul>/gi, '</ul></p>');
+    _value = _value.replace(/<ol/gi, '<p><ol');
+    _value = _value.replace(/<\/ol>/gi, '</ol></p>');
+
+    const split = _value.split('</p>');
+    split.forEach(d => {
+      if (d) {
+        result.push(d.replace('<p>', ''));
+      }
+    })
+    return result;
+  }
+  private compareDesc(old: string, _new: string): { text: string, hasNew: boolean } {
+    if (!old) old = '';
+    if (!_new) _new = '';
+
+    const result = [];
+    let hasNew: boolean = false;
+    const oldArr = this.splitParagraph(old);
+    const newArr = this.splitParagraph(_new);
+
+    newArr.forEach((d, i) => {
+      let tagStart = 'span';
+      let addClass = '';
+      if (d.startsWith("<ol") || d.startsWith("<ul")) { tagStart = 'div'; addClass = 'tag-ul' }
+      result.push('<p>');
+      const diff = this.diff.diff_main(oldArr[i] || '', d);
+      diff.forEach(d => {
+        const code = d[0];
+        const str = d[1];
+        if (code == 0) result.push(str);
+        if (code == 1) {
+          result.push(`<${tagStart} class="bg-new ${addClass}">${str} <sup class="fb7 fs10 txt-new">(new)</sup></${tagStart}>`);
+          hasNew = true;
+        }
+      });
+      result.push('</p>');
+    })
+    return { text: result.join(''), hasNew };
+  }
+  private getCompareArticle(article: ArticleDTO): ArticleDTO {
+    const _article: ArticleDTO = JSON.parse(JSON.stringify(article));
+    const _old = this.originArticle;
+
+    _article.desc = this.compareDesc(_old.desc, _article.desc).text;
+    this.compareContent(_article.contents);
+
+    return _article;
+  }
   setArticle(article: ArticleDTO) {
     this.articleDTO = article;
+    if (this.isCompare) {
+      this.articleDTO = this.getCompareArticle(article);
+    }
     this.categoryId = this.articleDTO.structureId;
 
     // HQ tampilkan gambar disini
@@ -335,6 +422,10 @@ export class PreviewComponent implements OnInit, AfterViewInit {
     // alert1.innerHTML = "";
 
     this.alert = false;
+  }
+
+  ngOnDestroy(): void {
+    console.log('destroy called');
   }
 
 }

@@ -53,7 +53,7 @@ height: 184px;
             <div class="d-flex flex-row justify-content-between">
                 <div class="d-flex flex-row">
                     <span class="pakar-text-header">{{articleDTO.title}}</span>
-                    <span *ngIf="!articleDTO.isPublished"><sup class="fb7 fs12" style="color: #107C10;">(new)</sup></span>
+                    <span *ngIf="!articleDTO.isPublished"><sup class="fb7 fs12 txt-new">(new)</sup></span>
                 </div>
                 <!-- on save -->
                 <div class="d-flex flex-row" *ngIf="!onPreview">
@@ -154,8 +154,8 @@ height: 184px;
                             <mat-expansion-panel class="acc-level acc-level-1"
                                 *ngFor="let content of articleDTO.contents" [expanded]="content.expanded">
                                 <mat-expansion-panel-header [@.disabled]="true">
-                                    <mat-panel-title>
-                                        <span>{{content.title}}</span>
+                                    <mat-panel-title class="fs16pt">
+                                        <span [innerHTML]="content.title">&nbsp;</span>
                                     </mat-panel-title>
                                     <ng-container *ngIf="readerView && isAllowEdit" [ngTemplateOutlet]="rightIcon"
                                         [ngTemplateOutletContext]="{ data: content}">
@@ -245,8 +245,9 @@ height: 184px;
             <mat-expansion-panel [@.disabled]="true" class="acc-level acc-level-{{level}}"
                 [expanded]="content.expanded">
                 <mat-expansion-panel-header>
-                    <mat-panel-title class="text-ellipsis-1">
-                        {{numberingFormat(content)}}. {{content.title}}
+                    <mat-panel-title class="d-flex flex-row fs16pt" [id]="'acc-title-'+content.id">
+                        <span class="mr-2">{{numberingFormat(content)}}.</span>
+                        <span [innerHTML]="content.title"></span>
                     </mat-panel-title>
                     <ng-container *ngIf="readerView && isAllowEdit" [ngTemplateOutlet]="rightIcon"
                         [ngTemplateOutletContext]="{ data: content}">

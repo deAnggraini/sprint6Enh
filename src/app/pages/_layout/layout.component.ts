@@ -8,6 +8,8 @@ import {
 import { LayoutService, LayoutInitService } from '../../_metronic/core';
 import KTLayoutContent from '../../../assets/js/layout/base/content';
 import { ThemeService } from 'src/app/modules/_services/theme.service';
+import { Router, NavigationStart, NavigationEnd } from '@angular/router';
+import { PakarStateService, PakarRawState } from 'src/app/modules/_services/pakar-state.service';
 
 @Component({
   selector: 'app-layout',
@@ -45,11 +47,15 @@ export class LayoutComponent implements OnInit, AfterViewInit {
 
   // custom header background
   background: string = ''
+  popstate: boolean = false;
+  // scrolls: any[] = [];
 
   constructor(
     private initService: LayoutInitService,
     private layout: LayoutService,
-    private themes : ThemeService
+    private themes: ThemeService,
+    private router: Router,
+    private state: PakarStateService
   ) {
     this.initService.init();
   }
@@ -143,5 +149,61 @@ export class LayoutComponent implements OnInit, AfterViewInit {
     }
     // Init Content
     KTLayoutContent.init('kt_content');
+
+    this.router.events.subscribe(resp => {
+      const y = window.scrollY;
+      if (resp instanceof NavigationStart) {
+        const { id, restoredState, url } = resp;
+        // console.log('NavigationStart', JSON.parse(JSON.stringify(resp)));
+        this.popstate = resp.navigationTrigger == "popstate";
+        if (this.popstate) {
+          let oldData: PakarRawState;
+          if (restoredState) {
+            const { navigationId } = restoredState;
+            oldData = this.state.state[navigationId];
+          } else if (url) {
+            const datas = Object.values(this.state.state);
+            oldData = datas.find(d => d.url == url);
+            this.state.state[id] = oldData;
+          }
+          if (!oldData) {
+            const keys = Object.keys(this.state.state);
+            oldData = this.state.state[keys[0]];
+            this.state.state[id] = oldData;
+          }
+          if (oldData) {
+            oldData.url = url
+          }
+        } else {
+          const index = id < 0 ? 0 : id - 1;
+
+          if (!this.state.state[index]) this.state.state[index] = { url: 'kosong', scroll: 0, data: {} };
+          this.state.state[index].scroll = y;
+          this.state.state[id] = { url, scroll: 0, data: {} };
+        }
+      } else if (resp instanceof NavigationEnd) {
+        const { id, url } = resp;
+        const _data = this.state.state[id];
+        // console.log('NavigationEnd scolls', this.state);
+        // console.log({ id, _data });
+        if (_data && _data.url == url) {
+          const { scroll } = _data;
+          // console.log('go to ', scroll);
+          window.scrollTo(0, scroll);
+        } else {
+          const datas = Object.values(this.state.state);
+          const filter = datas.filter(d => d.url == url);
+          // console.log({ filter });
+          const _data = filter[filter.length - 1];
+          const { scroll } = _data;
+          // console.log('kosong go to ', scroll);
+          window.scrollTo(0, scroll);
+        }
+      } else {
+
+      }
+    });
+
+    this.state.state[1] = { url: this.router.url, scroll: 0, data: {} };
   }
 }
