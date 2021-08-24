@@ -148,9 +148,7 @@ public class ArticleWorkflowService {
         try {
             logger.debug("start process workflow {} and param received is {}", map.get(PROCESS_KEY), map);
             Map<String, Object> variables = new HashMap<>();
-            variables.put(SENDER_PARAM, map.get(SENDER_PARAM));
             variables.put(GROUP_PARAM, map.get(GROUP_PARAM));
-            variables.put(RECEIVER_PARAM, map.get(RECEIVER_PARAM));
             variables.put(ARTICLE_ID_PARAM, map.get(ARTICLE_ID_PARAM));
             variables.put(TITLE_PARAM, map.get(TITLE_PARAM));
             String processKey = (String)map.get(PROCESS_KEY);
@@ -210,7 +208,8 @@ public class ArticleWorkflowService {
              */
             TaskDto taskDto = new TaskDto();
             taskDto.setCurrentState(initState.getCode());
-            taskDto.setArticleId((Long) variables.get(ARTICLE_ID_PARAM));
+            String articleId = (new StringBuffer().append(variables.get(ARTICLE_ID_PARAM)).toString();
+            taskDto.setArticleId(Long.parseLong(articleId));
             taskDto.setRequestId(requestModel.getId());
             taskDto.setSender(requestUserTaskModel.getProposedBy());
             taskDto.setCurrentSenderState(requestUserTaskModel.getSenderState() != null ?
