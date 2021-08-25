@@ -6,6 +6,10 @@ import { ConfirmService } from 'src/app/utils/_services/confirm.service';
 import { Router } from '@angular/router';
 import { PaginationModel } from 'src/app/utils/_model/pagination';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { UserModel } from '../../auth/_models/user.model';
+import { Option } from 'src/app/utils/_model/option';
+import { environment } from 'src/environments/environment';
+import { UserService } from '../../_services/user.service';
 
 export declare interface ContentRowItem {
   type: string,
@@ -19,7 +23,8 @@ export declare interface ContentRowItem {
   send_to?: string,
   current_by: string,
   state: string,
-  isNew: boolean
+  isNew: boolean,
+  isPublished: boolean
 }
 
 interface TabDTO {
@@ -98,13 +103,24 @@ export class ContentComponent implements OnInit, OnDestroy {
   selectedTr: { key: string, i: number } = { key: null, i: -1 };
   selectedItem: ContentRowItem;
 
+  //approver delete
+  userOptions: Option[] = [];
+  delete = {
+    sendTo: {
+      username: '',
+      email: '',
+    },
+    sendNote: ''
+  }
+
   constructor(
     private cdr: ChangeDetectorRef,
     private articleService: ArticleService,
     private confirm: ConfirmService,
     private router: Router,
     private modalService: NgbModal,
-    private configModel: NgbModalConfig) {
+    private configModel: NgbModalConfig,
+    private userService: UserService) {
 
     this.listStatus['approved'] = "PUBLISHED";
     this.listStatus['pending'] = "PENDING";
@@ -212,15 +228,28 @@ export class ContentComponent implements OnInit, OnDestroy {
     return false;
   }
   onClickEdit(item: ContentRowItem, index: number) {
-    this.confirm.open({
-      title: `Ubah Artikel`,
-      message: `<p>Apakah Kamu yakin ingin mengubah artikel “<b>${item.title}</b>”?`,
-      btnOkText: 'Ubah',
-      btnCancelText: 'Batal'
-    }).then((confirmed) => {
-      if (confirmed === true) {
-        this.router.navigate([`/article/form/${item.id}`, { isEdit: true }]);
+    this.articleService.checkArticleEditing(item.id).subscribe((resp: UserModel[]) => {
+      let editingMsg: string = '';
+      if (resp && resp.length) {
+        editingMsg = '<br><br>';
+        editingMsg += `Saat ini artikel sedang di edit juga oleh :
+              <ul>`;
+        resp.forEach(d => {
+          editingMsg += `<li>${d.fullname}</li>`;
+        });
+        editingMsg += '</ul>'
       }
+
+      this.confirm.open({
+        title: `Ubah Artikel`,
+        message: `<p>Apakah Kamu yakin ingin mengubah artikel “<b>${item.title}</b>”?${editingMsg}`,
+        btnOkText: 'Ubah',
+        btnCancelText: 'Batal'
+      }).then((confirmed) => {
+        if (confirmed === true) {
+          this.router.navigate([`/article/form/${item.id}`, { isEdit: true }]);
+        }
+      });
     });
     return false;
   }
@@ -253,5 +282,32 @@ export class ContentComponent implements OnInit, OnDestroy {
       }
     });
     return false;
+  }
+  // User saerch
+  searchUser(keyword) {
+    if (keyword) {
+      let body = { keyword: keyword, role: 'PUBLISHER', username: this.getUsername() }
+      this.subscriptions.push(
+        this.userService.searchUserApprover(body).subscribe(resp => {
+          if (resp) {
+            this.userOptions = this.userService.usersToOptions(resp);
+          }
+        })
+      );
+    } else {
+      this.userOptions = [];
+    }
+  }
+  userChange(item: Option) {
+    this.delete.sendTo.email = item.value;
+  }
+
+  onCancelApprover(e){
+    
+  }
+
+  getUsername(): string {
+    let username = JSON.parse(localStorage.getItem(`${environment.appVersion}-${environment.USERDATA_KEY}`)).username
+    return username
   }
 }
