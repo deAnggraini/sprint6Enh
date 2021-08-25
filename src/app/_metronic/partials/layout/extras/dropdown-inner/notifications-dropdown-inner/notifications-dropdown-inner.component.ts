@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NotificationService, NotificationDTO } from 'src/app/modules/_services/notification.service';
 import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-notifications-dropdown-inner',
@@ -12,7 +13,9 @@ export class NotificationsDropdownInnerComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
   dataList: NotificationDTO[] = [];
 
-  constructor(private notifService: NotificationService) { }
+  constructor(
+    private notifService: NotificationService,
+    private router: Router) { }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(sb => sb.unsubscribe());
@@ -44,5 +47,30 @@ export class NotificationsDropdownInnerComponent implements OnInit, OnDestroy {
       })
     );
     return false;
+  }
+
+  gotoNotif(item: NotificationDTO) {
+    if (!item.isRead) {
+      this.subscriptions.push(
+        this.notifService.readAll([item.id], false).subscribe(_ => {
+          item.isRead = true;
+          this.notifService.updateTopBarNotif(item.id);
+          this.gotoUrl(item);
+          // this.cdr.detectChanges();
+        })
+      );
+    } else {
+      this.gotoUrl(item);
+    }
+    return false;
+  }
+  private gotoUrl(item: NotificationDTO) {
+    const { status } = item;
+    if (status == "ubah" || status == "terima") {
+      if (item.type == "Artikel") {
+        this.router.navigate([`/article/list/${item.refId}`, { isEdit: true, contentId: 0 }]);
+      }
+    } else {
+    }
   }
 }
