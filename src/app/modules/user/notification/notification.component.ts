@@ -91,8 +91,8 @@ export class NotificationComponent implements OnInit, OnDestroy {
   }
   private gotoUrl(item: NotificationDTO) {
     const { status } = item;
-    if (status == "ubah" || status == "terima") {
-      if (item.type == "Artikel") {
+    if (status.toLowerCase() == "ubah" || status.toLowerCase() == "terima") {
+      if (item.type.toLowerCase() == "artikel") {
         this.router.navigate([`/article/list/${item.refId}`, { isEdit: true, contentId: 0 }]);
       }
     } else {
