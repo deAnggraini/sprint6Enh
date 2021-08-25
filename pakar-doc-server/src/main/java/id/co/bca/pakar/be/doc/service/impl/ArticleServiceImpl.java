@@ -606,14 +606,13 @@ public class ArticleServiceImpl implements ArticleService {
                 }
             }
 
+            if (articleState == null) {
+                articleState = articleStateRepository.findByArticleId(article.getId());
+            }
             if (articleDto.getIsHasSend().booleanValue()) {
                 // send to
                 logger.info("send article to {}", articleDto.getSendTo().getUsername());
                 logger.debug("send note article {}", articleDto.getSendNote());
-
-                if (articleState == null) {
-                    articleState = articleStateRepository.findByArticleId(article.getId());
-                }
 
                 UserWrapperDto userWrapperDto = new UserWrapperDto();
                 userWrapperDto.setUsername(articleDto.getSendTo().getUsername());
@@ -671,7 +670,7 @@ public class ArticleServiceImpl implements ArticleService {
                 articleNotification.setNotifDate(new Date());
                 // TODO fixing send note format
                 String sendNote = messageSource.getMessage("article.notification.template"
-                        , new Object[]{restResponse.getBody().getData().getAssigne(), Constant.Notification.EDIT_STATUS, articleDto.getSendNote()}, null);
+                        , new Object[]{restResponse.getBody().getData().getSender(), Constant.Notification.TAMBAH_STATUS, articleDto.getSendNote()}, null);
                 articleNotification.setSendNote(sendNote);
                 articleNotification.setSender(restResponse.getBody().getData().getSender());
                 articleNotification.setReceiver(restResponse.getBody().getData().getAssigne());
@@ -698,6 +697,24 @@ public class ArticleServiceImpl implements ArticleService {
             article.setJudulArticle(articleDto.getTitle());
             article = articleRepository.save(article);
 
+            /*
+            send to notification to sender article
+             */
+            if(articleDto.getUsername().equalsIgnoreCase(articleState.getReceiver())) {
+                // send notification to receiver
+                ArticleNotification articleNotification = new ArticleNotification();
+                articleNotification.setCreatedBy(articleDto.getUsername());
+                articleNotification.setArticle(article);
+                articleNotification.setNotifDate(new Date());
+                // TODO fixing send note format
+                String sendNote = messageSource.getMessage("article.notification.template"
+                        , new Object[]{articleState.getReceiver(), Constant.Notification.EDIT_STATUS, articleDto.getSendNote()}, null);
+                articleNotification.setSendNote(sendNote);
+                articleNotification.setSender(articleState.getReceiver());
+                articleNotification.setReceiver(articleState.getSender());
+                articleNotification.setStatus("Terima");
+                articleNotification.setDocumentType("Artikel");
+            }
             /*
             save article to article version
              */
