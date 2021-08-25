@@ -62,6 +62,13 @@ INSERT INTO public.r_wf_user_task(id, created_by, created_date, deleted, modify_
 VALUES(4, 'system', now()::DATE, false, NULL, NULL, 'PUBLISHER DENY ARTICLE', '', 0, 2, 'ARTICLE_REVIEW');
 INSERT INTO public.r_wf_user_task(id, created_by, created_date, deleted, modify_by, modify_date, description, "name", optlock, user_task_type, process)
 VALUES(5, 'system', now()::DATE, false, NULL, NULL, 'EDITOR CANCEL ARTICLE WAS SEND TO PUBLISHER', '', 0, 3, 'ARTICLE_REVIEW');
+--Tambahan untuk delete
+INSERT INTO public.r_wf_user_task(id, created_by, created_date, deleted, modify_by, modify_date, description, "name", optlock, user_task_type, process)
+VALUES(6, 'system', now()::DATE, false, NULL, NULL, 'EDITOR REQUEST DELETE TO PUBLISHER', '', 0, 1, 'ARTICLE_DELETE');
+INSERT INTO public.r_wf_user_task(id, created_by, created_date, deleted, modify_by, modify_date, description, "name", optlock, user_task_type, process)
+VALUES(7, 'system', now()::DATE, false, NULL, NULL, 'PUBLISHER DELETE PUBLISHED ARTICLE', '', 0, 1, 'ARTICLE_DELETE');
+INSERT INTO public.r_wf_user_task(id, created_by, created_date, deleted, modify_by, modify_date, description, "name", optlock, user_task_type, process)
+VALUES(8, 'system', now()::DATE, false, NULL, NULL, 'PUBLISHER DENY DELETE PUBLISHED ARTICLE', '', 0, 2, 'ARTICLE_DELETE');
 
 INSERT INTO public.r_wf_transition(id, created_by, created_date, deleted, modify_by, modify_date, optlock, name, current_state, next_state, process_id)
 VALUES (1, 'system', now()::date, 'f', NULL, NULL, 0, 'WAITING REVIEW', 'DRAFT', 'PENDING', 'ARTICLE_REVIEW');
@@ -71,6 +78,13 @@ INSERT INTO public.r_wf_transition(id, created_by, created_date, deleted, modify
 VALUES (3, 'system', now()::date, 'f', NULL, NULL, 0, 'EDIT ARTICLE DRAFT ONLY', 'DRAFT', 'DRAFT', 'ARTICLE_REVIEW');
 INSERT INTO public.r_wf_transition(id, created_by, created_date, deleted, modify_by, modify_date, optlock, name, current_state, next_state, process_id)
 VALUES (4, 'system', now()::date, 'f', NULL, NULL, 0, 'DENY ARTICLE', 'PENDING', 'DRAFT', 'ARTICLE_REVIEW');
+--Tambahan untuk Delete
+INSERT INTO public.r_wf_transition(id, created_by, created_date, deleted, modify_by, modify_date, optlock, name, current_state, next_state, process_id)
+VALUES (5, 'system', now()::date, 'f', NULL, NULL, 0, 'WAITING DELETE', 'DRAFTDELETED', 'PENDINGDELETED', 'ARTICLE_DELETE');
+INSERT INTO public.r_wf_transition(id, created_by, created_date, deleted, modify_by, modify_date, optlock, name, current_state, next_state, process_id)
+VALUES (6, 'system', now()::date, 'f', NULL, NULL, 0, 'APPROVE DELETE ARTICLE', 'PENDINGDELETED', 'DELETED', 'ARTICLE_DELETE');
+INSERT INTO public.r_wf_transition(id, created_by, created_date, deleted, modify_by, modify_date, optlock, name, current_state, next_state, process_id)
+VALUES (7, 'system', now()::date, 'f', NULL, NULL, 0, 'DENY ARTICLE', 'PENDINGDELETED', 'DRAFTDELETED', 'ARTICLE_DELETE');
 
 INSERT INTO public.r_wf_transition_user_task(id, created_by, created_date, deleted, modify_by, modify_date, optlock, user_task, transition)
 VALUES(1, 'system', now()::DATE, false, NULL, NULL, 0, 1, 2);
@@ -78,6 +92,11 @@ INSERT INTO public.r_wf_transition_user_task(id, created_by, created_date, delet
 VALUES(2, 'system', now()::DATE, false, NULL, NULL, 0, 2, 3);
 INSERT INTO public.r_wf_transition_user_task(id, created_by, created_date, deleted, modify_by, modify_date, optlock, user_task, transition)
 VALUES(3, 'system', now()::DATE, false, NULL, NULL, 0, 3, 1);
+--Tambahan untuk Delete
+INSERT INTO public.r_wf_transition_user_task(id, created_by, created_date, deleted, modify_by, modify_date, optlock, transition, user_task)
+VALUES(4, 'system', now()::DATE, false, NULL, NULL, 0, 5, 6);
+INSERT INTO public.r_wf_transition_user_task(id, created_by, created_date, deleted, modify_by, modify_date, optlock, transition, user_task)
+VALUES(5, 'system', now()::DATE, false, NULL, NULL, 0, 6, 7);
 
 INSERT INTO public.r_wf_group(id, created_by, created_date, deleted, modify_by, modify_date, "name", process_id)
 VALUES(1, 'system', now()::DATE, false, NULL, NULL, 'READER', 'ARTICLE_REVIEW');
@@ -85,11 +104,23 @@ INSERT INTO public.r_wf_group(id, created_by, created_date, deleted, modify_by, 
 VALUES(2, 'system', now()::DATE, false, NULL, NULL, 'EDITOR', 'ARTICLE_REVIEW');
 INSERT INTO public.r_wf_group(id, created_by, created_date, deleted, modify_by, modify_date, "name", process_id)
 VALUES(3, 'system', now()::DATE, false, NULL, NULL, 'PUBLISHER', 'ARTICLE_REVIEW');
+-- Tambahan untuk delete
+INSERT INTO public.r_wf_group(id, created_by, created_date, deleted, modify_by, modify_date, "name", process_id)
+VALUES(5, 'system', now()::DATE, false, NULL, NULL, 'EDITOR', 'ARTICLE_DELETE');
+INSERT INTO public.r_wf_group(id, created_by, created_date, deleted, modify_by, modify_date, "name", process_id)
+VALUES(6, 'system', now()::DATE, false, NULL, NULL, 'PUBLISHER', 'ARTICLE_DELETE');
+INSERT INTO public.r_wf_group(id, created_by, created_date, deleted, modify_by, modify_date, "name", process_id)
+VALUES(7, 'system', now()::DATE, false, NULL, NULL, 'SUPERADMIN', 'ARTICLE_DELETE');
 
 INSERT INTO public.r_wf_person_state(code, created_by, created_date, deleted, modify_by, modify_date, "name" ,optlock ,process_id)
 VALUES('DRAFT', 'system', now()::DATE, false, NULL, NULL, 'STATE IN RECEIVER FOR PERSON',0, 'ARTICLE_REVIEW');
 INSERT INTO public.r_wf_person_state(code, created_by, created_date, deleted, modify_by, modify_date, "name" ,optlock ,process_id)
 VALUES('PENDING', 'system', now()::DATE, false, NULL, NULL, 'STATE THAT PRESENT OF SENDER',0, 'ARTICLE_REVIEW');
+--Tambahan untuk delete
+INSERT INTO public.r_wf_person_state(code, created_by, created_date, deleted, modify_by, modify_date, "name" ,optlock ,process_id)
+VALUES('DRAFTDELETED', 'system', now()::DATE, false, NULL, NULL, 'STATE IN RECEIVER FOR PERSON',0, 'ARTICLE_DELETE');
+INSERT INTO public.r_wf_person_state(code, created_by, created_date, deleted, modify_by, modify_date, "name" ,optlock ,process_id)
+VALUES('PENDINGDELETED', 'system', now()::DATE, false, NULL, NULL, 'STATE THAT PRESENT OF SENDER',0, 'ARTICLE_DELETE');
 
 INSERT INTO public.r_wf_group_transition
 (id, created_by, created_date, deleted, modify_by, modify_date, rcv_group, transition)
@@ -100,4 +131,11 @@ VALUES(2, 'system', now()::DATE, false, NULL, NULL, 3, 1);
 INSERT INTO public.r_wf_group_transition
 (id, created_by, created_date, deleted, modify_by, modify_date, rcv_group, transition)
 VALUES(3, 'system', now()::DATE, false, NULL, NULL, 4, 3);
+INSERT INTO public.r_wf_group_transition
+(id, created_by, created_date, deleted, modify_by, modify_date, rcv_group, transition)
+VALUES(4, 'system', now()::DATE, false, NULL, NULL, 6, 5);
+--Tambahan untuk delete
+INSERT INTO public.r_wf_group_transition
+(id, created_by, created_date, deleted, modify_by, modify_date, rcv_group, transition)
+VALUES(4, 'system', now()::DATE, false, NULL, NULL, 6, 5);
 
