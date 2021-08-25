@@ -85,6 +85,8 @@ public class Constant {
 
 	public static final class Workflow {
 		public static final String ARTICLE_REVIEW_WF = "ARTICLE_REVIEW";
+		public static final String ARTICLE_DELETE_WF = "ARTICLE_DELETE";
+
 		public static final String PROCESS_KEY = "PROCESS_KEY";
 		public static final String ARTICLE_ID = "ARTICLE_ID";
 		public static final String WORKFLOW_REQ_ID_PARAM = "WORKFLOW_REQ_ID_PARAM";
@@ -98,5 +100,6 @@ public class Constant {
 		public static final String TITLE_PARAM = "TITLE_PARAM";
 		public static final String RECEIVER_PARAM = "RECEIVER_PARAM";
 		public static final String SENDER_PARAM = "SENDER_PARAM";
+
 	}
 }

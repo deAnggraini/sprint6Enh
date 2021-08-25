@@ -810,6 +810,108 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     /**
+     * @param articleDto
+     * @param username
+     * @param token
+     * @return
+     * @throws Exception
+     */
+    @Override
+    @Transactional(rollbackFor = {Exception.class, DataNotFoundException.class, DeletePublishedArticleException.class})
+    public Boolean cancelArticleUpdate(MultipartArticleDto articleDto, String username, String token) throws Exception {
+        try {
+            logger.info("cancel article with article id {}", articleDto.getId());
+            Optional<Article> articleOpt = articleRepository.findById(articleDto.getId());
+            if (articleOpt.isEmpty()) {
+                logger.info("not article with id {}", articleDto.getId());
+                throw new DataNotFoundException("not found article with id " + articleDto.getId());
+            }
+
+            Article article = articleOpt.get();
+            if (article.getArticleState().equalsIgnoreCase(NEW)) {
+                logger.info("delete related article with article id {}", article.getId());
+                Iterable<RelatedArticle> relatedArticles = articleRelatedRepository.findRelatedArticleByArticleId(article.getId());
+                if (relatedArticles != null)
+                    relatedArticleRepository.deleteAll(relatedArticles);
+
+                logger.info("delete article sk refference with article id {}", article.getId());
+                Iterable<ArticleSkReff> articleSkReffs = articleSkReffRepository.findByArticleId(article.getId());
+                if (articleSkReffs != null)
+                    articleSkReffRepository.deleteAll(articleSkReffs);
+
+                logger.info("delete article image with article id {}", article.getId());
+                Iterable<ArticleImage> articleImages = articleImageRepository.findArticleImagesByArticleId(article.getId());
+                if (articleImages != null)
+                    articleImageRepository.deleteAll(articleImages);
+
+                logger.info("delete article state with article id {}", article.getId());
+                ArticleState articleState = articleStateRepository.findByArticleId(article.getId());
+                if (articleState != null)
+                    articleStateRepository.delete(articleState);
+
+                logger.info("delete article edit with article id {}", article.getId());
+                List<ArticleEdit> articleEdits = articleEditRepository.findByArticleId(article.getId());
+                if (articleEdits != null)
+                    articleEditRepository.deleteAll(articleEdits);
+
+                logger.debug("delete from tabel t_article_content_clone with article id {} and username {} ", article.getId(), username);
+                Iterable<ArticleContentClone> contents = articleContentCloneRepository.findsByArticleId(article.getId(), username);
+                articleContentCloneRepository.deleteAll(contents);
+
+                logger.info("delete new article");
+                articleRepository.delete(article);
+                logger.info("deleted article {} success", article.getJudulArticle());
+            } else {
+                // Checking apakah article sudah dipublish? kalau iya, perlu persetujuan publisher to Approved
+                if(article.getArticleState().equalsIgnoreCase(PUBLISHED)) {
+                    ArticleState articleState = null;
+
+                    articleState = articleStateRepository.findByArticleId(article.getId());
+                    UserWrapperDto userWrapperDto = new UserWrapperDto();
+                    userWrapperDto.setUsername(articleDto.getSendTo().getUsername());
+                    logger.debug("get roles of task receiver {}", articleDto.getSendTo().getUsername());
+                    ResponseEntity<ApiResponseWrapper.RestResponse<List<String>>> roleSenderResponse = pakarOauthClient
+                            .getRolesByUser(BEARER + articleDto.getToken(), articleDto.getUsername(), userWrapperDto);
+                    List<String> rcvRoles = roleSenderResponse.getBody().getData();
+                    rcvRoles.forEach(e -> logger.debug("task receiver {} has role {}", userWrapperDto.getUsername(), e));
+
+                    Map<String, Object> wfRequestDelete = new HashMap<>();
+                    wfRequestDelete.put(PROCESS_KEY, ARTICLE_DELETE_WF);
+                    wfRequestDelete.put(TITLE_PARAM, articleDto.getTitle());
+                    wfRequestDelete.put(ARTICLE_ID_PARAM, articleDto.getId());
+//                    wfRequestDelete.put(TASK_TYPE_PARAM, "APPROVE");
+                    wfRequestDelete.put(SENDER_PARAM, articleDto.getUsername());
+                    Map<String, String> assignDto = new HashMap();
+                    assignDto.put(RECEIVER_PARAM, articleDto.getSendTo().getUsername());
+                    wfRequestDelete.put(SEND_TO_PARAM, assignDto);
+                    wfRequestDelete.put(SEND_NOTE_PARAM, articleDto.getSendNote());
+                    wfRequestDelete.put(GROUP_PARAM, rcvRoles.get(0));
+//                    wfRequestDelete.put(WORKFLOW_REQ_ID_PARAM, articleState.getWfReqId());
+
+                    ResponseEntity<ApiResponseWrapper.RestResponse<TaskDto>> restResponse = pakarWfClient
+                            .requestDelete(BEARER + articleDto.getToken(), articleDto.getUsername(), wfRequestDelete);
+                    logger.debug("response api request {}", restResponse);
+                    logger.debug("reponse status code {}", restResponse.getStatusCode());
+
+
+                } else {
+                    logger.debug("delete from tabel t_article_content_clone with article id {} and username {} ", article.getId(), username);
+                    Iterable<ArticleContentClone> contents = articleContentCloneRepository.findsByArticleId(article.getId(), username);
+                    articleContentCloneRepository.deleteAll(contents);
+                }
+
+            }
+            return Boolean.TRUE;
+        } catch (DataNotFoundException e) {
+            logger.error("not found data article", e);
+            throw new DataNotFoundException("", e);
+        } catch (Exception e) {
+            logger.error("fail to cancel article", e);
+            throw new Exception(e);
+        }
+    }
+
+    /**
      * Cancel sent article
      *
      * @param id

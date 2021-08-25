@@ -65,7 +65,11 @@ public class Constant {
 		public static final String DRAFT = "DRAFT";
 		public static final String PENDING = "PENDING";
 		public static final String PUBLISHED = "PUBLISHED";
-		public static final String REJECTED = "REJECTED";
+		public static final String DRAFT_DELETED = "DRAFTDELETED";
+		public static final String PENDING_DELETED = "PENDINGDELETED";
+		public static final String DELETED = "DELETED";
+		public static final String DENIED_DELETED = "DENIEDDELETED";
+
 	}
 
 	public static final class Workflow {
@@ -82,5 +86,7 @@ public class Constant {
 		public static final String TITLE_PARAM = "TITLE_PARAM";
 		public static final String RECEIVER_PARAM = "RECEIVER_PARAM";
 		public static final String SENDER_PARAM = "SENDER_PARAM";
+		public static final String ARTICLE_DELETE_WF = "ARTICLE_DELETE";
+
 	}
 }
