@@ -14,8 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
-import static id.co.bca.pakar.be.wf.common.Constant.ArticleWfState.DRAFT;
-import static id.co.bca.pakar.be.wf.common.Constant.ArticleWfState.PENDING;
+import static id.co.bca.pakar.be.wf.common.Constant.ArticleWfState.*;
 import static id.co.bca.pakar.be.wf.common.Constant.Workflow.*;
 
 @Service
@@ -488,7 +487,6 @@ public class ArticleWorkflowService {
             if (workflowProcessOpt.isEmpty()) {
                 throw new UndefinedProcessException("undefined process " + processKey);
             }
-
             WorkflowProcessModel workflowProcessModel = workflowProcessOpt.isPresent() ? workflowProcessOpt.get() : null;
 
             logger.info("find registered started state process {}", processKey);
@@ -526,9 +524,9 @@ public class ArticleWorkflowService {
             requestUserTaskModel.setRequestModel(requestModel);
             requestUserTaskModel.setProposedBy(sender);
             requestUserTaskModel.setAssigne(variables.get(SEND_TO_PARAM).toString()); // assign to receiver
-            Optional<WorkflowStateModel> receiverStateOpt = workflowStateRepository.findById(DRAFT);
+            Optional<WorkflowStateModel> receiverStateOpt = workflowStateRepository.findById(DRAFT_DELETED);
             requestUserTaskModel.setReceiverState(receiverStateOpt.isPresent() ? receiverStateOpt.get() : null);
-            Optional<WorkflowStateModel> senderStateOpt = workflowStateRepository.findById(PENDING);
+            Optional<WorkflowStateModel> senderStateOpt = workflowStateRepository.findById(PENDING_DELETED);
             requestUserTaskModel.setSenderState(senderStateOpt.isPresent() ? senderStateOpt.get() : null);
 
             logger.info("save request user task model");

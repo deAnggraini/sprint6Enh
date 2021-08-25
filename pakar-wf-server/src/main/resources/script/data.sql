@@ -29,6 +29,19 @@ VALUES('DENIED', 'SYSTEM', '2021-08-06 00:00:00.000', false, NULL, NULL, 'STATE 
 INSERT INTO public.r_wf_state
 (code, created_by, created_date, deleted, modify_by, modify_date, "name", optlock, process_id, state_type)
 VALUES('CANCELLED', 'SYSTEM', '2021-08-06 00:00:00.000', false, NULL, NULL, 'STATE ARTICLE IN CANCELLED CONDITION', 0, 'ARTICLE_REVIEW', 5);
+INSERT INTO public.r_wf_state
+--Tambahan untuk workflow hapus
+(code, created_by, created_date, deleted, modify_by, modify_date, "name", optlock, process_id, state_type)
+VALUES('DRAFTDELETED', 'SYSTEM', '2021-08-06 00:00:00.000', false, NULL, NULL, 'STATE ARTICLE IN DRAFT DELETED CONDITION', 0, 'ARTICLE_DELETE', 1);
+INSERT INTO public.r_wf_state
+(code, created_by, created_date, deleted, modify_by, modify_date, "name", optlock, process_id, state_type)
+VALUES('PENDINGDELETED', 'SYSTEM', '2021-08-06 00:00:00.000', false, NULL, NULL, 'STATE ARTICLE IN PENDING DELETED CONDITION', 0, 'ARTICLE_DELETE', 2);
+INSERT INTO public.r_wf_state
+(code, created_by, created_date, deleted, modify_by, modify_date, "name", optlock, process_id, state_type)
+VALUES('DELETED', 'SYSTEM', '2021-08-06 00:00:00.000', false, NULL, NULL, 'STATE ARTICLE IN DELETED CONDITION', 0, 'ARTICLE_DELETE', 3);
+INSERT INTO public.r_wf_state
+(code, created_by, created_date, deleted, modify_by, modify_date, "name", optlock, process_id, state_type)
+VALUES('DENIEDDELETED', 'SYSTEM', '2021-08-06 00:00:00.000', false, NULL, NULL, 'STATE ARTICLE IN REJECTED DELETED CONDITION', 0, 'ARTICLE_DELETE', 4);
 
 INSERT INTO public.r_wf_user_task_type(id, created_by, created_date, deleted, modify_by, modify_date, "name", optlock)
 VALUES(1, 'system', now()::date, false, null, null, 'APPROVE', 0);
