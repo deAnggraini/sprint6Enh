@@ -107,5 +107,6 @@ public class Constant {
 		public static final String TAMBAH_STATUS = "Tambah";
 		public static final String EDIT_STATUS = "Ubah";
 		public static final String HAPUS_STATUS = "Hapus";
+		public static final String KIRIM_STATUS = "Kirim";
 	}
 }

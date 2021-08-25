@@ -668,9 +668,9 @@ public class ArticleServiceImpl implements ArticleService {
                 articleNotification.setCreatedBy(articleDto.getUsername());
                 articleNotification.setArticle(article);
                 articleNotification.setNotifDate(new Date());
-                // TODO fixing send note format
+
                 String sendNote = messageSource.getMessage("article.notification.template"
-                        , new Object[]{restResponse.getBody().getData().getSender(), Constant.Notification.TAMBAH_STATUS, articleDto.getSendNote()}, null);
+                        , new Object[]{articleState.getFnSender(), Constant.Notification.KIRIM_STATUS, articleDto.getSendNote() != null ? articleDto.getSendNote() : ""}, null);
                 articleNotification.setSendNote(sendNote);
                 articleNotification.setSender(restResponse.getBody().getData().getSender());
                 articleNotification.setReceiver(restResponse.getBody().getData().getAssigne());
@@ -709,7 +709,7 @@ public class ArticleServiceImpl implements ArticleService {
                 articleNotification.setArticle(article);
                 articleNotification.setNotifDate(new Date());
                 String sendNote = messageSource.getMessage("article.notification.template"
-                        , new Object[]{articleState.getReceiver(), Constant.Notification.EDIT_STATUS, articleDto.getSendNote()}, null);
+                        , new Object[]{articleState.getFnReceiver(), Constant.Notification.EDIT_STATUS, articleDto.getSendNote() !=null ? articleDto.getSendNote() : ""} , null);
                 articleNotification.setSendNote(sendNote);
                 articleNotification.setSender(articleState.getReceiver());
                 articleNotification.setReceiver(articleState.getSender());
