@@ -701,12 +701,12 @@ public class ArticleServiceImpl implements ArticleService {
             send to notification to sender article
              */
             if(articleDto.getUsername().equalsIgnoreCase(articleState.getReceiver())) {
-                // send notification to receiver
+                // send notification to sender
+                logger.info("send notification to sender article {} from receiver {}", articleState.getSender(), articleState.getReceiver());
                 ArticleNotification articleNotification = new ArticleNotification();
                 articleNotification.setCreatedBy(articleDto.getUsername());
                 articleNotification.setArticle(article);
                 articleNotification.setNotifDate(new Date());
-                // TODO fixing send note format
                 String sendNote = messageSource.getMessage("article.notification.template"
                         , new Object[]{articleState.getReceiver(), Constant.Notification.EDIT_STATUS, articleDto.getSendNote()}, null);
                 articleNotification.setSendNote(sendNote);
