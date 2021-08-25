@@ -1,5 +1,7 @@
 INSERT INTO public.r_wf_process(id, created_by, created_date, deleted, modify_by, modify_date, name)
 VALUES('ARTICLE_REVIEW', 'system', now()::DATE, false, NULL, NULL, 'PROCESS ARTICLE PUBLISHING');
+INSERT INTO public.r_wf_process(id, created_by, created_date, deleted, modify_by, modify_date, name)
+VALUES('ARTICLE_DELETE', 'system', now()::DATE, false, NULL, NULL, 'PROCESS ARTICLE DELETING');
 
 INSERT INTO public.r_wf_state_type(id, created_by, created_date, deleted, modify_by, modify_date, name, optlock)
 VALUES(1, 'system', now()::DATE, false, NULL, NULL, 'Start', 0);

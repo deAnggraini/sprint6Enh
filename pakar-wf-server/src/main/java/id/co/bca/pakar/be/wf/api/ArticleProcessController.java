@@ -267,4 +267,17 @@ public class ArticleProcessController extends BaseController {
             return createResponse(new ArrayList<TaskDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, locale));
         }
     }
+
+    @PostMapping("/api/wf/requestDelete")
+    public ResponseEntity<RestResponse<TaskDto>> requestDelete(@RequestHeader(name = "Authorization") String authorization, @RequestHeader(name = "X-USERNAME") String username, @RequestBody Map<String, Object> body) {
+        try {
+            logger.info("body requestDelete " + body);
+            logger.info("received token bearer --- {}", authorization);
+            TaskDto taskDtos = articleWorkflowService.requestDelete(username, body);
+            return createResponse(taskDtos, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, locale));
+        } catch (Exception e) {
+            logger.error("exception", e);
+            return createResponse(new TaskDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, locale));
+        }
+    }
 }
