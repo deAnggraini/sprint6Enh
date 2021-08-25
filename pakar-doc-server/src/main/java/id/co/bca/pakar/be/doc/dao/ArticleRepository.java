@@ -12,8 +12,11 @@ import java.util.Optional;
 
 @Repository
 public interface ArticleRepository extends CrudRepository<Article, Long> {
-    @Query("SELECT CASE WHEN COUNT(m) > 0 THEN TRUE ELSE FALSE END FROM Article m WHERE LOWER(TRIM(m.judulArticle))=LOWER(TRIM(:title)) AND m.deleted IS FALSE")
-    Boolean existByArticleTitle(@Param("title") String title);
+    @Query("SELECT CASE WHEN COUNT(m) > 0 THEN TRUE ELSE FALSE END FROM Article m " +
+            "WHERE LOWER(TRIM(m.judulArticle))=LOWER(TRIM(:title)) " +
+            "AND m.deleted IS FALSE " +
+            "AND m.id <> :exludeArticleId ")
+    Boolean existByArticleTitle(@Param("title") String title, @Param("exludeArticleId")Long exludeArticleId);
 
     @Query("SELECT m FROM Article m " +
             "WHERE m.id=:id " +

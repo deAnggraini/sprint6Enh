@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 public interface ArticleService {
-    Boolean existArticle(String title);
+    Boolean existArticle(String title, Long articleId);
 
     ArticleDto generateArticle(GenerateArticleDto articleDto) throws Exception;
 

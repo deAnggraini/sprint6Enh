@@ -129,10 +129,10 @@ public class ArticleServiceImpl implements ArticleService {
      */
     @Override
     @Transactional
-    public Boolean existArticle(String title) {
+    public Boolean existArticle(String title, Long articleId) {
         try {
             logger.info("verify existence of article title ---> {}", title);
-            Boolean exist = articleRepository.existByArticleTitle(title);
+            Boolean exist = articleRepository.existByArticleTitle(title, articleId);
             logger.info("title {} {}", title, exist.booleanValue() ? "exist in database" : "not exist in database");
             return exist;
         } catch (Exception e) {
@@ -169,7 +169,7 @@ public class ArticleServiceImpl implements ArticleService {
              verify existence article
              */
             logger.debug("verify existence article with title {} in database", generateArticleDto.getTitle());
-            Boolean duplicateArticle = existArticle(generateArticleDto.getTitle());
+            Boolean duplicateArticle = existArticle(generateArticleDto.getTitle(), 0L);
             if (duplicateArticle.booleanValue()) {
                 logger.info("article {} already registered in database", generateArticleDto.getTitle());
                 throw new DuplicateTitleException("article title " + generateArticleDto.getTitle() + " already reagistered in database");
@@ -475,7 +475,7 @@ public class ArticleServiceImpl implements ArticleService {
              verify existence article
              */
             logger.debug("verify existence article with title {} in database", articleDto.getTitle());
-            Boolean duplicateArticle = existArticle(articleDto.getTitle());
+            Boolean duplicateArticle = existArticle(articleDto.getTitle(), articleDto.getId());
             if (duplicateArticle.booleanValue()) {
                 logger.info("article {} already registered in database", articleDto.getTitle());
                 throw new DuplicateTitleException("article title " + articleDto.getTitle() + " already reagistered in database");
