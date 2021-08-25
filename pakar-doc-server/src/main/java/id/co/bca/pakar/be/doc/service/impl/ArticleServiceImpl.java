@@ -715,6 +715,8 @@ public class ArticleServiceImpl implements ArticleService {
                 articleNotification.setReceiver(articleState.getSender());
                 articleNotification.setStatus("Terima");
                 articleNotification.setDocumentType("Artikel");
+
+                articleNotificationRepository.save(articleNotification);
             }
             /*
             save article to article version
