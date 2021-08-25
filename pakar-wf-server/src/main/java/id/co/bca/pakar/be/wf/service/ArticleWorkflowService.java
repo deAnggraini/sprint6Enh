@@ -476,10 +476,14 @@ public class ArticleWorkflowService {
 
         try {
             Map<String, Object> variables = new HashMap<>();
-            variables.put(SEND_TO_PARAM, body.get(SEND_TO_PARAM));
-            variables.put(ARTICLE_ID_PARAM, body.get(ARTICLE_ID_PARAM));
-            variables.put(SEND_NOTE_PARAM, body.get(SEND_NOTE_PARAM));
+            variables.put(PROCESS_KEY, body.get(PROCESS_KEY));
             variables.put(TITLE_PARAM, body.get(TITLE_PARAM));
+            variables.put(ARTICLE_ID_PARAM, body.get(ARTICLE_ID_PARAM));
+            variables.put(SENDER_PARAM, body.get(SENDER_PARAM));
+            variables.put(SEND_TO_PARAM, body.get(SEND_TO_PARAM));
+            variables.put(SEND_NOTE_PARAM, body.get(SEND_NOTE_PARAM));
+            variables.put(GROUP_PARAM, body.get(GROUP_PARAM));
+
             String processKey = (String) body.get(PROCESS_KEY);
 
             logger.debug("get registered process in system {}", processKey);
