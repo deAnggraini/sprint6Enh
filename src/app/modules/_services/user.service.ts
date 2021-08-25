@@ -20,6 +20,10 @@ export class UserService {
     return this.api.post(`${this._base_url}/searchUserNotReader`, { keyword });
   }
 
+  searchUserApprover(body: { keyword: string, role: string, username: string }) {
+    return this.api.post(`${this._base_url}/getUsersByRole`, body);
+  }
+
   usersToOptions(users: UserModel[]): Option[] {
     const result: Option[] = [];
     if (users && users.length) {
