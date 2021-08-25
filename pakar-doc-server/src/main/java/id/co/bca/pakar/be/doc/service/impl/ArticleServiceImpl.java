@@ -700,6 +700,7 @@ public class ArticleServiceImpl implements ArticleService {
             /*
             send to notification to sender article
              */
+            logger.debug("username {} and receiver {}", articleDto.getUsername(), articleState.getReceiver());
             if(articleDto.getUsername().equalsIgnoreCase(articleState.getReceiver())) {
                 // send notification to sender
                 logger.info("send notification to sender article {} from receiver {}", articleState.getSender(), articleState.getReceiver());
