@@ -136,10 +136,10 @@ public class ArticleProcessController extends BaseController {
             return createResponse(new TaskDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("usertask.not.found", null, locale));
         } catch (UndefinedProcessException e) {
             logger.error("exception", e);
-            return createResponse(new TaskDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, locale));
+            return createResponse(new TaskDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("process.key.undefined", null, locale));
         } catch (UndefinedStartedStateException e) {
             logger.error("exception", e);
-            return createResponse(new TaskDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, locale));
+            return createResponse(new TaskDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("started.state.undefined", null, locale));
         } catch (Exception e) {
             logger.error("exception", e);
             return createResponse(new TaskDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, locale));
@@ -147,35 +147,34 @@ public class ArticleProcessController extends BaseController {
     }
 
 
-//    /**
-//     * assign task to user
-//     * @param authorization
-//     * @param username
-//     * @param articleDto
-//     * @return
-//     */
-//    @PostMapping(value = "/api/wf/assignTask", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
-//            MediaType.APPLICATION_JSON_VALUE})
-//    public ResponseEntity<RestResponse<TaskDto>> assignTask(@RequestHeader(name = "Authorization") String authorization, @RequestHeader(name = "X-USERNAME") String username, @RequestBody ArticleDto articleDto) {
-//        try {
-//            logger.info("receive request to process workflow");
-//            ObjectMapper oMapper = new ObjectMapper();
-//            TaskDto taskDto = articleWorkflowService.next(username, oMapper.convertValue(articleDto, Map.class));
-//            return createResponse(taskDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, locale));
-//        } catch (UndefinedUserTaskException e) {
-//            logger.error("exception", e);
-//            return createResponse(new TaskDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("usertask.not.found", null, locale));
-//        } catch (UndefinedProcessException e) {
-//            logger.error("exception", e);
-//            return createResponse(new TaskDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, locale));
-//        } catch (UndefinedStartedStateException e) {
-//            logger.error("exception", e);
-//            return createResponse(new TaskDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, locale));
-//        } catch (Exception e) {
-//            logger.error("exception", e);
-//            return createResponse(new TaskDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, locale));
-//        }
-//    }
+    /**
+     *
+     * @param authorization
+     * @param username
+     * @param body
+     * @return
+     */
+    @PostMapping(value = "/api/wf/cancelTask", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
+            MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<RestResponse<TaskDto>> cancelTask(@RequestHeader(name = "Authorization") String authorization, @RequestHeader(name = "X-USERNAME") String username, @RequestBody Map<String,Object> body) {
+        try {
+            logger.info("receive request to cancel task");
+            TaskDto taskDto = articleWorkflowService.cancelTask(username, getTokenFromHeader(authorization), body);
+            return createResponse(taskDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, locale));
+        } catch (UndefinedUserTaskException e) {
+            logger.error("exception", e);
+            return createResponse(new TaskDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("usertask.not.found", null, locale));
+        } catch (UndefinedProcessException e) {
+            logger.error("exception", e);
+            return createResponse(new TaskDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("process.key.undefined", null, locale));
+        } catch (UndefinedStartedStateException e) {
+            logger.error("exception", e);
+            return createResponse(new TaskDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("started.state.undefined", null, locale));
+        } catch (Exception e) {
+            logger.error("exception", e);
+            return createResponse(new TaskDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, locale));
+        }
+    }
 
     /**
      * reject task
