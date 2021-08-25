@@ -98,5 +98,7 @@ public class Constant {
 		public static final String TITLE_PARAM = "TITLE_PARAM";
 		public static final String RECEIVER_PARAM = "RECEIVER_PARAM";
 		public static final String SENDER_PARAM = "SENDER_PARAM";
+		public static final String ARTICLE_DELETE_WF = "ARTICLE_DELETE";
+
 	}
 }
