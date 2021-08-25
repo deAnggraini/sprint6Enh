@@ -53,7 +53,7 @@ height: 184px;
             <div class="d-flex flex-row justify-content-between">
                 <div class="d-flex flex-row">
                     <span class="pakar-text-header">{{articleDTO.title}}</span>
-                    <span *ngIf="!articleDTO.isPublished"><sup class="fb7 fs12 txt-new">(new)</sup></span>
+                    <span *ngIf="articleDTO.isNew"><sup class="fb7 fs12 txt-new">(new)</sup></span>
                 </div>
                 <!-- on save -->
                 <div class="d-flex flex-row" *ngIf="!onPreview">

@@ -195,7 +195,6 @@ export class PreviewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    console.log('ngAfterViewInit called');
   }
 
   private loadData() {
@@ -425,7 +424,6 @@ export class PreviewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    console.log('destroy called');
   }
 
 }
