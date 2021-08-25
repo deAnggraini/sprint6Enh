@@ -2,7 +2,6 @@ import { Component, OnInit, forwardRef, Input, ChangeDetectorRef, EventEmitter, 
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { Option } from '../../_model/option';
 import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { fromEvent } from 'rxjs';
 import { map, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
@@ -22,6 +21,7 @@ export class AutoCompleteComponent implements OnInit, ControlValueAccessor {
 
   @Input() placeholder: string;
   @Input() options: Option[];
+  @Input() selected: Option = { id: '', text: '', value: '' };
   @Output() onSearch = new EventEmitter<any>();
   @Output() onChange = new EventEmitter<any>();
 
@@ -33,7 +33,6 @@ export class AutoCompleteComponent implements OnInit, ControlValueAccessor {
   _onChange: (_) => {};
 
   value: string;
-  selected: Option = { id: '', text: '', value: '' };
   disabled: boolean = false;
   hasError: boolean = false;
   isEnter: boolean = false;
@@ -71,9 +70,6 @@ export class AutoCompleteComponent implements OnInit, ControlValueAccessor {
       this.selected = { id: '', text: '', value: '' };
       this.onSelect(_options[0]);
     }
-    // e.preventDefault();
-    // e.stopPropagation();
-    // this.comboBoxDrop.close();
     return false;
   }
 
@@ -99,6 +95,7 @@ export class AutoCompleteComponent implements OnInit, ControlValueAccessor {
           this.comboBoxDrop.open();
         }
       });
+
   }
 
   writeValue(obj: any): void {

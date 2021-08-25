@@ -52,12 +52,12 @@ function themeInitializer(themingService: ThemeService) {
     HighlightModule,
     ClipboardModule,
     // #fake-start#
-    environment.isMockEnabled
-      ? HttpClientInMemoryWebApiModule.forRoot(FakeAPIService, {
-        passThruUnknownUrl: true,
-        dataEncapsulation: false,
-      })
-      : [],
+    // environment.isMockEnabled
+    //   ? HttpClientInMemoryWebApiModule.forRoot(FakeAPIService, {
+    //     passThruUnknownUrl: true,
+    //     dataEncapsulation: false,
+    //   })
+    //   : [],
     // #fake-end#
     AppRoutingModule,
     InlineSVGModule.forRoot(),

@@ -91,14 +91,14 @@
                 <input type="url" class="form-control" formControlName="video" placeholder="Masukan URL myVideo">
             </div>
             <div class="form-group col-sm-12 col-lg-11 col-xl-11 col-xxl-11">
-                <label>Content Artikel <span class="text-danger">*</span></label>
+                <label>Konten Artikel <span class="text-danger">*</span></label>
                 <div class="border border-light rounded-sm p-3">
                     <mat-accordion [togglePosition]="'before'" multi="true">
                         <mat-expansion-panel [id]="'acc-id-'+content.id"
                             *ngFor="let content of dataForm.get('contents').value; let i=index;"
                             class="acc-level acc-level-1" [(expanded)]="content.expanded">
                             <mat-expansion-panel-header [@.disabled]="true">
-                                <mat-panel-title [id]="'acc-title-'+content.id">
+                                <mat-panel-title class="d-flex flex-row fs16pt" [id]="'acc-title-'+content.id">
                                     <span>{{content.title}}</span>
                                     <span [inlineSVG]="'./assets/media/svg/bca/icon/info.svg'" cacheSVG="true"
                                         class="svg-icon svg-tooltip mx-2" placement="right" [ngbTooltip]="tooltips[i]"
@@ -139,8 +139,8 @@
                                                 (click)="accSaveAddEdit(content)">Simpan</button>
                                         </div>
                                     </div>
-                                    <div *ngIf="!content.isEdit && content.topicContent" class="p-3 drop-area-accordion"
-                                        style="padding-bottom: 0px !important;"
+                                    <div *ngIf="!content.isEdit && content.topicContent"
+                                        class="fs11pt p-3 drop-area-accordion" style="padding-bottom: 0px !important;"
                                         [innerHTML]="content.topicContent | sanitizeHtml" [attr.data-id]="content.id">
                                     </div>
                                     <input *ngIf="!content.isEdit && !content.topicContent" type="text"
@@ -204,7 +204,7 @@
     <pakar-article-preview (onCancelCallback)="onPreview(false)" [hideTopbar]="previewHideTopbar"
         [alert]="previewHideTopbar" [alertMessage]="previewAlertMessage" (onSaveCallback)="onSave($event)"
         (onSaveSendCallback)="onSaveAndSend($event)" [btnSaveEnabled]="dataForm.valid && !hasError && !hasImageError"
-        [btnSaveSendEnabled]="isAllPass()">
+        [btnSaveSendEnabled]="isAllPass()" [originArticle]="originArticle" [isCompare]="isCompare">
     </pakar-article-preview>
 </ng-template>
 
@@ -250,11 +250,14 @@
             <ng-container *ngFor="let content of children; let i = index">
                 <div class="input-accordion-separator"></div>
                 <mat-expansion-panel [@.disabled]="true" class="acc-level acc-level-{{level}}" cdkDrag
-                    [cdkDragData]="content" [(expanded)]="content.expanded" [id]="'acc-id-'+content.id" (cdkDragMoved)="dragMovedDebounce($event)">
+                    [cdkDragData]="content" [(expanded)]="content.expanded" [id]="'acc-id-'+content.id"
+                    (cdkDragMoved)="dragMovedDebounce($event)">
                     <div class="drag-placeholder" *cdkDragPlaceholder></div>
                     <mat-expansion-panel-header cdkDragHandle [class.drop-area-accordion]="content.expanded"
                         [attr.data-id]="content.id">
-                        <mat-panel-title class="text-ellipsis-1">{{numberingFormat(content)}}. {{content.title}}
+                        <mat-panel-title class="d-flex flex-row fs16pt" [id]="'acc-title-'+content.id">
+                            <span class="mr-2">{{numberingFormat(content)}}.</span>
+                            <span [innerHTML]="content.title"></span>
                         </mat-panel-title>
                         <ng-container *ngIf="!content.isNew" [ngTemplateOutlet]="rightIcon"
                             [ngTemplateOutletContext]="{ data: content}">
@@ -291,7 +294,7 @@
                                             (click)="accSaveAddEdit(content)">Simpan</button>
                                     </div>
                                 </div>
-                                <div *ngIf="!content.isEdit"
+                                <div class="fs11pt" *ngIf="!content.isEdit"
                                     [innerHTML]="(content.topicContent || '&nbsp;') | sanitizeHtml"></div>
                             </div>
                             <ng-container [ngTemplateOutlet]="accordionChild"
@@ -320,10 +323,11 @@
         <div class="form-group">
             <label>Kirim Ke <span class="text-danger">*</span></label>
             <pakar-auto-complete [(ngModel)]="saveAndSend.sendTo.username" [options]="userOptions"
-                placeholder="Masukkan Nama" (onSearch)="searchUser($event)" (onChange)="userChange($event)">
+                placeholder="Masukkan Nama" (onSearch)="searchUser($event)" (onChange)="userChange($event)"
+                [selected]="selectedSaveAndSend">
             </pakar-auto-complete>
             <textarea rows="4" class="form-control" placeholder="Catatan" [(ngModel)]="saveAndSend.sendNote"
-                style="margin-top:3px"></textarea>
+                style="margin-top:3px" maxlength="200"></textarea>
         </div>
     </div>
     <div class="modal-footer">
@@ -342,7 +346,10 @@
             (mouseover)="toggleTooltip(t1, user, i, true)" (mouseout)="toggleTooltip(t1, user, i, false)">{{user.alias}}
         </div>
 
-        <div *ngIf="listUserEditing.length > 5" class="d-flex flex-center ak ak-other rounded-xl fs10 fb6 mr-1">
+        <div *ngIf="listUserEditing.length > 5" [ngbTooltip]="tooltipUserOther" container="body" triggers="manual"
+            #t2="ngbTooltip" class="d-flex flex-center ak ak-other rounded-xl fs10 fb6 mr-1"
+            (mouseover)="toggleTooltip(t2, listUserEditing.slice(5), -1, true)"
+            (mouseout)="toggleTooltip(t2, null, -1, false)">
             +{{listUserEditing.length-5}}
         </div>
     </div>
@@ -352,5 +359,14 @@
     <div class="d-flex flex-row flex-center">
         <div class="d-flex flex-center ak ak-{{i+1}} rounded-xl fs10 fb6 mr-1">{{user.alias}}</div>
         <div>{{user.fullname}}</div>
+    </div>
+</ng-template>
+
+<ng-template #tooltipUserOther let-users="user" let-i="i">
+    <div class="d-flex flex-column">
+        <div *ngFor="let user of users; let i = index" class="d-flex flex-row justify-content-start flex-center mb-1">
+            <div class="d-flex flex-center ak ak-{{i+6}} rounded-xl fs10 fb6 mr-1">{{user.alias}}</div>
+            <div class="d-flex line-1" style="width: 150px;">{{user.fullname}}</div>
+        </div>
     </div>
 </ng-template>

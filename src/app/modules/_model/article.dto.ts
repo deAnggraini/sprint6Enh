@@ -40,6 +40,14 @@ export declare interface ArticleContentDTO {
     isNew?: boolean,
 }
 
+export declare interface ArticleSenderDTO {
+    username: string;
+    password: string;
+    fullname: string;
+    alias?: string;
+    email: string;
+}
+
 export declare interface ArticleDTO {
     id: number,
     isEmptyTemplate: boolean,
@@ -67,4 +75,6 @@ export declare interface ArticleDTO {
     },
     sendNote?: string,
     taskType?: string, // Approve, Deny, Cancel
+
+    sender?: ArticleSenderDTO
 }

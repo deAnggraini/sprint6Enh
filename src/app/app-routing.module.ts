@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from './modules/auth/_services/auth.guard';
-import { UtilsModule } from './utils/utils.module';
 
 export const routes: Routes = [
   {
@@ -21,7 +20,14 @@ export const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {
+    scrollPositionRestoration: 'enabled',
+    enableTracing: false,
+    initialNavigation: 'enabled',
+    anchorScrolling: 'enabled',
+    urlUpdateStrategy: 'eager',
+    onSameUrlNavigation: 'reload',
+  })],
   exports: [RouterModule],
 })
 export class AppRoutingModule { }

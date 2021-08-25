@@ -29,8 +29,17 @@ $bca-color-dark: #0F5EA9;
   font-size: 14px !important;
 }
 
-.font-size-16 {
-  font-size: 1rem !important;
+.fs11pt {
+  font-size: 11pt !important;
+}
+
+.fs16pt {
+  font-size: 16pt !important;
+}
+
+.font-size-16,
+.fs16 {
+  font-size: 16px !important;
 }
 
 .font-size-18,
