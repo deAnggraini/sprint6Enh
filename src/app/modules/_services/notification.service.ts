@@ -8,11 +8,12 @@ export declare interface NotificationDTO {
   id: number,
   status: string,
   type: string,
-  isUnread: boolean,
+  isRead: boolean,
   date: Date,
   by: string,
   title: string,
   desc: string,
+  refId?: string
 }
 
 export declare interface ResponseNotificationDTO {
@@ -37,7 +38,6 @@ export class NotificationService {
 
   refresh() {
     this.list().subscribe(resp => {
-      // console.log('refresh notif', resp);
     })
   }
   list(): Observable<any> {
@@ -58,7 +58,19 @@ export class NotificationService {
     return this.notif$;
   }
 
-  readAll() {
-    return this.api.post(`${this._base_url}/updateStatusNotification`, { id: [], isAll: true });
+  updateTopBarNotif(id: number) {
+    const dto: ResponseNotificationDTO = this.notif$.value;
+    dto.total_unread -= 1;
+    const found = dto.list.find(d => d.id == id);
+    if (found) {
+      found.isRead = true;
+      this.notif$.next(dto);
+    } else {
+      this.refresh();
+    }
+  }
+
+  readAll(id: number[] = [], isAll: boolean = true) {
+    return this.api.post(`${this._base_url}/updateStatusNotification`, { id, isAll });
   }
 }

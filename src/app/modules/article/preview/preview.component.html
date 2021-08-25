@@ -53,7 +53,7 @@ height: 184px;
             <div class="d-flex flex-row justify-content-between">
                 <div class="d-flex flex-row">
                     <span class="pakar-text-header">{{articleDTO.title}}</span>
-                    <span *ngIf="!articleDTO.isPublished"><sup class="fb7 fs12 txt-new">(new)</sup></span>
+                    <span *ngIf="articleDTO.isNew"><sup class="fb7 fs12 txt-new">(new)</sup></span>
                 </div>
                 <!-- on save -->
                 <div class="d-flex flex-row" *ngIf="!onPreview">
@@ -70,8 +70,9 @@ height: 184px;
                             class="svg-icon menu-icon"></span>
                         <span class="font-weight-bold" style="color: #0F5EA9;">Collapse Topik</span>
                     </div>
+
                     <!-- Ubah Artikel -->
-                    <div (click)="onEdit($event)" class="btn btn-link" *ngIf="editable">
+                    <div (click)="onEdit($event)" class="btn btn-link" *ngIf="editable && role != 'READER'">
                         <span [inlineSVG]="'./assets/media/svg/bca/icon/edit-document-dark.svg'" cacheSVG="true"
                             class="svg-icon menu-icon"></span>
                         <span class="font-weight-bold" style="color: #0F5EA9;">Ubah Artikel</span>
@@ -272,7 +273,7 @@ height: 184px;
 
 <ng-template #rightIcon let-data="data">
     <div class="right-icon d-flex flex-row align-items-center">
-        <a href='#' class="btn-link" (click)="onEdit($event, data.id)">
+        <a href='#' class="btn-link" (click)="onEdit($event, data.id, data.title)">
             <span [inlineSVG]="'./assets/media/svg/bca/icon/pencil.svg'" cacheSVG="true"
                 class="svg-icon svg-icon-sm accordion-icon mr-2"></span>
         </a>

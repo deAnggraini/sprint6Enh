@@ -14,14 +14,23 @@ export class ApiService {
 
   private authLocalStorageToken = `${environment.appVersion}-${environment.USERDATA_KEY}`;
 
-  constructor(private http: HttpClient, private toast: ToastService) { }
+  private userLogin: AuthModel;
+
+  constructor(private http: HttpClient, private toast: ToastService) {
+  }
+
+  setUserLogin(user: AuthModel): void {
+    this.userLogin = user;
+  }
 
   getHeaders(json: boolean = true) {
     let token = 'empty';
     let username = 'empty';
-    const str = localStorage.getItem(this.authLocalStorageToken);
-    if (str) {
-      const auth: AuthModel = JSON.parse(str);
+    // const str = localStorage.getItem(this.authLocalStorageToken);
+    // if (str) {
+    if (this.userLogin) {
+      // const auth: AuthModel = JSON.parse(str);
+      const auth: AuthModel = this.userLogin;
       token = `Bearer ${auth.authToken}`;
       username = auth.username
     }

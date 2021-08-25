@@ -99,6 +99,7 @@ export class AuthService implements OnDestroy {
             auth = Object.assign({}, auth, { autoLogout, remember });
             this.setWorker(auth, auth.expiresIn * 1000);
             this.setAuthFromLocalStorage(auth);
+            this.apiService.setUserLogin(auth);
           }
           return auth;
         }),
@@ -152,7 +153,7 @@ export class AuthService implements OnDestroy {
       map((user: UserModel) => {
         if (user) {
           this.currentUserSubject = new BehaviorSubject<UserModel>(user);
-          // this.setWorker();
+          this.apiService.setUserLogin(auth);
         } else {
           this.logout(true);
         }

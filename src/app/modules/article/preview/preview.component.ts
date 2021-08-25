@@ -51,6 +51,7 @@ export class PreviewComponent implements OnInit, AfterViewInit, OnDestroy {
   user$: Observable<UserModel>;
   aliasName: string = 'AA';
   fullName: string;
+  role: string;
   changed_date: Date = new Date();
   skReferences = [];
   relatedArticle = [];
@@ -139,7 +140,8 @@ export class PreviewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     return false;
   }
-  onEdit(e, contentId: number = 0) {
+  onEdit(e, contentId: number = 0, contentTitle: string = '') {
+    if (this.role == 'READER') return false;
     const item = this.articleDTO;
     this.articleService.checkArticleEditing(item.id).subscribe((resp: UserModel[]) => {
       let editingMsg: string = '';
@@ -153,9 +155,16 @@ export class PreviewComponent implements OnInit, AfterViewInit, OnDestroy {
         editingMsg += '</ul>'
       }
 
+      let msg: string = '';
+      if (contentId === 0) {
+        msg = `artikel “<b>${item.title}</b>”`
+      } else {
+        msg = `topik  “<b>${contentTitle}</b>” pada artikel ${item.title}`
+      }
+
       this.confirm.open({
         title: `Ubah ${contentId == 0 ? "Artikel" : "Topik"}`,
-        message: `<p>Apakah Kamu yakin ingin mengubah ${contentId == 0 ? "artikel" : "topik"} “<b>${item.title}</b>”?${editingMsg}`,
+        message: `<p>Apakah Kamu yakin ingin mengubah ${msg}?${editingMsg}`,
         btnOkText: 'Ubah',
         btnCancelText: 'Batal'
       }).then((confirmed) => {
@@ -177,6 +186,7 @@ export class PreviewComponent implements OnInit, AfterViewInit, OnDestroy {
       const aliasNameArr: string[] = [u.firstname, u.lastname];
       this.aliasName = aliasNameArr.map(d => d ? d[0] : '').join('');
       this.fullName = u.fullname;
+      this.role = u.roles[0];
     });
 
     //carousel test
@@ -188,7 +198,6 @@ export class PreviewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    console.log('ngAfterViewInit called');
   }
 
   private loadData() {
@@ -418,7 +427,6 @@ export class PreviewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    console.log('destroy called');
   }
 
 }
