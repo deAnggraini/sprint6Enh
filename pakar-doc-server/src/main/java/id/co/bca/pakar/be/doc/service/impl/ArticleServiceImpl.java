@@ -3,11 +3,11 @@ package id.co.bca.pakar.be.doc.service.impl;
 import id.co.bca.pakar.be.doc.client.ApiResponseWrapper;
 import id.co.bca.pakar.be.doc.client.PakarOauthClient;
 import id.co.bca.pakar.be.doc.client.PakarWfClient;
+import id.co.bca.pakar.be.doc.common.Constant;
 import id.co.bca.pakar.be.doc.dao.*;
 import id.co.bca.pakar.be.doc.dto.*;
 import id.co.bca.pakar.be.doc.dto.auth.UserProfileDto;
 import id.co.bca.pakar.be.doc.dto.auth.UserWrapperDto;
-import id.co.bca.pakar.be.doc.dto.wf.WfArticleDto;
 import id.co.bca.pakar.be.doc.exception.*;
 import id.co.bca.pakar.be.doc.model.*;
 import id.co.bca.pakar.be.doc.service.ArticleCloneService;
@@ -669,7 +669,10 @@ public class ArticleServiceImpl implements ArticleService {
                 articleNotification.setCreatedBy(articleDto.getUsername());
                 articleNotification.setArticle(article);
                 articleNotification.setNotifDate(new Date());
-                articleNotification.setSendNote(articleDto.getSendNote());
+                // TODO fixing send note format
+                String sendNote = messageSource.getMessage("article.notification.template"
+                        , new Object[]{restResponse.getBody().getData().getAssigne(), Constant.Notification.EDIT_STATUS, articleDto.getSendNote()}, null);
+                articleNotification.setSendNote(sendNote);
                 articleNotification.setSender(restResponse.getBody().getData().getSender());
                 articleNotification.setReceiver(restResponse.getBody().getData().getAssigne());
                 articleNotification.setStatus("Terima");

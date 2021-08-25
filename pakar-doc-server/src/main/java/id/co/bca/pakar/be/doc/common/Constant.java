@@ -102,4 +102,10 @@ public class Constant {
 		public static final String SENDER_PARAM = "SENDER_PARAM";
 
 	}
+
+	public static final class Notification {
+		public static final String TAMBAH_STATUS = "Tambah";
+		public static final String EDIT_STATUS = "Ubah";
+		public static final String HAPUS_STATUS = "Hapus";
+	}
 }
