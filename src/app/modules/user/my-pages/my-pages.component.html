@@ -43,62 +43,71 @@
                             <table [id]="'table-'+key" class="table table-head-borderless">
                                 <thead>
                                     <tr>
-                                        <th scope="col" style="width: 36px;">
+                                        <th scope="col" style="width: 36px;text-align: center;">
                                             <span [inlineSVG]="'./assets/media/svg/bca/icon/doc-empty.svg'"
                                                 class="svg"></span>
                                         </th>
-                                        <th scope="col" sortable="title" (sort)="onSort($event)">
-                                            <span class="text-title">Judul</span><i class="sortable"></i>
+                                        <th scope="col" sortable="title" (sort)="onSort($event)"
+                                            class="bothside-padding">
+                                            <span class="text-title font-scale-header">Judul</span><i
+                                                class="sortable"></i>
                                         </th>
                                         <th scope="col" sortable="location" (sort)="onSort($event)"
-                                            style="width: 320px;">
-                                            <span class="text-title">Lokasi</span><i class="sortable"></i>
+                                            class="bothside-padding width-table-320">
+                                            <span class="text-title font-scale-header">Lokasi</span><i
+                                                class="sortable"></i>
                                         </th>
 
                                         <ng-container *ngIf="key == 'approved'">
                                             <th scope="col" sortable="approved_date" (sort)="onSort($event)"
-                                                style="width: 180px;">
-                                                <span class="text-title">{{tableHeader[key][3]}}</span><i
+                                                class="bothside-padding width-table-180">
+                                                <span
+                                                    class="text-title font-scale-header">{{tableHeader[key][3]}}</span><i
                                                     class="sortable"></i>
                                             </th>
                                             <th scope="col" sortable="approved_by" (sort)="onSort($event)"
-                                                style="width: 180px;">
-                                                <span class="text-title">{{tableHeader[key][4]}}</span><i
+                                                class="bothside-padding width-table-150">
+                                                <span
+                                                    class="text-title font-scale-header">{{tableHeader[key][4]}}</span><i
                                                     class="sortable"></i>
                                             </th>
                                         </ng-container>
 
                                         <ng-container *ngIf="key == 'pending'">
                                             <th scope="col" sortable="modified_date" (sort)="onSort($event)"
-                                                style="width: 180px;">
-                                                <span class="text-title">{{tableHeader[key][3]}}</span><i
+                                                class="bothside-padding width-table-180">
+                                                <span
+                                                    class="text-title font-scale-header">{{tableHeader[key][3]}}</span><i
                                                     class="sortable"></i>
                                             </th>
                                             <th scope="col" sortable="send_to" (sort)="onSort($event)"
-                                                style="width: 180px;">
-                                                <span class="text-title">{{tableHeader[key][4]}}</span><i
+                                                class="bothside-padding width-table-150">
+                                                <span
+                                                    class="text-title font-scale-header">{{tableHeader[key][4]}}</span><i
                                                     class="sortable"></i>
                                             </th>
                                         </ng-container>
 
                                         <ng-container *ngIf="key == 'draft'">
                                             <th scope="col" sortable="modified_date" (sort)="onSort($event)"
-                                                style="width: 180px;">
-                                                <span class="text-title">{{tableHeader[key][3]}}</span><i
+                                                class="bothside-padding width-table-180">
+                                                <span
+                                                    class="text-title font-scale-header">{{tableHeader[key][3]}}</span><i
                                                     class="sortable"></i>
                                             </th>
                                             <th scope="col" sortable="modified_by" (sort)="onSort($event)"
-                                                style="width: 180px;">
-                                                <span class="text-title">{{tableHeader[key][4]}}</span><i
+                                                class="bothside-padding width-table-160">
+                                                <span
+                                                    class="text-title font-scale-header">{{tableHeader[key][4]}}</span><i
                                                     class="sortable"></i>
                                             </th>
                                         </ng-container>
 
-                                        <th scope="col" style="width: 260px;">
+                                        <th scope="col" class="bothside-padding width-table-260 font-scale-header">
                                             {{tableHeader[key][5]}}
                                         </th>
 
-                                        <th scope="col" style="width: 45px;">&nbsp;</th>
+                                        <th scope="col" style="width: 30px;">&nbsp;</th>
                                     </tr>
                                 </thead>
                                 <tbody [id]="'table-tbody-'+key">
@@ -106,31 +115,55 @@
                                         <tr *ngFor="let item of dataForm[key].dataList; let i = index;" ngbDropdown
                                             #dropDown="ngbDropdown" container="body" placement="bottom-right auto"
                                             class="dot3" (openChange)="onOpenChangeDropdown($event, key, i)">
-                                            <td (click)="showArticle(item.id)" class="cursor-pointer">
+                                            <td (click)="showArticle(item.id)" class="cursor-pointer bothside-padding"
+                                                style="text-align: center;">
                                                 <span [inlineSVG]="'./assets/media/svg/bca/icon/'+getIcon(item.type)"
-                                                    class="svg"></span>
+                                                    class="svg icon-table"></span>
                                             </td>
-                                            <td (click)="showArticle(item.id)" class="cursor-pointer">
-                                                {{item.title}}<sup *ngIf="item.isNew" class="sup-new fb7">(new)</sup>
+                                            <td (click)="showArticle(item.id)"
+                                                class="cursor-pointer bothside-padding font-scale-header">
+                                                {{lengthCharFormated(50,item.title)}}<sup *ngIf="item.isNew"
+                                                    class="sup-new fb7">(new)</sup>
                                             </td>
-                                            <td (click)="showArticle(item.id)" class="cursor-pointer">{{item.location}}</td>
+                                            <td (click)="showArticle(item.id)"
+                                                class="cursor-pointer bothside-padding font-scale-header" [title]="item.location">
+                                                {{lengthCharFormated(130,item.location)}}
+                                            </td>
 
                                             <ng-container *ngIf="key == 'approved'">
-                                                <td (click)="showArticle(item.id)" class="cursor-pointer">{{item.approved_date | date:'dd/MM/yyyy hh:mm a'}}</td>
-                                                <td (click)="showArticle(item.id)" class="cursor-pointer">{{item.approved_by}}</td>
-                                                <td (click)="showArticle(item.id)" class="cursor-pointer">{{item.affective_date | date:'dd/MM/yyyy hh:mm a'}}</td>
+                                                <td (click)="showArticle(item.id)"
+                                                    class="cursor-pointer bothside-padding font-scale-header">
+                                                    {{item.approved_date | date:'dd/MM/yyyy hh:mm a'}}</td>
+                                                <td (click)="showArticle(item.id)"
+                                                    class="cursor-pointer bothside-padding font-scale-header">
+                                                    {{item.approved_by}}</td>
+                                                <td (click)="showArticle(item.id)"
+                                                    class="cursor-pointer bothside-padding font-scale-header">
+                                                    {{item.affective_date | date:'dd/MM/yyyy hh:mm a'}}</td>
                                             </ng-container>
 
                                             <ng-container *ngIf="key == 'pending'">
-                                                <td (click)="showArticle(item.id)" class="cursor-pointer">{{item.modified_date | date:'dd/MM/yyyy hh:mm a'}}</td>
-                                                <td (click)="showArticle(item.id)" class="cursor-pointer">{{item.send_to}}</td>
-                                                <td (click)="showArticle(item.id)" class="cursor-pointer">{{item.current_by}}</td>
+                                                <td (click)="showArticle(item.id)"
+                                                    class="cursor-pointer bothside-padding font-scale-header">
+                                                    {{item.modified_date | date:'dd/MM/yyyy hh:mm a'}}</td>
+                                                <td (click)="showArticle(item.id)"
+                                                    class="cursor-pointer bothside-padding font-scale-header">
+                                                    {{item.send_to}}</td>
+                                                <td (click)="showArticle(item.id)"
+                                                    class="cursor-pointer bothside-padding font-scale-header">
+                                                    {{item.current_by}}</td>
                                             </ng-container>
 
                                             <ng-container *ngIf="key == 'draft'">
-                                                <td (click)="showArticle(item.id)" class="cursor-pointer">{{item.modified_date | date:'dd/MM/yyyy hh:mm a'}}</td>
-                                                <td (click)="showArticle(item.id)" class="cursor-pointer">{{item.modified_by}}</td>
-                                                <td (click)="showArticle(item.id)" class="cursor-pointer">{{item.current_by}}</td>
+                                                <td (click)="showArticle(item.id)"
+                                                    class="cursor-pointer bothside-padding font-scale-header">
+                                                    {{item.modified_date | date:'dd/MM/yyyy hh:mm a'}}</td>
+                                                <td (click)="showArticle(item.id)"
+                                                    class="cursor-pointer bothside-padding font-scale-header">
+                                                    {{lengthCharFormated(40,item.modified_by)}}</td>
+                                                <td (click)="showArticle(item.id)"
+                                                    class="cursor-pointer bothside-padding font-scale-header">
+                                                    {{lengthCharFormated(130,item.current_by)}}</td>
                                             </ng-container>
 
                                             <td class="td-dot3" style="width: 45px;" ngbDropdownToggle>
@@ -144,13 +177,24 @@
                                                             <a class="navi-link cursor-pointer"
                                                                 (click)="onClickRevision(item, i); dropDown.close()">
                                                                 <span class="navi-text font-weight-bolder">Riwayat
-                                                                    Revisi</span>
+                                                                    Versi</span>
                                                             </a>
                                                         </li>
 
-                                                        <ng-container *ngIf="key == 'approved'">
+                                                        <ng-container *ngIf="key == 'draft'||key == 'pending'">
                                                             <li class="navi-item">
-                                                                <a class="navi-link disabled"
+                                                                <a class="navi-link cursor-pointer"
+                                                                    (click)="onClickEdit(item, i, key); dropDown.close()">
+                                                                    <span
+                                                                        class="navi-text font-weight-bolder">Ubah</span>
+                                                                </a>
+                                                            </li>
+                                                        </ng-container>
+
+                                                        <ng-container *ngIf="key == 'approved'||key == 'draft'">
+                                                            <li class="navi-item">
+                                                                <!-- <a class="navi-link disabled" -->
+                                                                <a class="navi-link cursor-pointer"
                                                                     (click)="onClickCancel(item, i); dropDown.close()">
                                                                     <span
                                                                         class="navi-text font-weight-bolder">Hapus</span>
@@ -171,17 +215,9 @@
                                                         <ng-container *ngIf="key == 'draft'">
                                                             <li class="navi-item">
                                                                 <a class="navi-link cursor-pointer"
-                                                                    (click)="onClickEdit(item, i); dropDown.close()">
-                                                                    <span
-                                                                        class="navi-text font-weight-bolder">Ubah</span>
-                                                                </a>
-                                                            </li>
-                                                            <li class="navi-item">
-                                                                <a class="navi-link cursor-pointer"
-                                                                    (click)="onClickCancel(item, i); dropDown.close()">
-                                                                    <span class="navi-text font-weight-bolder">Hapus /
-                                                                        Batal
-                                                                        Tambah</span>
+                                                                    (click)="onClickCancelChange(item, i); dropDown.close()">
+                                                                    <span class="navi-text font-weight-bolder">Batal
+                                                                        Ubah</span>
                                                                 </a>
                                                             </li>
                                                         </ng-container>
@@ -250,5 +286,33 @@
                 </tr>
             </thead>
         </table>
+    </div>
+</ng-template>
+
+<ng-template #formConfirmDelete let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Hapus Artikel</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <i aria-hidden="true">&times;</i>
+        </button>
+    </div>
+    <div class="modal-body pt-0">
+        <!-- <div class="form-group">
+            <span>Artikel tidak dapat di hapus sebelum mendapatkan persetujuan. Silakan masukan dokumen dasar penghapusan artikel ini.</span>
+        </div>
+        <div class="form-group">
+            <label>Approver <span class="text-danger">*</span></label>
+            <pakar-auto-complete [(ngModel)]="saveAndSend.sendTo.username" [options]="userOptions"
+                placeholder="Masukkan Nama Approver" (onSearch)="searchUser($event)" (onChange)="userChange($event)">
+            </pakar-auto-complete>
+            <textarea rows="4" class="form-control" placeholder="Catatan" [(ngModel)]="saveAndSend.sendNote"
+                style="margin-top:3px"></textarea>
+        </div> -->
+    </div>
+    <div class="modal-footer">
+        <!-- <button type="button" class="btn btn-outline-light btn-sm rounded-lg px-5" (click)="c('Batal')">Batal</button>
+        <button type="button" class="btn btn-sm btn-blue rounded-lg px-5">Kirim</button> -->
+        <!-- [disabled]="!(saveAndSend.sendTo.username && saveAndSend.sendNote)"
+            (click)="doSaveAndSend($event)">Kirim</button> -->
     </div>
 </ng-template>

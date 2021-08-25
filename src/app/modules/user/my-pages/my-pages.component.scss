@@ -4,19 +4,18 @@
   .nav-link.active {
     border-color: transparent;
     background-color: transparent;
-    border-bottom: 2px solid #0078D4;
+    border-bottom: 2px solid #0078d4;
 
     .fa,
     .far {
-      color: #0078D4;
+      color: #0078d4;
     }
   }
-
 }
 
 :host ::ng-deep {
   .sup-new {
-    color: #107C10;
+    color: #107c10;
   }
 
   .data-item {
@@ -24,7 +23,7 @@
   }
 
   .input-group.inner {
-    border: 1px solid #0F5EA9;
+    border: 1px solid #0f5ea9;
     border-radius: 20px;
     padding-left: 15px;
     overflow: hidden;
@@ -41,8 +40,8 @@
     }
 
     .btn {
-      border-color: #0F5EA9;
-      background: #0F5EA9;
+      border-color: #0f5ea9;
+      background: #0f5ea9;
       border-radius: 0;
 
       .fa {
@@ -55,7 +54,7 @@
       border-color: #ddd;
 
       .fa {
-        color: #0F5EA9;
+        color: #0f5ea9;
       }
     }
 
@@ -76,17 +75,48 @@
   #table-draft,
   #table-pending,
   #table-approved {
-
     &.table tr.is-click td {
-      background-color: #F3F2F1;
+      background-color: #f3f2f1;
 
       &.td-dot3 {
-        background-color: #C8C6C4 !important;
+        background-color: #c8c6c4 !important;
       }
     }
   }
 
+  .width-table-320 {
+    width: calc(var(--scale) * 320px);
+  }
+
+  .width-table-260 {
+    width: calc(var(--scale) * 260px);
+  }
+
+  .width-table-180 {
+    width: calc(var(--scale) * 180px);
+  }
+
+  .width-table-160 {
+    width: calc(var(--scale) * 160px);
+  }
+
+
+  .font-scale-header {
+    font-size: calc(var(--scale) * 14px);
+  }
+
   div.tab-pane {
     height: 100%;
+  }
+
+  .icon-table {
+    > svg {
+      height: 16px;
+    }
+  }
+
+  .bothside-padding {
+    padding-right: 12px;
+    padding-left: 12px;
   }
 }

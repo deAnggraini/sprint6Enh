@@ -139,7 +139,7 @@ export class PreviewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     return false;
   }
-  onEdit(e, contentId: number = 0) {
+  onEdit(e, contentId: number = 0, contentTitle: string = '') {    
     const item = this.articleDTO;
     this.articleService.checkArticleEditing(item.id).subscribe((resp: UserModel[]) => {
       let editingMsg: string = '';
@@ -153,9 +153,16 @@ export class PreviewComponent implements OnInit, AfterViewInit, OnDestroy {
         editingMsg += '</ul>'
       }
 
+      let msg: string = '';
+      if (contentId === 0) {
+        msg = `artikel “<b>${item.title}</b>”`
+      } else {
+        msg = `topik  “<b>${contentTitle}</b>” pada artikel ${item.title}`
+      }
+
       this.confirm.open({
         title: `Ubah ${contentId == 0 ? "Artikel" : "Topik"}`,
-        message: `<p>Apakah Kamu yakin ingin mengubah ${contentId == 0 ? "artikel" : "topik"} “<b>${item.title}</b>”?${editingMsg}`,
+        message: `<p>Apakah Kamu yakin ingin mengubah ${msg}?${editingMsg}`,
         btnOkText: 'Ubah',
         btnCancelText: 'Batal'
       }).then((confirmed) => {

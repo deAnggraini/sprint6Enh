@@ -272,7 +272,7 @@ height: 184px;
 
 <ng-template #rightIcon let-data="data">
     <div class="right-icon d-flex flex-row align-items-center">
-        <a href='#' class="btn-link" (click)="onEdit($event, data.id)">
+        <a href='#' class="btn-link" (click)="onEdit($event, data.id, data.title)">
             <span [inlineSVG]="'./assets/media/svg/bca/icon/pencil.svg'" cacheSVG="true"
                 class="svg-icon svg-icon-sm accordion-icon mr-2"></span>
         </a>

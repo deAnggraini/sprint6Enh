@@ -1,12 +1,14 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChildren, QueryList, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChildren, QueryList, TemplateRef, ViewChild, HostListener } from '@angular/core';
 import { PaginationModel } from 'src/app/utils/_model/pagination';
 import { ArticleService } from '../../_services/article.service';
 import { Subscription, of } from 'rxjs';
 import { NgbdSortableHeader, SortEvent } from './sortable.directive';
 import { ConfirmService } from 'src/app/utils/_services/confirm.service';
 import { Router } from '@angular/router';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, mergeMapTo } from 'rxjs/operators';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { UserModel } from '../../auth/_models/user.model';
+import { environment } from 'src/environments/environment';
 
 export declare interface MyPageRowItem {
   type: string,
@@ -62,6 +64,7 @@ export class MyPagesComponent implements OnInit, OnDestroy {
 
   @ViewChildren(NgbdSortableHeader) headers: QueryList<NgbdSortableHeader>;
   @ViewChild('riwayatVersiModal') riwayatVersiModal: TemplateRef<any>;
+  @ViewChild('formConfirmDelete') formConfirmDelete: TemplateRef<any>;
 
   subscriptions: Subscription[] = [];
   dataForm: FormBean = JSON.parse(JSON.stringify(EMPTY_FORM_BEAN));
@@ -106,10 +109,34 @@ export class MyPagesComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.onSearch(null);
+    this.setScaleValue(window)
+    this.getUserInfo()
   }
 
   ngOnDestroy(): void {
+    this.modalService.dismissAll();
     this.subscriptions.forEach(sb => sb.unsubscribe());
+  }
+
+  setScaleValue(window) {
+    let scale = 1
+    let scalefont = 1
+    if (window.innerWidth < 1340) {
+      scalefont = window.innerWidth / 1458
+      scale = window.innerWidth / 1458
+      document.documentElement.style.setProperty('--scale', `${scale}`);
+      document.documentElement.style.setProperty('--scalefont', `${scalefont}`);
+      return
+    }
+    if (window.innerWidth < 1458) {
+      scale = window.innerWidth / 1458
+    }
+    document.documentElement.style.setProperty('--scale', `${scale}`);
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.setScaleValue(event.target)
   }
 
   getIcon(type: string) {
@@ -203,24 +230,59 @@ export class MyPagesComponent implements OnInit, OnDestroy {
     this.modalService.open(this.riwayatVersiModal, { size: 'xl' });
     return false;
   }
-  onClickEdit(item: MyPageRowItem, index: number) {
-    this.confirm.open({
-      title: `Ubah Artikel`,
-      message: `<p>Apakah Kamu yakin ingin mengubah artikel “<b>${item.title}</b>”?`,
-      btnOkText: 'Ubah',
-      btnCancelText: 'Batal'
-    }).then((confirmed) => {
-      if (confirmed === true) {
-        this.router.navigate([`/article/form/${item.id}`, { isEdit: true }]);
+  onClickEdit(item: MyPageRowItem, index: number, key: 'pending' | 'draft') {
+    if (key === 'draft' && !item.isNew) {
+      this.router.navigate([`/article/form/${item.id}`, { isEdit: true }]);
+      return
+    }
+    this.articleService.checkArticleEditing(item.id).subscribe((resp: UserModel[]) => {
+      let editingMsg: string = '';
+      if (resp && resp.length) {
+        editingMsg = '<br><br>';
+        editingMsg += `Saat ini artikel sedang di edit juga oleh :
+            <ul>`;
+        resp.forEach(d => {
+          editingMsg += `<li>${d.fullname}</li>`;
+        });
+        editingMsg += '</ul>'
       }
+
+      this.confirm.open({
+        title: `Ubah Artikel`,
+        message: `<p>Apakah Kamu yakin ingin mengubah artikel “<b>${item.title}</b>”?${editingMsg}`,
+        btnOkText: 'Ubah',
+        btnCancelText: 'Batal'
+      }).then((confirmed) => {
+        if (confirmed === true) {
+          this.router.navigate([`/article/form/${item.id}`, { isEdit: true }]);
+        }
+      });
     });
     return false;
   }
   onClickCancel(item: MyPageRowItem, index: number) {
     this.confirm.open({
       title: `Hapus Artikel`,
-      message: `<p>Apakah Kamu yakin ingin menghapus dan membatalkan penambahan artikel “<b>${item.title}</b>”?`,
+      message: `<p>Apakah Kamu yakin ingin menghapus artikel “<b>${item.title}</b>”?`,
       btnOkText: 'Hapus',
+      btnCancelText: 'Batal'
+    }).then((confirmed) => {
+      if (confirmed === true) {
+        // this.subscriptions.push(
+        //   this.articleService.cancelArticle(item.id).subscribe(resp => {
+        //     if (resp) this.onRefreshTable();
+        //   })
+        // );
+        this.modalService.open(this.formConfirmDelete);
+      }
+    });
+    return false;
+  }
+  onClickCancelChange(item: MyPageRowItem, index: number) {
+    this.confirm.open({
+      title: `Batal Ubah Artikel`,
+      message: `<p>Apakah Kamu yakin ingin membatalkan perubahan artikel “<b>${item.title}</b>”?`,
+      btnOkText: 'Ya, Batal Ubah',
       btnCancelText: 'Batal'
     }).then((confirmed) => {
       if (confirmed === true) {
@@ -236,8 +298,8 @@ export class MyPagesComponent implements OnInit, OnDestroy {
   onClickCancelSend(item: MyPageRowItem, index: number) {
     this.confirm.open({
       title: `Batal Kirim`,
-      message: `<p>Apakah kamu ingin membatalkan pengiriman artikel “<b>${item.title}</b>”?`,
-      btnOkText: 'Hapus',
+      message: `<p>Apakah kamu ingin membatalkan pengiriman artikel “<b>${item.title}</b>” ke “<b>${item.send_to}</b>”?`,
+      btnOkText: 'Ya, Batal Kirim',
       btnCancelText: 'Batal'
     }).then((confirmed) => {
       if (confirmed === true) {
@@ -259,17 +321,37 @@ export class MyPagesComponent implements OnInit, OnDestroy {
     return false;
   }
 
+  lengthCharFormated(length: number, text: string): string {
+    let string: string = ''
+    let overlimit: boolean = false
+    let arr = text.split(' ')
+    string = arr.reduce((text, item) => {
+      if ((text.length + item.length) + 1 > length) {
+        overlimit = true
+        return text
+      }
+      return text.length > 0 ? (text + ' ' + item) : (text + item)
+    }, '')
+    return overlimit ? string + ' ...' : string
+  }
+
   showErrorModal(title: string, message: string) {
     this.confirm.open({
-      title,
-      message,
+      title: title,
+      message: `<p>${message}`,
       btnOkText: 'OK',
       btnCancelText: ''
     }).then((confirmed) => {
       if (confirmed === true) {
-        // do nothing
+        this.modalService.dismissAll();
       }
     });
   }
+
+  getUserInfo() {
+    let userInfo = localStorage.getItem(`${environment.appVersion}-${environment.USERDATA_KEY}`)
+    console.log('userInfo', userInfo)
+  }
+
 
 }
