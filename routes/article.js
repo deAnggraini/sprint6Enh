@@ -534,6 +534,13 @@ router.post('/getArticleEditing', (req, res) => {
             "fullname": "Gerhana Purnama",
             "firstname": "Gerhana",
             "lastname": "Purnama",
+        },
+        {
+            "username": "nanda",
+            "email": "aflahahlam@gmail.com",
+            "fullname": "I Putu Gede Ayu Pramudya Sukma Ningrat",
+            "firstname": "I",
+            "lastname": "",
         }
     ]
     res.send({ status: { code: '00', message: 'asd' }, data });
