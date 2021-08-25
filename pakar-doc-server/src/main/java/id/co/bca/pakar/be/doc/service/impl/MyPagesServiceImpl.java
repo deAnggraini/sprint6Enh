@@ -145,6 +145,7 @@ public class MyPagesServiceImpl implements MyPagesService {
             }
             dto.setCurrentBy(currentEdit.toString());
             dto.setSendTo(entity.getFullNameReceiver());
+            dto.setReceiver(entity.getReceiver());
 
             if(entity.getSenderState() != null) {
                 if (entity.getSenderState().equalsIgnoreCase(Constant.ArticleWfState.PUBLISHED)) {

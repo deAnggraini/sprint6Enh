@@ -86,10 +86,6 @@ public class ArticleNotificationServiceImpl implements ArticleNotificationServic
         public List<ArticleNotificationDto> mapEntitiesIntoDTOs(List<ArticleNotification> entities) {
             List<ArticleNotificationDto> dtos = new ArrayList<>();
             entities.forEach(e -> dtos.add(mapEntityIntoDTO(e)));
-//            for(ArticleNotification entity : entities) {
-//                logger.debug("entity id {}", entity.getId());
-//                dtos.add(mapEntityIntoDTO(entity));
-//            }
             return dtos;
         }
 
@@ -103,6 +99,7 @@ public class ArticleNotificationServiceImpl implements ArticleNotificationServic
             dto.setStatus(entity.getStatus());
             dto.setRead(entity.isRead());
             dto.setType(entity.getDocumentType());
+            dto.setRefId(new StringBuffer().append(entity.getArticle().getId()).toString());
             return dto;
         }
 

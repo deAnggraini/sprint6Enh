@@ -29,6 +29,9 @@ public class ArticleNotificationDto {
     @JsonProperty("desc")
     private String desc;
 
+    @JsonProperty("refId")
+    private String refId;
+
     public Long getId() {
         return id;
     }
@@ -91,5 +94,13 @@ public class ArticleNotificationDto {
 
     public void setDesc(String desc) {
         this.desc = desc;
+    }
+
+    public String getRefId() {
+        return refId;
+    }
+
+    public void setRefId(String refId) {
+        this.refId = refId;
     }
 }

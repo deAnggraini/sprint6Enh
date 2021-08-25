@@ -31,6 +31,8 @@ public class MyPageDto extends BaseDto {
     private String sendTo;
     @JsonProperty("current_by")
     private String currentBy;
+    @JsonProperty("receiver")
+    private String receiver;
 
     public Long getId() {
         return id;
@@ -134,5 +136,13 @@ public class MyPageDto extends BaseDto {
 
     public void setCurrentBy(String currentBy) {
         this.currentBy = currentBy;
+    }
+
+    public String getReceiver() {
+        return receiver;
+    }
+
+    public void setReceiver(String receiver) {
+        this.receiver = receiver;
     }
 }

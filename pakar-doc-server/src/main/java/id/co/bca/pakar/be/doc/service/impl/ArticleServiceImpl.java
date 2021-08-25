@@ -465,11 +465,22 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     @Transactional(rollbackFor = {Exception.class
             , DataNotFoundException.class
-            , SavingArticleVersionException.class})
+            , SavingArticleVersionException.class
+            , DuplicateTitleException.class})
     public ArticleResponseDto saveArticle(MultipartArticleDto articleDto) throws Exception {
         ArticleResponseDto articleResponseDto = new ArticleResponseDto();
         try {
             logger.info("save article process");
+            /*
+             verify existence article
+             */
+            logger.debug("verify existence article with title {} in database", articleDto.getTitle());
+            Boolean duplicateArticle = existArticle(articleDto.getTitle());
+            if (duplicateArticle.booleanValue()) {
+                logger.info("article {} already registered in database", articleDto.getTitle());
+                throw new DuplicateTitleException("article title " + articleDto.getTitle() + " already reagistered in database");
+            }
+
             Optional<Article> articleOpt = articleRepository.findById(articleDto.getId());
             if (articleOpt.isEmpty()) {
                 logger.info("not found article data with id {}", articleDto.getId());
@@ -477,8 +488,6 @@ public class ArticleServiceImpl implements ArticleService {
             }
 
             // TODO validate existence of structure (RMTM create article 3.4 Tambah Artikel - Edit Accordion Level 1)
-//            logger.info("validate location/structure");
-//            structureRepository.findStructure(articleDto.ge.getId())
             Article article = articleOpt.get();
 
             for (SkReffDto skReffDto : articleDto.getReferences()) {
@@ -552,10 +561,6 @@ public class ArticleServiceImpl implements ArticleService {
             // call to workflow server to set draft, if sendto <> null
             if (currentState.equalsIgnoreCase(NEW)) {
                 logger.info("save draft article using article id {}", article.getId());
-
-//                WfArticleDto wfArticleDto = new WfArticleDto();
-//                wfArticleDto.setId(articleDto.getId());
-//                wfArticleDto.setTitle(articleDto.getTitle());
 
                 UserWrapperDto userWrapperDto = new UserWrapperDto();
                 userWrapperDto.setUsername(articleDto.getUsername());
@@ -641,10 +646,6 @@ public class ArticleServiceImpl implements ArticleService {
                     article.setArticleState(currentState);
                 }
 
-//                if (articleState == null) {
-//                    articleState = articleStateRepository.findByArticleId(article.getId());
-//                }
-
                 articleState.setCreatedBy(articleDto.getUsername());
                 articleState.setSender(restResponse.getBody().getData().getSender());
                 logger.debug("sender from workflow result {}", restResponse.getBody().getData().getSender());
@@ -691,6 +692,7 @@ public class ArticleServiceImpl implements ArticleService {
             article.setModifyDate(new Date());
             article.setShortDescription(articleDto.getDesc());
             article.setVideoLink(articleDto.getVideo());
+            article.setJudulArticle(articleDto.getTitle());
             article = articleRepository.save(article);
 
             /*
@@ -727,6 +729,9 @@ public class ArticleServiceImpl implements ArticleService {
         } catch (DataNotFoundException e) {
             logger.error("", e);
             throw new DataNotFoundException("exception", e);
+        } catch (DuplicateTitleException e) {
+            logger.error("", e);
+            throw new DuplicateTitleException("exception", e);
         } catch (Exception e) {
             logger.error("", e);
             throw new Exception("exception", e);
@@ -814,20 +819,54 @@ public class ArticleServiceImpl implements ArticleService {
      * @throws Exception
      */
     @Override
-    @Transactional(rollbackFor = {Exception.class, DataNotFoundException.class, DeletePublishedArticleException.class})
-    public Boolean cancelSendArticle(Long id, String username, String token) throws Exception {
+    @Transactional(rollbackFor = {Exception.class
+            , DataNotFoundException.class
+            , DeletePublishedArticleException.class
+            , ArticleInEditingxception.class})
+    public Boolean cancelSendArticle(Long id, String receiver, String username, String token) throws Exception {
         try {
             logger.info("cancel article with id {}", id);
             Optional<Article> articleOpt = articleRepository.findById(id);
             if (articleOpt.isEmpty()) {
-                logger.info("not article with id {}", id);
+                logger.info("not article found with id {}", id);
                 throw new DataNotFoundException("not found article with id " + id);
             }
 
             Article article = articleOpt.get();
+            /*
+            validate if receiver not already editing article was sent
+             */
+            ArticleState articleState = articleStateRepository.findByArticleId(article.getId());
+            logger.info("receiver of article id {} and and wf request id {} ---> {} ", new Object[] {articleState.getArticle().getId(), articleState.getWfReqId(), articleState.getReceiver()});
+//            String receiver = articleState.getReceiver();
+            logger.info("find editing status of article id {} from receiver {}", id, receiver);
+            ArticleEdit articleEdit = articleEditRepository.findActiveEditingStatusByUsername(id, receiver);
+            if (articleEdit == null) {
+                logger.info("article id {} in editing status", id);
+                throw new ArticleInEditingxception("article id "+id+" in editing status ");
+            }
+
+            Map<String, Object> wfRequest = new HashMap<>();
+            wfRequest.put(PROCESS_KEY, ARTICLE_REVIEW_WF);
+            wfRequest.put(TITLE_PARAM, article.getJudulArticle());
+            wfRequest.put(ARTICLE_ID_PARAM, article.getId());
+            wfRequest.put(SENDER_PARAM, username);
+            Map<String, String> assignDto = new HashMap();
+            //TODO set reviewer/publisher
+            assignDto.put(USERNAME_PARAM, receiver);
+            wfRequest.put(SEND_TO_PARAM, assignDto);
+            wfRequest.put(WORKFLOW_REQ_ID_PARAM, articleState.getWfReqId());
+            /*
+            request cancel task to worflow engine
+             */
+            ResponseEntity<ApiResponseWrapper.RestResponse<TaskDto>> restResponse = pakarWfClient
+                    .cancelTask(BEARER + token, username, wfRequest);
+            logger.debug("response api request {}", restResponse);
+            logger.debug("reponse status code {}", restResponse.getStatusCode());
+//            currentState = restResponse.getBody().getData().getCurrentState();
 
             logger.info("get article state with article id {}", article.getId());
-            ArticleState articleState = articleStateRepository.findByArticleId(article.getId());
+//            ArticleState articleState = articleStateRepository.findByArticleId(article.getId());
             articleState.setModifyBy(username);
             articleState.setModifyDate(new Date());
             articleState.setSenderState(null);
@@ -839,6 +878,9 @@ public class ArticleServiceImpl implements ArticleService {
         } catch (DataNotFoundException e) {
             logger.error("fail to cancel article", e);
             throw new DataNotFoundException("", e);
+        } catch (ArticleInEditingxception e) {
+            logger.error("cancel send article", e);
+            throw new ArticleInEditingxception("", e);
         } catch (Exception e) {
             logger.error("fail to cancel article", e);
             throw new Exception(e);

@@ -40,6 +40,15 @@ public interface ArticleEditRepository extends CrudRepository<ArticleEdit, Long>
     )
     ArticleEdit findByUsername(@Param("articleId") Long articleId, @Param("username") String username);
 
+    @Query(
+            "SELECT m FROM ArticleEdit m " +
+                    "WHERE m.article.id=:articleId " +
+                    "AND m.username=:username " +
+                    "AND m.status IS TRUE " +
+                    "AND m.deleted IS FALSE "
+    )
+    ArticleEdit findActiveEditingStatusByUsername(@Param("articleId") Long articleId, @Param("username") String username);
+
     @Query("SELECT m FROM ArticleEdit m " +
             "WHERE m.article.id=:articleId " +
             "AND m.deleted IS FALSE ")

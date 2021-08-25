@@ -383,6 +383,9 @@ public class ArticleController extends BaseController {
         } catch (DataNotFoundException e) {
             logger.error("exception", e);
             return createResponse(new ArticleResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("article.not.found", null, getLocale()));
+        } catch (DuplicateTitleException e) {
+            logger.error("exception", e);
+            return createResponse(new ArticleResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("title.article.exist", null, getLocale()));
         } catch (Exception e) {
             logger.error("exception", e);
             return createResponse(new ArticleResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
@@ -409,14 +412,24 @@ public class ArticleController extends BaseController {
         }
     }
 
+    /**
+     *
+     * @param authorization
+     * @param username
+     * @param cancelDto
+     * @return
+     */
     @PostMapping(value = "/api/doc/cancelSendArticle", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
             MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity<RestResponse<Boolean>> cancelSendArticle(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @RequestBody CancelSendArticleDto cancelDto) {
         try {
             logger.info("cancel article process");
             logger.info("received token bearer --- {}", authorization);
-            Boolean status = articleService.cancelSendArticle(cancelDto.getId(), username, getTokenFromHeader(authorization));
+            Boolean status = articleService.cancelSendArticle(cancelDto.getId(), cancelDto.getReceiver(), username, getTokenFromHeader(authorization));
             return createResponse(status, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));
+        } catch (ArticleInEditingxception e) {
+            logger.error("exception", e);
+            return createResponse(Boolean.TRUE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("could.not.cancel.send.article", null, getLocale()));
         } catch (Exception e) {
             logger.error("exception", e);
             return createResponse(Boolean.TRUE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
