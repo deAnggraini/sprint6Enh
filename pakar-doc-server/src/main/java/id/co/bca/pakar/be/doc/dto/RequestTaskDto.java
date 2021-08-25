@@ -9,6 +9,8 @@ public class RequestTaskDto extends PageDto {
     private String pic;
     @JsonProperty("state")
     private String state;
+    @JsonProperty("wfReqId")
+    private String wfReqId;
 
     public String getAssigne() {
         return assigne;
@@ -32,5 +34,13 @@ public class RequestTaskDto extends PageDto {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public String getWfReqId() {
+        return wfReqId;
+    }
+
+    public void setWfReqId(String wfReqId) {
+        this.wfReqId = wfReqId;
     }
 }

@@ -88,14 +88,15 @@ public class MyPagesServiceImpl implements MyPagesService {
             List<Long> ids = new ArrayList<>();
             for (TaskDto task : restResponse.getBody().getData()) {
                 ids.add(task.getArticleId());
+                logger.debug("user {} has article id {} in state {}", new Object[]{searchDto.getUsername(), task.getArticleId(), searchDto.getState()});
             }
 
             if (searchDto.getType().equals(Constant.JenisHalaman.All) || searchDto.getType().equals(Constant.JenisHalaman.Artikel)) {
-                if (searchDto.getState().equalsIgnoreCase("DRAFT"))
+                if (searchDto.getState().equalsIgnoreCase(Constant.ArticleWfState.DRAFT))
                     searchResultPage = myPagesRepository.findMyPagesDratfArticle(ids, searchDto.getKeyword(), searchDto.getUsername(), searchDto.getState(), pageable);
-                else if (searchDto.getState().equalsIgnoreCase("PENDING"))
+                else if (searchDto.getState().equalsIgnoreCase(Constant.ArticleWfState.PENDING))
                     searchResultPage = myPagesRepository.findMyPagesPendingArticle(ids, searchDto.getKeyword(), searchDto.getUsername(), searchDto.getState(), pageable);
-                else if (searchDto.getState().equalsIgnoreCase("PUBLISHED")) {
+                else if (searchDto.getState().equalsIgnoreCase(Constant.ArticleWfState.PUBLISHED)) {
                     searchResultPage = myPagesRepository.findMyPagesPublishedArticle(ids, searchDto.getKeyword(), searchDto.getUsername(), searchDto.getState(), pageable);
                 }
             } else {
