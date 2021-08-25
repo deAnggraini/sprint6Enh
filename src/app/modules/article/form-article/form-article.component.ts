@@ -335,11 +335,10 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     }).then((confirmed) => {
       if (confirmed === true) {
         const _dataForm = this.dataForm.value;
-        // const formData = new FormData(this.formArticle.nativeElement);
         this.subscriptions.push(
           this.article.saveArticle(_dataForm).subscribe(resp => {
             if (resp) {
-              this.article.formData = _dataForm;
+              this.article.formData = null;
               this.article.formAlert = 'Artikel berhasil disimpan ke dalam draft.';
               this.router.navigate(
                 [
@@ -400,7 +399,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
       this.article.saveArticle(_dataForm, true, this.saveAndSend).subscribe(resp => {
         if (resp) {
           this.modalService.dismissAll();
-          this.article.formData = _dataForm;
+          this.article.formData = null;
           this.article.formAlert = 'Artikel berhasil disimpan dan dikirim.';
           this.router.navigate(
             [
@@ -412,7 +411,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     return false;
   }
   onPreview(show: boolean, hideTopbar: boolean = false, alert: boolean = false, msg: string = '') {
-    this.article.formData = this.dataForm.value as ArticleDTO;
+    this.article.formData = show ? this.dataForm.value as ArticleDTO : null;
     this.previewHideTopbar = hideTopbar;
     this.previewAlert = alert;
     this.previewAlertMessage = msg;
@@ -528,7 +527,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   checkUniq(value) {
     this.hasError = false;
     if (!value) return;
-    const checkUniqSubrcr = this.article.checkUniq(value.trim())
+    const checkUniqSubrcr = this.article.checkUniq(value.trim(), this.dataForm.value.id)
       .pipe(
         catchError((err) => {
           this.hasError = true;

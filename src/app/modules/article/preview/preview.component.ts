@@ -51,6 +51,7 @@ export class PreviewComponent implements OnInit, AfterViewInit, OnDestroy {
   user$: Observable<UserModel>;
   aliasName: string = 'AA';
   fullName: string;
+  role: string;
   changed_date: Date = new Date();
   skReferences = [];
   relatedArticle = [];
@@ -139,7 +140,8 @@ export class PreviewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     return false;
   }
-  onEdit(e, contentId: number = 0, contentTitle: string = '') {    
+  onEdit(e, contentId: number = 0, contentTitle: string = '') {
+    if (this.role == 'READER') return false;
     const item = this.articleDTO;
     this.articleService.checkArticleEditing(item.id).subscribe((resp: UserModel[]) => {
       let editingMsg: string = '';
@@ -184,6 +186,7 @@ export class PreviewComponent implements OnInit, AfterViewInit, OnDestroy {
       const aliasNameArr: string[] = [u.firstname, u.lastname];
       this.aliasName = aliasNameArr.map(d => d ? d[0] : '').join('');
       this.fullName = u.fullname;
+      this.role = u.roles[0];
     });
 
     //carousel test

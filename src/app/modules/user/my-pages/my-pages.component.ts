@@ -23,7 +23,8 @@ export declare interface MyPageRowItem {
   send_to?: string,
   current_by: string,
   state: string,
-  isNew: boolean
+  isNew: boolean,
+  receiver?: string
 }
 
 interface TabDTO {
@@ -304,7 +305,7 @@ export class MyPagesComponent implements OnInit, OnDestroy {
     }).then((confirmed) => {
       if (confirmed === true) {
         this.subscriptions.push(
-          this.articleService.cancelSend(item.id)
+          this.articleService.cancelSend(item.id, item.receiver)
             .pipe(
               catchError((err) => {
                 this.showErrorModal('Gagal Batal Kirim', 'Batal Kirim tidak dapat dilakukan karena halaman tersebut sedang dalam proses review.');

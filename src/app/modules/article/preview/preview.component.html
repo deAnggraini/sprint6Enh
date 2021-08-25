@@ -70,8 +70,9 @@ height: 184px;
                             class="svg-icon menu-icon"></span>
                         <span class="font-weight-bold" style="color: #0F5EA9;">Collapse Topik</span>
                     </div>
+
                     <!-- Ubah Artikel -->
-                    <div (click)="onEdit($event)" class="btn btn-link" *ngIf="editable">
+                    <div (click)="onEdit($event)" class="btn btn-link" *ngIf="editable && role != 'READER'">
                         <span [inlineSVG]="'./assets/media/svg/bca/icon/edit-document-dark.svg'" cacheSVG="true"
                             class="svg-icon menu-icon"></span>
                         <span class="font-weight-bold" style="color: #0F5EA9;">Ubah Artikel</span>
