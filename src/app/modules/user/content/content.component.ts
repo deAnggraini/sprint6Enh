@@ -38,22 +38,22 @@ const EMPTY_FORM_BEAN: FormBean = {
   all: {
     dataList: [],
     pagination: new PaginationModel(1, 0),
-    sort: { column: 'modified_date', direction: 'desc' }
+    sort: { column: 'affective_date', direction: 'desc' }
   },
   article: {
     dataList: [],
     pagination: new PaginationModel(1, 0),
-    sort: { column: 'modified_date', direction: 'desc' }
+    sort: { column: 'affective_date', direction: 'desc' }
   },
   virtualpage: {
     dataList: [],
     pagination: new PaginationModel(1, 0),
-    sort: { column: 'modified_date', direction: 'desc' }
+    sort: { column: 'affective_date', direction: 'desc' }
   },
   formulir: {
     dataList: [],
     pagination: new PaginationModel(1, 0),
-    sort: { column: 'modified_date', direction: 'desc' }
+    sort: { column: 'affective_date', direction: 'desc' }
   },
 }
 

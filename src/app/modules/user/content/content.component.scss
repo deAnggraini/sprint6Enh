@@ -15,7 +15,14 @@
 }
 
 :host ::ng-deep {
-  
+
+  .svg.my-svg {
+    svg {
+      max-width: 16px;
+      max-height: 16px;
+    }
+  }
+
   .btn.btn-blue .svg-icon svg g [fill] {
     transition: fill 0.3s ease;
     fill: white;
