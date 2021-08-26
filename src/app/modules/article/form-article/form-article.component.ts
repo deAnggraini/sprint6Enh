@@ -85,6 +85,8 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
         'indent',
         'findAndReplace',
         '|',
+        'Mathtype',
+        '|',
         'link',
         'imageUpload',
         'blockQuote',
