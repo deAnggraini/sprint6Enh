@@ -15,37 +15,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-//import id.co.bca.pakar.be.doc.model.ArticleClone;
-
 @Service
 public class ArticleCloneServiceImpl implements ArticleCloneService {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-//    @Autowired
-//    private ArticleCloneRepository articleCloneRepository;
-
     @Autowired
     private ArticleContentCloneRepository articleContentCloneRepository;
-
-//    @Override
-//    @Transactional
-//    public Boolean clone(Article article, String username) throws Exception {
-//        try {
-//            logger.info("clone article id {} for user {}", article.getId(), username);
-//            // validate if article clone is exist
-//            Boolean isExistClone = articleCloneRepository.existByArticleId(article.getId());
-//            if (isExistClone.booleanValue())
-//                return Boolean.FALSE;
-//
-//            logger.info("clone article process");
-//            ArticleClone clone = new ArticleCloneHelper().populateArticle(article);
-//            articleCloneRepository.save(clone);
-//            return Boolean.TRUE;
-//        } catch (Exception e) {
-//            logger.error("exception ", e);
-//            throw new Exception(e);
-//        }
-//    }
 
     /*
     clone main article content into article content clone
@@ -56,11 +31,6 @@ public class ArticleCloneServiceImpl implements ArticleCloneService {
     public Boolean cloneArticleContent(Article article, String username) throws Exception {
         try {
             logger.info("clone article content of article id {} for user {}", article.getId(), username);
-            // validate if article clone is exist
-//            Boolean isExistClone = articleCloneRepository.existByArticleId(article.getId());
-//            if (isExistClone.booleanValue())
-//                return Boolean.FALSE;
-
             logger.info("populate and save cloning article content");
             List<ArticleContentClone> clones = new ArticleCloneHelper().populateContent(article.getArticleContents(), article);
             clones.forEach(e -> articleContentCloneRepository.save(e));
@@ -103,27 +73,6 @@ public class ArticleCloneServiceImpl implements ArticleCloneService {
      * helper class for article version
      */
     private class ArticleCloneHelper {
-//        ArticleClone populateArticle(Article article) {
-//            logger.info("populate article to article clone");
-//            ArticleClone article_ = new ArticleClone();
-//            article_.setId(article.getId());
-//            article_.setArticleId(article.getId());
-//            article_.setCreatedBy(article.getModifyBy());
-//            article_.setJudulArticle(article.getJudulArticle());
-//            article_.setNewArticle(article.getNewArticle());
-//            article_.setFullNameModifier(article.getFullNameModifier());
-//            article_.setArticleState(article.getArticleState());
-//            article_.setArticleUsedBy(article.getArticleUsedBy());
-//            article_.setShortDescription(article.getShortDescription());
-//            article_.setUseEmptyTemplate(article.getUseEmptyTemplate());
-//            article_.setArticleTemplate(article.getArticleTemplate());
-//            article_.setStructure(article.getStructure().getId());
-//            article_.setVideoLink(article.getVideoLink());
-//            article_.setReleaseVersion(UUID.randomUUID().toString());
-//            article_.setTimeStampVersion(new Date());
-//            return article_;
-//        }
-
         /**
          * populate list of article content
          *

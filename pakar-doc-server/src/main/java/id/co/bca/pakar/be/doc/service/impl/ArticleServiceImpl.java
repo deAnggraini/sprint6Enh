@@ -420,7 +420,7 @@ public class ArticleServiceImpl implements ArticleService {
             , ArticleNotFoundException.class})
     public ArticleDto getArticleById(Long id, boolean isEdit, String username, String token) throws Exception {
         try {
-            Optional<Article> articleOpt = articleRepository.findById(id);
+            Optional<Article> articleOpt = articleRepository.findById(id, username);
 
             if (articleOpt.isEmpty()) {
                 throw new ArticleNotFoundException("not found article with id --> " + id);
