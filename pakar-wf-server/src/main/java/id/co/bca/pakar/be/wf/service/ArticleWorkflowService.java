@@ -644,6 +644,7 @@ public class ArticleWorkflowService {
                     requestUserTaskModel.getSenderState().getCode() : null);
             taskDto.setAssigne(requestUserTaskModel.getAssigne());
             taskDto.setCurrentReceiverState(requestUserTaskModel.getReceiverState() != null ? requestUserTaskModel.getReceiverState().getCode() : "");
+            logger.debug("task Dto from workflow delete = "+ taskDto);
 
             return taskDto;
         } catch (Exception e) {
