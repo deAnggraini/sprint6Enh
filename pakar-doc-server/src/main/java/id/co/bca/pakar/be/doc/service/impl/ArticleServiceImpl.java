@@ -15,6 +15,7 @@ import id.co.bca.pakar.be.doc.service.ArticleService;
 import id.co.bca.pakar.be.doc.service.ArticleVersionService;
 import id.co.bca.pakar.be.doc.util.FileUploadUtil;
 import id.co.bca.pakar.be.doc.util.TreeArticleContents;
+import org.apache.catalina.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -454,7 +455,8 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     @Transactional(rollbackFor = {Exception.class
             , StructureNotFoundException.class
-            , ArticleNotFoundException.class})
+            , ArticleNotFoundException.class
+            , OauthApiClientException.class})
     public ArticleDto getArticleById(Long id, boolean isEdit, String username, String token) throws Exception {
         try {
             Optional<Article> articleOpt = articleRepository.findById(id);
@@ -476,25 +478,17 @@ public class ArticleServiceImpl implements ArticleService {
             articleDto.setPublished(article.getPublished());
             articleDto.setNew(article.getNewArticle());
 
-//            ResponseEntity<ApiResponseWrapper.RestResponse<List<UserProfileDto>>> restResponseUp = pakarOauthClient
-//                    .getListUserProfile(BEARER + articleDto.getToken(), articleDto.getUsername(), Arrays.asList(new String[]{articleState.getSender()}));
             // get user profile from oauth server
-            ResponseEntity<ApiResponseWrapper.RestResponse<UserProfileDto>> restResponseUp = null;
-            restResponseUp = pakarOauthClient.getUser(BEARER + token, article.getModifyBy());
+            ResponseEntity<ApiResponseWrapper.RestResponse<List<UserProfileDto>>> restResponseUp = null;
+            restResponseUp = pakarOauthClient.getListUserProfile(BEARER + token, username, Arrays.asList(new String[]{article.getModifyBy()}));
             if (!restResponseUp.getBody().getApiStatus().getCode().equalsIgnoreCase(Constant.OK_ACK)) {
                 throw new OauthApiClientException("call oauth api client is failed");
             }
 
-            articleDto.setModifiedName(restResponseUp.getBody().getData().getFullname());
+            articleDto.setModifiedName(restResponseUp.getBody().getData().get(0).getFullname());
 
             // get main contents
             List<ArticleContentDto> articleContentDtos = new ArrayList<>();
-//            if (article.getNewArticle().booleanValue()) {
-//                // refresh article
-//                Iterable<ArticleContentClone> articleContents = articleContentCloneRepository.findsByArticleId(article.getId(), article.getCreatedBy());
-//                logger.debug("copy value of article contents to dto", articleContents);
-//                articleContentDtos = new TreeArticleContents().menuTree(mapToListArticleContentCloneDto(articleContents));
-//            } else {
             // article already saved
             List<ArticleContent> articleContents = articleContentRepository.findByArticleId(article.getId());
             logger.debug("main article contents {}", articleContents);
@@ -593,6 +587,9 @@ public class ArticleServiceImpl implements ArticleService {
         } catch (ArticleNotFoundException e) {
             logger.error("exception", e);
             throw new ArticleNotFoundException("not found article id " + id);
+        } catch (OauthApiClientException e) {
+            logger.error("exception", e);
+            throw new OauthApiClientException("call oauth api failed ");
         } catch (Exception e) {
             logger.error("exception", e);
             throw new Exception("get article failed");
