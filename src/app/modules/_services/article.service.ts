@@ -93,6 +93,7 @@ export class ArticleService {
   // search all data [article|faq|pdf]
   search(params: SearchArticleParam = null): Observable<any> {
     if (params) {
+      params.structureId = parseInt(params.structureId.toString()); // fix bug : kadang2 kirim dengan petik dua di json nya
       return this.apiService.post(`${this._base_url}/searchArticle`, params);
     } else {
       return of(false);
