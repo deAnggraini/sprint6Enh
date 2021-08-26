@@ -36,7 +36,6 @@ height: 184px;
             &nbsp;&nbsp;
             <div class="font-weight-bold">{{ alertMessage }}</div>
         </div>
-
         <button type="button" class="btn btn-icon" data-bs-dismiss="alert" aria-label="Close" (click)="closeAlert()">
             <i [inlineSVG]="'./assets/media/svg/bca/icon/close.svg'" cacheSVG="true"></i>
         </button>
@@ -95,13 +94,13 @@ height: 184px;
                     </ng-container>
                 </div>
             </div>
-            <span class="pakar-text-header-desc my-4" style="color: #605E5C;">Terakhir diubah oleh
+            <span class="my-4" style="color: #605E5C;">Terakhir diubah oleh
                 <span class="symbol symbol-lg-25 symbol-25 mx-2">
                     <span class="symbol-label font-size-h7 font-weight-bold rounded-xl px-2 ">{{aliasName}}</span>
                 </span>
                 <span class="font-weight-bolder font-size-base d-none d-md-inline mr-2"
                     style="text-transform: uppercase;">{{fullName}}</span>
-                pada
+                <span> pada </span>
                 <span class="font-size-sm" style="color: black;">{{ changed_date | date: "dd/MM/yyyy"}}</span>
             </span>
 

@@ -413,7 +413,11 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     return false;
   }
   onPreview(show: boolean, hideTopbar: boolean = false, alert: boolean = false, msg: string = '') {
-    this.article.formData = show ? this.dataForm.value as ArticleDTO : null;
+    const _article: ArticleDTO = JSON.parse(JSON.stringify(this.dataForm.value));
+    _article.modified_date = new Date();
+    _article.modified_name = this.user.fullname;
+
+    this.article.formData = show ? _article : null;
     this.previewHideTopbar = hideTopbar;
     this.previewAlert = alert;
     this.previewAlertMessage = msg;
