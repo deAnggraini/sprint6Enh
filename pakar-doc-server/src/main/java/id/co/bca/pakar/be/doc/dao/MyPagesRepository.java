@@ -65,17 +65,17 @@ public interface MyPagesRepository extends CrudRepository<MyPages, Long> {
     // find article for contents page role ADMIN
     @Query("SELECT m FROM MyPages m " +
             "WHERE m.deleted IS FALSE " +
-            "AND (LOWER(m.judulArticle) LIKE lower(concat('%', :keyword,'%')) " +
-            "OR LOWER(m.fullNameModifier) LIKE lower(concat('%', :keyword,'%')) " +
-            "OR LOWER(m.structure.location_text) LIKE lower(concat('%', :keyword,'%')) )")
+            "AND (LOWER(m.judulArticle) LIKE CONCAT('%',LOWER(:keyword),'%') " +
+            "       OR LOWER(m.fullNameModifier) LIKE CONCAT('%', LOWER(:keyword), '%') " +
+            "       OR LOWER(m.location) LIKE CONCAT('%',LOWER(:keyword), '%') ) ")
     Page<MyPages> findContentArticleForAdmin(@Param("keyword") String keyword, Pageable pageable);
 
     // find article for contents page role except ADMIN
     @Query("SELECT m FROM MyPages m " +
             "WHERE  m.articleState = 'PUBLISHED' AND m.deleted IS FALSE " +
-            "AND (LOWER(m.judulArticle) LIKE lower(concat('%', :keyword,'%')) " +
-            "OR LOWER(m.fullNameModifier) LIKE lower(concat('%', :keyword,'%')) " +
-            "OR LOWER(m.structure.location_text) LIKE lower(concat('%', :keyword,'%')) ) ")
+            "AND (LOWER(m.judulArticle) LIKE CONCAT('%',LOWER(:keyword),'%') " +
+            "       OR LOWER(m.fullNameModifier) LIKE CONCAT('%', LOWER(:keyword), '%') " +
+            "       OR LOWER(m.location) LIKE CONCAT('%',LOWER(:keyword), '%') ) ")
     Page<MyPages> findContentArticle(@Param("keyword") String keyword, Pageable pageable);
 
 }
