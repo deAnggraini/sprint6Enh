@@ -911,12 +911,31 @@ public class ArticleServiceImpl implements ArticleService {
                     wfRequestDelete.put(GROUP_PARAM, rcvRoles.get(0));
 //                    wfRequestDelete.put(WORKFLOW_REQ_ID_PARAM, articleState.getWfReqId());
 
+                    // Flow request delete
                     ResponseEntity<ApiResponseWrapper.RestResponse<TaskDto>> restResponse = pakarWfClient
                             .requestDelete(BEARER + articleDto.getToken(), articleDto.getUsername(), wfRequestDelete);
                     logger.debug("response api request {}", restResponse);
                     logger.debug("reponse status code {}", restResponse.getStatusCode());
 
+                    // save ke article state
+                    articleState.setCreatedBy(username);
+                    articleState.setCreatedDate(new Date());
+                    ResponseEntity<ApiResponseWrapper.RestResponse<List<UserProfileDto>>> restResponseUp = pakarOauthClient
+                            .getListUserProfile(BEARER + articleDto.getToken(), articleDto.getUsername(), Arrays.asList(new String[]{articleState.getSender()}));
+                    List<UserProfileDto> userProfileDtos = restResponseUp.getBody().getData();
+                    articleState.setFnSender(userProfileDtos != null ? userProfileDtos.get(0) != null ? userProfileDtos.get(0).getFullname() : "" : "");
+                    articleState.setReceiver(restResponse.getBody().getData().getAssigne());
+                    restResponseUp = pakarOauthClient
+                            .getListUserProfile(BEARER + articleDto.getToken(), articleDto.getUsername(), Arrays.asList(new String[]{articleState.getReceiver()}));
+                    userProfileDtos.clear();
+                    userProfileDtos = restResponseUp.getBody().getData();
+                    articleState.setFnReceiver(userProfileDtos != null ? userProfileDtos.get(0) != null ? userProfileDtos.get(0).getFullname() : "" : "");
+                    articleState.setReceiverState(restResponse.getBody().getData().getCurrentReceiverState());
+                    articleState.setSenderState(restResponse.getBody().getData().getCurrentSenderState());
+                    articleState.setArticle(article);
+                    articleState.setWfReqId(restResponse.getBody().getData().getRequestId());
 
+                    articleStateRepository.save(articleState);
                 } else {
                     logger.debug("delete from tabel t_article_content_clone with article id {} and username {} ", article.getId(), username);
                     Iterable<ArticleContentClone> contents = articleContentCloneRepository.findsByArticleId(article.getId(), username);
