@@ -812,4 +812,32 @@ public class ArticleController extends BaseController {
             return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, null));
         }
     }
+
+
+    /**
+     *
+     * @param authorization
+     * @param username
+     * @param requestDeleteDto
+     * @return
+     */
+    @PostMapping(value = "/api/doc/deleteArticle", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
+            MediaType.APPLICATION_JSON_VALUE })
+    public ResponseEntity<RestResponse<Boolean>> deleteArticle(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @RequestBody RequestDeleteDto requestDeleteDto) {
+        try {
+            logger.info("delete article process ");
+            logger.info("received token bearer --- {}", authorization);
+            Boolean status = articleService.deleteArticle(requestDeleteDto, username, getTokenFromHeader(authorization));
+            return createResponse(status, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));
+        } catch (DeletePublishedArticleException e) {
+            logger.error("exception", e);
+            return createResponse(Boolean.TRUE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("published.article.could.not.deleted", null, getLocale()));
+        } catch (DataNotFoundException e) {
+            logger.error("exception", e);
+            return createResponse(Boolean.TRUE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, getLocale()));
+        } catch (Exception e) {
+            logger.error("exception", e);
+            return createResponse(Boolean.TRUE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
+        }
+    }
 }
