@@ -45,7 +45,8 @@ height: 184px;
 
 <div class="mx-15 mt-n25">
     <div class="back-panel">
-        <pakar-breadcrumbs [node]="struktur$"></pakar-breadcrumbs>
+        <pakar-breadcrumbs [node]="struktur$" [article]="{id:articleDTO.id, title:articleDTO.title}">
+        </pakar-breadcrumbs>
     </div>
     <ng-container *ngIf="articleDTO">
         <div class="pakar-container h-100 p-8 d-flex flex-column flex-column-auto flex-grow"
@@ -53,7 +54,7 @@ height: 184px;
             <div class="d-flex flex-row justify-content-between">
                 <div class="d-flex flex-row">
                     <span class="pakar-text-header">{{articleDTO.title}}</span>
-                    <span *ngIf="articleDTO.isNew"><sup class="fb7 fs12 txt-new">(new)</sup></span>
+                    <span *ngIf="!articleDTO.isPublished"><sup class="fb7 fs12 txt-new">(new)</sup></span>
                 </div>
                 <!-- on save -->
                 <div class="d-flex flex-row" *ngIf="!onPreview">
@@ -76,8 +77,9 @@ height: 184px;
                         <span [inlineSVG]="'./assets/media/svg/bca/icon/edit-document-dark.svg'" cacheSVG="true"
                             class="svg-icon menu-icon"></span>
                         <span class="font-weight-bold" style="color: #0F5EA9;">Ubah Artikel</span>
+                        <!-- <span class="font-weight-bold" style="color: #0F5EA9;">-{{readerView}}-{{isAllowEdit}</span> -->
                     </div>
-                    <ng-container *ngIf="readerView && isAllowEdit">
+                    <ng-container *ngIf="(readerView && isAllowEdit) || editable">
                         <div [routerLink]="['/article/form/'+articleDTO.id, {isEdit:true}]" class="btn btn-link"
                             *ngIf="editable">
                             <span [inlineSVG]="'./assets/media/svg/bca/icon/share.svg'" cacheSVG="true"
@@ -158,8 +160,8 @@ height: 184px;
                                     <mat-panel-title class="fs16pt">
                                         <span [innerHTML]="content.title">&nbsp;</span>
                                     </mat-panel-title>
-                                    <ng-container *ngIf="readerView && isAllowEdit" [ngTemplateOutlet]="rightIcon"
-                                        [ngTemplateOutletContext]="{ data: content}">
+                                    <ng-container *ngIf="(readerView && isAllowEdit) || editable"
+                                        [ngTemplateOutlet]="rightIcon" [ngTemplateOutletContext]="{ data: content}">
                                     </ng-container>
                                 </mat-expansion-panel-header>
                                 <div class="content">
@@ -250,7 +252,7 @@ height: 184px;
                         <span class="mr-2">{{numberingFormat(content)}}.</span>
                         <span [innerHTML]="content.title"></span>
                     </mat-panel-title>
-                    <ng-container *ngIf="readerView && isAllowEdit" [ngTemplateOutlet]="rightIcon"
+                    <ng-container *ngIf="(readerView && isAllowEdit) || editable" [ngTemplateOutlet]="rightIcon"
                         [ngTemplateOutletContext]="{ data: content}">
                     </ng-container>
                 </mat-expansion-panel-header>
