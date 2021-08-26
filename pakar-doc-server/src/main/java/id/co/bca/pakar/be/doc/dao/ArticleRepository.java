@@ -1,6 +1,7 @@
 package id.co.bca.pakar.be.doc.dao;
 
 import id.co.bca.pakar.be.doc.model.Article;
+import id.co.bca.pakar.be.doc.model.MyPages;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -38,21 +39,6 @@ public interface ArticleRepository extends CrudRepository<Article, Long> {
             "AND m.id=:id")
     Boolean isPreDraftArticle(@Param("id") Long id);
 
-    // find article for contents page role ADMIN
-    @Query("SELECT m FROM Article m " +
-            "WHERE m.deleted IS FALSE " +
-            "AND (LOWER(m.judulArticle) LIKE lower(concat('%', :keyword,'%')) " +
-            "OR LOWER(m.fullNameModifier) LIKE lower(concat('%', :keyword,'%')) " +
-            "OR LOWER(m.structure.location_text) LIKE lower(concat('%', :keyword,'%')) )")
-    Page<Article> findContentArticleForAdmin(@Param("keyword") String keyword, Pageable pageable);
-
-    // find article for contents page role except ADMIN
-    @Query("SELECT m FROM Article m " +
-            "WHERE  m.articleState = 'PUBLISHED' AND m.deleted IS FALSE " +
-            "AND (LOWER(m.judulArticle) LIKE lower(concat('%', :keyword,'%')) " +
-            "OR LOWER(m.fullNameModifier) LIKE lower(concat('%', :keyword,'%')) " +
-            "OR LOWER(m.structure.location_text) LIKE lower(concat('%', :keyword,'%')) ) ")
-    Page<Article> findContentArticle(@Param("keyword") String keyword, Pageable pageable);
 
     // find selain article for contents page
     @Query("select m from Article m where id not in (select id from Article m ) ")

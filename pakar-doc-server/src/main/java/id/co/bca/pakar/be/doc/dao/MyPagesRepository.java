@@ -61,4 +61,21 @@ public interface MyPagesRepository extends CrudRepository<MyPages, Long> {
                     "AND m.deleted IS FALSE "
     )
     MyPages findByArticleId(@Param("articleId") Long articleId);
+
+    // find article for contents page role ADMIN
+    @Query("SELECT m FROM MyPages m " +
+            "WHERE m.deleted IS FALSE " +
+            "AND (LOWER(m.judulArticle) LIKE lower(concat('%', :keyword,'%')) " +
+            "OR LOWER(m.fullNameModifier) LIKE lower(concat('%', :keyword,'%')) " +
+            "OR LOWER(m.structure.location_text) LIKE lower(concat('%', :keyword,'%')) )")
+    Page<MyPages> findContentArticleForAdmin(@Param("keyword") String keyword, Pageable pageable);
+
+    // find article for contents page role except ADMIN
+    @Query("SELECT m FROM MyPages m " +
+            "WHERE  m.articleState = 'PUBLISHED' AND m.deleted IS FALSE " +
+            "AND (LOWER(m.judulArticle) LIKE lower(concat('%', :keyword,'%')) " +
+            "OR LOWER(m.fullNameModifier) LIKE lower(concat('%', :keyword,'%')) " +
+            "OR LOWER(m.structure.location_text) LIKE lower(concat('%', :keyword,'%')) ) ")
+    Page<MyPages> findContentArticle(@Param("keyword") String keyword, Pageable pageable);
+
 }

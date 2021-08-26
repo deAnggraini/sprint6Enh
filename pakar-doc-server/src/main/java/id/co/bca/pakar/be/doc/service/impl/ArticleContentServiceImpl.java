@@ -5,10 +5,7 @@ import id.co.bca.pakar.be.doc.client.ApiResponseWrapper;
 import id.co.bca.pakar.be.doc.client.PakarOauthClient;
 import id.co.bca.pakar.be.doc.client.PakarWfClient;
 import id.co.bca.pakar.be.doc.common.Constant;
-import id.co.bca.pakar.be.doc.dao.ArticleContentRepository;
-import id.co.bca.pakar.be.doc.dao.ArticleEditRepository;
-import id.co.bca.pakar.be.doc.dao.ArticleMyPagesRepository;
-import id.co.bca.pakar.be.doc.dao.ArticleRepository;
+import id.co.bca.pakar.be.doc.dao.*;
 import id.co.bca.pakar.be.doc.dto.MyPageDto;
 import id.co.bca.pakar.be.doc.dto.RequestTaskDto;
 import id.co.bca.pakar.be.doc.dto.SearchMyPageDto;
@@ -19,6 +16,7 @@ import id.co.bca.pakar.be.doc.exception.MinValuePageNumberException;
 import id.co.bca.pakar.be.doc.model.Article;
 import id.co.bca.pakar.be.doc.model.ArticleEdit;
 import id.co.bca.pakar.be.doc.model.ArticleState;
+import id.co.bca.pakar.be.doc.model.MyPages;
 import id.co.bca.pakar.be.doc.service.ArticleContentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,6 +54,9 @@ public class ArticleContentServiceImpl implements ArticleContentService {
 
     @Autowired
     private ArticleRepository articleRepository;
+
+    @Autowired
+    private MyPagesRepository myPagesRepository;
     /**
      * @param searchDto
      * @return
@@ -72,7 +73,7 @@ public class ArticleContentServiceImpl implements ArticleContentService {
                 throw new AccesDeniedViewContentsException("role " + role + " has no authorize to see contents");
             }
 
-            Page<Article> searchResultPage = null;
+            Page<MyPages> searchResultPage = null;
             if (searchDto.getPage() == null) {
                 searchDto.setPage(0L);
             }
@@ -93,9 +94,9 @@ public class ArticleContentServiceImpl implements ArticleContentService {
             if (searchDto.getType().equals(Constant.DocumentType.All)
                     || searchDto.getType().equals(Constant.DocumentType.Artikel)) {
                 if(role.equals(ROLE_ADMIN)) {
-                    searchResultPage = articleRepository.findContentArticleForAdmin(searchDto.getKeyword(), pageable);
+                    searchResultPage = myPagesRepository.findContentArticleForAdmin(searchDto.getKeyword(), pageable);
                 } else if (role.equals(Constant.Roles.ROLE_EDITOR) || role.equals(Constant.Roles.ROLE_PUBLISHER)){
-                    searchResultPage = articleRepository.findContentArticle(searchDto.getKeyword(), pageable);
+                    searchResultPage = myPagesRepository.findContentArticle(searchDto.getKeyword(), pageable);
                 }
             } else {
 //                searchResultPage = articleRepository.findContentExceptArticle(searchDto.getKeyword(), pageable);
@@ -119,7 +120,7 @@ public class ArticleContentServiceImpl implements ArticleContentService {
      * mapper for contents
      */
     private class TodoMapperMyPages {
-        public List<MyPageDto> mapEntitiesIntoDTOs(Iterable<Article> entities) {
+        public List<MyPageDto> mapEntitiesIntoDTOs(Iterable<MyPages> entities) {
             List<MyPageDto> dtos = new ArrayList<>();
             entities.forEach(e -> dtos.add(mapEntityIntoDTO(e)));
             return dtos;
@@ -130,17 +131,17 @@ public class ArticleContentServiceImpl implements ArticleContentService {
             return new PageImpl<>(dtos, pageRequest, 0);
         }
 
-        public MyPageDto mapEntityIntoDTO(Article entity) {
+        public MyPageDto mapEntityIntoDTO(MyPages entity) {
             MyPageDto dto = new MyPageDto();
-            String locTemp = articleMyPagesRepository.findLocation(entity.getStructure().getId());
             List<ArticleEdit> articleEdits = articleEditRepository.findArticleInEditingStatus(entity.getId());
 
             dto.setId(entity.getId());
             dto.setType(Constant.JenisHalaman.Artikel);
             dto.setTitle(entity.getJudulArticle());
-            dto.setLocation(locTemp);
+            dto.setLocation(entity.getLocation());
             dto.setEffectiveDate(null);
             dto.setModifiedBy(entity.getFullNameModifier());
+            dto.setModifiedDate(entity.getModifyDate());
             int i = 0;
             StringBuffer currentEdit = new StringBuffer();
             for(ArticleEdit articleEdit : articleEdits) {
@@ -153,7 +154,7 @@ public class ArticleContentServiceImpl implements ArticleContentService {
             return dto;
         }
 
-        public Page<MyPageDto> mapEntityPageIntoDTOPage(Pageable pageRequest, Page<Article> source) {
+        public Page<MyPageDto> mapEntityPageIntoDTOPage(Pageable pageRequest, Page<MyPages> source) {
             List<MyPageDto> dtos = mapEntitiesIntoDTOs(source.getContent());
             return new PageImpl<>(dtos, pageRequest, source.getTotalElements());
         }
@@ -167,8 +168,10 @@ public class ArticleContentServiceImpl implements ArticleContentService {
                 return "structure.location_text";
             } else if (reqColumn.equals("modified_date")) {
                 return "modifyDate";
+            } else if (reqColumn.equals("effective_date")) { // dari column table belum ada field effective date
+                return "modifyDate";
             }
-            return "";
+            return "judulArticle";
         }
     }
 }
