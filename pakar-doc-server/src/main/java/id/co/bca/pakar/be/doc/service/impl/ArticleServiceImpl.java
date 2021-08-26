@@ -474,6 +474,7 @@ public class ArticleServiceImpl implements ArticleService {
             articleDto.setShortDescription(article.getShortDescription());
             articleDto.setVideoLink(article.getVideoLink());
             articleDto.setPublished(article.getPublished());
+            articleDto.setNew(article.getNewArticle());
 
             // get main contents
             List<ArticleContentDto> articleContentDtos = new ArrayList<>();
@@ -526,7 +527,7 @@ public class ArticleServiceImpl implements ArticleService {
             articleDto.setRelated(mapToRelatedArticleDto(relatedArticles));
             articleDto.setEmptyTemplate(article.getUseEmptyTemplate());
             articleDto.setStructureId(article.getStructure().getId());
-            articleDto.setPublished(article.getArticleState().equalsIgnoreCase(PUBLISHED) ? Boolean.TRUE : Boolean.FALSE);
+//            articleDto.setPublished(article.getArticleState().equalsIgnoreCase(PUBLISHED) ? Boolean.TRUE : Boolean.FALSE);
 
             logger.debug("get parent structure of structure id {}", article.getStructure().getId());
             List<Structure> breadcumbs = structureRepository.findBreadcumbById(article.getStructure().getId());
@@ -830,8 +831,13 @@ public class ArticleServiceImpl implements ArticleService {
                 articleNotification.setArticle(article);
                 articleNotification.setNotifDate(new Date());
 
-                String sendNote = messageSource.getMessage("article.notification.template"
-                        , new Object[]{articleState.getFnSender(), Constant.Notification.KIRIM_STATUS, articleDto.getSendNote() != null ? articleDto.getSendNote() : ""}, null);
+                String sendNote = "";
+                if(!article.getPublished().booleanValue())
+                    sendNote = messageSource.getMessage("article.notification.template"
+                        , new Object[]{articleState.getFnSender(), Constant.Notification.TAMBAH_STATUS, articleDto.getSendNote() != null ? articleDto.getSendNote() : ""}, null);
+                else
+                    sendNote = messageSource.getMessage("article.notification.template"
+                            , new Object[]{articleState.getFnSender(), Constant.Notification.EDIT_STATUS, articleDto.getSendNote() != null ? articleDto.getSendNote() : ""}, null);
                 articleNotification.setSendNote(sendNote);
                 articleNotification.setSender(restResponse.getBody().getData().getSender());
                 articleNotification.setReceiver(restResponse.getBody().getData().getAssigne());
@@ -866,27 +872,27 @@ public class ArticleServiceImpl implements ArticleService {
             article.setJudulArticle(articleDto.getTitle());
             article = articleRepository.save(article);
 
-            /*
-            send to notification to sender article
-             */
-            logger.debug("username {} and receiver {}", articleDto.getUsername(), articleState.getReceiver());
-            if (articleDto.getUsername().equalsIgnoreCase(articleState.getReceiver())) {
-                // send notification to sender
-                logger.info("send notification to sender article {} from receiver {}", articleState.getSender(), articleState.getReceiver());
-                ArticleNotification articleNotification = new ArticleNotification();
-                articleNotification.setCreatedBy(articleDto.getUsername());
-                articleNotification.setArticle(article);
-                articleNotification.setNotifDate(new Date());
-                String sendNote = messageSource.getMessage("article.notification.template"
-                        , new Object[]{articleState.getFnReceiver(), Constant.Notification.EDIT_STATUS, articleDto.getSendNote() != null ? articleDto.getSendNote() : ""}, null);
-                articleNotification.setSendNote(sendNote);
-                articleNotification.setSender(articleState.getReceiver());
-                articleNotification.setReceiver(articleState.getSender());
-                articleNotification.setStatus("Terima");
-                articleNotification.setDocumentType("Artikel");
-
-                articleNotificationRepository.save(articleNotification);
-            }
+//            /*
+//            send to notification to sender article
+//             */
+//            logger.debug("username {} and receiver {}", articleDto.getUsername(), articleState.getReceiver());
+//            if (articleDto.getUsername().equalsIgnoreCase(articleState.getReceiver())) {
+//                // send notification to sender
+//                logger.info("send notification to sender article {} from receiver {}", articleState.getSender(), articleState.getReceiver());
+//                ArticleNotification articleNotification = new ArticleNotification();
+//                articleNotification.setCreatedBy(articleDto.getUsername());
+//                articleNotification.setArticle(article);
+//                articleNotification.setNotifDate(new Date());
+//                String sendNote = messageSource.getMessage("article.notification.template"
+//                        , new Object[]{articleState.getFnReceiver(), Constant.Notification.EDIT_STATUS, articleDto.getSendNote() != null ? articleDto.getSendNote() : ""}, null);
+//                articleNotification.setSendNote(sendNote);
+//                articleNotification.setSender(articleState.getReceiver());
+//                articleNotification.setReceiver(articleState.getSender());
+//                articleNotification.setStatus("Terima");
+//                articleNotification.setDocumentType("Artikel");
+//
+//                articleNotificationRepository.save(articleNotification);
+//            }
             /*
             save article to article version
              */
