@@ -987,7 +987,9 @@ public class ArticleServiceImpl implements ArticleService {
                             .requestDelete(BEARER + token, username, wfRequestDelete);
                     logger.debug("response api request {}", restResponse);
                     logger.debug("reponse status code {}", restResponse.getStatusCode());
-
+                    if (!restResponse.getBody().getApiStatus().getCode().equalsIgnoreCase(Constant.OK_ACK)) {
+                    throw new WfApiClientException("fail call oauth endpoint requestDelete");
+                    }
                     // save ke article state
                     articleState.setCreatedBy(username);
                     articleState.setCreatedDate(new Date());
@@ -1029,8 +1031,11 @@ public class ArticleServiceImpl implements ArticleService {
         } catch (DataNotFoundException e) {
             logger.error("not found data article", e);
             throw new DataNotFoundException("", e);
-        } catch (Exception e) {
-            logger.error("fail to cancel article", e);
+        } catch (WfApiClientException e) {
+            logger.error("fail to call workflow request delete article", e);
+            throw new Exception(e);
+        }catch (Exception e) {
+            logger.error("fail to delete article", e);
             throw new Exception(e);
         }
     }

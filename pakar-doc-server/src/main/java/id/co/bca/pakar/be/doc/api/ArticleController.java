@@ -711,7 +711,7 @@ public class ArticleController extends BaseController {
             return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, getLocale()));
         } catch (WfApiClientException e) {
             logger.error("exception", e);
-            return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, getLocale()));
+            return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("fail.request.workflow", null, getLocale()));
         } catch (DataNotFoundException e) {
             logger.error("exception", e);
             return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, getLocale()));
@@ -829,13 +829,13 @@ public class ArticleController extends BaseController {
             logger.info("received token bearer --- {}", authorization);
             Boolean status = articleService.deleteArticle(requestDeleteDto, username, getTokenFromHeader(authorization));
             return createResponse(status, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));
-        } catch (DeletePublishedArticleException e) {
-            logger.error("exception", e);
-            return createResponse(Boolean.FALSE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("published.article.could.not.deleted", null, getLocale()));
         } catch (DataNotFoundException e) {
             logger.error("exception", e);
             return createResponse(Boolean.FALSE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, getLocale()));
-        } catch (Exception e) {
+        } catch (WfApiClientException e) {
+            logger.error("exception", e);
+            return createResponse(Boolean.FALSE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("fail.request.workflow", null, getLocale()));
+        }catch (Exception e) {
             logger.error("exception", e);
             return createResponse(Boolean.FALSE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
         }
