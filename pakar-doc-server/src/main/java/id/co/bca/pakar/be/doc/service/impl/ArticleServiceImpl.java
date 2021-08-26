@@ -756,7 +756,7 @@ public class ArticleServiceImpl implements ArticleService {
             }
 
             if (articleState == null) {
-                if(!article.getNewArticle().booleanValue())
+                if(article.getNewArticle().booleanValue())
                     articleState = articleStateRepository.findByArticleId(article.getId());
                 else
                     articleState = articleStateRepository.findByArticleIdAndReceiver(article.getId(), articleDto.getUsername());
