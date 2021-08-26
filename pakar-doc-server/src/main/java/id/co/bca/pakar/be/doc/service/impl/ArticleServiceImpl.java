@@ -479,13 +479,13 @@ public class ArticleServiceImpl implements ArticleService {
 //            ResponseEntity<ApiResponseWrapper.RestResponse<List<UserProfileDto>>> restResponseUp = pakarOauthClient
 //                    .getListUserProfile(BEARER + articleDto.getToken(), articleDto.getUsername(), Arrays.asList(new String[]{articleState.getSender()}));
             // get user profile from oauth server
-            ResponseEntity<ApiResponseWrapper.RestResponse<UserProfileDto>> restResponse = null;
-            restResponse = pakarOauthClient.getUser(BEARER + token, article.getModifyBy());
-            if (!restResponse.getBody().getApiStatus().getCode().equalsIgnoreCase(Constant.OK_ACK)) {
+            ResponseEntity<ApiResponseWrapper.RestResponse<UserProfileDto>> restResponseUp = null;
+            restResponseUp = pakarOauthClient.getUser(BEARER + token, article.getModifyBy());
+            if (!restResponseUp.getBody().getApiStatus().getCode().equalsIgnoreCase(Constant.OK_ACK)) {
                 throw new OauthApiClientException("call oauth api client is failed");
             }
 
-            articleDto.setModifiedName(restResponse.getBody().getData().getFullname());
+            articleDto.setModifiedName(restResponseUp.getBody().getData().getFullname());
 
             // get main contents
             List<ArticleContentDto> articleContentDtos = new ArrayList<>();
