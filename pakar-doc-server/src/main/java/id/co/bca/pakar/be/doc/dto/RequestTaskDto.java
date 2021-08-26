@@ -11,6 +11,8 @@ public class RequestTaskDto extends PageDto {
     private String state;
     @JsonProperty("wfReqId")
     private String wfReqId;
+    @JsonProperty("wfProcessKey")
+    private String wfProcessKey;
 
     public String getAssigne() {
         return assigne;
@@ -42,5 +44,13 @@ public class RequestTaskDto extends PageDto {
 
     public void setWfReqId(String wfReqId) {
         this.wfReqId = wfReqId;
+    }
+
+    public String getWfProcessKey() {
+        return wfProcessKey;
+    }
+
+    public void setWfProcessKey(String wfProcessKey) {
+        this.wfProcessKey = wfProcessKey;
     }
 }

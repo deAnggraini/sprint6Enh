@@ -545,10 +545,11 @@ public class ArticleWorkflowService {
      * @throws Exception
      */
     @Transactional(rollbackFor = {Exception.class})
-    public List<TaskDto> getTasksWithPicState(String pic, String state) throws Exception {
+    public List<TaskDto> getTasksWithPicState(String pic, String state, String wfProcess) throws Exception {
         logger.debug("get all task for pic {}", pic);
         try {
-            Iterable<WorkflowRequestUserTaskModel> tasks = workflowRequestUserTaskRepository.findByPicAndState(pic, state);
+            Iterable<WorkflowRequestUserTaskModel> tasks = workflowRequestUserTaskRepository
+                    .findByPicAndState(pic, state, wfProcess);
             List<TaskDto> dtos = new MapperHelper().mapToTaskDtos(tasks);
             return dtos;
         } catch (Exception e) {

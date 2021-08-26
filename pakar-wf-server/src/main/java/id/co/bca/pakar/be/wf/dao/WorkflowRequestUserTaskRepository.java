@@ -96,6 +96,8 @@ public interface WorkflowRequestUserTaskRepository extends CrudRepository<Workfl
     @Query("SELECT m FROM WorkflowRequestUserTaskModel m " +
             "WHERE (m.proposedBy=:pic OR m.assigne=:pic) " +
             "AND (m.senderState.code=:state OR m.receiverState.code=:state) " +
+            "AND m.requestModel.wfprocess.id=:wfProcess " +
+            "AND m.approvedDate IS NULL " +
             "AND m.deleted IS FALSE ")
-    Iterable<WorkflowRequestUserTaskModel> findByPicAndState(@Param("pic") String pic, @Param("state") String state);
+    Iterable<WorkflowRequestUserTaskModel> findByPicAndState(@Param("pic") String pic, @Param("state") String state, @Param("wfProcess") String wfProcess);
 }

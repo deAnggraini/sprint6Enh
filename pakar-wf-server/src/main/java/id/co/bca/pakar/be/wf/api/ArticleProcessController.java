@@ -244,7 +244,7 @@ public class ArticleProcessController extends BaseController {
             logger.info("received token bearer --- {}", authorization);
             dto.setUsername(username);
             dto.setToken(getTokenFromHeader(authorization));
-            List<TaskDto> taskDtos = articleWorkflowService.getTasksWithPicState(username, dto.getState());
+            List<TaskDto> taskDtos = articleWorkflowService.getTasksWithPicState(username, dto.getState(), dto.getWfProcessKey());
             return createResponse(taskDtos, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, locale));
         } catch (Exception e) {
             logger.error("exception", e);

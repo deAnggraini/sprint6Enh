@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static id.co.bca.pakar.be.doc.common.Constant.Headers.BEARER;
+import static id.co.bca.pakar.be.doc.common.Constant.Workflow.ARTICLE_REVIEW_WF;
+import static id.co.bca.pakar.be.doc.common.Constant.Workflow.PROCESS_KEY;
 
 @Service
 public class MyPagesServiceImpl implements MyPagesService {
@@ -83,6 +85,7 @@ public class MyPagesServiceImpl implements MyPagesService {
             requestTaskDto.setAssigne(searchDto.getUsername());
             requestTaskDto.setPic(searchDto.getUsername());
             requestTaskDto.setState(searchDto.getState());
+            requestTaskDto.setWfProcessKey(ARTICLE_REVIEW_WF);
             ResponseEntity<ApiResponseWrapper.RestResponse<List<TaskDto>>> restResponse = pakarWfClient
                     .getTasksWithState(BEARER + searchDto.getToken(), searchDto.getUsername(), requestTaskDto);
             List<Long> ids = new ArrayList<>();
