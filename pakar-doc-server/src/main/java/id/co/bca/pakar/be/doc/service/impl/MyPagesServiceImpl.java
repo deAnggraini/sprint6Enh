@@ -106,6 +106,10 @@ public class MyPagesServiceImpl implements MyPagesService {
 
             String roleUser = restOauthResponse.getBody().getData().get(0);
             logger.debug("user {} has role {}", searchDto.getUsername(), roleUser);
+
+            /*
+            get id of article
+             */
             requestTaskDto.setWfProcessKey(ARTICLE_REVIEW_WF);
             ResponseEntity<ApiResponseWrapper.RestResponse<List<TaskDto>>> restResponse = pakarWfClient
                     .getTasksWithState(BEARER + searchDto.getToken(), searchDto.getUsername(), requestTaskDto);
