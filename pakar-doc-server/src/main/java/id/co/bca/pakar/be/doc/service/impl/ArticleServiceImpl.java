@@ -658,10 +658,10 @@ public class ArticleServiceImpl implements ArticleService {
             String currentState = article.getArticleState();
 
             ArticleState articleState = null;
-            article.setNewArticle(Boolean.TRUE);
+//            article.setNewArticle(Boolean.TRUE);
 
             // call to workflow server to set draft, if sendto <> null
-            if (currentState.equalsIgnoreCase(NEW)) {
+            if (article.getNewArticle().booleanValue()) {
                 logger.info("save draft article using article id {}", article.getId());
 
                 UserWrapperDto userWrapperDto = new UserWrapperDto();
@@ -705,12 +705,18 @@ public class ArticleServiceImpl implements ArticleService {
                     articleState.setArticle(article);
 
                     articleState = articleStateRepository.save(articleState);
+
+                    /**
+                     * new article flag to false
+                     */
+                    article.setNewArticle(Boolean.FALSE);
                 }
             }
 
             if (articleState == null) {
                 articleState = articleStateRepository.findByArticleId(article.getId());
             }
+
             if (articleDto.getIsHasSend().booleanValue()) {
                 // send to
                 logger.info("send article to {}", articleDto.getSendTo().getUsername());
