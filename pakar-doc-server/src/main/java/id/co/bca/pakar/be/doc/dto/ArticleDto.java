@@ -25,6 +25,9 @@ public class ArticleDto extends BaseArticleDto {
     @JsonProperty("modified_by")
     private String modifiedBy;
 
+    @JsonProperty("modified_name")
+    private String modifiedName;
+
     @JsonProperty("modified_date")
     private Date modifiedDate = new Date();
 
@@ -195,6 +198,14 @@ public class ArticleDto extends BaseArticleDto {
 
     public void setModifiedBy(String modifiedBy) {
         this.modifiedBy = modifiedBy;
+    }
+
+    public String getModifiedName() {
+        return modifiedName;
+    }
+
+    public void setModifiedName(String modifiedName) {
+        this.modifiedName = modifiedName;
     }
 
     public Date getModifiedDate() {

@@ -476,6 +476,17 @@ public class ArticleServiceImpl implements ArticleService {
             articleDto.setPublished(article.getPublished());
             articleDto.setNew(article.getNewArticle());
 
+//            ResponseEntity<ApiResponseWrapper.RestResponse<List<UserProfileDto>>> restResponseUp = pakarOauthClient
+//                    .getListUserProfile(BEARER + articleDto.getToken(), articleDto.getUsername(), Arrays.asList(new String[]{articleState.getSender()}));
+            // get user profile from oauth server
+            ResponseEntity<ApiResponseWrapper.RestResponse<UserProfileDto>> restResponse = null;
+            restResponse = pakarOauthClient.getUser(BEARER + token, article.getModifyBy());
+            if (!restResponse.getBody().getApiStatus().getCode().equalsIgnoreCase(Constant.OK_ACK)) {
+                throw new OauthApiClientException("call oauth api client is failed");
+            }
+
+            articleDto.setModifiedName(restResponse.getBody().getData().getFullname());
+
             // get main contents
             List<ArticleContentDto> articleContentDtos = new ArrayList<>();
 //            if (article.getNewArticle().booleanValue()) {
@@ -484,36 +495,35 @@ public class ArticleServiceImpl implements ArticleService {
 //                logger.debug("copy value of article contents to dto", articleContents);
 //                articleContentDtos = new TreeArticleContents().menuTree(mapToListArticleContentCloneDto(articleContents));
 //            } else {
-                // article already saved
-                List<ArticleContent> articleContents = articleContentRepository.findByArticleId(article.getId());
-                logger.debug("main article contents {}", articleContents);
-                articleContentDtos = new TreeArticleContents().menuTree(mapToListArticleContentDto(articleContents));
+            // article already saved
+            List<ArticleContent> articleContents = articleContentRepository.findByArticleId(article.getId());
+            logger.debug("main article contents {}", articleContents);
+            articleContentDtos = new TreeArticleContents().menuTree(mapToListArticleContentDto(articleContents));
 
-                logger.debug("delete all existing content clones");
-                Iterable<ArticleContentClone> contentClones = articleContentCloneRepository.findsByArticleId(article.getId(), username);
-                articleContentCloneRepository.deleteAll(contentClones);
+            logger.debug("delete all existing content clones");
+            Iterable<ArticleContentClone> contentClones = articleContentCloneRepository.findsByArticleId(article.getId(), username);
+            articleContentCloneRepository.deleteAll(contentClones);
 
-                logger.debug("copy article content to clones");
-                articleContents.forEach(e -> {
-                    ArticleContentClone clone = new ArticleContentClone();
-                    clone.setId(e.getId());
-                    clone.setVersion(e.getVersion());
-                    clone.setArticle(article);
-                    clone.setDescription(e.getDescription());
-                    clone.setLevel(e.getLevel());
-                    clone.setName(e.getName());
-                    clone.setParent(e.getParent());
-                    clone.setSort(e.getSort());
-                    clone.setTopicCaption(e.getTopicCaption());
-                    clone.setTopicContent(e.getTopicContent());
-                    clone.setCreatedBy(e.getCreatedBy());
-                    clone.setCreatedDate(e.getCreatedDate());
-                    clone.setDeleted(e.getDeleted());
-                    clone.setModifyBy(e.getModifyBy());
-                    clone.setModifyDate(e.getModifyDate());
-                    articleContentCloneRepository.save(clone);
-                });
-//            }
+            logger.debug("copy article content to clones");
+            articleContents.forEach(e -> {
+                ArticleContentClone clone = new ArticleContentClone();
+                clone.setId(e.getId());
+                clone.setVersion(e.getVersion());
+                clone.setArticle(article);
+                clone.setDescription(e.getDescription());
+                clone.setLevel(e.getLevel());
+                clone.setName(e.getName());
+                clone.setParent(e.getParent());
+                clone.setSort(e.getSort());
+                clone.setTopicCaption(e.getTopicCaption());
+                clone.setTopicContent(e.getTopicContent());
+                clone.setCreatedBy(e.getCreatedBy());
+                clone.setCreatedDate(e.getCreatedDate());
+                clone.setDeleted(e.getDeleted());
+                clone.setModifyBy(e.getModifyBy());
+                clone.setModifyDate(e.getModifyDate());
+                articleContentCloneRepository.save(clone);
+            });
 
             articleDto.setContents(articleContentDtos);
             Iterable<SkRefference> skRefferenceList = skReffRepository.findByArticleId(id);
@@ -527,7 +537,6 @@ public class ArticleServiceImpl implements ArticleService {
             articleDto.setRelated(mapToRelatedArticleDto(relatedArticles));
             articleDto.setEmptyTemplate(article.getUseEmptyTemplate());
             articleDto.setStructureId(article.getStructure().getId());
-//            articleDto.setPublished(article.getArticleState().equalsIgnoreCase(PUBLISHED) ? Boolean.TRUE : Boolean.FALSE);
 
             logger.debug("get parent structure of structure id {}", article.getStructure().getId());
             List<Structure> breadcumbs = structureRepository.findBreadcumbById(article.getStructure().getId());
@@ -580,10 +589,6 @@ public class ArticleServiceImpl implements ArticleService {
                 }
             }
 
-//            if (article.getArticleState().equalsIgnoreCase(NEW))
-//                articleDto.setNew(Boolean.TRUE.booleanValue());
-//            else
-//                articleDto.setNew(Boolean.FALSE.booleanValue());
             return articleDto;
         } catch (ArticleNotFoundException e) {
             logger.error("exception", e);
@@ -756,7 +761,7 @@ public class ArticleServiceImpl implements ArticleService {
             }
 
             if (articleState == null) {
-                if(article.getNewArticle().booleanValue())
+                if (article.getNewArticle().booleanValue())
                     articleState = articleStateRepository.findByArticleId(article.getId());
                 else
                     articleState = articleStateRepository.findByArticleIdAndReceiver(article.getId(), articleDto.getUsername());
@@ -834,9 +839,9 @@ public class ArticleServiceImpl implements ArticleService {
                 articleNotification.setArticle(article);
                 articleNotification.setNotifDate(new Date());
                 String sendNote = "";
-                if(!article.getPublished().booleanValue())
+                if (!article.getPublished().booleanValue())
                     sendNote = messageSource.getMessage("article.notification.template"
-                        , new Object[]{articleState.getFnSender(), Constant.Notification.TAMBAH_STATUS, articleDto.getSendNote() != null ? articleDto.getSendNote() : ""}, null);
+                            , new Object[]{articleState.getFnSender(), Constant.Notification.TAMBAH_STATUS, articleDto.getSendNote() != null ? articleDto.getSendNote() : ""}, null);
                 else
                     sendNote = messageSource.getMessage("article.notification.template"
                             , new Object[]{articleState.getFnSender(), Constant.Notification.EDIT_STATUS, articleDto.getSendNote() != null ? articleDto.getSendNote() : ""}, null);
@@ -1110,7 +1115,7 @@ public class ArticleServiceImpl implements ArticleService {
         } catch (WfApiClientException e) {
             logger.error("fail to call workflow request delete article", e);
             throw new Exception(e);
-        }catch (Exception e) {
+        } catch (Exception e) {
             logger.error("fail to delete article", e);
             throw new Exception(e);
         }
