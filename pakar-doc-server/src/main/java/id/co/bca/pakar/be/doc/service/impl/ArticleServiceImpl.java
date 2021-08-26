@@ -210,7 +210,20 @@ public class ArticleServiceImpl implements ArticleService {
                 articleContent.setTopicContent(e.getTopicContent());
                 article.getArticleContentClones().add(articleContent);
                 articleContent.setArticle(article);
+
+                // set article content
+                ArticleContent articleContent_ = new ArticleContent();
+                articleContent_.setId(seqContentId);
+                articleContent_.setCreatedBy(generateArticleDto.getUsername());
+                articleContent_.setName(replaceTextByParams(e.getName(), generateArticleDto.getParamKey(), generateArticleDto.getParamValue()));
+                articleContent_.setLevel(e.getLevel());
+                articleContent_.setSort(e.getSort());
+                articleContent_.setTopicCaption(e.getTopicCaption());
+                articleContent_.setTopicContent(e.getTopicContent());
+                article.getArticleContents().add(articleContent_);
+                articleContent_.setArticle(article);
             }
+
 
             logger.info("save article and content clone");
             article = articleRepository.save(article);
@@ -241,6 +254,30 @@ public class ArticleServiceImpl implements ArticleService {
                 }
             }
 
+            // reset parent for article content
+            for (ArticleContent articleContent : article.getArticleContents()) {
+                for (ArticleTemplateContent articleTemplateContent : templateContents) {
+                    if (articleContent.getName().equals(replaceTextByParams(articleTemplateContent.getName(), generateArticleDto.getParamKey(), generateArticleDto.getParamValue()))) {
+                        if (articleTemplateContent.getParent() == null) {
+                            articleContent.setParent(0L);
+                            articleContentRepository.save(articleContent);
+                            break;
+                        } else {
+                            Optional<ArticleTemplateContent> parent = articleTemplateContentRepository.findById(articleTemplateContent.getId());
+                            if (!parent.isEmpty()) {
+                                ArticleTemplateContent _parent = parent.get();
+                                for (ArticleContent articleContent1 : article.getArticleContents()) {
+                                    if (articleContent1.getName().equals(replaceTextByParams(_parent.getName(), generateArticleDto.getParamKey(), generateArticleDto.getParamValue()))) {
+                                        articleContent.setParent(articleContent1.getId());
+                                        articleContentRepository.save(articleContent);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             /*********** generate sugggestion article *********
              // TODO suggestion article
              /*************************************************/
@@ -248,7 +285,7 @@ public class ArticleServiceImpl implements ArticleService {
             /*
             populate generated article to dto
              */
-            articleDto = getArticleById(article.getId());
+            articleDto = getArticleById(article.getId(), generateArticleDto.getUsername());
             return articleDto;
         } catch (DuplicateTitleException e) {
             logger.error("", e);
