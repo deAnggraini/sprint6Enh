@@ -44,8 +44,8 @@ height: 184px;
 </div>
 
 <div class="mx-15 mt-n25">
-    <div class="back-panel">
-        <pakar-breadcrumbs [node]="struktur$" [article]="{id:articleDTO.id, title:articleDTO.title}">
+    <div class="back-panel" *ngIf="articleDTO">
+        <pakar-breadcrumbs [node]="struktur$" [article]="articleDTO">
         </pakar-breadcrumbs>
     </div>
     <ng-container *ngIf="articleDTO">
