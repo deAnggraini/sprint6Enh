@@ -473,9 +473,6 @@ public class ArticleServiceImpl implements ArticleService {
                     clone.setDeleted(e.getDeleted());
                     clone.setModifyBy(e.getModifyBy());
                     clone.setModifyDate(e.getModifyDate());
-//                    article.getArticleContentClones().add(clone);
-//                    clone.setArticle(article);
-
                     articleContentCloneRepository.save(clone);
                 });
             }
@@ -545,10 +542,6 @@ public class ArticleServiceImpl implements ArticleService {
                 }
             }
 
-            // clone article content
-//            logger.debug("clone article id {} with username {}", article.getId(), username);
-//            articleCloneService.cloneArticleContent(article, username);
-
             if (article.getArticleState().equalsIgnoreCase(NEW))
                 articleDto.setNew(Boolean.TRUE.booleanValue());
             else
@@ -616,6 +609,9 @@ public class ArticleServiceImpl implements ArticleService {
             }
 
             /**** save article content *****/
+            List<Long> contentDtoIds = new ArrayList<>();
+            articleDto.getContents().forEach(e->contentDtoIds.add(e.getId()));
+            articleContentCloneRepository.deleteByNotInIds(articleDto.getUsername(), contentDtoIds);
             articleDto.getContents()
                     .forEach(e ->
                             new ArticleContentHelper().verifyUpdateAndSaveContent(e, articleDto.getUsername()));
@@ -1848,13 +1844,11 @@ public class ArticleServiceImpl implements ArticleService {
                     }
                 });
             } else {
+                logger.debug("sort data {}", dto.getSort());
                 ArticleContent _entity = entity.get();
                 _entity.setModifyBy(username);
                 _entity.setModifyDate(new Date());
                 _entity.setParent(dto.getParent());
-//                Optional<Article> artOpt = articleRepository.findById(dto.getArticleId());
-//                _entity.setArticle(artOpt.get());
-                logger.debug("sort data {}", dto.getSort());
                 _entity.setSort(dto.getSort());
                 _entity.setLevel(dto.getLevel());
                 _entity.setName(dto.getTitle());

@@ -36,6 +36,12 @@ public interface ArticleContentCloneRepository extends CrudRepository<ArticleCon
             "AND m.createdBy = :username")
     int deleteByIds(@Param("username") String username, @Param("ids") List<Long> ids);
 
+    @Modifying
+    @Query("DELETE FROM ArticleContentClone m " +
+            "WHERE m.id NOT IN (:ids) " +
+            "AND m.createdBy = :username")
+    int deleteByNotInIds(@Param("username") String username, @Param("ids") List<Long> ids);
+
     @Query(value = "SELECT tac_.* FROM ( " +
             "WITH RECURSIVE rec as " +
             "( " +
