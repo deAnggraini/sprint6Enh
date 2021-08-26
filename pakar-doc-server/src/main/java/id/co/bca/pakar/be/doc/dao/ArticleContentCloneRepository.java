@@ -39,14 +39,14 @@ public interface ArticleContentCloneRepository extends CrudRepository<ArticleCon
     @Query(value = "SELECT tac_.* FROM ( " +
             "WITH RECURSIVE rec as " +
             "( " +
-            "  SELECT tac.* FROM t_article_content tac WHERE tac.id= :parentId " +
+            "  SELECT tac.* FROM t_article_content_clone tac WHERE tac.id= :parentId " +
             "  UNION ALL " +
-            "  SELECT tac.* FROM rec, t_article_content tac WHERE tac.parent = rec.id " +
+            "  SELECT tac.* FROM rec, t_article_content_clone tac WHERE tac.parent = rec.id " +
             ") " +
             "SELECT * " +
             "FROM rec " +
             ") tac_ " +
-            "WHERE tac.created_by = :username " +
+            "WHERE tac_.created_by = :username " +
             "ORDER BY tac_.id " +
             "ASC ",
             nativeQuery = true)
