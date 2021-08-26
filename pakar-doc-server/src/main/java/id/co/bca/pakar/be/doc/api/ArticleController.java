@@ -831,13 +831,13 @@ public class ArticleController extends BaseController {
             return createResponse(status, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));
         } catch (DeletePublishedArticleException e) {
             logger.error("exception", e);
-            return createResponse(Boolean.TRUE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("published.article.could.not.deleted", null, getLocale()));
+            return createResponse(Boolean.FALSE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("published.article.could.not.deleted", null, getLocale()));
         } catch (DataNotFoundException e) {
             logger.error("exception", e);
-            return createResponse(Boolean.TRUE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, getLocale()));
+            return createResponse(Boolean.FALSE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, getLocale()));
         } catch (Exception e) {
             logger.error("exception", e);
-            return createResponse(Boolean.TRUE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
+            return createResponse(Boolean.FALSE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
         }
     }
 }
