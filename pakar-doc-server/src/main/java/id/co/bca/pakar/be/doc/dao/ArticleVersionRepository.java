@@ -64,4 +64,21 @@ public interface ArticleVersionRepository extends CrudRepository<ArticleVersion,
             "AND m.deleted IS FALSE " +
             "ORDER BY m.modifyDate ")
     Page<ArticleVersion> findPublishedArticles(Pageable pageable);
+
+    @Query("SELECT m FROM ArticleVersion m " +
+            "WHERE m.articleState = 'PUBLISHED' " +
+            "AND m.articleId=:articleId " +
+            "AND m.deleted IS FALSE " +
+            "ORDER BY m.id " +
+            "DESC ")
+    ArticleVersion findLastPublished(@Param("articleId") Long articleId);
+
+    @Query("SELECT m FROM ArticleVersion m " +
+            "WHERE m.timeStampVersion IS NOT NULL " +
+            "AND m.articleId=:articleId " +
+            "AND m.username=:username " +
+            "AND m.deleted IS FALSE " +
+            "ORDER BY m.timeStampVersion " +
+            "DESC ")
+    ArticleVersion findLastTimeStampByUsername(@Param("articleId") Long articleId, @Param("username") String username);
 }

@@ -54,6 +54,9 @@ public class Article extends EntityBase {
     @Column(name = "fn_modifier")
     private String fullNameModifier;
 
+    @Column(name = "isPublished", columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private Boolean isPublished;
+
     public Long getId() {
         return id;
     }
@@ -164,5 +167,13 @@ public class Article extends EntityBase {
 
     public void setFullNameModifier(String fullNameModifier) {
         this.fullNameModifier = fullNameModifier;
+    }
+
+    public Boolean getPublished() {
+        return isPublished;
+    }
+
+    public void setPublished(Boolean published) {
+        isPublished = published;
     }
 }

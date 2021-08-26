@@ -177,6 +177,7 @@ public class ArticleServiceImpl implements ArticleService {
             logger.info("populate article");
             Article article = new Article();
             article.setCreatedBy(generateArticleDto.getUsername());
+            article.setModifyBy(generateArticleDto.getUsername());
             article.setJudulArticle(generateArticleDto.getTitle());
             article.setArticleTemplate(template.getId());
             article.setArticleUsedBy(generateArticleDto.getUsedBy());
@@ -247,7 +248,7 @@ public class ArticleServiceImpl implements ArticleService {
             /*
             populate generated article to dto
              */
-            articleDto = getArticleById(article.getId());
+            articleDto = getArticleById(article.getId(), generateArticleDto.getUsername());
             return articleDto;
         } catch (DuplicateTitleException e) {
             logger.error("", e);
@@ -277,13 +278,16 @@ public class ArticleServiceImpl implements ArticleService {
 
             Article article = articleOpt.get();
             ArticleDto articleDto = new ArticleDto();
+            articleDto.setId(article.getId());
             articleDto.setCreatedBy(article.getCreatedBy());
             articleDto.setCreatedDate(article.getCreatedDate());
-            articleDto.setId(article.getId());
+            articleDto.setModifiedBy(article.getModifyBy());
+            articleDto.setModifiedDate(article.getModifyDate());
             articleDto.setTitle(article.getJudulArticle());
             articleDto.setShortDescription(article.getShortDescription());
             articleDto.setVideoLink(article.getVideoLink());
             articleDto.setNew(article.getNewArticle());
+            articleDto.setPublished(article.getPublished());
             Iterable<ArticleContentClone> articleContents = articleContentCloneRepository.findsByArticleId(article.getId(), article.getCreatedBy());
             List<ArticleContentDto> articleContentDtos = new TreeArticleContents().menuTree(mapToListArticleContentCloneDto(articleContents));
             articleDto.setContents(articleContentDtos);
@@ -328,6 +332,76 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     /**
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    @Transactional(readOnly = true)
+    private ArticleDto getArticleById(Long id, String username) throws Exception {
+        try {
+            Optional<Article> articleOpt = articleRepository.findById(id, username);
+
+            if (articleOpt.isEmpty()) {
+                throw new ArticleNotFoundException("not found article with id --> " + id);
+            }
+
+            Article article = articleOpt.get();
+            ArticleDto articleDto = new ArticleDto();
+            articleDto.setId(article.getId());
+            articleDto.setCreatedBy(article.getCreatedBy());
+            articleDto.setCreatedDate(article.getCreatedDate());
+            articleDto.setModifiedBy(article.getModifyBy());
+            articleDto.setModifiedDate(article.getModifyDate());
+            articleDto.setTitle(article.getJudulArticle());
+            articleDto.setShortDescription(article.getShortDescription());
+            articleDto.setVideoLink(article.getVideoLink());
+            articleDto.setNew(article.getNewArticle());
+            articleDto.setPublished(article.getPublished());
+            Iterable<ArticleContentClone> articleContents = articleContentCloneRepository.findsByArticleId(article.getId(), article.getCreatedBy());
+            List<ArticleContentDto> articleContentDtos = new TreeArticleContents().menuTree(mapToListArticleContentCloneDto(articleContents));
+            articleDto.setContents(articleContentDtos);
+            Iterable<SkRefference> skRefferenceList = skReffRepository.findByArticleId(id);
+            articleDto.setSkReff(mapToSkReffDto(skRefferenceList));
+            Optional<Images> imageOpt = articleImageRepository.findByArticleId(article.getId());
+            if (!imageOpt.isEmpty()) {
+                Images image = imageOpt.get();
+                articleDto.setImage(image.getUri());
+            }
+            Iterable<Article> relatedArticles = articleRelatedRepository.findByArticleId(article.getId());
+            articleDto.setRelated(mapToRelatedArticleDto(relatedArticles));
+            articleDto.setEmptyTemplate(article.getUseEmptyTemplate());
+            articleDto.setStructureId(article.getStructure().getId());
+
+            logger.debug("get parent structure of structure id {}", article.getStructure().getId());
+            List<Structure> breadcumbs = structureRepository.findBreadcumbById(article.getStructure().getId());
+            breadcumbs.forEach(e -> {
+                BreadcumbStructureDto bcDto = new BreadcumbStructureDto();
+                bcDto.setId(e.getId());
+                bcDto.setName(e.getStructureName());
+                bcDto.setLevel(e.getLevel());
+                articleDto.getStructureParentList().add(bcDto);
+            });
+
+            // sorting bread crumb
+            Collections.sort(articleDto.getStructureParentList(), new Comparator<BreadcumbStructureDto>() {
+                @Override
+                public int compare(BreadcumbStructureDto o1, BreadcumbStructureDto o2) {
+                    return o1.getLevel().intValue() - o2.getLevel().intValue();
+                }
+            });
+
+            return articleDto;
+        } catch (ArticleNotFoundException e) {
+            logger.error("exception", e);
+            throw new ArticleNotFoundException("not found article id " + id);
+        } catch (Exception e) {
+            logger.error("exception", e);
+            throw new Exception("get article failed");
+        }
+    }
+
+
+    /**
      * <p>
      * getting article using article id
      * isEdit is used as flagging that get article proses will edit article
@@ -360,6 +434,7 @@ public class ArticleServiceImpl implements ArticleService {
             articleDto.setTitle(article.getJudulArticle());
             articleDto.setShortDescription(article.getShortDescription());
             articleDto.setVideoLink(article.getVideoLink());
+            articleDto.setPublished(article.getPublished());
 
             // get main contents
             List<ArticleContentDto> articleContentDtos = new ArrayList<>();

@@ -392,6 +392,13 @@ public class ArticleController extends BaseController {
         }
     }
 
+    /**
+     *
+     * @param authorization
+     * @param username
+     * @param cancelDto
+     * @return
+     */
     @PostMapping(value = "/api/doc/cancelArticle", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
             MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity<RestResponse<Boolean>> cancelArticle(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @RequestBody CancelDto cancelDto) {
@@ -556,6 +563,13 @@ public class ArticleController extends BaseController {
         }
     }
 
+    /**
+     *
+     * @param authorization
+     * @param username
+     * @param deleteContentDto
+     * @return
+     */
     @PostMapping(value = "/api/doc/deleteContent", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
             MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<RestResponse<Boolean>> deleteArticleContent(@RequestHeader("Authorization") String authorization, @RequestHeader(name = "X-USERNAME") String username, @Valid @RequestBody DeleteContentDto deleteContentDto) {

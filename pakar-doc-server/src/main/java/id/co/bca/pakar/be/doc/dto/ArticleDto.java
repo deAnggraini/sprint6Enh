@@ -22,6 +22,12 @@ public class ArticleDto extends BaseArticleDto {
     @JsonProperty("created_date")
     private Date createdDate = new Date();
 
+    @JsonProperty("modified_by")
+    private String modifiedBy;
+
+    @JsonProperty("modified_date")
+    private Date modifiedDate = new Date();
+
     @JsonProperty("contents")
     private List<ArticleContentDto> contents = new ArrayList<>();
 
@@ -181,5 +187,21 @@ public class ArticleDto extends BaseArticleDto {
 
     public void setPublished(Boolean published) {
         this.published = published;
+    }
+
+    public String getModifiedBy() {
+        return modifiedBy;
+    }
+
+    public void setModifiedBy(String modifiedBy) {
+        this.modifiedBy = modifiedBy;
+    }
+
+    public Date getModifiedDate() {
+        return modifiedDate;
+    }
+
+    public void setModifiedDate(Date modifiedDate) {
+        this.modifiedDate = modifiedDate;
     }
 }

@@ -23,6 +23,12 @@ public interface ArticleRepository extends CrudRepository<Article, Long> {
             "AND m.deleted IS FALSE ")
     Optional<Article> findById(@Param("id") Long id);
 
+    @Query("SELECT m FROM Article m " +
+            "WHERE m.id=:id " +
+            "AND m.modifyBy = :username " +
+            "AND m.deleted IS FALSE ")
+    Optional<Article> findById(@Param("id") Long id, @Param("username") String username);
+
     @Query(value = "SELECT m.* FROM t_article m " +
             "    WHERE m.deleted IS FALSE " +
             "    AND m.state = 'PUBLISHED' " +

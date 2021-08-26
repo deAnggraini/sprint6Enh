@@ -127,7 +127,7 @@ public class UserController extends BaseController {
             return createResponse(dtos, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
         } catch (Exception e) {
             logger.error("exception", e);
-            return this.createResponse(new ArrayList<UserDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
+            return this.createResponse(new ArrayList<UserDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, locale));
         }
     }
 
