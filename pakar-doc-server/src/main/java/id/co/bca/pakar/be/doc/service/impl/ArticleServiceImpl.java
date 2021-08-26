@@ -473,8 +473,8 @@ public class ArticleServiceImpl implements ArticleService {
                     clone.setDeleted(e.getDeleted());
                     clone.setModifyBy(e.getModifyBy());
                     clone.setModifyDate(e.getModifyDate());
-                    article.getArticleContentClones().add(clone);
-                    clone.setArticle(article);
+//                    article.getArticleContentClones().add(clone);
+//                    clone.setArticle(article);
 
                     articleContentCloneRepository.save(clone);
                 });
