@@ -14,7 +14,7 @@ import java.util.List;
 public interface MyPagesRepository extends CrudRepository<MyPages, Long> {
     @Query("SELECT m FROM MyPages m WHERE m.id IN (:ids) " +
             "AND m.deleted IS FALSE " +
-            "AND m.receiverState = :state " +
+            "AND (m.receiverState = :state or m.receiverState = 'DRAFTDELETED') " +
             "AND m.receiver=:username " +
             "AND (LOWER(m.judulArticle) LIKE CONCAT('%',LOWER(:keyword),'%') " +
             "       OR LOWER(m.fullNameModifier) LIKE CONCAT('%', LOWER(:keyword), '%') " +
@@ -24,7 +24,7 @@ public interface MyPagesRepository extends CrudRepository<MyPages, Long> {
     @Query("SELECT m FROM MyPages m " +
             "WHERE m.id IN (:ids) " +
             "AND m.deleted IS FALSE " +
-            "AND m.senderState=:state " +
+            "AND (m.senderState=:state OR m.senderState='PENDINGDELETED') " +
             "AND m.sender=:username " +
             "AND (LOWER(m.judulArticle) LIKE CONCAT('%',LOWER(:keyword),'%') " +
             "       OR LOWER(m.fullNameModifier) LIKE CONCAT('%', LOWER(:keyword), '%') " +
@@ -34,7 +34,7 @@ public interface MyPagesRepository extends CrudRepository<MyPages, Long> {
     @Query("SELECT m FROM MyPages m " +
             "WHERE m.id IN (:ids) " +
             "AND m.deleted IS FALSE " +
-            "AND (m.receiverState=:state) " +
+            "AND (m.receiverState=:state)  " +
             "AND (m.receiver=:username) " +
             "AND (LOWER(m.judulArticle) LIKE CONCAT('%',LOWER(:keyword),'%') " +
             "       OR LOWER(m.fullNameModifier) LIKE CONCAT('%', LOWER(:keyword), '%') " +

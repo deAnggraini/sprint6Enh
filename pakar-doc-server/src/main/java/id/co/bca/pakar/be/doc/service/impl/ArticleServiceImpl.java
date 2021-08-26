@@ -1060,7 +1060,7 @@ public class ArticleServiceImpl implements ArticleService {
             logger.error("not found data article", e);
             throw new DataNotFoundException("", e);
         } catch (Exception e) {
-            logger.error("fail to cancel article", e);
+            logger.error("fail to delete article", e);
             throw new Exception(e);
         }
     }
