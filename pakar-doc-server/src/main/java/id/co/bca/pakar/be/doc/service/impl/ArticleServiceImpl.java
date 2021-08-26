@@ -611,9 +611,7 @@ public class ArticleServiceImpl implements ArticleService {
             /**** save article content *****/
             List<Long> contentDtoIds = new ArrayList<>();
             articleDto.getContents().forEach(e->contentDtoIds.add(e.getId()));
-            String[] myArray = new String[contentDtoIds.size()];
-            contentDtoIds.toArray(myArray);
-            logger.debug("delete article id with id not include in {}", myArray);
+            logger.debug("delete article content with id not include in {}", contentDtoIds);
             articleContentRepository.deleteByNotInIds(contentDtoIds);
             articleDto.getContents()
                     .forEach(e ->
