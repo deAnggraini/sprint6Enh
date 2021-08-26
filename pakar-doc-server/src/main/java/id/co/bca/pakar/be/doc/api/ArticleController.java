@@ -423,7 +423,7 @@ public class ArticleController extends BaseController {
             MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity<RestResponse<Boolean>> cancelSendArticle(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @RequestBody CancelSendArticleDto cancelDto) {
         try {
-            logger.info("cancel article process");
+            logger.info("cancel send article process");
             logger.info("received token bearer --- {}", authorization);
             Boolean status = articleService.cancelSendArticle(cancelDto.getId(), cancelDto.getReceiver(), username, getTokenFromHeader(authorization));
             return createResponse(status, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));

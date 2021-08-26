@@ -567,7 +567,7 @@ public class ArticleServiceImpl implements ArticleService {
                 ResponseEntity<ApiResponseWrapper.RestResponse<List<String>>> restResponserRoles = pakarOauthClient
                         .getRolesByUser(BEARER + articleDto.getToken(), articleDto.getUsername(), userWrapperDto);
                 List<String> rcvRoles = restResponserRoles.getBody().getData();
-                rcvRoles.forEach(e-> logger.debug("user {} have roles {}", articleDto.getUsername(), rcvRoles.get(0)));
+                rcvRoles.forEach(e -> logger.debug("user {} have roles {}", articleDto.getUsername(), rcvRoles.get(0)));
 
                 Map<String, Object> wfRequest = new HashMap<>();
                 wfRequest.put(PROCESS_KEY, ARTICLE_REVIEW_WF);
@@ -701,7 +701,7 @@ public class ArticleServiceImpl implements ArticleService {
             send to notification to sender article
              */
             logger.debug("username {} and receiver {}", articleDto.getUsername(), articleState.getReceiver());
-            if(articleDto.getUsername().equalsIgnoreCase(articleState.getReceiver())) {
+            if (articleDto.getUsername().equalsIgnoreCase(articleState.getReceiver())) {
                 // send notification to sender
                 logger.info("send notification to sender article {} from receiver {}", articleState.getSender(), articleState.getReceiver());
                 ArticleNotification articleNotification = new ArticleNotification();
@@ -709,7 +709,7 @@ public class ArticleServiceImpl implements ArticleService {
                 articleNotification.setArticle(article);
                 articleNotification.setNotifDate(new Date());
                 String sendNote = messageSource.getMessage("article.notification.template"
-                        , new Object[]{articleState.getFnReceiver(), Constant.Notification.EDIT_STATUS, articleDto.getSendNote() !=null ? articleDto.getSendNote() : ""} , null);
+                        , new Object[]{articleState.getFnReceiver(), Constant.Notification.EDIT_STATUS, articleDto.getSendNote() != null ? articleDto.getSendNote() : ""}, null);
                 articleNotification.setSendNote(sendNote);
                 articleNotification.setSender(articleState.getReceiver());
                 articleNotification.setReceiver(articleState.getSender());
@@ -886,7 +886,7 @@ public class ArticleServiceImpl implements ArticleService {
                 logger.info("deleted article {} success", article.getJudulArticle());
             } else {
                 // Checking apakah article sudah dipublish? kalau iya, perlu persetujuan publisher to Approved
-                if(article.getArticleState().equalsIgnoreCase(PUBLISHED)) {
+                if (article.getArticleState().equalsIgnoreCase(PUBLISHED)) {
                     ArticleState articleState = null;
 
                     articleState = articleStateRepository.findByArticleId(article.getId());
@@ -947,10 +947,11 @@ public class ArticleServiceImpl implements ArticleService {
     @Transactional(rollbackFor = {Exception.class
             , DataNotFoundException.class
             , DeletePublishedArticleException.class
-            , ArticleInEditingxception.class})
+            , ArticleInEditingxception.class
+            , WfApiClientException.class})
     public Boolean cancelSendArticle(Long id, String receiver, String username, String token) throws Exception {
         try {
-            logger.info("cancel article with id {}", id);
+            logger.info("cancel send article id {} to {}", receiver, id);
             Optional<Article> articleOpt = articleRepository.findById(id);
             if (articleOpt.isEmpty()) {
                 logger.info("not article found with id {}", id);
@@ -962,40 +963,40 @@ public class ArticleServiceImpl implements ArticleService {
             validate if receiver not already editing article was sent
              */
             ArticleState articleState = articleStateRepository.findByArticleId(article.getId());
-            logger.info("receiver of article id {} and and wf request id {} ---> {} ", new Object[] {articleState.getArticle().getId(), articleState.getWfReqId(), articleState.getReceiver()});
-//            String receiver = articleState.getReceiver();
+            logger.info("receiver of article id {} and and wf request id {} ---> {} ", new Object[]{articleState.getArticle().getId(), articleState.getWfReqId(), articleState.getReceiver()});
             logger.info("find editing status of article id {} from receiver {}", id, receiver);
             ArticleEdit articleEdit = articleEditRepository.findActiveEditingStatusByUsername(id, receiver);
-            if (articleEdit == null) {
+            if (articleEdit != null) {
                 logger.info("article id {} in editing status", id);
-                throw new ArticleInEditingxception("article id "+id+" in editing status ");
+                throw new ArticleInEditingxception("article id " + id + " in editing status ");
             }
 
+            /*
+            request cancel task to worflow engine
+             */
             Map<String, Object> wfRequest = new HashMap<>();
             wfRequest.put(PROCESS_KEY, ARTICLE_REVIEW_WF);
             wfRequest.put(TITLE_PARAM, article.getJudulArticle());
             wfRequest.put(ARTICLE_ID_PARAM, article.getId());
             wfRequest.put(SENDER_PARAM, username);
             Map<String, String> assignDto = new HashMap();
-            //TODO set reviewer/publisher
             assignDto.put(USERNAME_PARAM, receiver);
             wfRequest.put(SEND_TO_PARAM, assignDto);
             wfRequest.put(WORKFLOW_REQ_ID_PARAM, articleState.getWfReqId());
-            /*
-            request cancel task to worflow engine
-             */
             ResponseEntity<ApiResponseWrapper.RestResponse<TaskDto>> restResponse = pakarWfClient
                     .cancelTask(BEARER + token, username, wfRequest);
+            if (!restResponse.getBody().getApiStatus().getCode().equalsIgnoreCase(Constant.OK_ACK)) {
+                logger.info("fail call workflow endpoint cancelTask");
+                throw new WfApiClientException("fail call workflow endpoint cancelTask");
+            }
             logger.debug("response api request {}", restResponse);
-            logger.debug("reponse status code {}", restResponse.getStatusCode());
 //            currentState = restResponse.getBody().getData().getCurrentState();
 
             logger.info("get article state with article id {}", article.getId());
-//            ArticleState articleState = articleStateRepository.findByArticleId(article.getId());
             articleState.setModifyBy(username);
             articleState.setModifyDate(new Date());
             articleState.setSenderState(null);
-            articleState.setReceiverState("DRAFT");
+            articleState.setReceiverState(Constant.ArticleWfState.DRAFT);
             articleState.setReceiver(username);
             articleStateRepository.save(articleState);
 
@@ -1003,6 +1004,9 @@ public class ArticleServiceImpl implements ArticleService {
         } catch (DataNotFoundException e) {
             logger.error("fail to cancel article", e);
             throw new DataNotFoundException("", e);
+        } catch (WfApiClientException e) {
+            logger.error("cancel send article", e);
+            throw new WfApiClientException("", e);
         } catch (ArticleInEditingxception e) {
             logger.error("cancel send article", e);
             throw new ArticleInEditingxception("", e);
