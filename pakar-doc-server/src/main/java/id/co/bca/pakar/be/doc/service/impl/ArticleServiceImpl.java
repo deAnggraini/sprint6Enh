@@ -430,6 +430,8 @@ public class ArticleServiceImpl implements ArticleService {
             ArticleDto articleDto = new ArticleDto();
             articleDto.setCreatedBy(article.getCreatedBy());
             articleDto.setCreatedDate(article.getCreatedDate());
+            articleDto.setModifiedBy(article.getModifyBy());
+            articleDto.setModifiedDate(article.getModifyDate());
             articleDto.setId(article.getId());
             articleDto.setTitle(article.getJudulArticle());
             articleDto.setShortDescription(article.getShortDescription());
