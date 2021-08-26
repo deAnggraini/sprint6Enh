@@ -15,7 +15,7 @@ export declare interface ContentRowItem {
   type: string,
   id: number,
   title: string,
-  affective_date?: Date,
+  effective_date?: Date,
   modified_by: string,
   modified_date: Date,
   approved_date?: Date,
@@ -43,22 +43,22 @@ const EMPTY_FORM_BEAN: FormBean = {
   all: {
     dataList: [],
     pagination: new PaginationModel(1, 0),
-    sort: { column: 'affective_date', direction: 'desc' }
+    sort: { column: 'effective_date', direction: 'desc' }
   },
   article: {
     dataList: [],
     pagination: new PaginationModel(1, 0),
-    sort: { column: 'affective_date', direction: 'desc' }
+    sort: { column: 'effective_date', direction: 'desc' }
   },
   virtualpage: {
     dataList: [],
     pagination: new PaginationModel(1, 0),
-    sort: { column: 'affective_date', direction: 'desc' }
+    sort: { column: 'effective_date', direction: 'desc' }
   },
   formulir: {
     dataList: [],
     pagination: new PaginationModel(1, 0),
-    sort: { column: 'affective_date', direction: 'desc' }
+    sort: { column: 'effective_date', direction: 'desc' }
   },
 }
 
@@ -95,7 +95,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   tableColumn = {
     draft: ['type', 'title', 'location', 'modified_date', 'modified_by', 'current_by', ''],
     pending: ['type', 'title', 'location', 'modified_date', 'send_to', 'current_by', ''],
-    approved: ['type', 'title', 'location', 'approved_date', 'approved_by', 'affective_date', ''],
+    approved: ['type', 'title', 'location', 'approved_date', 'approved_by', 'effective_date', ''],
   }
 
   // filter component

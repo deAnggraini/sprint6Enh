@@ -177,8 +177,6 @@ export class DynamicAsideMenuService {
     return [];
   }
 
-  // Here you able to load your menu from server/data-base/localStorage
-  // Default => from DynamicAsideMenuConfig
   private loadMenu(_server) {
 
     const items = [].concat(_server);

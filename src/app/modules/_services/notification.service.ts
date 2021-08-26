@@ -40,8 +40,8 @@ export class NotificationService {
     this.list().subscribe(resp => {
     })
   }
-  list(): Observable<any> {
-    return this.api.post(`${this._base_url}/getNotification`, { keyword: '', page: 1, limit: 3 }).pipe(
+  list(column: string = 'isRead', sort: string = 'desc'): Observable<any> {
+    return this.api.post(`${this._base_url}/getNotification`, { keyword: '', page: 1, limit: 3, sorting: { column, sort } }).pipe(
       map((resp: ResponseNotificationDTO) => {
         if (resp) this.notif$.next(resp);
         return resp;
@@ -49,8 +49,8 @@ export class NotificationService {
     );
   }
 
-  listNotif(keyword: string, page: number = 1, limit: number = 10) {
-    const params = { keyword, page, limit };
+  listNotif(keyword: string, page: number = 1, limit: number = 10, column: string = 'created_date', sort: string = 'desc') {
+    const params = { keyword, page, limit, sorting: { column, sort } };
     return this.api.post(`${this._base_url}/getNotification`, params);
   }
 
