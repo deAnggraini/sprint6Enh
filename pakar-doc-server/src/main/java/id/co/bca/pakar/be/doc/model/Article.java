@@ -45,17 +45,17 @@ public class Article extends EntityBase {
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ArticleContentClone> articleContentClones = new ArrayList<>();
 
-    @Column(name = "use_empty_template", columnDefinition = "BOOLEAN DEFAULT FALSE")
+    @Column(name = "use_empty_template")
     private Boolean useEmptyTemplate = Boolean.FALSE;
 
-    @Column(name = "new_article", columnDefinition = "BOOLEAN DEFAULT TRUE")
+    @Column(name = "new_article")
     private Boolean newArticle = Boolean.TRUE;
 
     @Column(name = "fn_modifier")
     private String fullNameModifier;
 
-    @Column(name = "isPublished", columnDefinition = "BOOLEAN DEFAULT FALSE")
-    private Boolean isPublished;
+    @Column(name = "isPublished")
+    private Boolean isPublished = Boolean.FALSE;
 
     public Long getId() {
         return id;
