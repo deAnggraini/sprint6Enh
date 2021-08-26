@@ -953,7 +953,7 @@ public class ArticleServiceImpl implements ArticleService {
             }
 
             Article article = articleOpt.get();
-            if (requestDeleteDto.getIsHasSend().booleanValue()) {
+            if (requestDeleteDto.getIsHasSend() == Boolean.TRUE) {
                 // Checking apakah article sudah dipublish? kalau iya, perlu persetujuan publisher to Approved
                     ArticleState articleState = null;
 
