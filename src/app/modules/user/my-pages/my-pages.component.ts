@@ -21,7 +21,7 @@ export declare interface MyPageRowItem {
   modified_by: string,
   approved_date?: Date,
   approved_by?: string,
-  affective_date?: Date,
+  effective_date?: Date,
   send_to?: string,
   current_by: string,
   state: string,
@@ -85,7 +85,7 @@ export class MyPagesComponent implements OnInit, OnDestroy {
   tableColumn = {
     draft: ['type', 'title', 'location', 'modified_date', 'modified_by', 'current_by', ''],
     pending: ['type', 'title', 'location', 'modified_date', 'send_to', 'current_by', ''],
-    approved: ['type', 'title', 'location', 'approved_date', 'approved_by', 'affective_date', ''],
+    approved: ['type', 'title', 'location', 'approved_date', 'approved_by', 'effective_date', ''],
   }
 
   // filter component
