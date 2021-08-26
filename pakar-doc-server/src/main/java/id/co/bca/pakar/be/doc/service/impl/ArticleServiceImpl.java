@@ -440,12 +440,12 @@ public class ArticleServiceImpl implements ArticleService {
 
             // get main contents
             List<ArticleContentDto> articleContentDtos = new ArrayList<>();
-            if (article.getNewArticle().booleanValue()) {
-                // refresh article
-                Iterable<ArticleContentClone> articleContents = articleContentCloneRepository.findsByArticleId(article.getId(), article.getCreatedBy());
-                logger.debug("copy value of article contents to dto", articleContents);
-                articleContentDtos = new TreeArticleContents().menuTree(mapToListArticleContentCloneDto(articleContents));
-            } else {
+//            if (article.getNewArticle().booleanValue()) {
+//                // refresh article
+//                Iterable<ArticleContentClone> articleContents = articleContentCloneRepository.findsByArticleId(article.getId(), article.getCreatedBy());
+//                logger.debug("copy value of article contents to dto", articleContents);
+//                articleContentDtos = new TreeArticleContents().menuTree(mapToListArticleContentCloneDto(articleContents));
+//            } else {
                 // article already saved
                 List<ArticleContent> articleContents = articleContentRepository.findByArticleId(article.getId());
                 logger.debug("main article contents {}", articleContents);
@@ -456,7 +456,7 @@ public class ArticleServiceImpl implements ArticleService {
                 articleContentCloneRepository.deleteAll(contentClones);
 
                 logger.debug("copy article content to clones");
-                articleContents.forEach(e-> {
+                articleContents.forEach(e -> {
                     ArticleContentClone clone = new ArticleContentClone();
                     clone.setId(e.getId());
                     clone.setVersion(e.getVersion());
@@ -475,7 +475,7 @@ public class ArticleServiceImpl implements ArticleService {
                     clone.setModifyDate(e.getModifyDate());
                     articleContentCloneRepository.save(clone);
                 });
-            }
+//            }
 
             articleDto.setContents(articleContentDtos);
             Iterable<SkRefference> skRefferenceList = skReffRepository.findByArticleId(id);
@@ -542,10 +542,10 @@ public class ArticleServiceImpl implements ArticleService {
                 }
             }
 
-            if (article.getArticleState().equalsIgnoreCase(NEW))
-                articleDto.setNew(Boolean.TRUE.booleanValue());
-            else
-                articleDto.setNew(Boolean.FALSE.booleanValue());
+//            if (article.getArticleState().equalsIgnoreCase(NEW))
+//                articleDto.setNew(Boolean.TRUE.booleanValue());
+//            else
+//                articleDto.setNew(Boolean.FALSE.booleanValue());
             return articleDto;
         } catch (ArticleNotFoundException e) {
             logger.error("exception", e);
@@ -564,7 +564,9 @@ public class ArticleServiceImpl implements ArticleService {
     @Transactional(rollbackFor = {Exception.class
             , DataNotFoundException.class
             , SavingArticleVersionException.class
-            , DuplicateTitleException.class})
+            , DuplicateTitleException.class
+            , OauthApiClientException.class
+            , WfApiClientException.class})
     public ArticleResponseDto saveArticle(MultipartArticleDto articleDto) throws Exception {
         ArticleResponseDto articleResponseDto = new ArticleResponseDto();
         try {
@@ -610,7 +612,7 @@ public class ArticleServiceImpl implements ArticleService {
 
             /**** save article content *****/
             List<Long> contentDtoIds = new ArrayList<>();
-            articleDto.getContents().forEach(e->contentDtoIds.add(e.getId()));
+            articleDto.getContents().forEach(e -> contentDtoIds.add(e.getId()));
             logger.debug("delete article content with id not include in {}", contentDtoIds);
             articleContentRepository.deleteByNotInIds(contentDtoIds, article.getId());
             articleDto.getContents()
@@ -692,11 +694,18 @@ public class ArticleServiceImpl implements ArticleService {
                     articleState.setSender(restResponse.getBody().getData().getSender());
                     ResponseEntity<ApiResponseWrapper.RestResponse<List<UserProfileDto>>> restResponseUp = pakarOauthClient
                             .getListUserProfile(BEARER + articleDto.getToken(), articleDto.getUsername(), Arrays.asList(new String[]{articleState.getSender()}));
+                    if (!restResponseUp.getBody().getApiStatus().getCode().equalsIgnoreCase(Constant.OK_ACK)) {
+                        throw new OauthApiClientException("call oauth api client is failed");
+                    }
+
                     List<UserProfileDto> userProfileDtos = restResponseUp.getBody().getData();
                     articleState.setFnSender(userProfileDtos != null ? userProfileDtos.get(0) != null ? userProfileDtos.get(0).getFullname() : "" : "");
                     articleState.setReceiver(restResponse.getBody().getData().getAssigne());
                     restResponseUp = pakarOauthClient
                             .getListUserProfile(BEARER + articleDto.getToken(), articleDto.getUsername(), Arrays.asList(new String[]{articleState.getReceiver()}));
+                    if (!restResponseUp.getBody().getApiStatus().getCode().equalsIgnoreCase(Constant.OK_ACK)) {
+                        throw new OauthApiClientException("call oauth api client is failed");
+                    }
                     userProfileDtos.clear();
                     userProfileDtos = restResponseUp.getBody().getData();
                     articleState.setFnReceiver(userProfileDtos != null ? userProfileDtos.get(0) != null ? userProfileDtos.get(0).getFullname() : "" : "");
@@ -705,11 +714,6 @@ public class ArticleServiceImpl implements ArticleService {
                     articleState.setArticle(article);
 
                     articleState = articleStateRepository.save(articleState);
-
-                    /**
-                     * new article flag to false
-                     */
-                    article.setNewArticle(Boolean.FALSE);
                 }
             }
 
@@ -727,6 +731,9 @@ public class ArticleServiceImpl implements ArticleService {
                 logger.debug("get roles of task receiver {}", articleDto.getSendTo().getUsername());
                 ResponseEntity<ApiResponseWrapper.RestResponse<List<String>>> roleSenderResponse = pakarOauthClient
                         .getRolesByUser(BEARER + articleDto.getToken(), articleDto.getUsername(), userWrapperDto);
+                if (!roleSenderResponse.getBody().getApiStatus().getCode().equalsIgnoreCase(Constant.OK_ACK)) {
+                    throw new OauthApiClientException("call oauth api client is failed");
+                }
                 List<String> rcvRoles = roleSenderResponse.getBody().getData();
                 rcvRoles.forEach(e -> logger.debug("task receiver {} has role {}", userWrapperDto.getUsername(), e));
 
@@ -745,6 +752,9 @@ public class ArticleServiceImpl implements ArticleService {
 
                 ResponseEntity<ApiResponseWrapper.RestResponse<TaskDto>> restResponse = pakarWfClient
                         .completeTask(BEARER + articleDto.getToken(), articleDto.getUsername(), wfRequest);
+                if (!restResponse.getBody().getApiStatus().getCode().equalsIgnoreCase(Constant.OK_ACK)) {
+                    throw new WfApiClientException("call wf api client is failed");
+                }
                 logger.debug("response api request sendDraft {}", restResponse);
                 logger.debug("reponse status code {}", restResponse.getStatusCode());
                 currentState = restResponse.getBody().getData().getCurrentState();
@@ -758,12 +768,18 @@ public class ArticleServiceImpl implements ArticleService {
                 logger.debug("sender from workflow result {}", restResponse.getBody().getData().getSender());
                 ResponseEntity<ApiResponseWrapper.RestResponse<List<UserProfileDto>>> restResponseUp = pakarOauthClient
                         .getListUserProfile(BEARER + articleDto.getToken(), articleDto.getUsername(), Arrays.asList(new String[]{articleState.getSender()}));
+                if (!restResponseUp.getBody().getApiStatus().getCode().equalsIgnoreCase(Constant.OK_ACK)) {
+                    throw new OauthApiClientException("call oauth api client is failed");
+                }
                 List<UserProfileDto> userProfileDtos = restResponseUp.getBody().getData();
                 articleState.setFnSender(userProfileDtos != null ? userProfileDtos.get(0) != null ? userProfileDtos.get(0).getFullname() : "" : "");
                 articleState.setReceiver(restResponse.getBody().getData().getAssigne());
-                logger.debug("receiver from workflow result {}", restResponse.getBody().getData().getAssigne());
+                logger.debug("receiver from oauth result {}", restResponse.getBody().getData().getAssigne());
                 restResponseUp = pakarOauthClient
                         .getListUserProfile(BEARER + articleDto.getToken(), articleDto.getUsername(), Arrays.asList(new String[]{articleState.getReceiver()}));
+                if (!restResponseUp.getBody().getApiStatus().getCode().equalsIgnoreCase(Constant.OK_ACK)) {
+                    throw new OauthApiClientException("call oauth api client is failed");
+                }
                 userProfileDtos.clear();
                 userProfileDtos = restResponseUp.getBody().getData();
                 articleState.setFnReceiver(userProfileDtos != null ? userProfileDtos.get(0) != null ? userProfileDtos.get(0).getFullname() : "" : "");
@@ -786,12 +802,20 @@ public class ArticleServiceImpl implements ArticleService {
                 articleNotification.setDocumentType("Artikel");
 
                 articleNotificationRepository.save(articleNotification);
+
+                /**
+                 * SET new article flag to false, cause article has sent to other
+                 */
+                article.setNewArticle(Boolean.FALSE);
             }
 
             // get user profile from oauth server
             ResponseEntity<ApiResponseWrapper.RestResponse<UserProfileDto>> restResponse = null;
             try {
                 restResponse = pakarOauthClient.getUser(BEARER + articleDto.getToken(), articleDto.getUsername());
+                if (!restResponse.getBody().getApiStatus().getCode().equalsIgnoreCase(Constant.OK_ACK)) {
+                    throw new OauthApiClientException("call oauth api client is failed");
+                }
             } catch (Exception e) {
                 logger.error("call oauth server failed", e);
             }
@@ -860,6 +884,12 @@ public class ArticleServiceImpl implements ArticleService {
         } catch (DataNotFoundException e) {
             logger.error("", e);
             throw new DataNotFoundException("exception", e);
+        } catch (OauthApiClientException e) {
+            logger.error("", e);
+            throw new OauthApiClientException("exception", e);
+        } catch (WfApiClientException e) {
+            logger.error("", e);
+            throw new WfApiClientException("exception", e);
         } catch (DuplicateTitleException e) {
             logger.error("", e);
             throw new DuplicateTitleException("exception", e);
@@ -961,52 +991,52 @@ public class ArticleServiceImpl implements ArticleService {
             Article article = articleOpt.get();
             if (requestDeleteDto.getIsHasSend() == Boolean.TRUE) {
                 // Checking apakah article sudah dipublish? kalau iya, perlu persetujuan publisher to Approved
-                    ArticleState articleState = null;
+                ArticleState articleState = null;
 
-                    articleState = articleStateRepository.findByArticleId(article.getId());
-                    UserWrapperDto userWrapperDto = new UserWrapperDto();
-                    userWrapperDto.setUsername(requestDeleteDto.getSendTo().getUsername());
-                    logger.debug("get roles of task receiver {}", requestDeleteDto.getSendTo().getUsername());
-                    ResponseEntity<ApiResponseWrapper.RestResponse<List<String>>> roleSenderResponse = pakarOauthClient
-                            .getRolesByUser(BEARER + token, username, userWrapperDto);
-                    List<String> rcvRoles = roleSenderResponse.getBody().getData();
-                    rcvRoles.forEach(e -> logger.debug("task receiver {} has role {}", userWrapperDto.getUsername(), e));
+                articleState = articleStateRepository.findByArticleId(article.getId());
+                UserWrapperDto userWrapperDto = new UserWrapperDto();
+                userWrapperDto.setUsername(requestDeleteDto.getSendTo().getUsername());
+                logger.debug("get roles of task receiver {}", requestDeleteDto.getSendTo().getUsername());
+                ResponseEntity<ApiResponseWrapper.RestResponse<List<String>>> roleSenderResponse = pakarOauthClient
+                        .getRolesByUser(BEARER + token, username, userWrapperDto);
+                List<String> rcvRoles = roleSenderResponse.getBody().getData();
+                rcvRoles.forEach(e -> logger.debug("task receiver {} has role {}", userWrapperDto.getUsername(), e));
 
-                    Map<String, Object> wfRequestDelete = new HashMap<>();
-                    wfRequestDelete.put(PROCESS_KEY, ARTICLE_DELETE_WF);
-                    wfRequestDelete.put(ARTICLE_ID_PARAM, requestDeleteDto.getId());
-                    wfRequestDelete.put(SENDER_PARAM, username);
-                    Map<String, String> assignDto = new HashMap();
-                    assignDto.put(RECEIVER_PARAM, requestDeleteDto.getSendTo().getUsername());
-                    wfRequestDelete.put(SEND_TO_PARAM, assignDto);
-                    wfRequestDelete.put(SEND_NOTE_PARAM, requestDeleteDto.getSendNote());
-                    wfRequestDelete.put(GROUP_PARAM, rcvRoles.get(0));
+                Map<String, Object> wfRequestDelete = new HashMap<>();
+                wfRequestDelete.put(PROCESS_KEY, ARTICLE_DELETE_WF);
+                wfRequestDelete.put(ARTICLE_ID_PARAM, requestDeleteDto.getId());
+                wfRequestDelete.put(SENDER_PARAM, username);
+                Map<String, String> assignDto = new HashMap();
+                assignDto.put(RECEIVER_PARAM, requestDeleteDto.getSendTo().getUsername());
+                wfRequestDelete.put(SEND_TO_PARAM, assignDto);
+                wfRequestDelete.put(SEND_NOTE_PARAM, requestDeleteDto.getSendNote());
+                wfRequestDelete.put(GROUP_PARAM, rcvRoles.get(0));
 
-                    // Flow request delete
-                    ResponseEntity<ApiResponseWrapper.RestResponse<TaskDto>> restResponse = pakarWfClient
-                            .requestDelete(BEARER + token, username, wfRequestDelete);
-                    logger.debug("response api request {}", restResponse);
-                    logger.debug("reponse status code {}", restResponse.getStatusCode());
+                // Flow request delete
+                ResponseEntity<ApiResponseWrapper.RestResponse<TaskDto>> restResponse = pakarWfClient
+                        .requestDelete(BEARER + token, username, wfRequestDelete);
+                logger.debug("response api request {}", restResponse);
+                logger.debug("reponse status code {}", restResponse.getStatusCode());
 
-                    // save ke article state
-                    articleState.setCreatedBy(username);
-                    articleState.setCreatedDate(new Date());
-                    ResponseEntity<ApiResponseWrapper.RestResponse<List<UserProfileDto>>> restResponseUp = pakarOauthClient
-                            .getListUserProfile(BEARER + token, username, Arrays.asList(new String[]{articleState.getSender()}));
-                    List<UserProfileDto> userProfileDtos = restResponseUp.getBody().getData();
-                    articleState.setFnSender(userProfileDtos != null ? userProfileDtos.get(0) != null ? userProfileDtos.get(0).getFullname() : "" : "");
-                    articleState.setReceiver(restResponse.getBody().getData().getAssigne());
-                    restResponseUp = pakarOauthClient
-                            .getListUserProfile(BEARER + token, username, Arrays.asList(new String[]{articleState.getReceiver()}));
-                    userProfileDtos.clear();
-                    userProfileDtos = restResponseUp.getBody().getData();
-                    articleState.setFnReceiver(userProfileDtos != null ? userProfileDtos.get(0) != null ? userProfileDtos.get(0).getFullname() : "" : "");
-                    articleState.setReceiverState(restResponse.getBody().getData().getCurrentReceiverState());
-                    articleState.setSenderState(restResponse.getBody().getData().getCurrentSenderState());
-                    articleState.setArticle(article);
-                    articleState.setWfReqId(restResponse.getBody().getData().getRequestId());
+                // save ke article state
+                articleState.setCreatedBy(username);
+                articleState.setCreatedDate(new Date());
+                ResponseEntity<ApiResponseWrapper.RestResponse<List<UserProfileDto>>> restResponseUp = pakarOauthClient
+                        .getListUserProfile(BEARER + token, username, Arrays.asList(new String[]{articleState.getSender()}));
+                List<UserProfileDto> userProfileDtos = restResponseUp.getBody().getData();
+                articleState.setFnSender(userProfileDtos != null ? userProfileDtos.get(0) != null ? userProfileDtos.get(0).getFullname() : "" : "");
+                articleState.setReceiver(restResponse.getBody().getData().getAssigne());
+                restResponseUp = pakarOauthClient
+                        .getListUserProfile(BEARER + token, username, Arrays.asList(new String[]{articleState.getReceiver()}));
+                userProfileDtos.clear();
+                userProfileDtos = restResponseUp.getBody().getData();
+                articleState.setFnReceiver(userProfileDtos != null ? userProfileDtos.get(0) != null ? userProfileDtos.get(0).getFullname() : "" : "");
+                articleState.setReceiverState(restResponse.getBody().getData().getCurrentReceiverState());
+                articleState.setSenderState(restResponse.getBody().getData().getCurrentSenderState());
+                articleState.setArticle(article);
+                articleState.setWfReqId(restResponse.getBody().getData().getRequestId());
 
-                    articleStateRepository.save(articleState);
+                articleStateRepository.save(articleState);
 
                 // send request delete notification to receiver
                 ArticleNotification articleNotification = new ArticleNotification();
