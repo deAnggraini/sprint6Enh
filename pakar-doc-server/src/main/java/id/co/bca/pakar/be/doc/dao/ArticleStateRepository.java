@@ -60,4 +60,13 @@ public interface ArticleStateRepository extends CrudRepository<ArticleState, Lon
                     "AND m.article.deleted IS FALSE "
     )
     ArticleState findByArticleId(@Param("articleId") Long articleId);
+
+    @Query(
+            "SELECT m FROM ArticleState m " +
+                    "WHERE m.article.id=:articleId " +
+                    "AND m.deleted IS FALSE " +
+                    "AND m.receiver=:receiver " +
+                    "AND m.article.deleted IS FALSE "
+    )
+    ArticleState findByArticleIdAndReceiver(@Param("articleId") Long articleId, @Param("receiver") String receiver);
 }
