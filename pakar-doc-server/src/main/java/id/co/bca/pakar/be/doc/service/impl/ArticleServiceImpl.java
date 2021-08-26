@@ -612,7 +612,7 @@ public class ArticleServiceImpl implements ArticleService {
             List<Long> contentDtoIds = new ArrayList<>();
             articleDto.getContents().forEach(e->contentDtoIds.add(e.getId()));
             logger.debug("delete article content with id not include in {}", contentDtoIds);
-            articleContentRepository.deleteByNotInIds(contentDtoIds);
+            articleContentRepository.deleteByNotInIds(contentDtoIds, article.getId());
             articleDto.getContents()
                     .forEach(e ->
                             new ArticleContentHelper().verifyUpdateAndSaveContent(e, articleDto.getUsername()));

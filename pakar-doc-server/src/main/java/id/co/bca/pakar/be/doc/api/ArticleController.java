@@ -301,7 +301,7 @@ public class ArticleController extends BaseController {
             MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<RestResponse<ArticleDto>> geArticle(@RequestHeader("Authorization") String authorization, @RequestHeader(name = "X-USERNAME") String username, @RequestBody GetArticleDto requestDto) {
         try {
-            logger.info("generate article process");
+            logger.info("get article process");
             logger.info("received token bearer ---> {}", authorization);
             ArticleDto articleDto = articleService.getArticleById(requestDto.getId(), requestDto.getIsEdit(), username, getTokenFromHeader(authorization));
             return createResponse(articleDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));

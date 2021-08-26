@@ -89,6 +89,7 @@ public interface ArticleContentRepository extends CrudRepository<ArticleContent,
 
     @Modifying
     @Query("DELETE FROM ArticleContent m " +
-            "WHERE m.id NOT IN (:ids) ")
-    int deleteByNotInIds(@Param("ids") List<Long> ids);
+            "WHERE m.id NOT IN (:ids) " +
+            "AND m.article.id=:articleId ")
+    int deleteByNotInIds(@Param("ids") List<Long> ids, @Param("articleId") Long articleId);
 }
