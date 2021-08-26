@@ -420,7 +420,7 @@ public class ArticleServiceImpl implements ArticleService {
             , ArticleNotFoundException.class})
     public ArticleDto getArticleById(Long id, boolean isEdit, String username, String token) throws Exception {
         try {
-            Optional<Article> articleOpt = articleRepository.findById(id, username);
+            Optional<Article> articleOpt = articleRepository.findById(id);
 
             if (articleOpt.isEmpty()) {
                 throw new ArticleNotFoundException("not found article with id --> " + id);
@@ -440,7 +440,7 @@ public class ArticleServiceImpl implements ArticleService {
 
             // get main contents
             List<ArticleContentDto> articleContentDtos = new ArrayList<>();
-            if (article.getArticleState().equalsIgnoreCase(NEW)) {
+            if (article.getNewArticle().booleanValue()) {
                 // refresh article
                 Iterable<ArticleContentClone> articleContents = articleContentCloneRepository.findsByArticleId(article.getId(), article.getCreatedBy());
                 logger.debug("copy value of article contents to dto", articleContents);
