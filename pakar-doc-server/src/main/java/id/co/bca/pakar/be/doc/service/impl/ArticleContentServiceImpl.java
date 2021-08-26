@@ -165,7 +165,7 @@ public class ArticleContentServiceImpl implements ArticleContentService {
             } else if (reqColumn.equals("modified_by")) {
                 return "fullNameModifier";
             } else if (reqColumn.equals("location")) {
-                return "structure.location_text";
+                return "location";
             } else if (reqColumn.equals("modified_date")) {
                 return "modifyDate";
             } else if (reqColumn.equals("effective_date")) { // dari column table belum ada field effective date
