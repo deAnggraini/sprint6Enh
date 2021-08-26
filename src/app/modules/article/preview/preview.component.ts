@@ -216,6 +216,14 @@ export class PreviewComponent implements OnInit, AfterViewInit, OnDestroy {
         if (params.id) {
           this.articleService.getById(params.id, false).subscribe(resp => {
             this.setArticle(resp);
+            if (this.articleService.formAlert) {
+              this.alert = true;
+              this.alertMessage = this.articleService.formAlert;
+              setTimeout(() => {
+                document.getElementById('alert').hidden = true;
+                this.articleService.formAlert = null;
+              }, 3000);
+            }
             this.changeDetectorRef.detectChanges();
           })
         }
@@ -379,6 +387,7 @@ export class PreviewComponent implements OnInit, AfterViewInit, OnDestroy {
         d.text = `${d.title}`;
       })
     }
+    this.changeDetectorRef.detectChanges();
   }
 
   numberingFormat(data: ArticleContentDTO): string {
