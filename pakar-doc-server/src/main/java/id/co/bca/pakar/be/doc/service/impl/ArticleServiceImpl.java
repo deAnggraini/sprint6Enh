@@ -450,6 +450,34 @@ public class ArticleServiceImpl implements ArticleService {
                 List<ArticleContent> articleContents = articleContentRepository.findByArticleId(article.getId());
                 logger.debug("main article contents {}", articleContents);
                 articleContentDtos = new TreeArticleContents().menuTree(mapToListArticleContentDto(articleContents));
+
+                logger.debug("delete all existing content clones");
+                Iterable<ArticleContentClone> contentClones = articleContentCloneRepository.findsByArticleId(article.getId(), username);
+                articleContentCloneRepository.deleteAll(contentClones);
+
+                logger.debug("copy article content to clones");
+                articleContents.forEach(e-> {
+                    ArticleContentClone clone = new ArticleContentClone();
+                    clone.setId(e.getId());
+                    clone.setVersion(e.getVersion());
+                    clone.setArticle(article);
+                    clone.setDescription(e.getDescription());
+                    clone.setLevel(e.getLevel());
+                    clone.setName(e.getName());
+                    clone.setParent(e.getParent());
+                    clone.setSort(e.getSort());
+                    clone.setTopicCaption(e.getTopicCaption());
+                    clone.setTopicContent(e.getTopicContent());
+                    clone.setCreatedBy(e.getCreatedBy());
+                    clone.setCreatedDate(e.getCreatedDate());
+                    clone.setDeleted(e.getDeleted());
+                    clone.setModifyBy(e.getModifyBy());
+                    clone.setModifyDate(e.getModifyDate());
+                    article.getArticleContentClones().add(clone);
+                    clone.setArticle(article);
+
+                    articleContentCloneRepository.save(clone);
+                });
             }
 
             articleDto.setContents(articleContentDtos);
