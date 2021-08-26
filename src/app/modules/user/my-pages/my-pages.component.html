@@ -194,7 +194,7 @@
 
                                                         <ng-container *ngIf="key == 'draft'||key == 'pending'">
                                                             <li class="navi-item">
-                                                                <a class="navi-link cursor-pointer"
+                                                                <a class="navi-link cursor-pointer" [class.disabled]="key == 'pending'&&!item.isPublished"
                                                                     (click)="onClickEdit(item, i); dropDown.close()">
                                                                     <span
                                                                         class="navi-text font-weight-bolder">Ubah</span>
