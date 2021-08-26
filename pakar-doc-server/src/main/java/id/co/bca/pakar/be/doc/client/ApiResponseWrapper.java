@@ -29,9 +29,17 @@ public class ApiResponseWrapper {
         public void setData(T pData) {
             this.data = pData;
         }
+
+        public ApiStatus getApiStatus() {
+            return apiStatus;
+        }
+
+        public void setApiStatus(ApiStatus apiStatus) {
+            this.apiStatus = apiStatus;
+        }
     }
 
-    protected static class ApiStatus {
+    public static class ApiStatus {
         @JsonProperty("code")
         private String code;
         @JsonProperty("message")

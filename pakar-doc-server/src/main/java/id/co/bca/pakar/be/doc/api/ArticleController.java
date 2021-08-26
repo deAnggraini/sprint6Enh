@@ -692,6 +692,12 @@ public class ArticleController extends BaseController {
         } catch (MinValuePageNumberException e) {
             logger.error("exception", e);
             return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("paging.minimum.invalid", null, getLocale()));
+        } catch (OauthApiClientException e) {
+            logger.error("exception", e);
+            return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, getLocale()));
+        } catch (WfApiClientException e) {
+            logger.error("exception", e);
+            return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, getLocale()));
         } catch (DataNotFoundException e) {
             logger.error("exception", e);
             return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, getLocale()));

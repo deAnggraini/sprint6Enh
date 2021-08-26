@@ -24,12 +24,22 @@ public interface MyPagesRepository extends CrudRepository<MyPages, Long> {
     @Query("SELECT m FROM MyPages m " +
             "WHERE m.id IN (:ids) " +
             "AND m.deleted IS FALSE " +
-            "AND (m.senderState=:state OR m.receiverState=:state) " +
-            "AND (m.sender=:username OR m.receiver=:username) " +
+            "AND m.senderState=:state " +
+            "AND m.sender=:username " +
             "AND (LOWER(m.judulArticle) LIKE CONCAT('%',LOWER(:keyword),'%') " +
             "       OR LOWER(m.fullNameModifier) LIKE CONCAT('%', LOWER(:keyword), '%') " +
             "       OR LOWER(m.location) LIKE CONCAT('%',LOWER(:keyword), '%') ) ")
     Page<MyPages> findMyPagesPendingArticle(@Param("ids") List<Long> ids, @Param("keyword") String keyword, @Param("username") String username, @Param("state") String state, Pageable pageable);
+
+    @Query("SELECT m FROM MyPages m " +
+            "WHERE m.id IN (:ids) " +
+            "AND m.deleted IS FALSE " +
+            "AND (m.receiverState=:state) " +
+            "AND (m.receiver=:username) " +
+            "AND (LOWER(m.judulArticle) LIKE CONCAT('%',LOWER(:keyword),'%') " +
+            "       OR LOWER(m.fullNameModifier) LIKE CONCAT('%', LOWER(:keyword), '%') " +
+            "       OR LOWER(m.location) LIKE CONCAT('%',LOWER(:keyword), '%') ) ")
+    Page<MyPages> findMyPagesPendingArticleAsPublisher(@Param("ids") List<Long> ids, @Param("keyword") String keyword, @Param("username") String username, @Param("state") String state, Pageable pageable);
 
     @Query("SELECT m FROM MyPages m " +
             "WHERE m.id IN (:ids) " +

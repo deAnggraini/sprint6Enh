@@ -11,10 +11,14 @@ import id.co.bca.pakar.be.doc.dto.MyPageDto;
 import id.co.bca.pakar.be.doc.dto.RequestTaskDto;
 import id.co.bca.pakar.be.doc.dto.SearchMyPageDto;
 import id.co.bca.pakar.be.doc.dto.TaskDto;
+import id.co.bca.pakar.be.doc.dto.auth.UserWrapperDto;
 import id.co.bca.pakar.be.doc.exception.MinValuePageNumberException;
+import id.co.bca.pakar.be.doc.exception.OauthApiClientException;
+import id.co.bca.pakar.be.doc.exception.WfApiClientException;
 import id.co.bca.pakar.be.doc.model.ArticleEdit;
 import id.co.bca.pakar.be.doc.model.MyPages;
 import id.co.bca.pakar.be.doc.service.MyPagesService;
+import net.bytebuddy.implementation.bytecode.Throw;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static id.co.bca.pakar.be.doc.common.Constant.Headers.BEARER;
+import static id.co.bca.pakar.be.doc.common.Constant.OK_ACK;
 import static id.co.bca.pakar.be.doc.common.Constant.Workflow.ARTICLE_REVIEW_WF;
 import static id.co.bca.pakar.be.doc.common.Constant.Workflow.PROCESS_KEY;
 
@@ -61,7 +66,10 @@ public class MyPagesServiceImpl implements MyPagesService {
      * @throws Exception
      */
     @Override
-    @Transactional(rollbackFor = {Exception.class, MinValuePageNumberException.class})
+    @Transactional(rollbackFor = {Exception.class
+            , MinValuePageNumberException.class
+            , OauthApiClientException.class
+    , WfApiClientException.class})
     public Page<MyPageDto> searchMyPages(SearchMyPageDto searchDto) throws Exception {
         try {
             logger.info("search my page dto");
@@ -85,9 +93,25 @@ public class MyPagesServiceImpl implements MyPagesService {
             requestTaskDto.setAssigne(searchDto.getUsername());
             requestTaskDto.setPic(searchDto.getUsername());
             requestTaskDto.setState(searchDto.getState());
+            /*
+            get role of user
+             */
+            UserWrapperDto userWrapperDto = new UserWrapperDto();
+            userWrapperDto.setUsername(searchDto.getUsername());
+            ResponseEntity<ApiResponseWrapper.RestResponse<List<String>>> restOauthResponse = pakarOauthClient
+                    .getRolesByUser(BEARER + searchDto.getToken(), searchDto.getUsername(), userWrapperDto);
+            if (!restOauthResponse.getBody().getApiStatus().getCode().equalsIgnoreCase(OK_ACK)) {
+                throw new OauthApiClientException("fail call oauth endpoint getRolesByUserEndpoint");
+            }
+
+            String roleUser = restOauthResponse.getBody().getData().get(0);
+            logger.debug("user {} has role {}", searchDto.getUsername(), roleUser);
             requestTaskDto.setWfProcessKey(ARTICLE_REVIEW_WF);
             ResponseEntity<ApiResponseWrapper.RestResponse<List<TaskDto>>> restResponse = pakarWfClient
                     .getTasksWithState(BEARER + searchDto.getToken(), searchDto.getUsername(), requestTaskDto);
+            if (!restResponse.getBody().getApiStatus().getCode().equalsIgnoreCase(OK_ACK)) {
+                throw new WfApiClientException("fail call workflow endpoint getTasksWithState");
+            }
             List<Long> ids = new ArrayList<>();
             for (TaskDto task : restResponse.getBody().getData()) {
                 ids.add(task.getArticleId());
@@ -97,9 +121,13 @@ public class MyPagesServiceImpl implements MyPagesService {
             if (searchDto.getType().equals(Constant.JenisHalaman.All) || searchDto.getType().equals(Constant.JenisHalaman.Artikel)) {
                 if (searchDto.getState().equalsIgnoreCase(Constant.ArticleWfState.DRAFT))
                     searchResultPage = myPagesRepository.findMyPagesDratfArticle(ids, searchDto.getKeyword(), searchDto.getUsername(), searchDto.getState(), pageable);
-                else if (searchDto.getState().equalsIgnoreCase(Constant.ArticleWfState.PENDING))
-                    searchResultPage = myPagesRepository.findMyPagesPendingArticle(ids, searchDto.getKeyword(), searchDto.getUsername(), searchDto.getState(), pageable);
-                else if (searchDto.getState().equalsIgnoreCase(Constant.ArticleWfState.PUBLISHED)) {
+                else if (searchDto.getState().equalsIgnoreCase(Constant.ArticleWfState.PENDING)) {
+                    if (roleUser.equalsIgnoreCase(Constant.Roles.ROLE_PUBLISHER)) {
+                        searchResultPage = myPagesRepository.findMyPagesPendingArticleAsPublisher(ids, searchDto.getKeyword(), searchDto.getUsername(), searchDto.getState(), pageable);
+                    } else {
+                        searchResultPage = myPagesRepository.findMyPagesPendingArticle(ids, searchDto.getKeyword(), searchDto.getUsername(), searchDto.getState(), pageable);
+                    }
+                } else if (searchDto.getState().equalsIgnoreCase(Constant.ArticleWfState.PUBLISHED)) {
                     searchResultPage = myPagesRepository.findMyPagesPublishedArticle(ids, searchDto.getKeyword(), searchDto.getUsername(), searchDto.getState(), pageable);
                 }
             } else {
@@ -110,6 +138,12 @@ public class MyPagesServiceImpl implements MyPagesService {
         } catch (MinValuePageNumberException e) {
             logger.error("exception", e);
             throw new MinValuePageNumberException("exception", e);
+        } catch (OauthApiClientException e) {
+            logger.error("exception", e);
+            throw new OauthApiClientException("exception", e);
+        } catch (WfApiClientException e) {
+            logger.error("exception", e);
+            throw new WfApiClientException("exception", e);
         } catch (Exception e) {
             logger.error("exception", e);
             throw new Exception("exception", e);
@@ -150,7 +184,7 @@ public class MyPagesServiceImpl implements MyPagesService {
             dto.setSendTo(entity.getFullNameReceiver());
             dto.setReceiver(entity.getReceiver());
 
-            if(entity.getSenderState() != null) {
+            if (entity.getSenderState() != null) {
                 if (entity.getSenderState().equalsIgnoreCase(Constant.ArticleWfState.PUBLISHED)) {
                     dto.setApproved_by(entity.getFullNameReceiver());
 //                dto.setApprovedDate(entity.getModifyDate());
