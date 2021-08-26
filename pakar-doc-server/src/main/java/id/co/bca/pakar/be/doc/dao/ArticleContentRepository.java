@@ -1,7 +1,7 @@
 package id.co.bca.pakar.be.doc.dao;
 
 import id.co.bca.pakar.be.doc.model.ArticleContent;
-import id.co.bca.pakar.be.doc.model.ArticleContentClone;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -85,5 +85,10 @@ public interface ArticleContentRepository extends CrudRepository<ArticleContent,
             "                 ORDER BY rec.level " +
             " ) rs3",
             nativeQuery = true)
-    List<ArticleContent>  findParentListById(@Param("id") Long id);
+    List<ArticleContent> findParentListById(@Param("id") Long id);
+
+    @Modifying
+    @Query("DELETE FROM ArticleContent m " +
+            "WHERE m.id NOT IN (:ids) ")
+    int deleteByNotInIds(@Param("ids") List<Long> ids);
 }
