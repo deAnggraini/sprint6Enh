@@ -833,7 +833,6 @@ public class ArticleServiceImpl implements ArticleService {
                 articleNotification.setCreatedBy(articleDto.getUsername());
                 articleNotification.setArticle(article);
                 articleNotification.setNotifDate(new Date());
-
                 String sendNote = "";
                 if(!article.getPublished().booleanValue())
                     sendNote = messageSource.getMessage("article.notification.template"

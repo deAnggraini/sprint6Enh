@@ -68,7 +68,7 @@ public class ArticleVersion extends EntityBase {
     @Column(name = "approved_date")
     private Date approvedDate;
 
-    @Column(name = "isPublished", columnDefinition = "BOOLEAN DEFAULT FALSE")
+    @Column(name = "isPublished")
     private Boolean isPublished;
 
 
