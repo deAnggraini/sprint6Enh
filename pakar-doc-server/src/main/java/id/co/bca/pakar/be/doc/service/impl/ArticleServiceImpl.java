@@ -248,7 +248,7 @@ public class ArticleServiceImpl implements ArticleService {
             /*
             populate generated article to dto
              */
-            articleDto = getArticleById(article.getId(), generateArticleDto.getUsername());
+            articleDto = getArticleById(article.getId());
             return articleDto;
         } catch (DuplicateTitleException e) {
             logger.error("", e);
