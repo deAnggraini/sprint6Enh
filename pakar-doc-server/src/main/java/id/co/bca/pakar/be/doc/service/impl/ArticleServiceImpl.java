@@ -2003,7 +2003,7 @@ public class ArticleServiceImpl implements ArticleService {
             , DataNotFoundException.class})
     public Boolean cancelEditArticle(String token, String username, RequestCancelEditDto reqCancelDto) throws Exception {
         try {
-            logger.info("process cancel Edit article");
+            logger.info("process Batal Ubah Article");
             ArticleVersion lastVersion = null;
 
             // get user profile from oauth server
@@ -2018,8 +2018,21 @@ public class ArticleServiceImpl implements ArticleService {
             if(lastVersion == null) {
                 throw new DataNotFoundException("Not found last version article");
             }
+            logger.info("last version batal ubah "+ lastVersion);
             articleVersionRepository.delete(lastVersion);
-            return true;
+
+            // delete status editor
+            ArticleEdit articleEdit = null;
+            articleEdit = articleEditRepository.findByUsername(reqCancelDto.getId(), reqCancelDto.getUsername());
+            logger.info("article edit on batal ubah "+ articleEdit);
+            articleEditRepository.delete(articleEdit);
+
+            // delete content clone for user
+            Iterable<ArticleContentClone> contentClones = articleContentCloneRepository.findsByArticleId(reqCancelDto.getId(), reqCancelDto.getUsername());
+            logger.info("content clone on batal ubah "+ contentClones);
+            articleContentCloneRepository.deleteAll(contentClones);
+
+            return Boolean.TRUE;
         } catch (OauthApiClientException e) {
             logger.error("fail to call Oauth ", e);
             throw new Exception("Data Not Found", e);
