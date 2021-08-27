@@ -43,4 +43,6 @@ public interface ArticleService {
     List<UserArticleEditingDto> findUserArticleEditings(String username, String token, Long articleId) throws Exception;
 
     Boolean deleteArticle(RequestDeleteDto requestDeleteDto, String username, String token) throws Exception;
+
+    Boolean cancelEditArticle(RequestCancelEditDto reqCancelEdit) throws Exception;
 }

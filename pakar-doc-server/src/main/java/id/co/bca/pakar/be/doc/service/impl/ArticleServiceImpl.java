@@ -119,6 +119,9 @@ public class ArticleServiceImpl implements ArticleService {
     @Autowired
     private PakarWfClient pakarWfClient;
 
+    @Autowired
+    private ArticleVersionRepository articleVersionRepository;
+
     @Value("${upload.path.article}")
     private String pathCategory;
     @Value("${upload.path.base}")
@@ -1984,6 +1987,33 @@ public class ArticleServiceImpl implements ArticleService {
             return new ToDoMapperSuggestion().mapEntityPageIntoDTOPage(pageable, searchResultPage);
 
         } catch (Exception e) {
+            logger.error("exception", e);
+            throw new Exception("exception", e);
+        }
+    }
+
+    /**
+     * @param reqCancelDto
+     * @return
+     * @throws Exception
+     */
+    @Override
+    @Transactional(rollbackFor = {Exception.class
+            , DataNotFoundException.class})
+    public Boolean cancelEditArticle(RequestCancelEditDto reqCancelDto) throws Exception {
+        try {
+            logger.info("process cancel Edit article");
+            ArticleVersion lastVersion = null;
+            lastVersion = articleVersionRepository.findLastTimeStampByUsername(reqCancelDto.getId(), reqCancelDto.getUsername());
+            if(lastVersion == null) {
+                throw new DataNotFoundException("Not found last version article");
+            }
+            articleVersionRepository.delete(lastVersion);
+            return true;
+        } catch (DataNotFoundException e) {
+            logger.error("Data Not Found", e);
+            throw new Exception("Data Not Found", e);
+        }catch (Exception e) {
             logger.error("exception", e);
             throw new Exception("exception", e);
         }

@@ -840,4 +840,28 @@ public class ArticleController extends BaseController {
             return createResponse(Boolean.FALSE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
         }
     }
+
+    /**
+     *
+     * @param authorization
+     * @param username
+     * @param reqCancelEdit
+     * @return
+     */
+    @PostMapping(value = "/api/doc/cancelEditArticle", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
+            MediaType.APPLICATION_JSON_VALUE })
+    public ResponseEntity<RestResponse<Boolean>> cancelEditArticle(@RequestHeader("Authorization") String authorization, @RequestHeader (name="X-USERNAME") String username, @RequestBody RequestCancelEditDto reqCancelEdit) {
+        try {
+            logger.info("cancel Edit Article Process ");
+            logger.info("received token bearer --- {}", authorization);
+            Boolean status = articleService.cancelEditArticle(reqCancelEdit);
+            return createResponse(status, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));
+        } catch (DataNotFoundException e) {
+            logger.error("exception", e);
+            return createResponse(Boolean.FALSE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, getLocale()));
+        }catch (Exception e) {
+            logger.error("exception", e);
+            return createResponse(Boolean.FALSE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
+        }
+    }
 }
