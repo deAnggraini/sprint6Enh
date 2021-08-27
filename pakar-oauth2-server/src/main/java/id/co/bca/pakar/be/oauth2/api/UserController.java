@@ -60,14 +60,14 @@ public class UserController extends BaseController {
             logger.info("get user by token ");
             LoggedinDto loggedInDto = userService.findUserByToken(tokenValue, username);
 //            return createResponse(loggedInDto, Constant.ApiResponseCode.EXIST_USER_PROFILE.getAction()[0], Constant.ApiResponseCode.EXIST_USER_PROFILE.getAction()[1]);
-			return this.createResponse(loggedInDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, locale));
+			return this.createResponse(loggedInDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));
 		} catch (Exception e) {
             logger.error("exception", e);
 //            HttpHeaders headers = new HttpHeaders();
 //            headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
 //            RestResponse<LoggedinDto> tResponse = new RestResponse(new LoggedinDto(), Constant.ApiResponseCode.USER_PROFILE_NOT_FOUND.getAction()[0], Constant.ApiResponseCode.USER_PROFILE_NOT_FOUND.getAction()[1]);
 //            return new ResponseEntity<RestResponse<LoggedinDto>>(tResponse, HttpStatus.OK);
-			return this.createResponse(new LoggedinDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, locale));
+			return this.createResponse(new LoggedinDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
 		}
     }
 
@@ -77,10 +77,10 @@ public class UserController extends BaseController {
         try {
             logger.info("get role by username {}", username);
             List<String> roles = userService.findRolesByUser(username);
-            return this.createResponse(roles, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, locale));
+            return this.createResponse(roles, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));
         } catch (Exception e) {
             logger.error("exception", e);
-            return this.createResponse(new ArrayList<String>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, locale));
+            return this.createResponse(new ArrayList<String>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
         }
     }
 
@@ -90,10 +90,10 @@ public class UserController extends BaseController {
         try {
             logger.info("get role by username {}", userWrapper.getUsername());
             List<String> roles = userService.findRolesByUser(userWrapper.getUsername());
-            return this.createResponse(roles, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, locale));
+            return this.createResponse(roles, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));
         } catch (Exception e) {
             logger.error("exception", e);
-            return this.createResponse(new ArrayList<String>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, locale));
+            return this.createResponse(new ArrayList<String>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
         }
     }
 
@@ -104,10 +104,10 @@ public class UserController extends BaseController {
         try {
             logger.info("load username {}", searchDto);
             List<ResponseUser> user = userService.findUserNotReader(username, searchDto);
-            return this.createResponse(user, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, locale));
+            return this.createResponse(user, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));
         } catch (Exception e) {
             logger.error("exception", e);
-            return this.createResponse(new ArrayList<ResponseUser>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, locale));
+            return this.createResponse(new ArrayList<ResponseUser>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
         }
     }
 
@@ -127,7 +127,7 @@ public class UserController extends BaseController {
             return createResponse(dtos, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
         } catch (Exception e) {
             logger.error("exception", e);
-            return this.createResponse(new ArrayList<UserDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, locale));
+            return this.createResponse(new ArrayList<UserDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
         }
     }
 
@@ -144,10 +144,10 @@ public class UserController extends BaseController {
         try {
             logger.info("load all user by collection users {}", listUserDto);
             List<UserDto> dtos = userService.findUsersByListUser(listUserDto);
-            return createResponse(dtos, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, locale));
+            return createResponse(dtos, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));
         } catch (Exception e) {
             logger.error("exception", e);
-            return createResponse(new ArrayList<UserDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, locale));
+            return createResponse(new ArrayList<UserDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
         }
     }
 }

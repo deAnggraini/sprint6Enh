@@ -32,10 +32,10 @@ public class AuthenticationController extends BaseController {
 			LoggedinDto oAuthToken = authenticationService.authenticate(dto);
 			oAuthToken.setRememberMe(dto.getRememberMe());
 
-			return this.createResponse(oAuthToken, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
+			return this.createResponse(oAuthToken, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));
 		} catch (Exception e) {
 			logger.error("exception", e);
-			return this.createResponse(new LoggedinDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("userid.password.incorrect.update", null, new Locale("en", "US")));
+			return this.createResponse(new LoggedinDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("userid.password.incorrect.update", null, getLocale()));
 		}
 	}
 
@@ -49,14 +49,14 @@ public class AuthenticationController extends BaseController {
 			    String tokenValue = authorization.replace("Bearer", "").trim();
 			    Boolean logoutStatus = authenticationService.logout(tokenValue);
 			    if(logoutStatus) {
-			    	return this.createResponse("0", Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("logout.success", null, new Locale("en", "US")));
+			    	return this.createResponse("0", Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("logout.success", null, getLocale()));
 			    } else
-			    	return this.createResponse("-1", Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("logout.failed", null, new Locale("en", "US")));
+			    	return this.createResponse("-1", Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("logout.failed", null, getLocale()));
 			}
-			return this.createResponse("-1", Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("logout.failed", null, new Locale("en", "US")));
+			return this.createResponse("-1", Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("logout.failed", null, getLocale()));
 		} catch (Exception e) {
 			logger.error("exception",e);
-			return this.createResponse("-1", Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("logout.failed", null, new Locale("en", "US")));
+			return this.createResponse("-1", Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("logout.failed", null, getLocale()));
 		}
 	}
 	
@@ -66,10 +66,10 @@ public class AuthenticationController extends BaseController {
 		try {
 			logger.info("generate new access token with refresh token --- " + dto.getRefreshToken());
 			RefreshTokenResponseDto oAuthToken = authenticationService.generateNewAccessToken(dto.getRefreshToken());
-			return this.createResponse(oAuthToken, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("refreshtoken.success", null, new Locale("en", "US")));
+			return this.createResponse(oAuthToken, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("refreshtoken.success", null, getLocale()));
 		} catch (Exception e) {
 			logger.error("exception", e);
-			return this.createResponse(new RefreshTokenResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("refreshtoken.failed", null, new Locale("en", "US")));
+			return this.createResponse(new RefreshTokenResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("refreshtoken.failed", null, getLocale()));
 		}
 	}
 }

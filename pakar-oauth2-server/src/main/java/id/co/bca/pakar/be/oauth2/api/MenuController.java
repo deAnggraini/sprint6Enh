@@ -33,10 +33,10 @@ public class MenuController extends BaseController {
                 logger.info("username request header --- "+username);
             }
             List<MenuDto> menu = menuService.getMenus(tokenValue, username);
-            return this.createResponse(menu, Constant.ApiResponseCode.OK.getAction()[0], Constant.ApiResponseCode.OK.getAction()[1]);
+            return this.createResponse(menu, Constant.ApiResponseCode.OK.getAction()[0],  messageSource.getMessage("success.response", null, getLocale()));
         } catch (Exception e) {
             logger.error("exception", e);
-            return this.createResponse(new ArrayList<MenuDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], Constant.ApiResponseCode.GENERAL_ERROR.getAction()[1]);
+            return this.createResponse(new ArrayList<MenuDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
         }
     }
 }
