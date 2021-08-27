@@ -924,7 +924,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   previewHideTopbar: boolean = false;
   previewAlert: boolean = false;
   previewAlertMessage: string = '';
-  isCompare: boolean = false;
+  isCompare: boolean = true;
 
   // save and send
   userOptions: Option[] = [];

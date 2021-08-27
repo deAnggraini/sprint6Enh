@@ -124,3 +124,12 @@ ul {
     }
   }
 }
+
+:host .mat-accordion .mat-expansion-panel.acc-level {
+
+  .mat-expansion-panel-header {
+    &.mat-expanded {
+      background-color: #C3DEF8 !important;
+    }
+  }
+}
