@@ -2018,13 +2018,19 @@ public class ArticleServiceImpl implements ArticleService {
             if(lastVersion == null) {
                 throw new DataNotFoundException("Not found last version article");
             }
+            logger.info("last version batal ubah "+ lastVersion);
             articleVersionRepository.delete(lastVersion);
 
             // delete status editor
             ArticleEdit articleEdit = null;
             articleEdit = articleEditRepository.findByUsername(reqCancelDto.getId(), reqCancelDto.getUsername());
-
+            logger.info("article edit on batal ubah "+ articleEdit);
             articleEditRepository.delete(articleEdit);
+
+            // delete content clone for user
+            Iterable<ArticleContentClone> contentClones = articleContentCloneRepository.findsByArticleId(reqCancelDto.getId(), reqCancelDto.getUsername());
+            logger.info("content clone on batal ubah "+ contentClones);
+            articleContentCloneRepository.deleteAll(contentClones);
 
             return true;
         } catch (OauthApiClientException e) {
