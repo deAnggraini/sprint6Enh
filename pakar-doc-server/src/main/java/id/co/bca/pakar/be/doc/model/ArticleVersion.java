@@ -1,5 +1,7 @@
 package id.co.bca.pakar.be.doc.model;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
@@ -9,13 +11,12 @@ import java.util.List;
 @Table(name = "t_article_version")
 public class ArticleVersion extends EntityBase {
     @Id
-	@SequenceGenerator(name = "articleVersionSeqGen", sequenceName = "articleVersionSeq", initialValue = 1, allocationSize = 1)
-	@GeneratedValue(generator = "articleVersionSeqGen")
+    @GenericGenerator(name = "UUID",  strategy = "org.hibernate.id.UUIDGenerator")
+    @GeneratedValue(generator = "UUID")
     @Column(name = "id")
-    private Long id;
+    private String id;
 
-    @Version
-    @Column(name = "optlock", columnDefinition = "integer DEFAULT 0", nullable = false)
+    @Column(name = "optlock", columnDefinition = "integer DEFAULT 0")
     private Long version;
 
     @Column(name = "article_id")
@@ -71,12 +72,14 @@ public class ArticleVersion extends EntityBase {
     @Column(name = "isPublished")
     private Boolean isPublished;
 
+    @Column(name = "isAdd")
+    private Boolean isAdd = Boolean.TRUE;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -222,5 +225,13 @@ public class ArticleVersion extends EntityBase {
 
     public void setPublished(Boolean published) {
         isPublished = published;
+    }
+
+    public Boolean getAdd() {
+        return isAdd;
+    }
+
+    public void setAdd(Boolean add) {
+        isAdd = add;
     }
 }

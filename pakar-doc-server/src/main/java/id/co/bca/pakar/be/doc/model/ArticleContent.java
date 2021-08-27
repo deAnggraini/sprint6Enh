@@ -9,8 +9,8 @@ public class ArticleContent extends CommonArticleContent {
     @Column(name = "id")
     private Long id = 0L;
 
-    @Version
-    @Column(name = "optlock", columnDefinition = "integer DEFAULT 0", nullable = false)
+//    @Version
+    @Column(name = "optlock", columnDefinition = "integer DEFAULT 0")
     private Long version;
 
     @ManyToOne

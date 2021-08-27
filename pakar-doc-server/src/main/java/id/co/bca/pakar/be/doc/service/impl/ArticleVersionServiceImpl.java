@@ -128,6 +128,7 @@ public class ArticleVersionServiceImpl implements ArticleVersionService {
                 articleVersion.setTimeStampVersion(new Date());
             articleVersion.setUsername(article.getModifyBy());
             articleVersion.setPublished(article.getPublished());
+            articleVersion.setAdd(article.getAdd());
             return articleVersion;
         }
 

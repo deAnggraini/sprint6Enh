@@ -1,21 +1,21 @@
 package id.co.bca.pakar.be.doc.model;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "t_article_content_version")
 public class ArticleContentVersion extends CommonArticleContent {
     @Id
-    @SequenceGenerator(name = "articleContentVersionSeqGen", sequenceName = "articleContentVersionSeq", initialValue = 1, allocationSize = 1)
-    @GeneratedValue(generator = "articleContentVersionSeqGen")
+    @GenericGenerator(name = "UUID",  strategy = "org.hibernate.id.UUIDGenerator")
+    @GeneratedValue(generator = "UUID")
     @Column(name = "id")
-    private Long id = 0L;
+    private String id;
 
     @Column(name = "origin_article_content_id")
     private Long originArticleContentId;
 
-//    @Version
-//    @Column(name = "optlock", columnDefinition = "integer DEFAULT 0", nullable = false)
     @Column(name = "optlock", columnDefinition = "integer DEFAULT 0")
     private Long version;
 
@@ -26,11 +26,11 @@ public class ArticleContentVersion extends CommonArticleContent {
     @Column(name = "origin_article_id")
     private Long articleId;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

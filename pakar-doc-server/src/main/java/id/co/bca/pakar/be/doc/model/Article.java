@@ -13,8 +13,8 @@ public class Article extends EntityBase {
     @Column(name = "id")
     private Long id;
 
-    @Version
-    @Column(name = "optlock", columnDefinition = "integer DEFAULT 0", nullable = false)
+//    @Version
+    @Column(name = "optlock", columnDefinition = "integer DEFAULT 0")
     private Long version;
 
     @ManyToOne
@@ -56,6 +56,9 @@ public class Article extends EntityBase {
 
     @Column(name = "isPublished")
     private Boolean isPublished = Boolean.FALSE;
+
+    @Column(name = "isAdd")
+    private Boolean isAdd = Boolean.TRUE;
 
     public Long getId() {
         return id;
@@ -175,5 +178,13 @@ public class Article extends EntityBase {
 
     public void setPublished(Boolean published) {
         isPublished = published;
+    }
+
+    public Boolean getAdd() {
+        return isAdd;
+    }
+
+    public void setAdd(Boolean add) {
+        isAdd = add;
     }
 }

@@ -25,3 +25,7 @@ desc
 
 --- DROP NOT NULL
 ALTER TABLE public.t_article_content_clone ALTER COLUMN optlock DROP NOT NULL;
+
+ALTER TABLE public.t_article_version ALTER COLUMN optlock DROP NOT NULL;
+
+ALTER TABLE public.t_article_content_version ALTER COLUMN optlock DROP NOT NULL;

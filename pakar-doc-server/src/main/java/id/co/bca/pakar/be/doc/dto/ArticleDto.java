@@ -52,6 +52,9 @@ public class ArticleDto extends BaseArticleDto {
     @JsonProperty("structureParentList")
     private List<BreadcumbStructureDto> structureParentList = new ArrayList<>();
 
+    /**
+     * jika artikel sudah send maka isNew = true
+     */
     @JsonProperty("isNew")
     private Boolean isNew = Boolean.TRUE;
 
@@ -63,6 +66,12 @@ public class ArticleDto extends BaseArticleDto {
 
     @JsonProperty("isPublished")
     private Boolean published = Boolean.FALSE;
+
+    /**
+     * jika artikel belum pernah save atau kirim, maka isAdd = true
+     */
+    @JsonProperty("isAdd")
+    private Boolean isAdd = Boolean.TRUE;
 
     public String getShortDescription() {
         return shortDescription;
@@ -214,5 +223,13 @@ public class ArticleDto extends BaseArticleDto {
 
     public void setModifiedDate(Date modifiedDate) {
         this.modifiedDate = modifiedDate;
+    }
+
+    public Boolean getIsAdd() {
+        return isAdd;
+    }
+
+    public void setIsAdd(Boolean add) {
+        isAdd = add;
     }
 }

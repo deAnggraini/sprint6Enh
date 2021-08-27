@@ -480,6 +480,7 @@ public class ArticleServiceImpl implements ArticleService {
             articleDto.setVideoLink(article.getVideoLink());
             articleDto.setPublished(article.getPublished());
             articleDto.setNew(article.getNewArticle());
+            articleDto.setIsAdd(article.getAdd());
 
             // get user profile from oauth server
             ResponseEntity<ApiResponseWrapper.RestResponse<List<UserProfileDto>>> restResponseUp = null;
@@ -703,7 +704,6 @@ public class ArticleServiceImpl implements ArticleService {
             String currentState = article.getArticleState();
 
             ArticleState articleState = null;
-//            article.setNewArticle(Boolean.TRUE);
 
             // call to workflow server to set draft, if sendto <> null
             if (article.getNewArticle().booleanValue()) {
@@ -871,6 +871,7 @@ public class ArticleServiceImpl implements ArticleService {
             }
 
             // set state
+            article.setAdd(Boolean.FALSE);
             article.setFullNameModifier(restResponse.getBody() != null ? restResponse.getBody().getData().getFullname() : "");
             article.setModifyBy(articleDto.getUsername());
             article.setModifyDate(new Date());
