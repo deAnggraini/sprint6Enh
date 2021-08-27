@@ -119,6 +119,9 @@ public class ArticleServiceImpl implements ArticleService {
     @Autowired
     private PakarWfClient pakarWfClient;
 
+    @Autowired
+    private ArticleVersionRepository articleVersionRepository;
+
     @Value("${upload.path.article}")
     private String pathCategory;
     @Value("${upload.path.base}")
@@ -1985,6 +1988,45 @@ public class ArticleServiceImpl implements ArticleService {
             return new ToDoMapperSuggestion().mapEntityPageIntoDTOPage(pageable, searchResultPage);
 
         } catch (Exception e) {
+            logger.error("exception", e);
+            throw new Exception("exception", e);
+        }
+    }
+
+    /**
+     * @param reqCancelDto
+     * @return
+     * @throws Exception
+     */
+    @Override
+    @Transactional(rollbackFor = {Exception.class
+            , DataNotFoundException.class})
+    public Boolean cancelEditArticle(String token, String username, RequestCancelEditDto reqCancelDto) throws Exception {
+        try {
+            logger.info("process cancel Edit article");
+            ArticleVersion lastVersion = null;
+
+            // get user profile from oauth server
+            ResponseEntity<ApiResponseWrapper.RestResponse<List<UserProfileDto>>> restResponseUp = null;
+            restResponseUp = pakarOauthClient.getListUserProfile(BEARER + token, username, Arrays.asList(new String[]{reqCancelDto.getUsername()}));
+            if (!restResponseUp.getBody().getApiStatus().getCode().equalsIgnoreCase(Constant.OK_ACK)) {
+                throw new OauthApiClientException("call oauth api client is failed");
+            }
+            lastVersion = articleVersionRepository.findLastTimeStampByFnModifier(reqCancelDto.getId(), restResponseUp.getBody().getData().get(0).getFullname());
+
+//            lastVersion = articleVersionRepository.findLastTimeStampByUsername(reqCancelDto.getId(), reqCancelDto.getUsername());
+            if(lastVersion == null) {
+                throw new DataNotFoundException("Not found last version article");
+            }
+            articleVersionRepository.delete(lastVersion);
+            return true;
+        } catch (OauthApiClientException e) {
+            logger.error("fail to call Oauth ", e);
+            throw new Exception("Data Not Found", e);
+        }catch (DataNotFoundException e) {
+            logger.error("Data Not Found", e);
+            throw new Exception("Data Not Found", e);
+        }catch (Exception e) {
             logger.error("exception", e);
             throw new Exception("exception", e);
         }
