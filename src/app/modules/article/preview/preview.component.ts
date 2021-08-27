@@ -50,8 +50,8 @@ export class PreviewComponent implements OnInit, AfterViewInit, OnDestroy {
   dataForm: FormGroup;
   user$: Observable<UserModel>;
   aliasName: string = 'AA';
-  fullName: string;
-  role: string;
+  fullName: string = 'Empty';
+  role: string = 'READER';
   changed_date: Date = new Date();
   skReferences = [];
   relatedArticle = [];
@@ -183,9 +183,9 @@ export class PreviewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     //user
     this.user$.subscribe(u => {
-      const aliasNameArr: string[] = [u.firstname, u.lastname];
-      this.aliasName = aliasNameArr.map(d => d ? d[0] : '').join('');
-      this.fullName = u.fullname;
+      // const aliasNameArr: string[] = [u.firstname, u.lastname];
+      // this.aliasName = aliasNameArr.map(d => d ? d[0] : '').join('');
+      // this.fullName = u.fullname;
       this.role = u.roles[0];
     });
 
@@ -340,14 +340,15 @@ export class PreviewComponent implements OnInit, AfterViewInit, OnDestroy {
     if (image) {
       if (typeof (image) == "string") { // image string artinya sudah diupload
         this.imageSrc = `${environment.backend_img}/${image}`;
+        this.imageTitle = image.split(".")[0];
       } else { // image bukan string, kemungkinan object file
         const reader = new FileReader();
         reader.readAsDataURL(image);
         reader.onload = () => {
           this.imageSrc = reader.result as string;
         };
+        this.imageTitle = image.name?.split(".")[0];
       }
-      this.imageTitle = image.name?.split(".")[0];
     } else {
       this.imageSrc = this.backend_img + '/articles/artikel-no-image.jpg';
       this.imageTitle = "Ini adalah judul dari infografis"
@@ -387,6 +388,16 @@ export class PreviewComponent implements OnInit, AfterViewInit, OnDestroy {
         d.text = `${d.title}`;
       })
     }
+
+    // set fullaname, alias
+    this.fullName = article.modified_name || '';
+    this.changed_date = article.modified_date || new Date();
+    const _split = this.fullName.split(' ');
+    this.aliasName = [
+      (_split[0][0]) || 'A',
+      (_split[_split.length - 1][0]) || 'Z',
+    ].join('');
+
     this.changeDetectorRef.detectChanges();
   }
 
