@@ -796,6 +796,8 @@ public class ArticleServiceImpl implements ArticleService {
                 wfRequest.put(SEND_TO_PARAM, assignDto);
                 wfRequest.put(SEND_NOTE_PARAM, articleDto.getSendNote());
                 wfRequest.put(GROUP_PARAM, rcvRoles.get(0));
+
+                articleState = articleStateRepository.findByArticleId(article.getId());
                 wfRequest.put(WORKFLOW_REQ_ID_PARAM, articleState.getWfReqId());
 
                 ResponseEntity<ApiResponseWrapper.RestResponse<TaskDto>> restResponse = pakarWfClient
@@ -814,7 +816,7 @@ public class ArticleServiceImpl implements ArticleService {
                 /*
                 get article state from system
                  */
-                articleState = articleStateRepository.findByArticleId(article.getId());
+
                 articleState.setCreatedBy(articleDto.getUsername());
                 articleState.setSender(restResponse.getBody().getData().getSender());
                 logger.debug("sender from workflow result {}", restResponse.getBody().getData().getSender());
