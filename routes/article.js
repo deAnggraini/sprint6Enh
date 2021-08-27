@@ -25,10 +25,10 @@ router.post('/keyword', (req, res) => {
     res.send({ error: false, msg: "", data: lastKeyword });
 });
 router.post('/searchArticle', (req, res) => {
-    const { keyword, page, limit, type } = req.body;
+    const { keyword, page, limit, type, structureId } = req.body;
     console.log('search article', { keyword, page });
 
-    if (keyword == 'kosong' || type == "faq") {
+    if (keyword == 'kosong' || type == "faq" || (structureId && structureId != 110)) {
         res.send({
             error: false,
             msg: "",
@@ -392,7 +392,7 @@ router.post('/generateArticle', (req, res) => {
 router.post('/getArticle', (req, res) => {
     const { body } = req;
     console.log({ body });
-    res.send({ error: false, msg: "", data: sample_non_basic });
+    res.send({ error: false, msg: "", data: sample_basic });
 });
 
 router.get('/getContentId', (req, res) => {

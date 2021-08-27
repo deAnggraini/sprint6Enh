@@ -1,6 +1,6 @@
 const sample_empty = {
     id: 100,
-    title: 'Tahapan',
+    title: 'Tahapan Empty',
     desc: '',
     image: '',
     video: '',
@@ -20,12 +20,15 @@ const sample_empty = {
     isEmptyTemplate: true,
     isNew: true,
     isPublished: false,
+    modified_name: 'Putu Sruti Permata Sari',
+    modified_by: 'editor07',
+    modified_date: new Date(),
 };
 
 const sample_basic = {
     id: 100,
     title: 'Tahapan',
-    desc: ``,
+    desc: `a`,
     image: 'a.jpg',
     video: '',
     created_at: new Date(),
@@ -39,7 +42,7 @@ const sample_basic = {
         {
             id: 1,
             title: 'Ketentuan Tahapan',
-            intro: '',
+            intro: 'a',
             parent: 0,
             level: 1,
             sort: 1,
@@ -48,7 +51,7 @@ const sample_basic = {
         {
             id: 2,
             title: 'Prosedur Tahapan',
-            intro: '',
+            intro: 'a',
             parent: 0,
             level: 1,
             sort: 2,
@@ -57,7 +60,7 @@ const sample_basic = {
         {
             id: 3,
             title: 'Formulir Tahapan',
-            intro: '',
+            intro: 'a',
             parent: 0,
             level: 1,
             sort: 2,
@@ -73,9 +76,20 @@ const sample_basic = {
     suggestions: [
         { id: 2, title: "Perihal Ketentuan Tahapan 1", no: "025/SKSE/TL/2020" }
     ],
+    isAdd: false, // belum pernah simpan | kirim, false == sudah pernah simpan / kirim
     isEmptyTemplate: false,
-    isNew: true,
+    isNew: true, // belum pernah send
     isPublished: false,
+    sender: {
+        username: 'admin004',
+        fullname: 'Admin nol nol 4',
+        email: 'admin004@bca.com',
+        firstname: 'Admin',
+        lastname: '',
+    },
+    modified_name: 'Putu Sruti Permata Sari',
+    modified_by: 'editor07',
+    modified_date: new Date(),
 };
 
 const sample_non_basic = {
@@ -369,6 +383,16 @@ const sample_non_basic = {
     isEmptyTemplate: false,
     isNew: false,
     isPublished: false,
+    sender: {
+        username: 'admin004',
+        fullname: 'Admin nol nol 4',
+        email: 'admin004@bca.com',
+        firstname: 'Admin',
+        lastname: '',
+    },
+    modified_name: 'Putu Sruti Permata Sari',
+    modified_by: 'editor07',
+    modified_date: new Date(),
 };
 
 const articles = [
@@ -924,16 +948,17 @@ module.exports.mypages = [
         type: 'article',
         id: 1,
         title: 'Host to Host ERP Integration',
-        location: 'Aplikasi dan Mesin > Aplikasi/Mesin Pendukung Transaksi Nasabah > Aplikasi Mesin Pendukung Transaksi Umum',
+        location: 'Menu Testing digunakan adalah sampai maxlength 01  > Kategori Testing digunakan adalah sampai maxlength > Sub Sub Kategori Bank 1 > Aplikasi dan Mesin > Aplikasi/Mesin Pendukung Transaksi Nasabah > Aplikasi Mesin Pendukung Transaksi Umum',
         modified_date: new Date(),
         modified_by: 'Putri Faizatu',
         approved_date: new Date(),
         approved_by: 'Diandra Amanda',
-        affective_date: new Date(),
+        effective_date: new Date(),
         send_to: 'Yayopriyo Wibowo',
-        current_by: 'Theresa Theodorus, Anita Rachmat',
+        current_by: '',
         state: 'DRAFT',
         isNew: false,
+        receiver:'test1'
 
     },
     {
@@ -945,11 +970,12 @@ module.exports.mypages = [
         modified_by: 'Yayopriyo Wibowo',
         approved_date: new Date(),
         approved_by: 'Diandra Amanda',
-        affective_date: new Date(),
+        effective_date: new Date(),
         send_to: 'Yayopriyo Wibowo',
         current_by: 'Theresa Theodorus, Natasha Debora',
         state: 'DRAFT',
-        isNew: true
+        isNew: true,
+        receiver:'test1'
     },
     {
         type: 'formulir',
@@ -960,11 +986,12 @@ module.exports.mypages = [
         modified_by: 'Anita Rachmat',
         approved_date: new Date(),
         approved_by: 'Diandra Amanda',
-        affective_date: new Date(),
+        effective_date: new Date(),
         send_to: 'Yayopriyo Wibowo',
         current_by: 'Firda Agustriyani',
         state: 'DRAFT',
-        isNew: false
+        isNew: false,
+        receiver:'test1'
     },
     {
         type: 'atribut',
@@ -975,13 +1002,13 @@ module.exports.mypages = [
         modified_by: 'Putu Ayu Sruti Permata Sari',
         approved_date: new Date(),
         approved_by: 'Diandra Amanda',
-        affective_date: new Date(),
+        effective_date: new Date(),
         send_to: 'Yayopriyo Wibowo',
-        current_by: 'Firda Agustriyani, Kemal Batubara, Indah Permata Sari, Andreas Herawan, Thomas Wibisono, John Doe, Amalia..',
+        current_by: 'Firda Agustriyani, Kemal Batubara, Indah Permata Sari, Andreas Herawan, Thomas Wibisono, John Doe, Amalia Lestari Sejahtera Bahagia, Purnama Sempurna Gerhana Maharani',
         state: 'DRAFT',
-        isNew: true
+        isNew: true,
+        receiver:'test1'
     },
-
 
     {
         type: 'article',
@@ -992,12 +1019,12 @@ module.exports.mypages = [
         modified_by: 'Putri Faizatu',
         approved_date: new Date(),
         approved_by: 'Diandra Amanda',
-        affective_date: new Date(),
+        effective_date: new Date(),
         send_to: 'Yayopriyo Wibowo',
         current_by: 'Theresa Theodorus, Anita Rachmat',
         state: 'DRAFT',
         isNew: false,
-
+        receiver:'test1'
     },
     {
         type: 'microinformation',
@@ -1008,11 +1035,12 @@ module.exports.mypages = [
         modified_by: 'Yayopriyo Wibowo',
         approved_date: new Date(),
         approved_by: 'Diandra Amanda',
-        affective_date: new Date(),
+        effective_date: new Date(),
         send_to: 'Yayopriyo Wibowo',
         current_by: 'Theresa Theodorus, Natasha Debora',
         state: 'DRAFT',
-        isNew: true
+        isNew: true,
+        receiver:'test1'
     },
     {
         type: 'formulir',
@@ -1023,11 +1051,12 @@ module.exports.mypages = [
         modified_by: 'Anita Rachmat',
         approved_date: new Date(),
         approved_by: 'Diandra Amanda',
-        affective_date: new Date(),
+        effective_date: new Date(),
         send_to: 'Yayopriyo Wibowo',
         current_by: 'Firda Agustriyani',
         state: 'DRAFT',
-        isNew: false
+        isNew: false,
+        receiver:'test1'
     },
     {
         type: 'atribut',
@@ -1038,11 +1067,12 @@ module.exports.mypages = [
         modified_by: 'Putu Ayu Sruti Permata Sari',
         approved_date: new Date(),
         approved_by: 'Diandra Amanda',
-        affective_date: new Date(),
+        effective_date: new Date(),
         send_to: 'Yayopriyo Wibowo',
         current_by: 'Firda Agustriyani, Kemal Batubara, Indah Permata Sari, Andreas Herawan, Thomas Wibisono, John Doe, Amalia..',
         state: 'DRAFT',
-        isNew: true
+        isNew: true,
+        receiver:'test1'
     }
 ]
 
@@ -1062,7 +1092,8 @@ module.exports.notification = {
             date: new Date(),
             by: '',
             title: 'PAKAR Info',
-            desc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+            desc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+            // refId: 123,
         },
         {
             id: 2,
@@ -1072,17 +1103,19 @@ module.exports.notification = {
             date: new Date(),
             by: 'Thalia Sari Landi',
             title: 'Tahapan',
-            desc: 'Artikel Tahapan yang sedang kamu ubah sudah rilis versi terbaru. Segera sesuaikan dengan versi terbaru.'
+            desc: 'Artikel Tahapan yang sedang kamu ubah sudah rilis versi terbaru. Segera sesuaikan dengan versi terbaru.',
+            refId: '123', // tambahan untuk click per row item
         },
         {
             id: 3,
-            status: 'terima',
+            status: 'terima', // save & send
             type: 'Artikel',
-            isRead: true,
+            isRead: false,
             date: new Date(),
             by: 'Stacia Marella',
             title: 'Joint Account',
-            desc: 'Mohon review atas pembuatan Virtual Page.' // sendNote
+            desc: '[PIC] telah melakukan [STATUS] dengan pesan : Mohon review atas pembuatan Virtual Page.', // sendNote
+            refId: '123',
         },
         {
             id: 4,
@@ -1092,17 +1125,20 @@ module.exports.notification = {
             date: new Date(),
             by: 'Shinta Dewi',
             title: 'Time Loan',
-            desc: 'Perubahan PAKAR Time Loan telah disetujui.'
+            desc: 'Perubahan PAKAR Time Loan telah disetujui.',
+            refId: '123',
         },
         {
             id: 5,
-            status: 'edit',
+            status: 'ubah', // [tambah | ubah | hapus] <--- penerima melakukan simpan article, kirim notif ke pengirim
             type: 'Artikel',
-            isRead: true,
+            isRead: false,
             date: new Date(),
             by: 'Ni Luh Gede Sri Fajaryani',
             title: 'BCA Mobile',
-            desc: 'Terdapat editor baru yang melakukan perubahan pada artikel yang sama. Pastikan kamu melakukan perubahan di versi paling baru.'
+            desc: 'Terdapat editor baru yang melakukan perubahan pada artikel yang sama. Pastikan kamu melakukan perubahan di versi paling baru.',
+            // format desc "[NAMA PIC] telah melakukan [Status] dengan pesan berikut ini: [pesan editor]"
+            refId: '123',
         }
     ]
 }
