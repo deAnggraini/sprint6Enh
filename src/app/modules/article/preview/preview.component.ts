@@ -330,14 +330,15 @@ export class PreviewComponent implements OnInit, AfterViewInit, OnDestroy {
     if (image) {
       if (typeof (image) == "string") { // image string artinya sudah diupload
         this.imageSrc = `${environment.backend_img}/${image}`;
+        this.imageTitle = image.split(".")[0];
       } else { // image bukan string, kemungkinan object file
         const reader = new FileReader();
         reader.readAsDataURL(image);
         reader.onload = () => {
           this.imageSrc = reader.result as string;
         };
+        this.imageTitle = image.name?.split(".")[0];
       }
-      this.imageTitle = image.name?.split(".")[0];
     } else {
       this.imageSrc = this.backend_img + '/articles/artikel-no-image.jpg';
       this.imageTitle = "Ini adalah judul dari infografis"
