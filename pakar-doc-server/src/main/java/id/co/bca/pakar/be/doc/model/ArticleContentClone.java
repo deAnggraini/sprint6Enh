@@ -9,7 +9,7 @@ public class ArticleContentClone extends CommonArticleContent {
     @Column(name = "id")
     private Long id = 0L;
 
-    @Version
+//    @Version
     @Column(name = "optlock", columnDefinition = "integer DEFAULT 0", nullable = false)
     private Long version;
 
