@@ -103,6 +103,7 @@ export class MyPagesComponent implements OnInit, OnDestroy {
     },
     sendNote: ''
   }
+  idSelected: number
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -283,6 +284,7 @@ export class MyPagesComponent implements OnInit, OnDestroy {
     }).then((confirmed) => {
       if (confirmed === true) {
         if (item.isPublished) {
+          this.idSelected = item.id
           this.modalService.open(this.formConfirmDelete);
           return
         }
@@ -304,7 +306,7 @@ export class MyPagesComponent implements OnInit, OnDestroy {
     }).then((confirmed) => {
       if (confirmed === true) {
         this.subscriptions.push(
-          this.articleService.cancelArticle(item.id).subscribe(resp => {
+          this.articleService.cancelEditArticle({ id: item.id, username: this.getUsername() }).subscribe(resp => {
             if (resp) this.onRefreshTable();
           })
         );
@@ -357,7 +359,16 @@ export class MyPagesComponent implements OnInit, OnDestroy {
   }
 
   onCancelApprover(e) {
-
+    let body = { id: this.idSelected, isHasSend: true, sendTo: this.delete.sendTo, sendNote: this.delete.sendNote }
+    this.subscriptions.push(
+      this.articleService.deleteArticle(body).subscribe(resp => {
+        if (resp) {
+          this.modalService.dismissAll();
+          this.onRefreshTable();
+        }
+      })
+    )
+    return false;
   }
 
   showErrorModal(title: string, message: string) {

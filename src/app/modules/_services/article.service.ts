@@ -153,6 +153,14 @@ export class ArticleService {
     return this.apiService.post(`${this._base_url}/cancelArticle`, { id });
   }
 
+  deleteArticle(body) {
+    return this.apiService.post(`${this._base_url}/deletelArticle`, body);
+  }
+
+  cancelEditArticle(body) {
+    return this.apiService.post(`${this._base_url}/cancelEditArticle`, body);
+  }
+
   cancelSend(id: number, receiver: string) {
     return this.apiService.post(`${this._base_url}/cancelSendArticle`, { id, receiver });
   }
