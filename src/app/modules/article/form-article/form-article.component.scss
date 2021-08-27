@@ -45,12 +45,32 @@ $acc-child-margin: 10px;
   .custom-file-label.hasError {
     border: 1px solid red;
   }
+
+  .custom-file-label {
+    border: 1px solid #c8c6c4;
+  }
 }
 
 :host ::ng-deep {
   .content {
     p {
       margin-bottom: 0;
+    }
+  }
+
+  input {
+    border: 1px solid #c8c6c4;
+  }
+
+  pakar-input-length {
+    .input-with-length {
+      border: 1px solid #c8c6c4;
+    }
+  }
+
+  pakar-combo-box-accordion {
+    .combo-box {
+      border: 1px solid #c8c6c4;
     }
   }
 }
@@ -68,41 +88,41 @@ $acc-child-margin: 10px;
   text-align: center;
 
   &.ak-other {
-    border: 1px solid #A19F9D;
+    border: 1px solid #a19f9d;
     background-color: white;
     color: black;
   }
 
   &.ak-1 {
-    background-color: #0B6A0B;
+    background-color: #0b6a0b;
   }
 
   &.ak-2 {
-    background-color: #8C95E9;
+    background-color: #8c95e9;
   }
 
   &.ak-3 {
-    background-color: #1DBFB6;
+    background-color: #1dbfb6;
   }
 
   &.ak-4 {
-    background-color: #D17F2D;
+    background-color: #d17f2d;
   }
 
   &.ak-5 {
-    background-color: #87009D;
+    background-color: #87009d;
   }
 
   &.ak-6 {
-    background-color: #0C30AF;
+    background-color: #0c30af;
   }
 
   &.ak-7 {
-    background-color: #5FBD00;
+    background-color: #5fbd00;
   }
 
   &.ak-8 {
-    background-color: #8B0D0D;
+    background-color: #8b0d0d;
   }
 }
 
