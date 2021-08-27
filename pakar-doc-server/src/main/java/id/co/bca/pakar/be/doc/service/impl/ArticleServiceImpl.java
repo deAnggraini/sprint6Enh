@@ -2003,7 +2003,7 @@ public class ArticleServiceImpl implements ArticleService {
             , DataNotFoundException.class})
     public Boolean cancelEditArticle(String token, String username, RequestCancelEditDto reqCancelDto) throws Exception {
         try {
-            logger.info("process cancel Edit article");
+            logger.info("process Batal Ubah Article");
             ArticleVersion lastVersion = null;
 
             // get user profile from oauth server
@@ -2032,7 +2032,7 @@ public class ArticleServiceImpl implements ArticleService {
             logger.info("content clone on batal ubah "+ contentClones);
             articleContentCloneRepository.deleteAll(contentClones);
 
-            return true;
+            return Boolean.TRUE;
         } catch (OauthApiClientException e) {
             logger.error("fail to call Oauth ", e);
             throw new Exception("Data Not Found", e);
