@@ -72,9 +72,9 @@ export class MyPagesComponent implements OnInit, OnDestroy {
 
   subscriptions: Subscription[] = [];
   dataForm: FormBean = JSON.parse(JSON.stringify(EMPTY_FORM_BEAN));
-  activeId: number = 2;
-  listHeader: string[] = ['approved', 'pending', 'draft'];
-  listStatus: string[] = ['PUBLISHED', 'PENDING', 'DRAFT'];
+  activeId: number = 0;
+  listHeader: string[] = ['draft', 'pending', 'approved'];
+  listStatus: string[] = ['DRAFT', 'PENDING', 'PUBLISHED'];
 
   // table
   tableHeader = {
