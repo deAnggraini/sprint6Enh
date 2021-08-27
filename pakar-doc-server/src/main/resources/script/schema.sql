@@ -22,3 +22,6 @@ LEFT JOIN public.t_article_state tas ON tas.article_id = ta.id
 ORDER BY ta.id
 desc
 ;
+
+--- DROP NOT NULL
+ALTER TABLE public.t_article_content_clone ALTER COLUMN optlock DROP NOT NULL;

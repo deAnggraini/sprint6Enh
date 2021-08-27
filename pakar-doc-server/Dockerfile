@@ -12,7 +12,7 @@ ENV APP_FILE pakar-doc-server.jar
 
 COPY application.yml /config/application.yml
 COPY log4j2.xml /config/log4j2.xml
-COPY messages.properties.yml messages.properties
+COPY messages.properties messages.properties
 COPY messages_en.properties messages_en.properties
 EXPOSE 12082
 

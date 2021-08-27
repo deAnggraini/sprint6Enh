@@ -901,7 +901,8 @@ public class ArticleServiceImpl implements ArticleService {
             save article to article version
              */
             logger.info("save to article version");
-            ArticleVersion av = articleVersionService.saveArticle(article);
+            Boolean isReleased = article.getArticleState().equalsIgnoreCase(PUBLISHED) ? Boolean.TRUE : Boolean.FALSE;
+            ArticleVersion av = articleVersionService.saveArticle(article, isReleased);
             if (av == null) {
                 logger.error("could not save article version");
                 throw new SavingArticleVersionException("could not save article version");

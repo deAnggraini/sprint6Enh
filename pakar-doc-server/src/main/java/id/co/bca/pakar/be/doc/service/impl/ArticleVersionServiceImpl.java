@@ -35,10 +35,10 @@ public class ArticleVersionServiceImpl implements ArticleVersionService {
 
     @Override
     @Transactional(rollbackFor = {Exception.class, SavingArticleVersionException.class})
-    public ArticleVersion saveArticle(Article article) throws Exception {
+    public ArticleVersion saveArticle(Article article, Boolean isReleased) throws Exception {
         try {
             logger.info("save to article version");
-            ArticleVersion av = new ArticleVersionHelper().populateArticleVersion(article);
+            ArticleVersion av = new ArticleVersionHelper().populateArticleVersion(article, isReleased);
             List<ArticleContentVersion> articleContentVersions = new ArticleVersionHelper().populateArticleContentVersion(article.getArticleContents(), av);
             av.setArticleContents(articleContentVersions);
             av = articleVersionRepository.save(av);
@@ -104,7 +104,7 @@ public class ArticleVersionServiceImpl implements ArticleVersionService {
      * helper class for article version
      */
     private class ArticleVersionHelper {
-        ArticleVersion populateArticleVersion(Article article) {
+        ArticleVersion populateArticleVersion(Article article, Boolean isReleased) {
             logger.info("populate article to article version");
             ArticleVersion articleVersion = new ArticleVersion();
             articleVersion.setArticleId(article.getId());
@@ -119,8 +119,14 @@ public class ArticleVersionServiceImpl implements ArticleVersionService {
             articleVersion.setArticleTemplate(article.getArticleTemplate());
             articleVersion.setStructure(article.getStructure().getId());
             articleVersion.setVideoLink(article.getVideoLink());
-            articleVersion.setReleaseVersion(UUID.randomUUID().toString());
-            articleVersion.setTimeStampVersion(new Date());
+
+            if(isReleased.booleanValue()) {
+                articleVersion.setReleaseVersion(UUID.randomUUID().toString());
+            }
+
+            if(!isReleased.booleanValue())
+                articleVersion.setTimeStampVersion(new Date());
+            articleVersion.setUsername(article.getModifyBy());
             return articleVersion;
         }
 
