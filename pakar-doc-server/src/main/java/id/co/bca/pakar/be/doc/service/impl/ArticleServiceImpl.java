@@ -2019,6 +2019,13 @@ public class ArticleServiceImpl implements ArticleService {
                 throw new DataNotFoundException("Not found last version article");
             }
             articleVersionRepository.delete(lastVersion);
+
+            // delete status editor
+            ArticleEdit articleEdit = null;
+            articleEdit = articleEditRepository.findByUsername(reqCancelDto.getId(), reqCancelDto.getUsername());
+
+            articleEditRepository.delete(articleEdit);
+
             return true;
         } catch (OauthApiClientException e) {
             logger.error("fail to call Oauth ", e);
