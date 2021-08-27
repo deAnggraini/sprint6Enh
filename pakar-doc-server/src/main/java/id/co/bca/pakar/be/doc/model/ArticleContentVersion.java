@@ -14,8 +14,9 @@ public class ArticleContentVersion extends CommonArticleContent {
     @Column(name = "origin_article_content_id")
     private Long originArticleContentId;
 
-    @Version
-    @Column(name = "optlock", columnDefinition = "integer DEFAULT 0", nullable = false)
+//    @Version
+//    @Column(name = "optlock", columnDefinition = "integer DEFAULT 0", nullable = false)
+    @Column(name = "optlock", columnDefinition = "integer DEFAULT 0")
     private Long version;
 
     @ManyToOne
