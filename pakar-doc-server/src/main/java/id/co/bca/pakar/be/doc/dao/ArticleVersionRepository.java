@@ -91,5 +91,4 @@ public interface ArticleVersionRepository extends CrudRepository<ArticleVersion,
             "ORDER BY m.timeStampVersion " +
             "DESC ")
     ArticleVersion findLastTimeStampByFnModifier(@Param("articleId") Long articleId, @Param("username") String username);
-
 }
