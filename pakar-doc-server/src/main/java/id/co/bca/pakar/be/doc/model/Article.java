@@ -13,7 +13,6 @@ public class Article extends EntityBase {
     @Column(name = "id")
     private Long id;
 
-//    @Version
     @Column(name = "optlock", columnDefinition = "integer DEFAULT 0")
     private Long version;
 
@@ -180,11 +179,11 @@ public class Article extends EntityBase {
         isPublished = published;
     }
 
-    public Boolean getAdd() {
+    public Boolean getIsAdd() {
         return isAdd;
     }
 
-    public void setAdd(Boolean add) {
+    public void setIsAdd(Boolean add) {
         isAdd = add;
     }
 }

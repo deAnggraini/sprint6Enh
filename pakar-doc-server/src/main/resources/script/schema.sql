@@ -27,5 +27,12 @@ desc
 ALTER TABLE public.t_article_content_clone ALTER COLUMN optlock DROP NOT NULL;
 
 ALTER TABLE public.t_article_version ALTER COLUMN optlock DROP NOT NULL;
+ALTER TABLE public.t_article_content ALTER COLUMN id TYPE varchar USING id::varchar;
 
 ALTER TABLE public.t_article_content_version ALTER COLUMN optlock DROP NOT NULL;
+ALTER TABLE public.t_article_content_version ALTER COLUMN id TYPE varchar USING id::varchar;
+ALTER TABLE public.t_article_content_version DROP CONSTRAINT fkr5h9iy8eem78l9fu0fdxlmcrq;
+
+ALTER TABLE public.t_article ALTER COLUMN optlock DROP NOT NULL;
+
+ALTER TABLE public.t_article_content ALTER COLUMN optlock DROP NOT NULL;

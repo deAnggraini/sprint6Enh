@@ -15,7 +15,6 @@ import id.co.bca.pakar.be.doc.service.ArticleService;
 import id.co.bca.pakar.be.doc.service.ArticleVersionService;
 import id.co.bca.pakar.be.doc.util.FileUploadUtil;
 import id.co.bca.pakar.be.doc.util.TreeArticleContents;
-import org.apache.catalina.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -480,7 +479,7 @@ public class ArticleServiceImpl implements ArticleService {
             articleDto.setVideoLink(article.getVideoLink());
             articleDto.setPublished(article.getPublished());
             articleDto.setNew(article.getNewArticle());
-            articleDto.setIsAdd(article.getAdd());
+            articleDto.setIsAdd(article.getIsAdd());
 
             // get user profile from oauth server
             ResponseEntity<ApiResponseWrapper.RestResponse<List<UserProfileDto>>> restResponseUp = null;
@@ -703,10 +702,13 @@ public class ArticleServiceImpl implements ArticleService {
 
             String currentState = article.getArticleState();
 
+            /**
+             * initialize article state
+             */
             ArticleState articleState = null;
 
             // call to workflow server to set draft, if sendto <> null
-            if (article.getNewArticle().booleanValue()) {
+            if (article.getIsAdd().booleanValue()) {
                 logger.info("save draft article using article id {}", article.getId());
 
                 UserWrapperDto userWrapperDto = new UserWrapperDto();
@@ -760,12 +762,12 @@ public class ArticleServiceImpl implements ArticleService {
                 }
             }
 
-            if (articleState == null) {
-                if (article.getNewArticle().booleanValue())
-                    articleState = articleStateRepository.findByArticleId(article.getId());
-                else
-                    articleState = articleStateRepository.findByArticleIdAndReceiver(article.getId(), articleDto.getUsername());
-            }
+//            if (articleState == null) {
+////                if (article.getIsAdd().booleanValue())
+//                articleState = articleStateRepository.findByArticleId(article.getId());
+////                else
+////                    articleState = articleStateRepository.findByArticleIdAndReceiver(article.getId(), articleDto.getUsername());
+//            }
 
             if (articleDto.getIsHasSend().booleanValue()) {
                 // send to
@@ -809,6 +811,10 @@ public class ArticleServiceImpl implements ArticleService {
                     article.setArticleState(currentState);
                 }
 
+                /*
+                get article state from system
+                 */
+                articleState = articleStateRepository.findByArticleId(article.getId());
                 articleState.setCreatedBy(articleDto.getUsername());
                 articleState.setSender(restResponse.getBody().getData().getSender());
                 logger.debug("sender from workflow result {}", restResponse.getBody().getData().getSender());
@@ -871,7 +877,7 @@ public class ArticleServiceImpl implements ArticleService {
             }
 
             // set state
-            article.setAdd(Boolean.FALSE);
+            article.setIsAdd(Boolean.FALSE);
             article.setFullNameModifier(restResponse.getBody() != null ? restResponse.getBody().getData().getFullname() : "");
             article.setModifyBy(articleDto.getUsername());
             article.setModifyDate(new Date());
@@ -880,27 +886,6 @@ public class ArticleServiceImpl implements ArticleService {
             article.setJudulArticle(articleDto.getTitle());
             article = articleRepository.save(article);
 
-//            /*
-//            send to notification to sender article
-//             */
-//            logger.debug("username {} and receiver {}", articleDto.getUsername(), articleState.getReceiver());
-//            if (articleDto.getUsername().equalsIgnoreCase(articleState.getReceiver())) {
-//                // send notification to sender
-//                logger.info("send notification to sender article {} from receiver {}", articleState.getSender(), articleState.getReceiver());
-//                ArticleNotification articleNotification = new ArticleNotification();
-//                articleNotification.setCreatedBy(articleDto.getUsername());
-//                articleNotification.setArticle(article);
-//                articleNotification.setNotifDate(new Date());
-//                String sendNote = messageSource.getMessage("article.notification.template"
-//                        , new Object[]{articleState.getFnReceiver(), Constant.Notification.EDIT_STATUS, articleDto.getSendNote() != null ? articleDto.getSendNote() : ""}, null);
-//                articleNotification.setSendNote(sendNote);
-//                articleNotification.setSender(articleState.getReceiver());
-//                articleNotification.setReceiver(articleState.getSender());
-//                articleNotification.setStatus("Terima");
-//                articleNotification.setDocumentType("Artikel");
-//
-//                articleNotificationRepository.save(articleNotification);
-//            }
             /*
             save article to article version
              */
@@ -1855,10 +1840,14 @@ public class ArticleServiceImpl implements ArticleService {
         try {
             logger.info("find users that editing article id {}", articleId);
             List<ArticleEdit> articleEdits = articleEditRepository.findArticleInEditingStatus(articleId);
-            if (articleEdits == null)
-                throw new NotFoundUserArticleEditingException("no user found that editing article id {}");
-            if (articleEdits.isEmpty())
-                throw new NotFoundUserArticleEditingException("no user found that editing article id {}");
+            if (articleEdits == null) {
+//                throw new NotFoundUserArticleEditingException("no user found that editing article id {}");
+                return new ArrayList<UserArticleEditingDto>();
+            }
+            if (articleEdits.isEmpty()) {
+//                throw new NotFoundUserArticleEditingException("no user found that editing article id {}");
+                return new ArrayList<UserArticleEditingDto>();
+            }
 
             List<String> userList = new ArrayList<>();
             articleEdits.forEach(e -> userList.add(e.getUsername()));
@@ -1884,9 +1873,6 @@ public class ArticleServiceImpl implements ArticleService {
                 userArticleEditingDtos.add(dto_);
             });
             return userArticleEditingDtos;
-        } catch (NotFoundUserArticleEditingException e) {
-            logger.error("exception", e);
-            throw new NotFoundUserArticleEditingException("exception", e);
         } catch (OauthApiClientException e) {
             logger.error("exception", e);
             throw new OauthApiClientException("exception", e);
@@ -2016,31 +2002,31 @@ public class ArticleServiceImpl implements ArticleService {
             lastVersion = articleVersionRepository.findLastTimeStampByFnModifier(reqCancelDto.getId(), restResponseUp.getBody().getData().get(0).getFullname());
 
 //            lastVersion = articleVersionRepository.findLastTimeStampByUsername(reqCancelDto.getId(), reqCancelDto.getUsername());
-            if(lastVersion == null) {
+            if (lastVersion == null) {
                 throw new DataNotFoundException("Not found last version article");
             }
-            logger.info("last version batal ubah "+ lastVersion);
+            logger.info("last version batal ubah " + lastVersion);
             articleVersionRepository.delete(lastVersion);
 
             // delete status editor
             ArticleEdit articleEdit = null;
             articleEdit = articleEditRepository.findByUsername(reqCancelDto.getId(), reqCancelDto.getUsername());
-            logger.info("article edit on batal ubah "+ articleEdit);
+            logger.info("article edit on batal ubah " + articleEdit);
             articleEditRepository.delete(articleEdit);
 
             // delete content clone for user
             Iterable<ArticleContentClone> contentClones = articleContentCloneRepository.findsByArticleId(reqCancelDto.getId(), reqCancelDto.getUsername());
-            logger.info("content clone on batal ubah "+ contentClones);
+            logger.info("content clone on batal ubah " + contentClones);
             articleContentCloneRepository.deleteAll(contentClones);
 
             return Boolean.TRUE;
         } catch (OauthApiClientException e) {
             logger.error("fail to call Oauth ", e);
             throw new Exception("Data Not Found", e);
-        }catch (DataNotFoundException e) {
+        } catch (DataNotFoundException e) {
             logger.error("Data Not Found", e);
             throw new Exception("Data Not Found", e);
-        }catch (Exception e) {
+        } catch (Exception e) {
             logger.error("exception", e);
             throw new Exception("exception", e);
         }
