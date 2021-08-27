@@ -30,7 +30,8 @@ public class AppConfig {
 	@Bean
 	public MessageSource messageSource() {
 		ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-		messageSource.setBasename("file:messages");
+		messageSource.setBasename("classpath:messages");
+//		messageSource.setBasename("file:messages");
 		messageSource.setCacheSeconds(10); //reload messages every 10 seconds
 		return messageSource;
 	}
