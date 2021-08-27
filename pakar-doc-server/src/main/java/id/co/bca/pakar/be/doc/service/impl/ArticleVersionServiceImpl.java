@@ -127,6 +127,7 @@ public class ArticleVersionServiceImpl implements ArticleVersionService {
             if(!isReleased.booleanValue())
                 articleVersion.setTimeStampVersion(new Date());
             articleVersion.setUsername(article.getModifyBy());
+            articleVersion.setPublished(article.getPublished());
             return articleVersion;
         }
 
