@@ -84,6 +84,8 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
         'outdent',
         'indent',
         'findAndReplace',
+        // '|',
+        // 'Mathtype',
         '|',
         'link',
         'imageUpload',
@@ -124,7 +126,358 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
       options: [11, 13, 16, 18],
       supportAllValues: false
     },
-    wordCount: { maxLimit: 1000 }
+    wordCount: { maxLimit: 1000 },
+    fontColor: {
+      colors: [
+        {
+          color: 'hsl(0, 0%, 100%)',
+          label: 'Putih',
+          hasBorder: true
+        },
+        {
+          color: 'hsl(0, 0%, 0%)',
+          label: 'Hitam'
+        },
+        {
+          color: 'hsl(0, 0%, 90%)',
+          label: 'Abu - Abu Muda'
+        },
+        {
+          color: 'hsl(215, 22%, 34%)',
+          label: 'Biru Abu - Abu'
+        },
+        {
+          color: 'hsl(218, 52%, 52%)',
+          label: 'Biru, Aksen 1'
+        },
+        {
+          color: 'hsl(24, 84%, 56%)',
+          label: 'Oranye, Aksen 2'
+        },
+        {
+          color: 'hsl(0, 0%, 65%)',
+          label: 'Abu - Abu, Aksen 3'
+        },
+        {
+          color: 'hsl(45, 100%, 50%)',
+          label: 'Emas, Aksen 4'
+        },
+        {
+          color: 'hsl(209, 59%, 60%)',
+          label: 'Biru, Aksen 5'
+        },
+        {
+          color: 'hsl(96, 42%, 48%)',
+          label: 'Hijau, Aksen 6'
+        },
+        {
+          color: 'hsl(0, 0%, 93%)',
+          label: 'Putih, Lebih Gelap 5%'
+        },
+        {
+          color: 'hsl(0, 0%, 50%)',
+          label: 'Hitam, Lebih Terang 50%'
+        },
+        {
+          color: 'hsl(0, 2%, 81%)',
+          label: 'Abu - Abu Muda, Lebih Gelap 10%'
+        },
+        {
+          color: 'hsl(214, 21%, 87%)',
+          label: 'Biru Abu - Abu, Lebih Terang 80%'
+        },
+        {
+          color: 'hsl(219, 52%, 90%)',
+          label: 'Biru, Aksen 1, Lebh Terang 80%'
+        },
+        {
+          color: 'hsl(25, 83%, 91%)',
+          label: 'Oranye, Aksen 2, Lebih Terang 80%'
+        },
+        {
+          color: 'hsl(0, 0%, 92%)',
+          label: 'Abu - Abu, Aksen 3, Lebih Terang 80%'
+        },
+        {
+          color: 'hsl(45, 100%, 90%)',
+          label: 'Emas, Aksen 4, Lebih Terang 80%'
+        },
+        {
+          color: 'hsl(208, 57%, 92%)',
+          label: 'Biru, Aksen 5, Lebih Terang 80%'
+        },
+        {
+          color: 'hsl(95, 41%, 89%)',
+          label: 'Hijau, Aksen 6, Lebih Terang 80%'
+        },
+        {
+          color: 'hsl(0, 0%, 85%)',
+          label: 'Putih, Lebih Gelap 15%'
+        },
+        {
+          color: 'hsl(0, 0%, 35%)',
+          label: 'Hitam, Lebih Terang 35%'
+        },
+        {
+          color: 'hsl(0, 2%, 68%)',
+          label: 'Abu - Abu Muda, Lebih Gelap 25%'
+        },
+        {
+          color: 'hsl(215, 21%, 74%)',
+          label: 'Biru Abu - Abu, Lebih Terang 60%'
+        },
+        {
+          color: 'hsl(219, 52%, 81%)',
+          label: 'Biru, Aksen 1, Lebh Terang 60%'
+        },
+        {
+          color: 'hsl(25, 82%, 82%)',
+          label: 'Oranye, Aksen 2, Lebih Terang 60%'
+        },
+        {
+          color: 'hsl(0, 0%, 86%)',
+          label: 'Abu - Abu, Aksen 3, Lebih Terang 60%'
+        },
+        {
+          color: 'hsl(45, 98%, 80%)',
+          label: 'Emas, Aksen 4, Lebih Terang 60%'
+        },
+        {
+          color: 'hsl(208, 59%, 84%)',
+          label: 'Biru, Aksen 5, Lebih Terang 60%'
+        },
+        {
+          color: 'hsl(96, 42%, 79%)',
+          label: 'Hijau, Aksen 6, Lebih Terang 60%'
+        },
+        {
+          color: 'hsl(0, 0%, 75%)',
+          label: 'Putih, Lebih Gelap 25%'
+        },
+        {
+          color: 'hsl(0, 0%, 25%)',
+          label: 'Hitam, Lebih Terang 25%'
+        },
+        {
+          color: 'hsl(0, 2%, 45%)',
+          label: 'Abu - Abu Muda, Lebih Gelap 50%'
+        },
+        {
+          color: 'hsl(215, 22%, 60%)',
+          label: 'Biru Abu - Abu, Lebih Terang 40%'
+        },
+        {
+          color: 'hsl(218, 52%, 71%)',
+          label: 'Biru, Aksen 1, Lebh Terang 40%'
+        },
+        {
+          color: 'hsl(24, 84%, 74%)',
+          label: 'Oranye, Aksen 2, Lebih Terang 40%'
+        },
+        {
+          color: 'hsl(0, 0%, 79%)',
+          label: 'Abu - Abu, Aksen 3, Lebih Terang 40%'
+        },
+        {
+          color: 'hsl(45, 100%, 70%)',
+          label: 'Emas, Aksen 4, Lebih Terang 40%'
+        },
+        {
+          color: 'hsl(208, 58%, 75%)',
+          label: 'Biru, Aksen 5, Lebih Terang 40%'
+        },
+        {
+          color: 'hsl(96, 42%, 68%)',
+          label: 'Hijau, Aksen 6, Lebih Terang 40%'
+        },
+        {
+          color: 'hsl(0, 0%, 65%)',
+          label: 'Putih, Lebih Gelap 35%'
+        },
+        {
+          color: 'hsl(0, 0%, 15%)',
+          label: 'Hitam, Lebih Terang 15%'
+        },
+        {
+          color: 'hsl(0, 2%, 22%)',
+          label: 'Abu - Abu Muda, Lebih Gelap 75%'
+        },
+        {
+          color: 'hsl(213, 22%, 25%)',
+          label: 'Biru Abu - Abu, Lebih Gelap 25%'
+        },
+        {
+          color: 'hsl(218, 52%, 39%)',
+          label: 'Biru, Aksen 1, Lebh Gelap 25%'
+        },
+        {
+          color: 'hsl(24, 84%, 42%)',
+          label: 'Oranye, Aksen 2, Lebih Gelap 25%'
+        },
+        {
+          color: 'hsl(0, 0%, 48%)',
+          label: 'Abu - Abu, Aksen 3, Lebih Gelap 25%'
+        },
+        {
+          color: 'hsl(45, 100%, 37%)',
+          label: 'Emas, Aksen 4, Lebih Gelap 25%'
+        },
+        {
+          color: 'hsl(208, 59%, 45%)',
+          label: 'Biru, Aksen 5, Lebih Gelap 25%'
+        },
+        {
+          color: 'hsl(96, 42%, 36%)',
+          label: 'Hijau, Aksen 6, Lebih Gelap 25%'
+        },
+        {
+          color: 'hsl(0, 0%, 50%)',
+          label: 'Putih, Lebih Gelap 50%'
+        },
+        {
+          color: 'hsl(0, 0%, 5%)',
+          label: 'Hitam, Lebih Terang 5%'
+        },
+        {
+          color: 'hsl(0, 2%, 9%)',
+          label: 'Abu - Abu Muda, Lebih Gelap 90%'
+        },
+        {
+          color: 'hsl(215, 22%, 17%)',
+          label: 'Biru Abu - Abu, Lebih Gelap 50%'
+        },
+        {
+          color: 'hsl(218, 53%, 26%)',
+          label: 'Biru, Aksen 1, Lebh Gelap 50%'
+        },
+        {
+          color: 'hsl(25, 85%, 28%)',
+          label: 'Oranye, Aksen 2, Lebih Gelap 50%'
+        },
+        {
+          color: 'hsl(0, 0%, 32%)',
+          label: 'Abu - Abu, Aksen 3, Lebih Gelap 50%'
+        },
+        {
+          color: 'hsl(45, 100%, 25%)',
+          label: 'Emas, Aksen 4, Lebih Gelap 50%'
+        },
+        {
+          color: 'hsl(208, 60%, 30%)',
+          label: 'Biru, Aksen 5, Lebih Gelap 50%'
+        },
+        {
+          color: 'hsl(96, 42%, 24%)',
+          label: 'Hijau, Aksen 6, Lebih Gelap 50%'
+        },
+        {
+          color: 'hsl(0, 100%, 38%)',
+          label: 'Merah Tua'
+        },
+        {
+          color: 'hsl(0, 100%, 50%)',
+          label: 'Merah'
+        },
+        {
+          color: 'hsl(45, 100%, 50%)',
+          label: 'Oranye'
+        },
+        {
+          color: 'hsl(60, 100%, 50%)',
+          label: 'Kuning'
+        },
+        {
+          color: 'hsl(89, 58%, 56%)',
+          label: 'Hijau Muda'
+        },
+        {
+          color: 'hsl(147, 100%, 35%)',
+          label: 'Hijau'
+        },
+        {
+          color: 'hsl(196, 100%, 47%)',
+          label: 'Biru Muda'
+        },
+        {
+          color: 'hsl(205, 100%, 38%)',
+          label: 'Biru'
+        },
+        {
+          color: 'hsl(220, 100%, 19%)',
+          label: 'Biru Tua'
+        },
+        {
+          color: 'hsl(274, 54%, 41%)',
+          label: 'Ungu'
+        }
+      ],
+      columns: 10
+    },
+    fontBackgroundColor: {
+      colors: [
+        {
+          color: 'hsl(60, 100%, 50%)',
+          label: 'Kuning'
+        },
+        {
+          color: 'hsl(120, 100%, 50%)',
+          label: 'Hijau Cerah'
+        },
+        {
+          color: 'hsl(180, 100%, 50%)',
+          label: 'Biru Kehijauan'
+        },
+        {
+          color: 'hsl(300, 100%, 50%)',
+          label: 'Merah Muda'
+        },
+        {
+          color: 'hsl(240, 100%, 50%)',
+          label: 'Biru'
+        },
+        {
+          color: 'hsl(0, 100%, 50%)',
+          label: 'Merah'
+        },
+        {
+          color: 'hsl(240, 100%, 25%)',
+          label: 'Biru Tua'
+        },
+        {
+          color: 'hsl(180, 100%, 25%)',
+          label: 'Hijau Kebiruan'
+        },
+        {
+          color: 'hsl(120, 100%, 25%)',
+          label: 'Hijau'
+        },
+        {
+          color: 'hsl(300, 100%, 25%)',
+          label: 'Lembayung'
+        },
+        {
+          color: 'hsl(0, 100%, 25%)',
+          label: 'Merah Tua'
+        },
+        {
+          color: 'hsl(60, 100%, 25%)',
+          label: 'Kuning Tua'
+        },
+        {
+          color: 'hsl(0, 0%, 50%)',
+          label: 'Abu - abu 50%'
+        },
+        {
+          color: 'hsl(0, 0%, 75%)',
+          label: 'Abu - abu 255'
+        },
+        {
+          color: 'hsl(0, 0%, 0%)',
+          label: 'Hitam'
+        },
+      ],
+      columns: 5
+    }
   };
 
   configTopic = {
@@ -194,7 +547,358 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
       options: [11, 13, 16, 18],
       supportAllValues: false
     },
-    placeholder: 'Masukkan kalimat pengantar terkait Ketentuan disini.'
+    placeholder: 'Masukkan kalimat pengantar terkait Ketentuan disini.',
+    fontColor: {
+      colors: [
+        {
+          color: 'hsl(0, 0%, 100%)',
+          label: 'Putih',
+          hasBorder: true
+        },
+        {
+          color: 'hsl(0, 0%, 0%)',
+          label: 'Hitam'
+        },
+        {
+          color: 'hsl(0, 0%, 90%)',
+          label: 'Abu - Abu Muda'
+        },
+        {
+          color: 'hsl(215, 22%, 34%)',
+          label: 'Biru Abu - Abu'
+        },
+        {
+          color: 'hsl(218, 52%, 52%)',
+          label: 'Biru, Aksen 1'
+        },
+        {
+          color: 'hsl(24, 84%, 56%)',
+          label: 'Oranye, Aksen 2'
+        },
+        {
+          color: 'hsl(0, 0%, 65%)',
+          label: 'Abu - Abu, Aksen 3'
+        },
+        {
+          color: 'hsl(45, 100%, 50%)',
+          label: 'Emas, Aksen 4'
+        },
+        {
+          color: 'hsl(209, 59%, 60%)',
+          label: 'Biru, Aksen 5'
+        },
+        {
+          color: 'hsl(96, 42%, 48%)',
+          label: 'Hijau, Aksen 6'
+        },
+        {
+          color: 'hsl(0, 0%, 93%)',
+          label: 'Putih, Lebih Gelap 5%'
+        },
+        {
+          color: 'hsl(0, 0%, 50%)',
+          label: 'Hitam, Lebih Terang 50%'
+        },
+        {
+          color: 'hsl(0, 2%, 81%)',
+          label: 'Abu - Abu Muda, Lebih Gelap 10%'
+        },
+        {
+          color: 'hsl(214, 21%, 87%)',
+          label: 'Biru Abu - Abu, Lebih Terang 80%'
+        },
+        {
+          color: 'hsl(219, 52%, 90%)',
+          label: 'Biru, Aksen 1, Lebh Terang 80%'
+        },
+        {
+          color: 'hsl(25, 83%, 91%)',
+          label: 'Oranye, Aksen 2, Lebih Terang 80%'
+        },
+        {
+          color: 'hsl(0, 0%, 92%)',
+          label: 'Abu - Abu, Aksen 3, Lebih Terang 80%'
+        },
+        {
+          color: 'hsl(45, 100%, 90%)',
+          label: 'Emas, Aksen 4, Lebih Terang 80%'
+        },
+        {
+          color: 'hsl(208, 57%, 92%)',
+          label: 'Biru, Aksen 5, Lebih Terang 80%'
+        },
+        {
+          color: 'hsl(95, 41%, 89%)',
+          label: 'Hijau, Aksen 6, Lebih Terang 80%'
+        },
+        {
+          color: 'hsl(0, 0%, 85%)',
+          label: 'Putih, Lebih Gelap 15%'
+        },
+        {
+          color: 'hsl(0, 0%, 35%)',
+          label: 'Hitam, Lebih Terang 35%'
+        },
+        {
+          color: 'hsl(0, 2%, 68%)',
+          label: 'Abu - Abu Muda, Lebih Gelap 25%'
+        },
+        {
+          color: 'hsl(215, 21%, 74%)',
+          label: 'Biru Abu - Abu, Lebih Terang 60%'
+        },
+        {
+          color: 'hsl(219, 52%, 81%)',
+          label: 'Biru, Aksen 1, Lebh Terang 60%'
+        },
+        {
+          color: 'hsl(25, 82%, 82%)',
+          label: 'Oranye, Aksen 2, Lebih Terang 60%'
+        },
+        {
+          color: 'hsl(0, 0%, 86%)',
+          label: 'Abu - Abu, Aksen 3, Lebih Terang 60%'
+        },
+        {
+          color: 'hsl(45, 98%, 80%)',
+          label: 'Emas, Aksen 4, Lebih Terang 60%'
+        },
+        {
+          color: 'hsl(208, 59%, 84%)',
+          label: 'Biru, Aksen 5, Lebih Terang 60%'
+        },
+        {
+          color: 'hsl(96, 42%, 79%)',
+          label: 'Hijau, Aksen 6, Lebih Terang 60%'
+        },
+        {
+          color: 'hsl(0, 0%, 75%)',
+          label: 'Putih, Lebih Gelap 25%'
+        },
+        {
+          color: 'hsl(0, 0%, 25%)',
+          label: 'Hitam, Lebih Terang 25%'
+        },
+        {
+          color: 'hsl(0, 2%, 45%)',
+          label: 'Abu - Abu Muda, Lebih Gelap 50%'
+        },
+        {
+          color: 'hsl(215, 22%, 60%)',
+          label: 'Biru Abu - Abu, Lebih Terang 40%'
+        },
+        {
+          color: 'hsl(218, 52%, 71%)',
+          label: 'Biru, Aksen 1, Lebh Terang 40%'
+        },
+        {
+          color: 'hsl(24, 84%, 74%)',
+          label: 'Oranye, Aksen 2, Lebih Terang 40%'
+        },
+        {
+          color: 'hsl(0, 0%, 79%)',
+          label: 'Abu - Abu, Aksen 3, Lebih Terang 40%'
+        },
+        {
+          color: 'hsl(45, 100%, 70%)',
+          label: 'Emas, Aksen 4, Lebih Terang 40%'
+        },
+        {
+          color: 'hsl(208, 58%, 75%)',
+          label: 'Biru, Aksen 5, Lebih Terang 40%'
+        },
+        {
+          color: 'hsl(96, 42%, 68%)',
+          label: 'Hijau, Aksen 6, Lebih Terang 40%'
+        },
+        {
+          color: 'hsl(0, 0%, 65%)',
+          label: 'Putih, Lebih Gelap 35%'
+        },
+        {
+          color: 'hsl(0, 0%, 15%)',
+          label: 'Hitam, Lebih Terang 15%'
+        },
+        {
+          color: 'hsl(0, 2%, 22%)',
+          label: 'Abu - Abu Muda, Lebih Gelap 75%'
+        },
+        {
+          color: 'hsl(213, 22%, 25%)',
+          label: 'Biru Abu - Abu, Lebih Gelap 25%'
+        },
+        {
+          color: 'hsl(218, 52%, 39%)',
+          label: 'Biru, Aksen 1, Lebh Gelap 25%'
+        },
+        {
+          color: 'hsl(24, 84%, 42%)',
+          label: 'Oranye, Aksen 2, Lebih Gelap 25%'
+        },
+        {
+          color: 'hsl(0, 0%, 48%)',
+          label: 'Abu - Abu, Aksen 3, Lebih Gelap 25%'
+        },
+        {
+          color: 'hsl(45, 100%, 37%)',
+          label: 'Emas, Aksen 4, Lebih Gelap 25%'
+        },
+        {
+          color: 'hsl(208, 59%, 45%)',
+          label: 'Biru, Aksen 5, Lebih Gelap 25%'
+        },
+        {
+          color: 'hsl(96, 42%, 36%)',
+          label: 'Hijau, Aksen 6, Lebih Gelap 25%'
+        },
+        {
+          color: 'hsl(0, 0%, 50%)',
+          label: 'Putih, Lebih Gelap 50%'
+        },
+        {
+          color: 'hsl(0, 0%, 5%)',
+          label: 'Hitam, Lebih Terang 5%'
+        },
+        {
+          color: 'hsl(0, 2%, 9%)',
+          label: 'Abu - Abu Muda, Lebih Gelap 90%'
+        },
+        {
+          color: 'hsl(215, 22%, 17%)',
+          label: 'Biru Abu - Abu, Lebih Gelap 50%'
+        },
+        {
+          color: 'hsl(218, 53%, 26%)',
+          label: 'Biru, Aksen 1, Lebh Gelap 50%'
+        },
+        {
+          color: 'hsl(25, 85%, 28%)',
+          label: 'Oranye, Aksen 2, Lebih Gelap 50%'
+        },
+        {
+          color: 'hsl(0, 0%, 32%)',
+          label: 'Abu - Abu, Aksen 3, Lebih Gelap 50%'
+        },
+        {
+          color: 'hsl(45, 100%, 25%)',
+          label: 'Emas, Aksen 4, Lebih Gelap 50%'
+        },
+        {
+          color: 'hsl(208, 60%, 30%)',
+          label: 'Biru, Aksen 5, Lebih Gelap 50%'
+        },
+        {
+          color: 'hsl(96, 42%, 24%)',
+          label: 'Hijau, Aksen 6, Lebih Gelap 50%'
+        },
+        {
+          color: 'hsl(0, 100%, 38%)',
+          label: 'Merah Tua'
+        },
+        {
+          color: 'hsl(0, 100%, 50%)',
+          label: 'Merah'
+        },
+        {
+          color: 'hsl(45, 100%, 50%)',
+          label: 'Oranye'
+        },
+        {
+          color: 'hsl(60, 100%, 50%)',
+          label: 'Kuning'
+        },
+        {
+          color: 'hsl(89, 58%, 56%)',
+          label: 'Hijau Muda'
+        },
+        {
+          color: 'hsl(147, 100%, 35%)',
+          label: 'Hijau'
+        },
+        {
+          color: 'hsl(196, 100%, 47%)',
+          label: 'Biru Muda'
+        },
+        {
+          color: 'hsl(205, 100%, 38%)',
+          label: 'Biru'
+        },
+        {
+          color: 'hsl(220, 100%, 19%)',
+          label: 'Biru Tua'
+        },
+        {
+          color: 'hsl(274, 54%, 41%)',
+          label: 'Ungu'
+        }
+      ],
+      columns: 10
+    },
+    fontBackgroundColor: {
+      colors: [
+        {
+          color: 'hsl(60, 100%, 50%)',
+          label: 'Kuning'
+        },
+        {
+          color: 'hsl(120, 100%, 50%)',
+          label: 'Hijau Cerah'
+        },
+        {
+          color: 'hsl(180, 100%, 50%)',
+          label: 'Biru Kehijauan'
+        },
+        {
+          color: 'hsl(300, 100%, 50%)',
+          label: 'Merah Muda'
+        },
+        {
+          color: 'hsl(240, 100%, 50%)',
+          label: 'Biru'
+        },
+        {
+          color: 'hsl(0, 100%, 50%)',
+          label: 'Merah'
+        },
+        {
+          color: 'hsl(240, 100%, 25%)',
+          label: 'Biru Tua'
+        },
+        {
+          color: 'hsl(180, 100%, 25%)',
+          label: 'Hijau Kebiruan'
+        },
+        {
+          color: 'hsl(120, 100%, 25%)',
+          label: 'Hijau'
+        },
+        {
+          color: 'hsl(300, 100%, 25%)',
+          label: 'Lembayung'
+        },
+        {
+          color: 'hsl(0, 100%, 25%)',
+          label: 'Merah Tua'
+        },
+        {
+          color: 'hsl(60, 100%, 25%)',
+          label: 'Kuning Tua'
+        },
+        {
+          color: 'hsl(0, 0%, 50%)',
+          label: 'Abu - abu 50%'
+        },
+        {
+          color: 'hsl(0, 0%, 75%)',
+          label: 'Abu - abu 255'
+        },
+        {
+          color: 'hsl(0, 0%, 0%)',
+          label: 'Hitam'
+        },
+      ],
+      columns: 5
+    }
   };
 
   // error manual
@@ -220,7 +924,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   previewHideTopbar: boolean = false;
   previewAlert: boolean = false;
   previewAlertMessage: string = '';
-  isCompare: boolean = false;
+  isCompare: boolean = true;
 
   // save and send
   userOptions: Option[] = [];
@@ -335,11 +1039,10 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     }).then((confirmed) => {
       if (confirmed === true) {
         const _dataForm = this.dataForm.value;
-        // const formData = new FormData(this.formArticle.nativeElement);
         this.subscriptions.push(
           this.article.saveArticle(_dataForm).subscribe(resp => {
             if (resp) {
-              this.article.formData = _dataForm;
+              this.article.formData = null;
               this.article.formAlert = 'Artikel berhasil disimpan ke dalam draft.';
               this.router.navigate(
                 [
@@ -400,7 +1103,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
       this.article.saveArticle(_dataForm, true, this.saveAndSend).subscribe(resp => {
         if (resp) {
           this.modalService.dismissAll();
-          this.article.formData = _dataForm;
+          this.article.formData = null;
           this.article.formAlert = 'Artikel berhasil disimpan dan dikirim.';
           this.router.navigate(
             [
@@ -412,7 +1115,11 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     return false;
   }
   onPreview(show: boolean, hideTopbar: boolean = false, alert: boolean = false, msg: string = '') {
-    this.article.formData = this.dataForm.value as ArticleDTO;
+    const _article: ArticleDTO = JSON.parse(JSON.stringify(this.dataForm.value));
+    _article.modified_date = new Date();
+    _article.modified_name = this.user.fullname;
+
+    this.article.formData = show ? _article : null;
     this.previewHideTopbar = hideTopbar;
     this.previewAlert = alert;
     this.previewAlertMessage = msg;
@@ -528,7 +1235,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   checkUniq(value) {
     this.hasError = false;
     if (!value) return;
-    const checkUniqSubrcr = this.article.checkUniq(value.trim())
+    const checkUniqSubrcr = this.article.checkUniq(value.trim(), this.dataForm.value.id)
       .pipe(
         catchError((err) => {
           this.hasError = true;

@@ -87,7 +87,7 @@
                                                 tooltipClass="fs12">
                                                 {{item.location | maxLength:130}}</td>
                                             <td (click)="showArticle(item.id)" class="cursor-pointer">
-                                                {{item.affective_date | date:'dd/MM/yyyy hh:mm a'}}</td>
+                                                {{item.effective_date | date:'dd/MM/yyyy hh:mm a'}}</td>
                                             <td (click)="showArticle(item.id)" class="cursor-pointer">
                                                 {{item.modified_by | maxLength:40}}</td>
                                             <td (click)="showArticle(item.id)" class="te-3 cursor-pointer"
@@ -107,7 +107,7 @@
                                                             <a class="navi-link cursor-pointer"
                                                                 (click)="onClickRevision(item, i); dropDown.close()">
                                                                 <span class="navi-text font-weight-bolder">Riwayat
-                                                                    Revisi</span>
+                                                                    Versi</span>
                                                             </a>
                                                         </li>
                                                         <li class="navi-item">
@@ -208,5 +208,33 @@
                 </tr>
             </thead>
         </table>
+    </div>
+</ng-template>
+
+<ng-template #formConfirmDelete let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Hapus Artikel</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <i aria-hidden="true">&times;</i>
+        </button>
+    </div>
+    <div class="modal-body pt-0">
+        <div class="form-group">
+            <span>Artikel tidak dapat di hapus sebelum mendapatkan persetujuan. Silakan masukan dokumen dasar
+                penghapusan artikel ini.</span>
+        </div>
+        <div class="form-group">
+            <label>Approver <span class="text-danger">*</span></label>
+            <pakar-auto-complete [(ngModel)]="delete.sendTo.username" [options]="userOptions"
+                placeholder="Masukkan Nama Approver" (onSearch)="searchUser($event)" (onChange)="userChange($event)">
+            </pakar-auto-complete>
+            <textarea rows="4" class="form-control" placeholder="Catatan" [(ngModel)]="delete.sendNote"
+                style="margin-top:3px"></textarea>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-light btn-sm rounded-lg px-5" (click)="c('Batal')">Batal</button>
+        <button type="button" class="btn btn-sm btn-blue rounded-lg px-5"
+            [disabled]="!(delete.sendTo.username && delete.sendNote)" (click)="onCancelApprover($event)">Kirim</button>
     </div>
 </ng-template>

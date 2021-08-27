@@ -93,6 +93,8 @@ export class ArticleService {
   // search all data [article|faq|pdf]
   search(params: SearchArticleParam = null): Observable<any> {
     if (params) {
+      if (params.structureId)
+        params.structureId = parseInt(params.structureId.toString()); // fix bug : kadang2 kirim dengan petik dua di json nya
       return this.apiService.post(`${this._base_url}/searchArticle`, params);
     } else {
       return of(false);
@@ -122,8 +124,8 @@ export class ArticleService {
     return this.apiService.post(`${this._base_url}/popular`, {});
   }
 
-  checkUniq(title: string) {
-    return this.apiService.post(`${this._base_url}/checkUnique`, { title }, this.apiService.getHeaders(true), false);
+  checkUniq(title: string, exclude: number = 0) {
+    return this.apiService.post(`${this._base_url}/checkUnique`, { title, exclude }, this.apiService.getHeaders(true), false);
   }
 
   getById(id: any, isEdit: boolean) {
@@ -151,8 +153,8 @@ export class ArticleService {
     return this.apiService.post(`${this._base_url}/cancelArticle`, { id });
   }
 
-  cancelSend(id: number) {
-    return this.apiService.post(`${this._base_url}/cancelSendArticle`, { id });
+  cancelSend(id: number, receiver: string) {
+    return this.apiService.post(`${this._base_url}/cancelSendArticle`, { id, receiver });
   }
 
   private parseToArray(content: ArticleContentDTO, index: number): ArticleContentDTO[] {

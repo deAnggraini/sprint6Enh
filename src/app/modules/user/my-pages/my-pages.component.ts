@@ -9,6 +9,8 @@ import { catchError, map, mergeMapTo } from 'rxjs/operators';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { UserModel } from '../../auth/_models/user.model';
 import { environment } from 'src/environments/environment';
+import { UserService } from '../../_services/user.service';
+import { Option } from 'src/app/utils/_model/option';
 
 export declare interface MyPageRowItem {
   type: string,
@@ -19,11 +21,13 @@ export declare interface MyPageRowItem {
   modified_by: string,
   approved_date?: Date,
   approved_by?: string,
-  affective_date?: Date,
+  effective_date?: Date,
   send_to?: string,
   current_by: string,
   state: string,
-  isNew: boolean
+  isNew: boolean,
+  isPublished: boolean
+  receiver?: string
 }
 
 interface TabDTO {
@@ -81,7 +85,7 @@ export class MyPagesComponent implements OnInit, OnDestroy {
   tableColumn = {
     draft: ['type', 'title', 'location', 'modified_date', 'modified_by', 'current_by', ''],
     pending: ['type', 'title', 'location', 'modified_date', 'send_to', 'current_by', ''],
-    approved: ['type', 'title', 'location', 'approved_date', 'approved_by', 'affective_date', ''],
+    approved: ['type', 'title', 'location', 'approved_date', 'approved_by', 'effective_date', ''],
   }
 
   // filter component
@@ -90,13 +94,24 @@ export class MyPagesComponent implements OnInit, OnDestroy {
   selectedTr: { key: string, i: number } = { key: null, i: -1 };
   selectedItem: MyPageRowItem;
 
+  //approver delete
+  userOptions: Option[] = [];
+  delete = {
+    sendTo: {
+      username: '',
+      email: '',
+    },
+    sendNote: ''
+  }
+
   constructor(
     private cdr: ChangeDetectorRef,
     private articleService: ArticleService,
     private confirm: ConfirmService,
     private router: Router,
     private modalService: NgbModal,
-    private configModel: NgbModalConfig) {
+    private configModel: NgbModalConfig,
+    private userService: UserService) {
 
     this.listStatus['approved'] = "PUBLISHED";
     this.listStatus['pending'] = "PENDING";
@@ -110,7 +125,6 @@ export class MyPagesComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.onSearch(null);
     this.setScaleValue(window)
-    this.getUserInfo()
   }
 
   ngOnDestroy(): void {
@@ -230,8 +244,8 @@ export class MyPagesComponent implements OnInit, OnDestroy {
     this.modalService.open(this.riwayatVersiModal, { size: 'xl' });
     return false;
   }
-  onClickEdit(item: MyPageRowItem, index: number, key: 'pending' | 'draft') {
-    if (key === 'draft' && !item.isNew) {
+  onClickEdit(item: MyPageRowItem, index: number) {
+    if (!item.isNew) {
       this.router.navigate([`/article/form/${item.id}`, { isEdit: true }]);
       return
     }
@@ -268,12 +282,15 @@ export class MyPagesComponent implements OnInit, OnDestroy {
       btnCancelText: 'Batal'
     }).then((confirmed) => {
       if (confirmed === true) {
-        // this.subscriptions.push(
-        //   this.articleService.cancelArticle(item.id).subscribe(resp => {
-        //     if (resp) this.onRefreshTable();
-        //   })
-        // );
-        this.modalService.open(this.formConfirmDelete);
+        if (item.isPublished) {
+          this.modalService.open(this.formConfirmDelete);
+          return
+        }
+        this.subscriptions.push(
+          this.articleService.cancelArticle(item.id).subscribe(resp => {
+            if (resp) this.onRefreshTable();
+          })
+        );
       }
     });
     return false;
@@ -304,7 +321,7 @@ export class MyPagesComponent implements OnInit, OnDestroy {
     }).then((confirmed) => {
       if (confirmed === true) {
         this.subscriptions.push(
-          this.articleService.cancelSend(item.id)
+          this.articleService.cancelSend(item.id, item.receiver)
             .pipe(
               catchError((err) => {
                 this.showErrorModal('Gagal Batal Kirim', 'Batal Kirim tidak dapat dilakukan karena halaman tersebut sedang dalam proses review.');
@@ -320,19 +337,27 @@ export class MyPagesComponent implements OnInit, OnDestroy {
     });
     return false;
   }
+  // User saerch
+  searchUser(keyword) {
+    if (keyword) {
+      let body = { keyword: keyword, role: 'PUBLISHER', username: this.getUsername() }
+      this.subscriptions.push(
+        this.userService.searchUserApprover(body).subscribe(resp => {
+          if (resp) {
+            this.userOptions = this.userService.usersToOptions(resp);
+          }
+        })
+      );
+    } else {
+      this.userOptions = [];
+    }
+  }
+  userChange(item: Option) {
+    this.delete.sendTo.email = item.value;
+  }
 
-  lengthCharFormated(length: number, text: string): string {
-    let string: string = ''
-    let overlimit: boolean = false
-    let arr = text.split(' ')
-    string = arr.reduce((text, item) => {
-      if ((text.length + item.length) + 1 > length) {
-        overlimit = true
-        return text
-      }
-      return text.length > 0 ? (text + ' ' + item) : (text + item)
-    }, '')
-    return overlimit ? string + ' ...' : string
+  onCancelApprover(e) {
+
   }
 
   showErrorModal(title: string, message: string) {
@@ -348,9 +373,9 @@ export class MyPagesComponent implements OnInit, OnDestroy {
     });
   }
 
-  getUserInfo() {
-    let userInfo = localStorage.getItem(`${environment.appVersion}-${environment.USERDATA_KEY}`)
-    console.log('userInfo', userInfo)
+  getUsername(): string {
+    let username = JSON.parse(localStorage.getItem(`${environment.appVersion}-${environment.USERDATA_KEY}`)).username
+    return username
   }
 
 

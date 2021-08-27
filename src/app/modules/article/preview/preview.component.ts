@@ -50,7 +50,8 @@ export class PreviewComponent implements OnInit, AfterViewInit, OnDestroy {
   dataForm: FormGroup;
   user$: Observable<UserModel>;
   aliasName: string = 'AA';
-  fullName: string;
+  fullName: string = 'Empty';
+  role: string = 'READER';
   changed_date: Date = new Date();
   skReferences = [];
   relatedArticle = [];
@@ -139,7 +140,8 @@ export class PreviewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     return false;
   }
-  onEdit(e, contentId: number = 0, contentTitle: string = '') {    
+  onEdit(e, contentId: number = 0, contentTitle: string = '') {
+    if (this.role == 'READER') return false;
     const item = this.articleDTO;
     this.articleService.checkArticleEditing(item.id).subscribe((resp: UserModel[]) => {
       let editingMsg: string = '';
@@ -181,9 +183,10 @@ export class PreviewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     //user
     this.user$.subscribe(u => {
-      const aliasNameArr: string[] = [u.firstname, u.lastname];
-      this.aliasName = aliasNameArr.map(d => d ? d[0] : '').join('');
-      this.fullName = u.fullname;
+      // const aliasNameArr: string[] = [u.firstname, u.lastname];
+      // this.aliasName = aliasNameArr.map(d => d ? d[0] : '').join('');
+      // this.fullName = u.fullname;
+      this.role = u.roles[0];
     });
 
     //carousel test
@@ -195,7 +198,6 @@ export class PreviewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    console.log('ngAfterViewInit called');
   }
 
   private loadData() {
@@ -214,6 +216,14 @@ export class PreviewComponent implements OnInit, AfterViewInit, OnDestroy {
         if (params.id) {
           this.articleService.getById(params.id, false).subscribe(resp => {
             this.setArticle(resp);
+            if (this.articleService.formAlert) {
+              this.alert = true;
+              this.alertMessage = this.articleService.formAlert;
+              setTimeout(() => {
+                document.getElementById('alert').hidden = true;
+                this.articleService.formAlert = null;
+              }, 3000);
+            }
             this.changeDetectorRef.detectChanges();
           })
         }
@@ -378,6 +388,17 @@ export class PreviewComponent implements OnInit, AfterViewInit, OnDestroy {
         d.text = `${d.title}`;
       })
     }
+
+    // set fullaname, alias
+    this.fullName = article.modified_name || '';
+    this.changed_date = article.modified_date || new Date();
+    const _split = this.fullName.split(' ');
+    this.aliasName = [
+      (_split[0][0]) || 'A',
+      (_split[_split.length - 1][0]) || 'Z',
+    ].join('');
+
+    this.changeDetectorRef.detectChanges();
   }
 
   numberingFormat(data: ArticleContentDTO): string {
@@ -426,7 +447,6 @@ export class PreviewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    console.log('destroy called');
   }
 
 }

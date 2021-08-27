@@ -8,11 +8,12 @@ export declare interface NotificationDTO {
   id: number,
   status: string,
   type: string,
-  isUnread: boolean,
+  isRead: boolean,
   date: Date,
   by: string,
   title: string,
   desc: string,
+  refId?: string
 }
 
 export declare interface ResponseNotificationDTO {
@@ -37,11 +38,10 @@ export class NotificationService {
 
   refresh() {
     this.list().subscribe(resp => {
-      // console.log('refresh notif', resp);
     })
   }
-  list(): Observable<any> {
-    return this.api.post(`${this._base_url}/getNotification`, { keyword: '', page: 1, limit: 3 }).pipe(
+  list(column: string = 'isRead', sort: string = 'desc'): Observable<any> {
+    return this.api.post(`${this._base_url}/getNotification`, { keyword: '', page: 1, limit: 3, sorting: { column, sort } }).pipe(
       map((resp: ResponseNotificationDTO) => {
         if (resp) this.notif$.next(resp);
         return resp;
@@ -49,8 +49,8 @@ export class NotificationService {
     );
   }
 
-  listNotif(keyword: string, page: number = 1, limit: number = 10) {
-    const params = { keyword, page, limit };
+  listNotif(keyword: string, page: number = 1, limit: number = 10, column: string = 'created_date', sort: string = 'desc') {
+    const params = { keyword, page, limit, sorting: { column, sort } };
     return this.api.post(`${this._base_url}/getNotification`, params);
   }
 
@@ -58,7 +58,19 @@ export class NotificationService {
     return this.notif$;
   }
 
-  readAll() {
-    return this.api.post(`${this._base_url}/updateStatusNotification`, { id: [], isAll: true });
+  updateTopBarNotif(id: number) {
+    const dto: ResponseNotificationDTO = this.notif$.value;
+    dto.total_unread -= 1;
+    const found = dto.list.find(d => d.id == id);
+    if (found) {
+      found.isRead = true;
+      this.notif$.next(dto);
+    } else {
+      this.refresh();
+    }
+  }
+
+  readAll(id: number[] = [], isAll: boolean = true) {
+    return this.api.post(`${this._base_url}/updateStatusNotification`, { id, isAll });
   }
 }

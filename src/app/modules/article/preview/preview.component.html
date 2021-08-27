@@ -36,7 +36,6 @@ height: 184px;
             &nbsp;&nbsp;
             <div class="font-weight-bold">{{ alertMessage }}</div>
         </div>
-
         <button type="button" class="btn btn-icon" data-bs-dismiss="alert" aria-label="Close" (click)="closeAlert()">
             <i [inlineSVG]="'./assets/media/svg/bca/icon/close.svg'" cacheSVG="true"></i>
         </button>
@@ -44,8 +43,9 @@ height: 184px;
 </div>
 
 <div class="mx-15 mt-n25">
-    <div class="back-panel">
-        <pakar-breadcrumbs [node]="struktur$"></pakar-breadcrumbs>
+    <div class="back-panel" *ngIf="articleDTO">
+        <pakar-breadcrumbs [node]="struktur$" [article]="articleDTO">
+        </pakar-breadcrumbs>
     </div>
     <ng-container *ngIf="articleDTO">
         <div class="pakar-container h-100 p-8 d-flex flex-column flex-column-auto flex-grow"
@@ -70,13 +70,15 @@ height: 184px;
                             class="svg-icon menu-icon"></span>
                         <span class="font-weight-bold" style="color: #0F5EA9;">Collapse Topik</span>
                     </div>
+
                     <!-- Ubah Artikel -->
-                    <div (click)="onEdit($event)" class="btn btn-link" *ngIf="editable">
+                    <div (click)="onEdit($event)" class="btn btn-link" *ngIf="editable && role != 'READER'">
                         <span [inlineSVG]="'./assets/media/svg/bca/icon/edit-document-dark.svg'" cacheSVG="true"
                             class="svg-icon menu-icon"></span>
                         <span class="font-weight-bold" style="color: #0F5EA9;">Ubah Artikel</span>
+                        <!-- <span class="font-weight-bold" style="color: #0F5EA9;">-{{readerView}}-{{isAllowEdit}</span> -->
                     </div>
-                    <ng-container *ngIf="readerView && isAllowEdit">
+                    <ng-container *ngIf="(readerView && isAllowEdit) || editable">
                         <div [routerLink]="['/article/form/'+articleDTO.id, {isEdit:true}]" class="btn btn-link"
                             *ngIf="editable">
                             <span [inlineSVG]="'./assets/media/svg/bca/icon/share.svg'" cacheSVG="true"
@@ -92,13 +94,13 @@ height: 184px;
                     </ng-container>
                 </div>
             </div>
-            <span class="pakar-text-header-desc my-4" style="color: #605E5C;">Terakhir diubah oleh
+            <span class="my-4" style="color: #605E5C;">Terakhir diubah oleh
                 <span class="symbol symbol-lg-25 symbol-25 mx-2">
                     <span class="symbol-label font-size-h7 font-weight-bold rounded-xl px-2 ">{{aliasName}}</span>
                 </span>
                 <span class="font-weight-bolder font-size-base d-none d-md-inline mr-2"
                     style="text-transform: uppercase;">{{fullName}}</span>
-                pada
+                <span> pada </span>
                 <span class="font-size-sm" style="color: black;">{{ changed_date | date: "dd/MM/yyyy"}}</span>
             </span>
 
@@ -157,8 +159,8 @@ height: 184px;
                                     <mat-panel-title class="fs16pt">
                                         <span [innerHTML]="content.title">&nbsp;</span>
                                     </mat-panel-title>
-                                    <ng-container *ngIf="readerView && isAllowEdit" [ngTemplateOutlet]="rightIcon"
-                                        [ngTemplateOutletContext]="{ data: content}">
+                                    <ng-container *ngIf="(readerView && isAllowEdit) || editable"
+                                        [ngTemplateOutlet]="rightIcon" [ngTemplateOutletContext]="{ data: content}">
                                     </ng-container>
                                 </mat-expansion-panel-header>
                                 <div class="content">
@@ -249,7 +251,7 @@ height: 184px;
                         <span class="mr-2">{{numberingFormat(content)}}.</span>
                         <span [innerHTML]="content.title"></span>
                     </mat-panel-title>
-                    <ng-container *ngIf="readerView && isAllowEdit" [ngTemplateOutlet]="rightIcon"
+                    <ng-container *ngIf="(readerView && isAllowEdit) || editable" [ngTemplateOutlet]="rightIcon"
                         [ngTemplateOutletContext]="{ data: content}">
                     </ng-container>
                 </mat-expansion-panel-header>

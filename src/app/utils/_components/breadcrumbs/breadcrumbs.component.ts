@@ -2,6 +2,11 @@ import { Component, OnInit, Input } from '@angular/core';
 import { StrukturDTO } from 'src/app/modules/_model/struktur.dto';
 import { BehaviorSubject } from 'rxjs';
 
+export declare interface ArticleBreadDTO {
+  id: number,
+  title: string
+}
+
 @Component({
   selector: 'pakar-breadcrumbs',
   templateUrl: './breadcrumbs.component.html',
@@ -10,6 +15,7 @@ import { BehaviorSubject } from 'rxjs';
 export class BreadcrumbsComponent implements OnInit {
 
   @Input() node: BehaviorSubject<StrukturDTO>;
+  @Input() article: ArticleBreadDTO;
   dataList: any[];
 
   constructor() { }
@@ -24,6 +30,10 @@ export class BreadcrumbsComponent implements OnInit {
           this.dataList.push({ uri: `/struktur/list/${d.id}`, title: d.title });
         });
         this.dataList.push({ uri: `/struktur/list/${node.id}`, title: node.title });
+
+        if (this.article) {
+          this.dataList.push({ uri: `/article/list/${this.article.id}`, title: this.article.title });
+        }
       });
     }
   }

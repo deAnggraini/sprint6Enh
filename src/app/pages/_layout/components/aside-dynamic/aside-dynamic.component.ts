@@ -133,21 +133,23 @@ export class AsideDynamicComponent implements OnInit, OnDestroy {
   }
 
   checkArticle(e, item: any) {
-    if (!item.submenu) item.submenu = [];
     const params: SearchArticleParam = {
       keyword: '', page: 1, limit: 10, sorting: { column: 'approved_date', sort: 'asc' },
       type: 'article', state: 'PUBLISHED', structureId: item.id, isLatest: false
     };
     this.subscriptions.push(this.article.search(params).subscribe(resp => {
-      resp.list.forEach(d => {
-        const _item = {
-          id: d.id,
-          title: d.title,
-          level: 100,
-        };
-        item.submenu.push(_item);
-      });
-      this.cdr.detectChanges();
+      if (resp && resp.list && resp.list.length) {
+        if (!item.submenu) item.submenu = [];
+        resp.list.forEach(d => {
+          const _item = {
+            id: d.id,
+            title: d.title,
+            level: 100,
+          };
+          item.submenu.push(_item);
+        });
+        this.cdr.detectChanges();
+      }
     }));
   }
 
