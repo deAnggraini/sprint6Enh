@@ -1534,11 +1534,10 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
         })
       }
 
-      this.isEdit = !article.isNew;
+      this.isEdit = !article.isAdd;
       if (this.isEdit) {
         this.setUserEditing(article.id);
         this.isCompare = true;
-
       }
 
       this.originArticle = JSON.parse(JSON.stringify(article));

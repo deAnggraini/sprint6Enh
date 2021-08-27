@@ -64,6 +64,7 @@ export declare interface ArticleDTO {
     references: SkReferenceDTO[],
     related: ArticleRelatedDTO[],
     suggestions: ArticleRelatedDTO[],
+    isAdd?: boolean,
     isNew?: boolean,
     isPublished?: boolean,
     modified_name?: string,
