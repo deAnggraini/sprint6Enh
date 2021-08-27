@@ -1321,7 +1321,12 @@ public class ArticleServiceImpl implements ArticleService {
                 articleContent.setParent(articleContentDto.getParent());
             } else {
                 logger.debug("level article content <> 1");
-                Optional<ArticleContent> parentOpt = articleContentRepository.findById(articleContentDto.getParent());
+//                Optional<ArticleContent> parentOpt = articleContentRepository.findById(articleContentDto.getParent());
+//                if (parentOpt.isEmpty()) {
+//                    throw new ParentContentNotFoundException("parent article content not found");
+//                }
+//                articleContent.setParent(parentOpt.get().getId());
+                Optional<ArticleContentClone> parentOpt = articleContentCloneRepository.findById(articleContentDto.getParent());
                 if (parentOpt.isEmpty()) {
                     throw new ParentContentNotFoundException("parent article content not found");
                 }
