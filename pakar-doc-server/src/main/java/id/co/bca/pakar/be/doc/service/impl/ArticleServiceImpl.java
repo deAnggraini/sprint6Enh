@@ -2000,17 +2000,29 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     @Transactional(rollbackFor = {Exception.class
             , DataNotFoundException.class})
-    public Boolean cancelEditArticle(RequestCancelEditDto reqCancelDto) throws Exception {
+    public Boolean cancelEditArticle(String token, String username, RequestCancelEditDto reqCancelDto) throws Exception {
         try {
             logger.info("process cancel Edit article");
             ArticleVersion lastVersion = null;
-            lastVersion = articleVersionRepository.findLastTimeStampByUsername(reqCancelDto.getId(), reqCancelDto.getUsername());
+
+            // get user profile from oauth server
+            ResponseEntity<ApiResponseWrapper.RestResponse<List<UserProfileDto>>> restResponseUp = null;
+            restResponseUp = pakarOauthClient.getListUserProfile(BEARER + token, username, Arrays.asList(new String[]{reqCancelDto.getUsername()}));
+            if (!restResponseUp.getBody().getApiStatus().getCode().equalsIgnoreCase(Constant.OK_ACK)) {
+                throw new OauthApiClientException("call oauth api client is failed");
+            }
+            lastVersion = articleVersionRepository.findLastTimeStampByFnModifier(reqCancelDto.getId(), restResponseUp.getBody().getData().get(0).getFullname());
+
+//            lastVersion = articleVersionRepository.findLastTimeStampByUsername(reqCancelDto.getId(), reqCancelDto.getUsername());
             if(lastVersion == null) {
                 throw new DataNotFoundException("Not found last version article");
             }
             articleVersionRepository.delete(lastVersion);
             return true;
-        } catch (DataNotFoundException e) {
+        } catch (OauthApiClientException e) {
+            logger.error("fail to call Oauth ", e);
+            throw new Exception("Data Not Found", e);
+        }catch (DataNotFoundException e) {
             logger.error("Data Not Found", e);
             throw new Exception("Data Not Found", e);
         }catch (Exception e) {

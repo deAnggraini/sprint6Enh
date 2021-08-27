@@ -44,5 +44,5 @@ public interface ArticleService {
 
     Boolean deleteArticle(RequestDeleteDto requestDeleteDto, String username, String token) throws Exception;
 
-    Boolean cancelEditArticle(RequestCancelEditDto reqCancelEdit) throws Exception;
+    Boolean cancelEditArticle(String token, String username,RequestCancelEditDto reqCancelEdit) throws Exception;
 }

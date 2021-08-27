@@ -854,9 +854,12 @@ public class ArticleController extends BaseController {
         try {
             logger.info("cancel Edit Article Process ");
             logger.info("received token bearer --- {}", authorization);
-            Boolean status = articleService.cancelEditArticle(reqCancelEdit);
+            Boolean status = articleService.cancelEditArticle(authorization, username, reqCancelEdit);
             return createResponse(status, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));
-        } catch (DataNotFoundException e) {
+        } catch (OauthApiClientException e) {
+            logger.error("exception", e);
+            return createResponse(Boolean.FALSE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("fail.request.oauth", null, getLocale()));
+        }catch (DataNotFoundException e) {
             logger.error("exception", e);
             return createResponse(Boolean.FALSE, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, getLocale()));
         }catch (Exception e) {
