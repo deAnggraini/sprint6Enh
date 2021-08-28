@@ -20,6 +20,7 @@ const sample_empty = {
     isEmptyTemplate: true,
     isNew: true,
     isPublished: false,
+    isClone: false,
     modified_name: 'Putu Sruti Permata Sari',
     modified_by: 'editor07',
     modified_date: new Date(),
@@ -80,6 +81,7 @@ const sample_basic = {
     isEmptyTemplate: false,
     isNew: true, // belum pernah send
     isPublished: false,
+    isClone: false,
     sender: {
         username: 'admin004',
         fullname: 'Admin nol nol 4',
@@ -382,7 +384,312 @@ const sample_non_basic = {
     ],
     isEmptyTemplate: false,
     isNew: false,
-    isPublished: false,
+    isPublished: true,
+    isClone: false,
+    sender: {
+        username: 'admin004',
+        fullname: 'Admin nol nol 4',
+        email: 'admin004@bca.com',
+        firstname: 'Admin',
+        lastname: '',
+    },
+    modified_name: 'Putu Sruti Permata Sari',
+    modified_by: 'editor07',
+    modified_date: new Date(),
+};
+
+const sample_non_basic2 = {
+    id: 101,
+    title: 'Tahapan 2 Cloned',
+    structureId: 2,
+    desc: '<p>Time Loan - SME merupakan salah satu produk kredit produktif untuk modal kerja kepada debitur segmen Small dan Medium Enterprises (SME) dalam mata uang rupiah ataupun valas yang penarikannya menggunakan Surat Permohonan Penarikan Fasilitas Kredit/Perpanjangan Pembayaran untuk jangka waktu tertentu.</p>',
+    image: '/articles/tapres.jpeg',
+    video: 'https://www.youtube.com/embed/oDZ-mIg2-Dk',
+    // video: null,
+    created_at: new Date(),
+    created_by: '',
+    location: 2,
+    structureParentList: [
+        { id: 100, title: 'Produk Untuk Nasabah' },
+        { id: 110, title: 'Produk Dana' },
+    ],
+    contents: [
+        {
+            id: 1,
+            title: 'Ketentuan Tahapan 2',
+            intro: '',
+            topicContent: '<p>Ketentuan Time Loan - SME adalah berikut ini. </p>',
+            parent: 0,
+            level: 1,
+            sort: 1,
+            children: [
+                {
+                    id: 3,
+                    title: 'Ketentuan Pengajuan Time Loan - SME',
+                    topicTitle: 'Rekening Tahapan 2',
+                    topicContent: '<p>Ketentuan Pengajuan Time Loan - SME adalah debitur yang memiliki kegiatan usaha segmen SME dengan total eksposur ≤Rp 15 miliar per debitur atau per Kesatuan Unit Usaha (KUU).</p>',
+                    parent: 1,
+                    level: 2,
+                    sort: 1,
+                    children: [
+                        {
+                            id: 18,
+                            title: '123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 ',
+                            topicTitle: '',
+                            topicContent: `<ol style="list-style-type:lower-latin;"><li>Sasaran Time Loan adalah debitur yang memiliki kegiatan usaha segmen SME dengan total eksposur ≤Rp 15 miliar per debitur atau per Kesatuan Unit Usaha (KUU).</li><li><span style="font-family:'Segoe UI', 'Open Sans';">Jenis Time Loan</span></li></ol><ul style="list-style-type:square;"><li><span style="font-family:'Segoe UI', 'Open Sans';">Time Loan Revolving -&gt; Pemakaian/penarikan atas fasilitas Time Loan dapat dilakukan berkali-kali (revolving). Dalam fasilitas kredit yang bersifat revolving, bank mengikat diri untuk memberikan pinjaman dalam jumlah, jangka waktu, dan kondisi yang telah ditentukan oleh bank. Jangka waktu 1 tahun.</span></li><li><span style="font-family:'Segoe UI', 'Open Sans';">Time Loan Insidentil -&gt; Pemakaian/penarikan fasilitas Time Loan dilakukan hanya satu kali dan harus sekaligus (tidak bersifat revolving) untuk pembiayaan suatu tujuan khusus. Jangka waktu yaitu 6 bulan.&nbsp;</span></li></ul><p><span style="font-family:'Segoe UI', 'Open Sans';">Catatan: *</span><br><span style="font-family:'Segoe UI', 'Open Sans';">Jangka waktu maksimum Time Loan insidentil yang dijamin cash collateral dengan mata uang sama ≥ 100% adalah 1 tahun.</span><br>&nbsp;</p><ol style="list-style-type:lower-latin;"><li><span style="font-family:'Segoe UI', 'Open Sans';">Pembebanan Bunga</span></li></ol>`,
+                            parent: 3,
+                            level: 3,
+                            sort: 1,
+                            children: [
+                                {
+                                    id: 181,
+                                    title: 'Satu titik satu',
+                                    desc: '',
+                                    parent: 18,
+                                    level: 4,
+                                    sort: 1,
+                                    children: [
+                                        {
+                                            id: 1811,
+                                            title: 'Terkahir minus satu',
+                                            desc: '',
+                                            parent: 181,
+                                            level: 5,
+                                            sort: 1,
+                                            children: [],
+                                        },
+                                        {
+                                            id: 1812,
+                                            title: 'Terkahir minus 2',
+                                            desc: '',
+                                            parent: 181,
+                                            level: 5,
+                                            sort: 2,
+                                            children: [],
+                                        },
+                                    ],
+                                },
+                                {
+                                    id: 182,
+                                    title: 'Satu titik dua',
+                                    desc: '',
+                                    parent: 18,
+                                    level: 4,
+                                    sort: 2,
+                                    children: [],
+                                }
+                            ],
+                        },
+                        {
+                            id: 19,
+                            title: 'Dua',
+                            topicTitle: '',
+                            topicContent: '',
+                            parent: 3,
+                            level: 3,
+                            sort: 2,
+                            children: [],
+                        },
+                        {
+                            id: 20,
+                            title: 'Tiga',
+                            topicTitle: '',
+                            topicContent: '',
+                            parent: 3,
+                            level: 3,
+                            sort: 3,
+                            children: [],
+                        },
+                    ],
+                },
+                {
+                    id: 4,
+                    title: 'Pembukaan Rekening Tahapan 2',
+                    topicTitle: '',
+                    topicContent: '',
+                    parent: 1,
+                    level: 2,
+                    sort: 2,
+                    children: [
+                        {
+                            id: 18,
+                            title: 'Satu',
+                            topicTitle: '',
+                            topicContent: '',
+                            parent: 3,
+                            level: 3,
+                            sort: 1,
+                            children: [
+                                {
+                                    id: 181,
+                                    title: 'Satu titik satu',
+                                    topicTitle: '',
+                                    topicContent: '',
+                                    parent: 18,
+                                    level: 4,
+                                    sort: 1,
+                                    children: [
+                                        {
+                                            id: 1811,
+                                            title: 'Terkahir minus satu',
+                                            topicTitle: '',
+                                            topicContent: '',
+                                            parent: 181,
+                                            level: 5,
+                                            sort: 1,
+                                            children: [],
+                                        },
+                                        {
+                                            id: 1812,
+                                            title: 'Terkahir minus 2',
+                                            topicTitle: '',
+                                            topicContent: '',
+                                            parent: 181,
+                                            level: 5,
+                                            sort: 2,
+                                            children: [],
+                                        },
+                                    ],
+                                },
+                                {
+                                    id: 182,
+                                    title: 'Satu titik dua',
+                                    topicTitle: '',
+                                    topicContent: '',
+                                    parent: 18,
+                                    level: 4,
+                                    sort: 2,
+                                    children: [],
+                                }
+                            ],
+                        },
+                        {
+                            id: 19,
+                            title: 'Dua',
+                            topicTitle: '',
+                            topicContent: '',
+                            parent: 3,
+                            level: 3,
+                            sort: 2,
+                            children: [],
+                        },
+                    ],
+                },
+                {
+                    id: 5,
+                    title: 'Perubahan Data Rekening Tahapan 2',
+                    topicTitle: '',
+                    topicContent: '',
+                    parent: 1,
+                    level: 2,
+                    sort: 3,
+                    children: [],
+                },
+                {
+                    id: 6,
+                    title: 'Penutupan Tahapan 2',
+                    topicTitle: '',
+                    topicContent: '',
+                    parent: 1,
+                    level: 2,
+                    sort: 4,
+                    children: [],
+                },
+                {
+                    id: 7,
+                    title: 'Biaya Tahapan 2',
+                    topicTitle: '',
+                    topicContent: '',
+                    parent: 1,
+                    level: 2,
+                    sort: 5,
+                    children: [],
+                },
+            ],
+        },
+        {
+            id: 2,
+            title: 'Prosedur Tahapan 2',
+            intro: '<p>test aja prosedure disini</p>',
+            parent: 0,
+            level: 1,
+            sort: 2,
+            children: [
+                {
+                    id: 8,
+                    title: 'Rekening Tahapan',
+                    topicTitle: '',
+                    topicContent: '',
+                    parent: 2,
+                    level: 2,
+                    sort: 1,
+                    children: [],
+                },
+                {
+                    id: 9,
+                    title: 'Pembukaan Rekening Tahapan',
+                    topicTitle: '',
+                    topicContent: '',
+                    parent: 2,
+                    level: 2,
+                    sort: 2,
+                    children: [],
+                },
+                {
+                    id: 10,
+                    title: 'Perubahan Data Rekening Tahapan',
+                    topicTitle: '',
+                    topicContent: '',
+                    parent: 2,
+                    level: 2,
+                    sort: 3,
+                    children: [],
+                },
+                {
+                    id: 11,
+                    title: 'Penutupan Tahapan',
+                    topicTitle: '',
+                    topicContent: '',
+                    parent: 2,
+                    level: 2,
+                    sort: 4,
+                    children: [],
+                },
+                {
+                    id: 12,
+                    title: 'Biaya Tahapan',
+                    topicTitle: '',
+                    topicContent: '',
+                    parent: 2,
+                    level: 2,
+                    sort: 5,
+                    children: [],
+                },
+            ],
+        },
+        {
+            id: 31,
+            title: 'Formulir Tahapan 2',
+            intro: '',
+            parent: 0,
+            level: 1,
+            sort: 2,
+            children: [],
+        }
+    ],
+    references: [
+        { id: 20, title: "Perihal Ketentuan Tahapan 1", no: "025/SKSE/TL/2020" }
+    ],
+    related: [
+        { id: 20, title: "Perihal Ketentuan Tahapan 1", no: "025/SKSE/TL/2020" }
+    ],
+    suggestions: [
+        { id: 20, title: "Perihal Ketentuan Tahapan 1", no: "025/SKSE/TL/2020" }
+    ],
+    isEmptyTemplate: false,
+    isNew: false,
+    isPublished: true,
+    isClone: true,
     sender: {
         username: 'admin004',
         fullname: 'Admin nol nol 4',
@@ -958,7 +1265,9 @@ module.exports.mypages = [
         current_by: '',
         state: 'DRAFT',
         isNew: false,
-        receiver:'test1'
+        isPublished: false,
+        isClone: false,
+        receiver: 'test1'
 
     },
     {
@@ -975,7 +1284,9 @@ module.exports.mypages = [
         current_by: 'Theresa Theodorus, Natasha Debora',
         state: 'DRAFT',
         isNew: true,
-        receiver:'test1'
+        isPublished: false,
+        isClone: false,
+        receiver: 'test1'
     },
     {
         type: 'formulir',
@@ -991,7 +1302,9 @@ module.exports.mypages = [
         current_by: 'Firda Agustriyani',
         state: 'DRAFT',
         isNew: false,
-        receiver:'test1'
+        isPublished: false,
+        isClone: false,
+        receiver: 'test1'
     },
     {
         type: 'atribut',
@@ -1007,7 +1320,9 @@ module.exports.mypages = [
         current_by: 'Firda Agustriyani, Kemal Batubara, Indah Permata Sari, Andreas Herawan, Thomas Wibisono, John Doe, Amalia Lestari Sejahtera Bahagia, Purnama Sempurna Gerhana Maharani',
         state: 'DRAFT',
         isNew: true,
-        receiver:'test1'
+        isPublished: false,
+        isClone: false,
+        receiver: 'test1'
     },
 
     {
@@ -1024,7 +1339,9 @@ module.exports.mypages = [
         current_by: 'Theresa Theodorus, Anita Rachmat',
         state: 'DRAFT',
         isNew: false,
-        receiver:'test1'
+        isPublished: false,
+        isClone: false,
+        receiver: 'test1'
     },
     {
         type: 'microinformation',
@@ -1040,7 +1357,9 @@ module.exports.mypages = [
         current_by: 'Theresa Theodorus, Natasha Debora',
         state: 'DRAFT',
         isNew: true,
-        receiver:'test1'
+        isPublished: false,
+        isClone: false,
+        receiver: 'test1'
     },
     {
         type: 'formulir',
@@ -1055,8 +1374,10 @@ module.exports.mypages = [
         send_to: 'Yayopriyo Wibowo',
         current_by: 'Firda Agustriyani',
         state: 'DRAFT',
-        isNew: false,
-        receiver:'test1'
+        isNew: true,
+        isPublished: true,
+        isClone: false,
+        receiver: 'test1'
     },
     {
         type: 'atribut',
@@ -1072,7 +1393,9 @@ module.exports.mypages = [
         current_by: 'Firda Agustriyani, Kemal Batubara, Indah Permata Sari, Andreas Herawan, Thomas Wibisono, John Doe, Amalia..',
         state: 'DRAFT',
         isNew: true,
-        receiver:'test1'
+        isPublished: true,
+        isClone: true,
+        receiver: 'test1'
     }
 ]
 
@@ -1174,4 +1497,5 @@ module.exports.lastKeyword = lastKeyword;
 module.exports.articles = articles;
 module.exports.sample_basic = sample_basic;
 module.exports.sample_non_basic = sample_non_basic;
+module.exports.sample_non_basic2 = sample_non_basic2;
 module.exports.sample_empty = sample_empty;
