@@ -27,6 +27,7 @@ export declare interface MyPageRowItem {
   state: string,
   isNew: boolean,
   isPublished: boolean
+  isClone: boolean
   receiver?: string
 }
 
@@ -269,7 +270,8 @@ export class MyPagesComponent implements OnInit, OnDestroy {
         btnCancelText: 'Batal'
       }).then((confirmed) => {
         if (confirmed === true) {
-          this.router.navigate([`/article/form/${item.id}`, { isEdit: true }]);
+          const needClone: boolean = item.isPublished === true && item.isClone === false;
+          this.router.navigate([`/article/form/${item.id}`, { isEdit: true, needClone }]);
         }
       });
     });

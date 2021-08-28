@@ -66,6 +66,7 @@ export declare interface ArticleDTO {
     suggestions: ArticleRelatedDTO[],
     isAdd?: boolean,
     isNew?: boolean,
+    isClone?: boolean,
     isPublished?: boolean,
     modified_name?: string,
     modified_by?: string,

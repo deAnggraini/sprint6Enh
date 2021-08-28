@@ -169,7 +169,11 @@ export class PreviewComponent implements OnInit, AfterViewInit, OnDestroy {
         btnCancelText: 'Batal'
       }).then((confirmed) => {
         if (confirmed === true) {
-          this.router.navigate([`/article/form/${item.id}`, { isEdit: true, contentId }], { fragment: `acc-id-${contentId}` });
+          this.router.navigate(
+            [`/article/form/${item.id}`,
+            { isEdit: true, contentId, needClone: item.isPublished === true && item.isClone === false }
+            ], { fragment: `acc-id-${contentId}` }
+          );
         }
       });
     });
