@@ -66,7 +66,7 @@ public interface ArticleContentVersionRepository extends CrudRepository<ArticleC
                     " WHERE m.judulArticle = :judulArticle " +
                     " AND m.id = (SELECT MAX(m.id) FROM ArticleVersion m " +
                     "               WHERE m.judulArticle = :judulArticle " +
-                    "               AND m.releaseVersion IS NOT NULL " +
+                    "               AND m.publishedVersion IS NOT NULL " +
                     "               AND m.deleted IS FALSE " +
                     ")"
     )
