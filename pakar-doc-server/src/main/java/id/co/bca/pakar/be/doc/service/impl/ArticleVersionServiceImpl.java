@@ -1,15 +1,14 @@
 package id.co.bca.pakar.be.doc.service.impl;
 
-import id.co.bca.pakar.be.doc.common.Constant;
+import id.co.bca.pakar.be.doc.dao.ArticleContentVersionRepository;
+import id.co.bca.pakar.be.doc.dao.ArticleRepository;
 import id.co.bca.pakar.be.doc.dao.ArticleVersionRepository;
+import id.co.bca.pakar.be.doc.dao.StructureRepository;
 import id.co.bca.pakar.be.doc.dto.ArticleDto;
 import id.co.bca.pakar.be.doc.dto.SearchPublishedArticleDto;
 import id.co.bca.pakar.be.doc.exception.MinValuePageNumberException;
 import id.co.bca.pakar.be.doc.exception.SavingArticleVersionException;
-import id.co.bca.pakar.be.doc.model.Article;
-import id.co.bca.pakar.be.doc.model.ArticleContent;
-import id.co.bca.pakar.be.doc.model.ArticleContentVersion;
-import id.co.bca.pakar.be.doc.model.ArticleVersion;
+import id.co.bca.pakar.be.doc.model.*;
 import id.co.bca.pakar.be.doc.service.ArticleVersionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 /**
  *
@@ -32,6 +30,15 @@ public class ArticleVersionServiceImpl implements ArticleVersionService {
 
     @Autowired
     private ArticleVersionRepository articleVersionRepository;
+
+    @Autowired
+    private ArticleRepository articleRepository;
+
+    @Autowired
+    private ArticleContentVersionRepository articleContentVersionRepository;
+
+    @Autowired
+    private StructureRepository structureRepository;
 
     @Override
     @Transactional(rollbackFor = {Exception.class, SavingArticleVersionException.class})
@@ -58,6 +65,7 @@ public class ArticleVersionServiceImpl implements ArticleVersionService {
 
     /**
      * search published article from article version
+     *
      * @param searchDto
      * @return
      * @throws Exception
@@ -84,7 +92,7 @@ public class ArticleVersionServiceImpl implements ArticleVersionService {
             searchDto.getSorting().setColumn(new ArticleVersionHelper().convertColumnNameforSort(reqSortColumnName));
             Sort sort = searchDto.getSorting().getSort().equals("asc") ? Sort.by(searchDto.getSorting().getColumn()).ascending() : Sort.by(searchDto.getSorting().getColumn()).descending();
             Pageable pageable = PageRequest.of(pageNum, searchDto.getSize().intValue(), sort);
-            if(!searchDto.getIsLatest().booleanValue())
+            if (!searchDto.getIsLatest().booleanValue())
                 searchResultPage = articleVersionRepository.findPublishedArticles(searchDto.getStructureId(), searchDto.getKeyword(), pageable);
             else {
                 logger.info("get latests published article ");
@@ -97,6 +105,26 @@ public class ArticleVersionServiceImpl implements ArticleVersionService {
         } catch (Exception e) {
             logger.error("exception", e);
             throw new Exception("exception", e);
+        }
+    }
+
+    /**
+     * reload article version to article
+     *
+     * @return
+     * @throws Exception
+     */
+    @Override
+    @Transactional
+    public Article reloadPublishedArticleVersion(String judulArticle, String copier, Article destination) throws Exception {
+        try {
+            logger.info("loading article {} from article version by {}", judulArticle, copier);
+            ArticleVersion version = articleVersionRepository.findLastPublished(judulArticle);
+            destination = new ArticleVersionHelper().copyToArticle(version, destination, copier);
+            return destination;
+        } catch (Exception e) {
+            logger.error("failed to reload");
+            return null;
         }
     }
 
@@ -120,15 +148,19 @@ public class ArticleVersionServiceImpl implements ArticleVersionService {
             articleVersion.setStructure(article.getStructure().getId());
             articleVersion.setVideoLink(article.getVideoLink());
 
-            if(isReleased.booleanValue()) {
-                articleVersion.setReleaseVersion(UUID.randomUUID().toString());
+            if (isReleased.booleanValue()) {
+                // get latest published version
+                ArticleVersion lastPublished = articleVersionRepository.findLastPublished(article.getJudulArticle());
+                if (lastPublished != null)
+                    articleVersion.setPublishedVersion(lastPublished.getPublishedVersion() + 1);
             }
 
-            if(!isReleased.booleanValue())
+            if (!isReleased.booleanValue())
                 articleVersion.setTimeStampVersion(new Date());
             articleVersion.setUsername(article.getModifyBy());
             articleVersion.setPublished(article.getPublished());
-            articleVersion.setAdd(article.getIsAdd());
+            articleVersion.setIsAdd(article.getIsAdd());
+            articleVersion.setIsClone(article.getIsClone());
             return articleVersion;
         }
 
@@ -176,8 +208,11 @@ public class ArticleVersionServiceImpl implements ArticleVersionService {
             dto.setShortDescription(entity.getShortDescription());
             dto.setVideoLink(entity.getVideoLink());
             dto.setStructureId(entity.getStructure());
+            dto.setIsAdd(entity.getIsAdd());
+            dto.setNew(entity.getNewArticle());
             //dto.setImage(entity.getArt);
-            dto.setPublished(entity.getArticleState().equalsIgnoreCase(Constant.ArticleWfState.PUBLISHED) ? Boolean.TRUE : Boolean.FALSE);
+            dto.setPublished(entity.getPublished());
+            dto.setIsClone(entity.getIsClone());
             return dto;
         }
 
@@ -189,6 +224,82 @@ public class ArticleVersionServiceImpl implements ArticleVersionService {
         public Page<ArticleDto> emptypage(Pageable pageRequest) {
             List<ArticleDto> dtos = new ArrayList<>();
             return new PageImpl<>(dtos, pageRequest, 0);
+        }
+
+        /**
+         *
+         * @param source
+         * @param destination
+         * @param copier
+         * @return
+         */
+        public Article copyToArticle(ArticleVersion source, Article destination, String copier) {
+            /*
+            if article not yet created then create new article from published version,
+            if article ever saved or save and send than update article from article version with time stamp
+             */
+            if (destination == null) {
+                destination.setCreatedBy(copier);
+                destination.setCreatedDate(new Date());
+                destination.setModifyBy(copier);
+                destination.setModifyDate(new Date());
+                destination.setJudulArticle(source.getJudulArticle());
+                destination.setShortDescription(source.getShortDescription());
+                destination.setVideoLink(source.getVideoLink());
+                destination.setStructure(structureRepository.findStructure(source.getStructure()));
+                //TODO dto.setImage(destination.getArt);
+                destination.setUseEmptyTemplate(source.getUseEmptyTemplate());
+                destination.setArticleState(source.getArticleState());
+                destination.setFullNameModifier(source.getFullNameModifier());
+                destination.setPublished(source.getPublished());
+                destination.setIsAdd(source.getIsAdd());
+                destination.setNewArticle(source.getNewArticle());
+                destination.setIsClone(source.getIsClone());
+
+                // copy content version to content
+                // TODO content version
+//                List<ArticleContentVersion> publishedContentVersion = articleContentVersionRepository.
+//                List<ArticleContent> articleContents = new ArticleVersionHelper().populateArticleContentVersion(article.getArticleContents(), av);
+//
+//                articleContents.forEach(e -> {
+//                    ArticleContentClone clone = new ArticleContentClone();
+//                    clone.setId(e.getId());
+//                    clone.setVersion(e.getVersion());
+//                    clone.setArticle(article);
+//                    clone.setDescription(e.getDescription());
+//                    clone.setLevel(e.getLevel());
+//                    clone.setName(e.getName());
+//                    clone.setParent(e.getParent());
+//                    clone.setSort(e.getSort());
+//                    clone.setTopicCaption(e.getTopicCaption());
+//                    clone.setTopicContent(e.getTopicContent());
+//                    clone.setCreatedBy(e.getCreatedBy());
+//                    clone.setCreatedDate(e.getCreatedDate());
+//                    clone.setDeleted(e.getDeleted());
+//                    clone.setModifyBy(e.getModifyBy());
+//                    clone.setModifyDate(e.getModifyDate());
+//                    articleContentCloneRepository.save(clone);
+//                });
+                // save to article
+                articleRepository.save(destination);
+            } else {
+                destination.setCreatedBy(copier);
+                destination.setCreatedDate(new Date());
+                destination.setModifyBy(copier);
+                destination.setModifyDate(new Date());
+                destination.setJudulArticle(source.getJudulArticle());
+                destination.setShortDescription(source.getShortDescription());
+                destination.setVideoLink(source.getVideoLink());
+                destination.setStructure(structureRepository.findStructure(source.getStructure()));
+                //TODO dto.setImage(destination.getArt);
+                destination.setUseEmptyTemplate(source.getUseEmptyTemplate());
+                destination.setArticleState(source.getArticleState());
+                destination.setFullNameModifier(source.getFullNameModifier());
+                destination.setPublished(source.getPublished());
+                destination.setIsAdd(source.getIsAdd());
+                destination.setNewArticle(source.getNewArticle());
+            }
+            return destination;
         }
 
         public String convertColumnNameforSort(String reqColumn) {

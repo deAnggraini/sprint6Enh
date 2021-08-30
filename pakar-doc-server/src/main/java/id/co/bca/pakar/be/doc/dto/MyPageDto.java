@@ -33,6 +33,8 @@ public class MyPageDto extends BaseDto {
     private String currentBy;
     @JsonProperty("receiver")
     private String receiver;
+    @JsonProperty("isClone")
+    private Boolean isClone;
 
     public Long getId() {
         return id;
@@ -144,5 +146,13 @@ public class MyPageDto extends BaseDto {
 
     public void setReceiver(String receiver) {
         this.receiver = receiver;
+    }
+
+    public Boolean getIsClone() {
+        return isClone;
+    }
+
+    public void setIsClone(Boolean clone) {
+        isClone = clone;
     }
 }

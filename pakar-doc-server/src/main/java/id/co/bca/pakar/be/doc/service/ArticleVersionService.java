@@ -10,4 +10,6 @@ public interface ArticleVersionService {
     ArticleVersion saveArticle(Article article, Boolean isReleased) throws Exception;
 
     Page<ArticleDto> searchPublishedArticle(SearchPublishedArticleDto searchDto) throws Exception;
+
+    Article reloadPublishedArticleVersion(String judulArticle, String copier, Article source) throws Exception;
 }

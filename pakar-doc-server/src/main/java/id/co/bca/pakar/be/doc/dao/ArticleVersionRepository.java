@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface ArticleVersionRepository extends CrudRepository<ArticleVersion, Long> {
+public interface ArticleVersionRepository extends CrudRepository<ArticleVersion, String> {
     @Query("SELECT m FROM ArticleVersion m " +
             "WHERE m.id=:id " +
             "AND m.deleted IS FALSE ")
@@ -25,12 +25,6 @@ public interface ArticleVersionRepository extends CrudRepository<ArticleVersion,
             nativeQuery = true
     )
     Page<ArticleVersion> findRelatedArticles(@Param("id") Long id, @Param("keyword") String keyword, Pageable pageable);
-
-    @Query("SELECT CASE WHEN COUNT(m) > 0 THEN TRUE ELSE FALSE END FROM ArticleVersion m " +
-            "WHERE m.articleState = 'NEW'" +
-            "AND m.deleted IS FALSE " +
-            "AND m.id=:id")
-    Boolean isPreDraftArticle(@Param("id") Long id);
 
     // find article for contents page role ADMIN
     @Query("SELECT m FROM ArticleVersion m " +
@@ -66,22 +60,28 @@ public interface ArticleVersionRepository extends CrudRepository<ArticleVersion,
             "ORDER BY m.modifyDate ")
     Page<ArticleVersion> findPublishedArticles(Pageable pageable);
 
-    @Query("SELECT m FROM ArticleVersion m " +
-            "WHERE m.isPublished IS TRUE " +
-            "AND m.articleId=:articleId " +
-            "AND m.deleted IS FALSE " +
-            "ORDER BY m.id " +
-            "DESC ")
-    ArticleVersion findLastPublished(@Param("articleId") Long articleId);
+    @Query(
+            "SELECT m FROM ArticleVersion m " +
+                    " WHERE m.judulArticle = :judulArticle " +
+                    " AND m.id = (SELEC MAX(m.id) FROM ArticleVersion m " +
+                    "               WHERE m.judulArticle = :judulArticle " +
+                    "               AND m.releaseVersion IS NOT NULL " +
+                    "               AND m.deleted IS FALSE " +
+                    ")"
+    )
+    ArticleVersion findLastPublished(@Param("judulArticle") String judulArticle);
 
     @Query("SELECT m FROM ArticleVersion m " +
             "WHERE m.timeStampVersion IS NOT NULL " +
-            "AND m.articleId=:articleId " +
-            "AND m.username=:username " +
-            "AND m.deleted IS FALSE " +
-            "ORDER BY m.timeStampVersion " +
-            "DESC ")
-    ArticleVersion findLastTimeStampByUsername(@Param("articleId") Long articleId, @Param("username") String username);
+            "AND m.judulArticle = :judulArticle " +
+            "AND m.createdBy=:username " +
+            "AND m.id = (SELEC MAX(m.id) FROM ArticleVersion m " +
+            "           WHERE m.judulArticle = :judulArticle " +
+            "           AND m.timeStampVersion IS NOT NULL " +
+            "           AND m.deleted IS FALSE " +
+            ")"
+    )
+    ArticleVersion findLastTimeStampVersion(@Param("judulArticle") String judulArticle, @Param("username") String username);
 
     @Query("SELECT m FROM ArticleVersion m " +
             "WHERE m.timeStampVersion IS NOT NULL " +

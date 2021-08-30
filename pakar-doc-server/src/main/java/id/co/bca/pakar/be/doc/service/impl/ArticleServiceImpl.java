@@ -462,12 +462,17 @@ public class ArticleServiceImpl implements ArticleService {
     public ArticleDto getArticleById(Long id, boolean isEdit, String username, String token) throws Exception {
         try {
             Optional<Article> articleOpt = articleRepository.findById(id);
-
             if (articleOpt.isEmpty()) {
                 throw new ArticleNotFoundException("not found article with id --> " + id);
             }
 
             Article article = articleOpt.get();
+            // TODO add clone article version
+            if(article.getPublished() && !article.getIsClone()) {
+                // clone article version to article
+//                article = articleVersionService.reloadPublishedArticleVersion(article.getJudulArticle(), username);
+            }
+
             ArticleDto articleDto = new ArticleDto();
             articleDto.setCreatedBy(article.getCreatedBy());
             articleDto.setCreatedDate(article.getCreatedDate());
@@ -480,6 +485,7 @@ public class ArticleServiceImpl implements ArticleService {
             articleDto.setPublished(article.getPublished());
             articleDto.setNew(article.getNewArticle());
             articleDto.setIsAdd(article.getIsAdd());
+            articleDto.setIsClone(articleDto.getIsClone());
 
             // get user profile from oauth server
             ResponseEntity<ApiResponseWrapper.RestResponse<List<UserProfileDto>>> restResponseUp = null;

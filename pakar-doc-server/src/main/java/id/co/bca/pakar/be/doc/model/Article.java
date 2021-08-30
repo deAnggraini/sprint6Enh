@@ -53,11 +53,14 @@ public class Article extends EntityBase {
     @Column(name = "fn_modifier")
     private String fullNameModifier;
 
-    @Column(name = "isPublished")
+    @Column(name = "is_published")
     private Boolean isPublished = Boolean.FALSE;
 
-    @Column(name = "isAdd")
+    @Column(name = "is_add")
     private Boolean isAdd = Boolean.TRUE;
+
+    @Column(name = "is_clone")
+    private Boolean isClone = Boolean.TRUE;
 
     public Long getId() {
         return id;
@@ -185,5 +188,13 @@ public class Article extends EntityBase {
 
     public void setIsAdd(Boolean add) {
         isAdd = add;
+    }
+
+    public Boolean getIsClone() {
+        return isClone;
+    }
+
+    public void setIsClone(Boolean clone) {
+        isClone = clone;
     }
 }

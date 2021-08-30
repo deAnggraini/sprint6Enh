@@ -73,6 +73,9 @@ public class ArticleDto extends BaseArticleDto {
     @JsonProperty("isAdd")
     private Boolean isAdd = Boolean.TRUE;
 
+    @JsonProperty("isClone")
+    private Boolean isClone = Boolean.FALSE;
+
     public String getShortDescription() {
         return shortDescription;
     }
@@ -231,5 +234,13 @@ public class ArticleDto extends BaseArticleDto {
 
     public void setIsAdd(Boolean add) {
         isAdd = add;
+    }
+
+    public Boolean getIsClone() {
+        return isClone;
+    }
+
+    public void setIsClone(Boolean clone) {
+        isClone = clone;
     }
 }

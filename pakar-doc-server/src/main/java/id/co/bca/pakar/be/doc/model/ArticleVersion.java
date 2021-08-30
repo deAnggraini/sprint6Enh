@@ -55,8 +55,8 @@ public class ArticleVersion extends EntityBase {
     @Column(name = "fn_modifier")
     private String fullNameModifier;
 
-    @Column(name = "release_version")
-    private String releaseVersion;
+    @Column(name = "published_version")
+    private Long publishedVersion = 0L;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "timestamp_version")
@@ -74,6 +74,9 @@ public class ArticleVersion extends EntityBase {
 
     @Column(name = "isAdd")
     private Boolean isAdd = Boolean.TRUE;
+
+    @Column(name = "is_clone")
+    private Boolean isClone = Boolean.TRUE;
 
     public String getId() {
         return id;
@@ -195,12 +198,12 @@ public class ArticleVersion extends EntityBase {
         this.timeStampVersion = timeStampVersion;
     }
 
-    public String getReleaseVersion() {
-        return releaseVersion;
+    public Long getPublishedVersion() {
+        return publishedVersion;
     }
 
-    public void setReleaseVersion(String releaseVersion) {
-        this.releaseVersion = releaseVersion;
+    public void setPublishedVersion(Long publishedVersion) {
+        this.publishedVersion = publishedVersion;
     }
 
     public String getUsername() {
@@ -227,11 +230,19 @@ public class ArticleVersion extends EntityBase {
         isPublished = published;
     }
 
-    public Boolean getAdd() {
+    public Boolean getIsAdd() {
         return isAdd;
     }
 
-    public void setAdd(Boolean add) {
+    public void setIsAdd(Boolean add) {
         isAdd = add;
+    }
+
+    public Boolean getIsClone() {
+        return isClone;
+    }
+
+    public void setIsClone(Boolean clone) {
+        isClone = clone;
     }
 }
