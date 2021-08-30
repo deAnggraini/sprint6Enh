@@ -27,13 +27,20 @@ desc
 ALTER TABLE public.t_article_content_clone ALTER COLUMN optlock DROP NOT NULL;
 
 ALTER TABLE public.t_article_version ALTER COLUMN optlock DROP NOT NULL;
-ALTER TABLE public.t_article_content ALTER COLUMN id TYPE varchar USING id::varchar;
+ALTER TABLE public.t_article_version ALTER COLUMN id TYPE varchar USING id::varchar;
 
 ALTER TABLE public.t_article_content_version ALTER COLUMN optlock DROP NOT NULL;
 ALTER TABLE public.t_article_content_version ALTER COLUMN id TYPE varchar USING id::varchar;
 ALTER TABLE public.t_article_content_version DROP CONSTRAINT fkr5h9iy8eem78l9fu0fdxlmcrq;
+ALTER TABLE public.t_article_content_version ALTER COLUMN article_version_id TYPE varchar USING article_version_id::varchar;
 
 ALTER TABLE public.t_article ALTER COLUMN optlock DROP NOT NULL;
 
 ALTER TABLE public.t_article_content ALTER COLUMN optlock DROP NOT NULL;
+
+ALTER TABLE public.t_article ALTER COLUMN optlock DROP NOT NULL;
+
+ALTER TABLE public.t_article_version DROP COLUMN release_version;
+
+DROP TABLE IF EXISTS public.t_article_clone CASCADE;
 
