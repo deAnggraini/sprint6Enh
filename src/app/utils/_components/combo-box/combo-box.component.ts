@@ -50,11 +50,6 @@ const empty = { id: '0', value: '', text: '' };
       useExisting: forwardRef(() => ComboBoxComponent),
       multi: true
     },
-    // {
-    //   provide: NG_VALIDATORS,
-    //   useExisting: ComboBoxComponent,
-    //   multi: true
-    // }
   ]
 })
 export class ComboBoxComponent implements OnInit, OnDestroy, ControlValueAccessor, AfterViewInit {
@@ -96,9 +91,9 @@ export class ComboBoxComponent implements OnInit, OnDestroy, ControlValueAccesso
     }
   }
 
-  onClick(item) {
-    this.onSelect(item);
-  }
+  // onClick(item) {
+  //   this.onSelect(item);
+  // }
 
   onSelect(item: Option) {
     this.selected = item;
@@ -183,8 +178,19 @@ export class ComboBoxComponent implements OnInit, OnDestroy, ControlValueAccesso
     });
     $(this.tree_id).on("changed.jstree", function (e, data) {
       if (data && data.action == "select_node") {
-        $this.selectNode(data.selected[0]);
+        data.instance.toggle_node(data.node);
       }
+    });
+    $(this.tree_id).on('dblclick', '.jstree-anchor', function (e) {
+      console.log('dblclick', { e });
+      let instance = $.jstree.reference(this),
+        node = instance.get_node(e.target);
+      if (node) {
+        $this.selectNode(parseInt(node.id));
+      }
+      e.stopPropagation();
+      e.preventDefault();
+      return false;
     });
   }
 

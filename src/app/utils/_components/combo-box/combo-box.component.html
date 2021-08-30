@@ -1,6 +1,5 @@
 <div #comboBox class="combo-box d-flex align-items-center justify-content-between"
     [ngClass]="{ 'is-invalid': hasError, 'disabled': disabled}" (click)="toogleDropdown($event)">
-    <!-- <div class="text-ellipsis-1" [ngClass]="{'text-muted': !selected.value}">{{selected.value || placeholder}}</div> -->
     <input type="text" [placeholder]="placeholder" class="input-show" [value]="selected.value" readonly
         [disabled]="disabled">
     <input type="text" [placeholder]="placeholder" required autocomplete="off" [value]="selected.text"
@@ -13,23 +12,6 @@
     display="static">
     <button style="display: none;" ngbDropdownAnchor (focus)="comboBoxDrop.open()"></button>
     <div ngbDropdownMenu class="combo-box-dropdown">
-        <!-- <ngb-accordion class="accordion-light accordion-light-borderless accordion-combo-box" [destroyOnHide]="false"
-            (hidden)="onHidden($event)" (shown)="onShow($event)">
-            <ngb-panel *ngFor="let content of options.value">
-                <ng-template ngbPanelHeader>
-                    <div class="card-title d-flex align-items-center justify-content-between">
-                        <div>
-                            <button ngbPanelToggle class="btn btn-link btn-xs">
-                                <i class="ki ki-arrow-next text-primary icon-xs "></i></button>
-                            <span (click)="onClick(content)">{{content.text}}</span>
-                        </div>
-                    </div>
-                </ng-template>
-                <ng-template ngbPanelContent>
-
-                </ng-template>
-            </ngb-panel>
-        </ngb-accordion> -->
         <div [id]="'tree-cbx-'+randomId" class="combo-box-tree tree-demo"></div>
     </div>
 </div>
