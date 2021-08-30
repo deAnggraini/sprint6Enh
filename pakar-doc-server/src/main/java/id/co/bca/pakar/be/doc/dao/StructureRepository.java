@@ -13,7 +13,7 @@ public interface StructureRepository extends CrudRepository<Structure, Long>{
     @Query("SELECT CASE WHEN COUNT(m) > 0 THEN TRUE ELSE FALSE END FROM Structure m WHERE m.parentStructure=:parentId AND m.sort=:sort AND m.deleted IS FALSE")
     Boolean existStructureByParentIdAndSort(@Param("parentId") Long parentId, @Param("sort") Long sort);
     @Query(value="SELECT m.id, m.created_by, m.created_date, m.deleted, m.modify_by, m.modify_date, m.edit, m.level, m.parent, m.sort " +
-            "           ,m.description, m.name, m.uri, m.has_article, m.optlock, m.breadcumb, m.location, (SELECT string_agg(tbl.name::text, ' > '::text) AS location_text " +
+            "           ,m.description, m.name, m.uri, m.has_article, m.optlock, m.breadcumb, m.location, (SELECT string_agg(tbl.name, ' > ') AS location_text " +
             "           FROM ( WITH RECURSIVE rec AS (" +
             "                         SELECT tree.id," +
             "                            tree.name," +
