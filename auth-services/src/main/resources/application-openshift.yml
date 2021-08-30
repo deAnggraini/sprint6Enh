@@ -1,0 +1,15 @@
+server:
+  port: 8080
+spring:
+  profiles: openshift
+  dataSource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password:
+    hikari:
+      connectionTimeout: 20000
+      maximumPoolSize: 5
+    json:
+      file:
+        user: /var/bca/file/user.json

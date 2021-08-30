@@ -41,8 +41,8 @@ spring:
       signingkey: pakar123
   dataSource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://36.89.25.220:5432/pakardb2
-    username: pakar2
+    url: jdbc:postgresql://36.89.25.220:5432/pakardb5
+    username: pakar5
     password: pakar123
     hikari:
       connectionTimeout: 20000

@@ -1,7 +1,7 @@
 server:
   port: 8080
 spring:
-  profiles: dev-ogya
+  profiles: openshift
   rest:
     timeout:
       read: 60000
@@ -22,15 +22,14 @@ spring:
     locking-time-failed-login : 30
   eai:
     ad:
-      loginUri: http://36.89.25.220:12085/ad-gateways/verify1
+      loginUri: http://36.89.25.220:13085/ad-gateways/verify1
       clientId: 8C21EBEEB1AA3FBFE05400144FFBD319
       applicationID: PRJ1
       key: 123456789013245678901234
   security:
     oauth2:
-      server: 
-#        url: http://127.0.0.1:12081/oauth/token
-        url: http://127.0.0.1:12081
+      server:
+       url: http://localhost:8080
       clientId: 8C21EBEEB1AA3FBFE05400144FFBD319
       clientSecret: da82edc6dcc1af30
       authorize-grant-type: password,refresh_token
@@ -40,8 +39,8 @@ spring:
       signingkey: pakar123
   dataSource: 
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://36.89.25.220:5432/pakardb
-    username: pakar
+    url: jdbc:postgresql://36.89.25.220:5432/pakardb5
+    username: pakar5
     password: pakar123
     hikari:
       connectionTimeout: 20000
