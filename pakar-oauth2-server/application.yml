@@ -50,8 +50,11 @@ spring:
     username: pakar3
     password: pakar123
     hikari:
+      minimumIdle: 5
+      maximumPoolSize: 20
+      idleTimeout: 30000
+      maxLifetime: 2000000
       connectionTimeout: 20000
-      maximumPoolSize: 5
 ---
 spring:
   profiles: dev-local-docker
