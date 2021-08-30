@@ -128,15 +128,11 @@ export class DetailComponent implements OnInit, OnDestroy {
     fd.append('id', this.dataForm.value.id.toString());
     fd.append('name', this.dataForm.value.name);
     fd.append('desc', this.dataForm.value.desc);
-    // fd.append('image', this.dataForm.value.image);
-    // fd.append('icon', this.dataForm.value.icon);
     if (typeof (this.dataForm.value.image) == "string") {
-      // fd.append('image', null);
     } else {
       fd.append('image', this.dataForm.value.image);
     }
     if (typeof (this.dataForm.value.icon) == "string") {
-      // fd.append('icon', null);
     } else {
       fd.append('icon', this.dataForm.value.icon);
     }
@@ -157,8 +153,15 @@ export class DetailComponent implements OnInit, OnDestroy {
       fd.append('sort', (maxSort + 1).toString());
     }
 
-    fd.append('parent', this.dataForm.value.parent);
     fd.append('location', this.dataForm.value.location);
+    console.log('this.dataForm.value.location', this.dataForm.value.location);
+    if (this.dataForm.value.location) {
+      const split = this.dataForm.value.location.split(",");
+      const locationId: number = split[split.length - 1];
+      fd.append('parent', locationId.toString());
+    } else {
+      fd.append('parent', this.dataForm.value.parent);
+    }
     fd.append('location_text', this.locations.find(d => d._value == this.dataForm.value.location)._text);
     return fd;
   }
