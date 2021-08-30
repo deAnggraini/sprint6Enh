@@ -125,11 +125,23 @@ ul {
   }
 }
 
-:host .mat-accordion .mat-expansion-panel.acc-level {
+:host ::ng-deep .mat-accordion .mat-expansion-panel.acc-level {
 
   .mat-expansion-panel-header {
     &.mat-expanded {
       background-color: #C3DEF8 !important;
+    }
+  }
+
+  &.acc-level-2,
+  &.acc-level-3,
+  &.acc-level-4,
+  &.acc-level-5 {
+    .mat-expansion-panel-header.mat-expanded {
+      background-color: transparent !important;
+      span.mat-content {
+        background-color: #C3DEF8 !important;
+      }
     }
   }
 }

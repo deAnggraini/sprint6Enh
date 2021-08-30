@@ -85,7 +85,8 @@
                                             <td (click)="showArticle(item.id)" class="cursor-pointer"
                                                 placement="top auto" [ngbTooltip]="item.location" container="body"
                                                 tooltipClass="fs12">
-                                                {{item.location | maxLength:130}}</td>
+                                                <div class="te-3">{{item.location | maxLength:130}}</div>
+                                            </td>
                                             <td (click)="showArticle(item.id)" class="cursor-pointer">
                                                 {{item.effective_date | date:'dd/MM/yyyy hh:mm a'}}</td>
                                             <td (click)="showArticle(item.id)" class="cursor-pointer">
@@ -93,7 +94,7 @@
                                             <td (click)="showArticle(item.id)" class="te-3 cursor-pointer"
                                                 placement="top auto" [ngbTooltip]="item.current_by" container="body"
                                                 tooltipClass="fs12">
-                                                {{(item.current_by | maxLength:130) || '-'}}
+                                                <div class="te-3">{{(item.current_by | maxLength:130) || '-'}}</div>
                                             </td>
 
                                             <td class="td-dot3" style="width: 45px;" ngbDropdownToggle>

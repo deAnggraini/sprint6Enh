@@ -24,6 +24,7 @@ export declare interface ContentRowItem {
   current_by: string,
   state: string,
   isNew: boolean,
+  isClone: boolean,
   isPublished: boolean
 }
 
@@ -71,6 +72,7 @@ export class ContentComponent implements OnInit, OnDestroy {
 
   @ViewChildren(NgbdSortableHeader) headers: QueryList<NgbdSortableHeader>;
   @ViewChild('riwayatVersiModal') riwayatVersiModal: TemplateRef<any>;
+  @ViewChild('formConfirmDelete') formConfirmDelete: TemplateRef<any>;
 
   subscriptions: Subscription[] = [];
   dataForm: FormBean = JSON.parse(JSON.stringify(EMPTY_FORM_BEAN));
@@ -112,6 +114,7 @@ export class ContentComponent implements OnInit, OnDestroy {
     },
     sendNote: ''
   }
+  idSelected: number
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -247,7 +250,8 @@ export class ContentComponent implements OnInit, OnDestroy {
         btnCancelText: 'Batal'
       }).then((confirmed) => {
         if (confirmed === true) {
-          this.router.navigate([`/article/form/${item.id}`, { isEdit: true }]);
+          const needClone: boolean = item.isPublished === true && item.isClone === false;
+          this.router.navigate([`/article/form/${item.id}`, { isEdit: true, needClone }]);
         }
       });
     });
@@ -261,6 +265,11 @@ export class ContentComponent implements OnInit, OnDestroy {
       btnCancelText: 'Batal'
     }).then((confirmed) => {
       if (confirmed === true) {
+        if (item.isPublished) {
+          this.idSelected = item.id
+          this.modalService.open(this.formConfirmDelete);
+          return
+        }
         this.subscriptions.push(
           this.articleService.cancelArticle(item.id).subscribe(resp => {
             if (resp) this.onRefreshTable();
@@ -302,8 +311,17 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.delete.sendTo.email = item.value;
   }
 
-  onCancelApprover(e){
-    
+  onCancelApprover(e) {
+    let body = { id: this.idSelected, isHasSend: true, sendTo: this.delete.sendTo, sendNote: this.delete.sendNote }
+    this.subscriptions.push(
+      this.articleService.deleteArticle(body).subscribe(resp => {
+        if (resp) {
+          this.modalService.dismissAll();
+          this.onRefreshTable();
+        }
+      })
+    )
+    return false;
   }
 
   getUsername(): string {
