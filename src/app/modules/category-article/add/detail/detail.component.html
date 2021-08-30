@@ -80,7 +80,7 @@
     <div class="modal-footer">
         <button type="button" class="btn btn-outline-light btn-sm rounded-lg px-5" (click)="c('Batal')">Batal</button>
         <button type="button" class="btn btn-sm btn-blue rounded-lg px-5" (click)="save()"
-            [disabled]="dataForm.invalid">{{isEdit ? 'Ubah' : 'Tambah'}}</button>
+            [disabled]="dataForm.invalid || isProcess">{{isEdit ? 'Ubah' : 'Tambah'}}</button>
     </div>
 </ng-template>
 

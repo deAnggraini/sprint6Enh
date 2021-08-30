@@ -7,6 +7,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { StrukturService } from 'src/app/modules/_services/struktur.service';
 import { DynamicAsideMenuService } from 'src/app/_metronic/core';
 import { ToastService } from 'src/app/utils/_services/toast.service';
+import { finalize } from 'rxjs/operators';
 
 declare var $: any;
 
@@ -62,6 +63,7 @@ export class DetailComponent implements OnInit, OnDestroy {
   selectedDelete: any = { id: 0, title: '', name: '' };
   listToChangeParent: any[] = [];
   listBrothers: any[] = [];
+  isProcess: boolean = false;
 
   constructor(
     private menu: DynamicAsideMenuService,
@@ -124,7 +126,7 @@ export class DetailComponent implements OnInit, OnDestroy {
 
   private convertToFormData(): FormData {
     const fd: FormData = new FormData();
-    const { id } = this.dataForm.value;
+    const { id, location } = this.dataForm.value;
     fd.append('id', this.dataForm.value.id.toString());
     fd.append('name', this.dataForm.value.name);
     fd.append('desc', this.dataForm.value.desc);
@@ -153,14 +155,33 @@ export class DetailComponent implements OnInit, OnDestroy {
       fd.append('sort', (maxSort + 1).toString());
     }
 
+    fd.append('parent', this.dataForm.value.parent);
     fd.append('location', this.dataForm.value.location);
-    console.log('this.dataForm.value.location', this.dataForm.value.location);
-    if (this.dataForm.value.location) {
-      const split = this.dataForm.value.location.split(",");
-      const locationId: number = split[split.length - 1];
-      fd.append('parent', locationId.toString());
-    } else {
-      fd.append('parent', this.dataForm.value.parent);
+    console.log({ id, location });
+    if (location) {
+      const split = location.split(",");
+      let locationId: number = split.pop();
+      if (locationId == id) { // locationId adalah item itu sendiri
+        locationId = split.pop();
+      }
+      console.log('locationId', locationId);
+      const _parent = this.locations.find(d => d.id == locationId);
+      console.log('_parent', _parent);
+      if (_parent) {
+        fd.delete('parent');
+        fd.delete('sort');
+        fd.delete('level');
+
+        fd.append('parent', _parent.id.toString());
+        fd.append('level', (_parent.level + 1).toString());
+
+        if (!(_parent.menus && _parent.menus.length)) {
+          _parent.menus = [];
+        }
+        const listSort = _parent.menus.map(d => d.sort);
+        const maxSort = Math.max(...listSort) | 0;
+        fd.append('sort', (maxSort + 1).toString());
+      }
     }
     fd.append('location_text', this.locations.find(d => d._value == this.dataForm.value.location)._text);
     return fd;
@@ -181,13 +202,18 @@ export class DetailComponent implements OnInit, OnDestroy {
 
   save() {
     if (this.dataForm.valid) {
-      this.strukturService.save(this.convertToFormData()).subscribe(resp => {
-        if (resp) {
-          this.menu.refreshStruktur();
-          this.modalService.dismissAll();
-          this.toast.showSuccess('Simpan Data Berhasil');
-        }
-      });
+      this.isProcess = true;
+      this.strukturService.save(this.convertToFormData())
+        .pipe(
+          finalize(() => this.isProcess = false)
+        )
+        .subscribe(resp => {
+          if (resp) {
+            this.menu.refreshStruktur();
+            this.modalService.dismissAll();
+            this.toast.showSuccess('Simpan Data Berhasil');
+          }
+        });
     }
   }
 
