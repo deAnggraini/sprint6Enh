@@ -12,45 +12,47 @@ import java.util.List;
 public interface StructureRepository extends CrudRepository<Structure, Long>{
     @Query("SELECT CASE WHEN COUNT(m) > 0 THEN TRUE ELSE FALSE END FROM Structure m WHERE m.parentStructure=:parentId AND m.sort=:sort AND m.deleted IS FALSE")
     Boolean existStructureByParentIdAndSort(@Param("parentId") Long parentId, @Param("sort") Long sort);
-    @Query(value="SELECT m.id, m.created_by, m.created_date, m.deleted, m.modify_by, m.modify_date, m.edit, m.level, m.parent, m.sort "+
-            "           , m.description, m.name, m.uri, m.has_article, m.optlock, m.location, (SELECT string_agg(tbl.name, ' > ') AS location_text " +
-            "           FROM ( WITH RECURSIVE rec AS (" +
-            "                         SELECT tree.id," +
-            "                            tree.name," +
-            "                            tree.parent," +
-            "                            tree.level" +
-            "                           FROM r_structure tree" +
-            "                          WHERE tree.id = m.id" +
-            "                        UNION ALL" +
-            "                         SELECT tree.id," +
-            "                            tree.name," +
-            "                            tree.parent," +
-            "                            tree.level" +
-            "                           FROM rec rec_1," +
-            "                            r_structure tree" +
-            "                          WHERE tree.id = rec_1.parent" +
-            "                        )" +
-            "                 SELECT rec.id," +
-            "                    rec.name," +
-            "                    rec.level," +
-            "                    1 AS grouper" +
-            "                   FROM rec" +
-            "                  ORDER BY rec.level) tbl" +
-            "          GROUP BY tbl.grouper) AS location_text" +
-            "          FROM (SELECT m.* FROM (SELECT m.* FROM r_structure m " +
-            "            LEFT JOIN r_structure m2 ON m2.parent = m.id " +
-            "            WHERE m.deleted is false " +
-            "            ORDER BY m.id ASC) m " +
-            "            WHERE m.parent IN ( " +
-            "            SELECT m.id FROM r_structure m " +
-            "            LEFT JOIN r_structure m2 ON m2.parent = m.id " +
-            "            WHERE m.deleted is false " +
-            "            ORDER BY m.id ASC) " +
-            "            UNION " +
-            "            SELECT m.* FROM r_structure m WHERE m.deleted is false and m.parent = 0" +
-            "            ) m" +
-            "          ORDER BY m.id " +
-            "          ASC",
+    @Query(value="select n.* FROM (\n" +
+            "          SELECT m.id, m.created_by, m.created_date, m.deleted, m.modify_by, m.modify_date, m.edit, m.level, m.parent, m.sort,\n" +
+            "           m.description, m.name, m.uri, m.has_article, m.optlock, m.breadcumb, m.location, (SELECT string_agg(tbl.name, ' > ') AS location_text\n" +
+            "           \t\t\t\t\tFROM ( WITH RECURSIVE rec as (\n" +
+            "\t\t                         SELECT tree.id,\n" +
+            "\t\t                            tree.name,\n" +
+            "\t\t                            tree.parent,\n" +
+            "\t\t                            tree.level\n" +
+            "\t\t                           FROM r_structure tree\n" +
+            "\t\t                          WHERE tree.id = m.id\n" +
+            "\t\t                        UNION ALL\n" +
+            "\t\t                         SELECT tree.id,\n" +
+            "\t\t                            tree.name,\n" +
+            "\t\t                            tree.parent,\n" +
+            "\t\t                            tree.level\n" +
+            "\t\t                           FROM rec rec_1,\n" +
+            "\t\t                            r_structure tree\n" +
+            "\t\t                          WHERE tree.id = rec_1.parent\n" +
+            "\t\t                        )\n" +
+            "\t\t                 SELECT rec.id,\n" +
+            "\t\t                    rec.name,\n" +
+            "\t\t                    rec.level,\n" +
+            "\t\t                    1 AS grouper\n" +
+            "\t\t                   FROM rec\n" +
+            "\t\t                  ORDER BY rec.level) tbl\n" +
+            "\t\t          GROUP BY tbl.grouper) AS location_text\n" +
+            "          FROM (SELECT m.* FROM (SELECT m.* FROM r_structure m \n" +
+            "\t\t            LEFT JOIN r_structure m2 ON m2.parent = m.id \n" +
+            "\t\t            WHERE m.deleted is false \n" +
+            "\t\t            ORDER BY m.id ASC) m \n" +
+            "\t\t            WHERE m.parent IN ( \n" +
+            "\t\t            SELECT m.id FROM r_structure m \n" +
+            "\t\t            LEFT JOIN r_structure m2 ON m2.parent = m.id \n" +
+            "\t\t            WHERE m.deleted is false \n" +
+            "\t\t            ORDER BY m.id ASC) \n" +
+            "\t\t            UNION \n" +
+            "\t\t            SELECT m.* FROM r_structure m WHERE m.deleted is false and m.parent = 0\n" +
+            "            ) m\n" +
+            "          ORDER BY m.id \n" +
+            "          asc\n" +
+            "          ) n",
             nativeQuery = true)
     List<Structure> findAll();
 
