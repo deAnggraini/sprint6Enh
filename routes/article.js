@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const categoryArticle = require('../database/category-article');
-const { notification, mypages, sample_empty, sample_basic, sample_non_basic, articles, recommendation, news, popular, suggestion, lastKeyword } = require('../database/articles');
+const { notification, mypages, sample_empty, sample_basic, sample_non_basic2, sample_non_basic, articles, recommendation, news, popular, suggestion, lastKeyword } = require('../database/articles');
 const theme = require('../database/themes');
 const _ = require('lodash');
 const path = require('path');
@@ -25,10 +25,10 @@ router.post('/keyword', (req, res) => {
     res.send({ error: false, msg: "", data: lastKeyword });
 });
 router.post('/searchArticle', (req, res) => {
-    const { keyword, page, limit, type } = req.body;
+    const { keyword, page, limit, type, structureId } = req.body;
     console.log('search article', { keyword, page });
 
-    if (keyword == 'kosong' || type == "faq") {
+    if (keyword == 'kosong' || type == "faq" || (structureId && structureId != 110)) {
         res.send({
             error: false,
             msg: "",
@@ -392,7 +392,7 @@ router.post('/generateArticle', (req, res) => {
 router.post('/getArticle', (req, res) => {
     const { body } = req;
     console.log({ body });
-    res.send({ error: false, msg: "", data: sample_non_basic });
+    res.send({ error: false, msg: "", data: sample_non_basic2 });
 });
 
 router.get('/getContentId', (req, res) => {
