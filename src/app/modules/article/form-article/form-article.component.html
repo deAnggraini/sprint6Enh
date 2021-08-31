@@ -98,7 +98,7 @@
                             *ngFor="let content of dataForm.get('contents').value; let i=index;"
                             class="acc-level acc-level-1" [(expanded)]="content.expanded">
                             <mat-expansion-panel-header [@.disabled]="true">
-                                <mat-panel-title class="d-flex flex-row fs16pt" [id]="'acc-title-'+content.id">
+                                <mat-panel-title class="d-flex flex-row fs16pt-em" [id]="'acc-title-'+content.id">
                                     <span>{{content.title}}</span>
                                     <span [inlineSVG]="'./assets/media/svg/bca/icon/info.svg'" cacheSVG="true"
                                         class="svg-icon svg-tooltip mx-2" placement="right" [ngbTooltip]="tooltips[i]"
@@ -255,7 +255,7 @@
                     <div class="drag-placeholder" *cdkDragPlaceholder></div>
                     <mat-expansion-panel-header cdkDragHandle [class.drop-area-accordion]="content.expanded"
                         [attr.data-id]="content.id">
-                        <mat-panel-title class="d-flex flex-row fs16pt" [id]="'acc-title-'+content.id">
+                        <mat-panel-title class="d-flex flex-row fs16pt-em" [id]="'acc-title-'+content.id">
                             <span class="mr-2">{{numberingFormat(content)}}.</span>
                             <span [innerHTML]="content.title"></span>
                         </mat-panel-title>

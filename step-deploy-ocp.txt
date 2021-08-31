@@ -1,0 +1,32 @@
+### clone project from git ###
+git clone http://dev2.quadras.co.id/PAKAR/angular.git pakar-angular
+
+### goto inside directory ###
+cd pakar-angular
+
+### install project dependencies ###
+npm install
+
+### generate build ###
+npm run build-dev
+
+### login to ocp ###
+oc login -u <user> -p *****
+
+### create build-config ocp ###
+oc new-build --name bca-pakar-angular-dev --labels app=bca-pakar-angular-dev --binary=true --strategy=docker
+
+### generate build ocp ###
+oc start-build bca-pakar-angular-dev --from-dir=. --follow
+
+### create application ###
+oc apply -f  angular-deployment.yml 
+
+### check pod is running ###
+oc get pod --selector app=bca-pakar-angular-dev
+
+### check pod is running ###
+oc logs -f bca-pakar-angular-dev-54b66df9c9-rtg7s
+
+### publish pod supppose to be access from outside ###
+oc expose svc/bca-pakar-angular-dev
