@@ -98,4 +98,8 @@ router.post('/searchUserNotReader', (req, res) => {
     res.send({ error: false, msg: "", data: users });
 });
 
+router.post('/getUsersByRole', (req, res) => {
+    res.send({ error: false, msg: "", data: users });
+});
+
 module.exports = router;

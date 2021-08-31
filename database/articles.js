@@ -934,7 +934,7 @@ module.exports.mypages = [
         current_by: 'Theresa Theodorus, Anita Rachmat',
         state: 'DRAFT',
         isNew: false,
-
+        isPublished: true
     },
     {
         type: 'microinformation',
@@ -949,7 +949,8 @@ module.exports.mypages = [
         send_to: 'Yayopriyo Wibowo',
         current_by: 'Theresa Theodorus, Natasha Debora',
         state: 'DRAFT',
-        isNew: true
+        isNew: true,
+        isPublished: false
     },
     {
         type: 'formulir',
@@ -964,7 +965,8 @@ module.exports.mypages = [
         send_to: 'Yayopriyo Wibowo',
         current_by: 'Firda Agustriyani',
         state: 'DRAFT',
-        isNew: false
+        isNew: false,
+        isPublished: true
     },
     {
         type: 'atribut',
@@ -979,7 +981,8 @@ module.exports.mypages = [
         send_to: 'Yayopriyo Wibowo',
         current_by: 'Firda Agustriyani, Kemal Batubara, Indah Permata Sari, Andreas Herawan, Thomas Wibisono, John Doe, Amalia..',
         state: 'DRAFT',
-        isNew: true
+        isNew: true,
+        isPublished: false
     },
 
 
@@ -997,6 +1000,7 @@ module.exports.mypages = [
         current_by: 'Theresa Theodorus, Anita Rachmat',
         state: 'DRAFT',
         isNew: false,
+        isPublished: false
 
     },
     {
@@ -1012,7 +1016,8 @@ module.exports.mypages = [
         send_to: 'Yayopriyo Wibowo',
         current_by: 'Theresa Theodorus, Natasha Debora',
         state: 'DRAFT',
-        isNew: true
+        isNew: true,
+        isPublished: false
     },
     {
         type: 'formulir',
@@ -1027,7 +1032,8 @@ module.exports.mypages = [
         send_to: 'Yayopriyo Wibowo',
         current_by: 'Firda Agustriyani',
         state: 'DRAFT',
-        isNew: false
+        isNew: false,
+        isPublished: false
     },
     {
         type: 'atribut',
@@ -1042,7 +1048,8 @@ module.exports.mypages = [
         send_to: 'Yayopriyo Wibowo',
         current_by: 'Firda Agustriyani, Kemal Batubara, Indah Permata Sari, Andreas Herawan, Thomas Wibisono, John Doe, Amalia..',
         state: 'DRAFT',
-        isNew: true
+        isNew: true,
+        isPublished: false
     }
 ]
 
