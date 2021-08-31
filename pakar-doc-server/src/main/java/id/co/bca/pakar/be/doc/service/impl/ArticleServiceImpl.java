@@ -467,8 +467,8 @@ public class ArticleServiceImpl implements ArticleService {
             }
 
             Article article = articleOpt.get();
-            // TODO add clone article version
-            if(article.getPublished() && !article.getIsClone()) {
+            // TODO add clone published article version
+            if(article.getPublished().booleanValue() && !article.getIsClone().booleanValue()) {
                 // clone article version to article
 //                article = articleVersionService.reloadPublishedArticleVersion(article.getJudulArticle(), username);
             }
