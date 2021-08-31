@@ -1,0 +1,38 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: bca-pakar-angular-dev
+  labels:
+    app: bca-pakar-angular-dev
+spec:
+  selector:
+    app: bca-pakar-angular-dev
+  ports:
+    - port: 8080
+      name: http
+  type: NodePort
+---
+
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: bca-pakar-angular-dev
+  labels:
+    app: bca-pakar-angular-dev
+spec:
+  selector:                
+    matchLabels:     
+      app: bca-pakar-angular-dev
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: bca-pakar-angular-dev
+        version: v1
+    spec:
+      containers:
+      - name: bca-pakar-angular-dev
+        image: image-registry.openshift-image-registry.svc:5000/d3wiaccred-dev/bca-pakar-angular-dev:latest
+        ports:
+        - containerPort: 8080
+      restartPolicy: Always
