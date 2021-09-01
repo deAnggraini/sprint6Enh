@@ -185,7 +185,7 @@ public class ArticleServiceImpl implements ArticleService {
             // get user profile from oauth server
             ResponseEntity<ApiResponseWrapper.RestResponse<UserProfileDto>> restResponse = null;
             try {
-                restResponse = pakarOauthClient.getUser(BEARER + articleDto.getToken(), articleDto.getUsername());
+                restResponse = pakarOauthClient.getUser(BEARER + generateArticleDto.getToken(), generateArticleDto.getUsername());
                 if (!restResponse.getBody().getApiStatus().getCode().equalsIgnoreCase(Constant.OK_ACK)) {
                     throw new OauthApiClientException("call oauth api client is failed");
                 }
