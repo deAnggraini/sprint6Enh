@@ -162,6 +162,13 @@ $acc-child-margin: 10px;
   padding: 0px;
 }
 
+.btn-save-send:disabled {
+  color: white;
+    // cursor: not-allowed;
+    background-color: #A19F9D;
+    border-color: #A19F9D;
+}
+
 .preview-drag {
   padding: 0.5rem 1rem;
   width: 1032px;
