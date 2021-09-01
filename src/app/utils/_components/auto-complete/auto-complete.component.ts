@@ -20,7 +20,7 @@ import { map, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 export class AutoCompleteComponent implements OnInit, ControlValueAccessor {
 
   @Input() placeholder: string;
-  @Input() options: Option[];
+  @Input() options: Option[] = [];
   @Input() selected: Option = { id: '', text: '', value: '' };
   @Output() onSearch = new EventEmitter<any>();
   @Output() onChange = new EventEmitter<any>();
@@ -55,7 +55,6 @@ export class AutoCompleteComponent implements OnInit, ControlValueAccessor {
     this.inputText.nativeElement.value = this.selected.text;
   }
   onReset() {
-    console.log('onReset');
     this.onSelect({ id: '', text: '', value: '' });
   }
   onSelect(item: Option) {
@@ -67,7 +66,6 @@ export class AutoCompleteComponent implements OnInit, ControlValueAccessor {
   }
   keyEnter(e) {
     const _options = this.options;
-    console.log('enter key', _options);
     if (_options && _options.length) {
       this.selected = { id: '', text: '', value: '' };
       this.onSelect(_options[0]);
@@ -93,7 +91,8 @@ export class AutoCompleteComponent implements OnInit, ControlValueAccessor {
       .subscribe((text: string) => {
         if (this.isEnter) {
           this.isEnter = false;
-          this.comboBoxDrop.close();
+          if (this.options.length)
+            this.comboBoxDrop.close();
         } else {
           this.onSearch.emit(text);
           this.comboBoxDrop.open();

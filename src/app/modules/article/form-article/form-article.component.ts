@@ -1281,12 +1281,8 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
       return
     }
     if (event.previousContainer === event.container) {
-      console.log('move dalam satu list');
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
-      console.log('pindah list');
-      console.log('dari', event.previousContainer.data, event.previousIndex);
-      console.log('ke', event.container.data, event.currentIndex);
       transferArrayItem(event.previousContainer.data,
         event.container.data,
         event.previousIndex,
