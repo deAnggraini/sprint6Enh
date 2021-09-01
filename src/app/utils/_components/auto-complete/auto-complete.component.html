@@ -15,7 +15,7 @@
     <button style="display: none;" ngbDropdownAnchor (focus)="comboBoxDrop.open()"></button>
     <div ngbDropdownMenu class="combo-box-dropdown">
         <div *ngIf="options.length < 1" class="px-3">
-            Data tidak ditemukan
+            ({{keyword}}) tidak ditemukan
         </div>
         <button type="button" ngbDropdownItem *ngFor="let item of options"
             (click)="onSelect(item)">{{item.text}}</button>
