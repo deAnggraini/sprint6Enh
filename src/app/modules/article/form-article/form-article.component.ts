@@ -1033,7 +1033,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   onSave(e) {
     this.confirm.open({
       title: `Simpan`,
-      message: `<p>Apakah Kamu yakin ingin menyimpan halaman ini? Halaman akan tersimpan kedalam draft Kamu`,
+      message: `<p>Apakah Kamu yakin ingin menyimpan halaman ini? Halaman akan tersimpan kedalam draft Kamu.`,
       btnOkText: 'Simpan',
       btnCancelText: 'Batal'
     }).then((confirmed) => {

@@ -6,4 +6,21 @@
   ul {
     padding-inline-start: 17px;
   }
+
+  button.close {
+    font-size: xx-large;
+    font-weight: lighter;
+    color: black;
+  }
 }
+
+.btn-outline {
+  color: #201F1E;
+  background-color: white;
+  border-color: #A19F9D;
+
+  &:hover {
+    background-color: #A19F9D;
+  }
+}
+
