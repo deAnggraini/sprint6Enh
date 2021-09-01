@@ -73,6 +73,21 @@ public interface StructureRepository extends CrudRepository<Structure, Long> {
             nativeQuery = true)
     List<Structure> findParentListById(@Param("id") Long id);
 
+    @Query(value = "SELECT rs3.* FROM ( " +
+            "SELECT rs2.* FROM ( " +
+            "WITH RECURSIVE rec as " +
+            "( " +
+            "  SELECT rs.* FROM r_structure rs WHERE rs.id=:id " +
+            "  UNION ALL " +
+            "  SELECT rs.* FROM rec rec1, r_structure rs WHERE rs.parent = rec1.id " +
+            "  ) " +
+            "SELECT * " +
+            "FROM rec " +
+            ") rs2 " +
+            ") rs3 WHERE rs3.id <> :id ",
+            nativeQuery = true)
+    List<Structure> findChildsById(@Param("id") Long id);
+
     @Query(value = "SELECT rs3.* FROM (  " +
             " WITH RECURSIVE rec AS ( " +
             "     SELECT rs.* " +
