@@ -548,7 +548,7 @@ public class StructureServiceImp implements StructureService {
             validate if sort value destination <> sort value of dto
              */
             if (destinationParentStructure.getSort().longValue() == dto.getSort().longValue()) {
-                logger.info("parent sort value same as with dto stor value {} ", dto.getSort());
+                logger.info("parent sort value same as with request sort value {} ", dto.getSort());
                 throw new InvalidSortException("parent sort value same as with dto stor value " + dto.getSort());
             }
 
