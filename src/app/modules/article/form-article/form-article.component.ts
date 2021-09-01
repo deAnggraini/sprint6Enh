@@ -1033,7 +1033,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   onSave(e) {
     this.confirm.open({
       title: `Simpan`,
-      message: `<p>Apakah Kamu yakin ingin menyimpan halaman ini? Halaman akan tersimpan kedalam draft Kamu`,
+      message: `<p>Apakah Kamu yakin ingin menyimpan halaman ini? Halaman akan tersimpan kedalam draft Kamu.`,
       btnOkText: 'Simpan',
       btnCancelText: 'Batal'
     }).then((confirmed) => {
@@ -1259,6 +1259,9 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   drop(event: CdkDragDrop<any[]>, levelParent: number, parent) {
     this.clearFakePlaceholder()
     if (this.fakeDragAndDropStatus) {
+      if (this.getFakeMaxLevel(this.dataForm.controls.contents.value, this.idAccordionSelected, [event.item.data]) > 5) {
+        return
+      }
       this.addArray(this.dataForm.controls.contents.value, this.idAccordionSelected, event.item.data, parent)
       transferArrayItem(event.previousContainer.data, [], event.previousIndex, 0)
       this.recalculateChildren(event.previousContainer.data, event.previousContainer.data.length > 0 ? event.previousContainer.data[0].listParent : [])
@@ -1309,6 +1312,17 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     this.document.getElementById('plc' + id).classList.add('fake-drag-placeholder-show')
     this.document.querySelectorAll('.drag-placeholder').forEach(element => element.classList.add('drag-placeholder-hidden'))
     this.idAccordionSelected = id
+  }
+
+  getFakeMaxLevel(arr, id, item): number {
+    return arr.reduce((depth, child) => {
+      if (child.id.toString() === id) {
+        return (child.level + this.getMaxLevel(item));
+      }
+      return (depth + this.getFakeMaxLevel(child.children, id, item));
+    }, 0);
+
+
   }
 
   addArray(arr, id, value, parent) {

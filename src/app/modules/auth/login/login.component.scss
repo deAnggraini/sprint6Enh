@@ -51,8 +51,16 @@
     }
   }
 
-  .form-control, .form-control.ng-invalid.ng-touched {
+  input {
     border-color: #C8C6C4;
+  }
+  
+  .form-control.ng-invalid.ng-touched, .form-control.ng-invalid.ng-dirty {
+    border-color: #C8C6C4;
+  }
+
+  .form-control.is-invalid.ng-touched.ng-dirty {
+    border-color: red;
   }
 
   // avoid input:-internal-autofill-selected style for autocomplete
