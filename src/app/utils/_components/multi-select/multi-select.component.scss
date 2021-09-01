@@ -23,10 +23,15 @@ $border-color-active: #0F5EA9;
   .input-multi-select {
     border: none;
     outline: none;
+    min-width: 50%;
     width: 100%;
     height: $height;
     margin-bottom: $margin;
     margin-right: $margin;
+
+    &:disabled {
+      background-color: transparent;
+    }
   }
 
   .selected-item {

@@ -80,7 +80,6 @@ export class MultiSelectComponent implements OnInit, ControlValueAccessor, OnDes
     return result;
   }
   private add(item) {
-    console.log('add or onSelect', item);
     this.value.push(item);
     this._onChange(this.value);
     this.onSelect.emit({ item, keyword: this.search });
@@ -113,6 +112,7 @@ export class MultiSelectComponent implements OnInit, ControlValueAccessor, OnDes
     } else {
       this.cancel(item);
     }
+    this.search = '';
     return true;
   }
 
@@ -127,6 +127,7 @@ export class MultiSelectComponent implements OnInit, ControlValueAccessor, OnDes
         div.classList.add('focus');
       } else {
         div.classList.remove('focus');
+        this.search = '';
       }
     }
   }
