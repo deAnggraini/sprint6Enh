@@ -3,10 +3,10 @@
 //
 
 // Default icon
-i {
-    // font-size: get($icon-sizes, md);
-    color: $text-muted;
-}
+// i {
+//     // font-size: get($icon-sizes, md);
+//     color: $text-muted;
+// }
 
 // Responsive icon sizes
 @each $breakpoint in map-keys($grid-breakpoints) {
