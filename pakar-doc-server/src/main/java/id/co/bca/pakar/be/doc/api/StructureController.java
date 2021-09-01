@@ -10,6 +10,7 @@ import id.co.bca.pakar.be.doc.dto.StructureWithFileDto;
 import id.co.bca.pakar.be.doc.exception.DataNotFoundException;
 import id.co.bca.pakar.be.doc.exception.InvalidLevelException;
 import id.co.bca.pakar.be.doc.exception.InvalidSortException;
+import id.co.bca.pakar.be.doc.exception.UndefinedStructureException;
 import id.co.bca.pakar.be.doc.service.StructureService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -106,6 +107,9 @@ public class StructureController extends BaseController {
         } catch (DataNotFoundException e) {
             logger.error("exception", e);
             return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, new Locale("en", "US")));
+        } catch (UndefinedStructureException e) {
+            logger.error("exception", e);
+            return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("undefined.structure", null, new Locale("en", "US")));
         } catch (InvalidLevelException e) {
             logger.error("exception", e);
             return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("level.structure.invalid", null, new Locale("en", "US")));
