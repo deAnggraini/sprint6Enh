@@ -665,7 +665,7 @@ public class StructureServiceImp implements StructureService {
             /*
             verify child structures
              */
-            Long deltaLevel = destinationlevel.longValue() - existingLevel;
+            Long deltaLevel = destinationlevel.longValue() - existingLevel + 1;
             verifyAndUpdateLevelChildStructures(childStructures, deltaLevel, username);
 
             _dto.setId(_structure.getId());
