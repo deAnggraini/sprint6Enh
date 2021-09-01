@@ -68,7 +68,7 @@
                 <label>Lokasi <span class="text-danger">*</span></label>
                 <select class="form-control" required formControlName="location">
                     <option value="">-- Pilih Salah Satu --</option>
-                    <option *ngFor="let lokasi of locations" [value]="lokasi._value">
+                    <option *ngFor="let lokasi of locationParents" [value]="lokasi._value">
                         {{lokasi._text}}
                     </option>
                 </select>
