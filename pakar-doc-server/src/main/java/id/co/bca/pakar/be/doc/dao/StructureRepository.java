@@ -1,19 +1,21 @@
 package id.co.bca.pakar.be.doc.dao;
 
 import id.co.bca.pakar.be.doc.model.Structure;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
-public interface StructureRepository extends CrudRepository<Structure, Long>{
+public interface StructureRepository extends CrudRepository<Structure, Long> {
     @Query("SELECT CASE WHEN COUNT(m) > 0 THEN TRUE ELSE FALSE END FROM Structure m WHERE m.parentStructure=:parentId AND m.sort=:sort AND m.deleted IS FALSE")
     Boolean existStructureByParentIdAndSort(@Param("parentId") Long parentId, @Param("sort") Long sort);
 
-    @Query(value="SELECT m.* FROM ( " +
+    @Query(value = "SELECT m.* FROM ( " +
             "SELECT m.* FROM (SELECT m.* FROM r_structure m " +
             "LEFT JOIN r_structure m2 ON m2.parent = m.id " +
             "WHERE m.deleted is false " +
@@ -29,7 +31,7 @@ public interface StructureRepository extends CrudRepository<Structure, Long>{
             nativeQuery = true)
     List<Structure> findAll();
 
-    @Query(value="SELECT m.* FROM ( " +
+    @Query(value = "SELECT m.* FROM ( " +
             "SELECT m.* FROM (SELECT m.* FROM r_structure m " +
             "LEFT JOIN r_structure m2 ON m2.parent = m.id " +
             "WHERE m.deleted is false " +
@@ -44,7 +46,7 @@ public interface StructureRepository extends CrudRepository<Structure, Long>{
             nativeQuery = true)
     List<Structure> findAllForReader();
 
-    @Query(value="SELECT m FROM Structure m WHERE m.parentStructure=:parentId AND m.deleted IS FALSE ")
+    @Query(value = "SELECT m FROM Structure m WHERE m.parentStructure=:parentId AND m.deleted IS FALSE ")
     List<Structure> findByParentId(@Param("parentId") Long parentId);
 
     @Query(value = "SELECT CASE WHEN max(m.sort) IS NULL THEN 0 ELSE max(m.sort) END FROM Structure m WHERE m.parentStructure=:parentId AND m.deleted IS FALSE ")
@@ -69,7 +71,7 @@ public interface StructureRepository extends CrudRepository<Structure, Long>{
             "                 ORDER BY rec.level " +
             " ) rs3",
             nativeQuery = true)
-    List<Structure>  findParentListById(@Param("id") Long id);
+    List<Structure> findParentListById(@Param("id") Long id);
 
     @Query(value = "SELECT rs3.* FROM (  " +
             " WITH RECURSIVE rec AS ( " +
@@ -85,6 +87,7 @@ public interface StructureRepository extends CrudRepository<Structure, Long>{
             "                 SELECT rec.* " +
             "                 FROM rec " +
             "                 ORDER BY rec.level " +
+            "                 ASC " +
             " ) rs3",
             nativeQuery = true)
     List<Structure> findBreadcumbById(@Param("id") Long id);
@@ -95,6 +98,39 @@ public interface StructureRepository extends CrudRepository<Structure, Long>{
 //    @Query(value = "select getStructureLocation(:id)", nativeQuery = true)
 //    String getLocationText(@Param("id") Long id);
 
-    @Query(value = "select getStructureLocation(?1)", nativeQuery = true)
-    String getLocationText(Long id);
+    //    @Query(value = "select getStructureLocation(?1)", nativeQuery = true)
+    @Query(value = "SELECT string_agg(tbl.name, ' > ' ) AS location_text" +
+            "           FROM ( WITH RECURSIVE rec AS (" +
+            "                         SELECT tree.id," +
+            "                            tree.name," +
+            "                            tree.parent," +
+            "                            tree.level" +
+            "                           FROM r_structure tree" +
+            "                          WHERE tree.id = :id" +
+            "                        UNION ALL" +
+            "                         SELECT tree.id," +
+            "                            tree.name," +
+            "                            tree.parent," +
+            "                            tree.level" +
+            "                           FROM rec rec_1," +
+            "                            r_structure tree" +
+            "                          WHERE tree.id = rec_1.parent" +
+            "                        )" +
+            "                 SELECT rec.id," +
+            "                    rec.name," +
+            "                    rec.level," +
+            "                    1 AS grouper" +
+            "                   FROM rec" +
+            "                  ORDER BY rec.level" +
+            "                  ASC " +
+            " ) AS tbl",
+            nativeQuery = true)
+    String getLocationText(@Param("id") Long id);
+
+    @CacheEvict
+    @Query("SELECT m FROM Structure m " +
+            "WHERE m.deleted IS FALSE " +
+            "AND m.id=:id ")
+    @Override
+    Optional<Structure> findById(@Param("id") Long id);
 }
