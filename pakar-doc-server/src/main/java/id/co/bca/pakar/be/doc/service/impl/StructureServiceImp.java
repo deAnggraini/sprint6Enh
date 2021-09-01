@@ -888,7 +888,7 @@ public class StructureServiceImp implements StructureService {
         });
         return bcmDtoList;
     }
-    
+
     /**
      *
      * @param childs
