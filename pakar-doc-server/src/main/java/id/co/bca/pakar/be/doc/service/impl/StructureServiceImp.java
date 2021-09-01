@@ -772,8 +772,8 @@ public class StructureServiceImp implements StructureService {
             menuDto.setMenuName(structure.getStructureName());
             menuDto.setMenuDescription(structure.getStructureDescription());
             menuDto.setLocation(structure.getLocation());
-//            menuDto.setLocation_text(structureRepository.getLocationText(structure.getId()));
-            menuDto.setLocation_text(structure.getLocation_text());
+            menuDto.setLocation_text(structureRepository.getLocationText(structure.getId()));
+//            menuDto.setLocation_text(structure.getLocation_text());
             menuDto.setHasArticle(structure.getHasArticle());
             try {
                 StructureIcons sic = structureIconRepository.findByStructureId(structure.getId());
@@ -787,7 +787,7 @@ public class StructureServiceImp implements StructureService {
             } catch (Exception e) {
 
             }
-//            menuDto.setBreadcumbMenuDtoList(getParentBc(structure));
+            menuDto.setBreadcumbMenuDtoList(getParent(structure));
             menuDto.setUri(structure.getUri());
             listOfMenus.add(menuDto);
         }
@@ -804,6 +804,7 @@ public class StructureServiceImp implements StructureService {
         List<BreadcumbMenuDto> bcmDtoList = new ArrayList<>();
         Long parentId = _structure.getParentStructure();
         boolean parentStatus = Boolean.TRUE;
+        logger.debug("generate breadcumb of parent id -------------------------->>>>>>>> {}", parentId);
         do {
             Optional<Structure> parentStructure = structureRepository.findById(parentId);
             if (!parentStructure.isEmpty()) {
@@ -827,6 +828,7 @@ public class StructureServiceImp implements StructureService {
         Collections.sort(bcmDtoList, new Comparator<BreadcumbMenuDto>() {
             @Override
             public int compare(BreadcumbMenuDto o1, BreadcumbMenuDto o2) {
+                logger.debug("compare leveling object 1 {} : object {}", o1.getLevel(), o2.getLevel());
                 return o1.getLevel().intValue() - o2.getLevel().intValue();
             }
         });
@@ -840,10 +842,10 @@ public class StructureServiceImp implements StructureService {
      * @return
      */
     private List<BreadcumbMenuDto> getParent(Structure _structure) {
-        // get list parent of new structure
+        // get list parent of structure
         List<BreadcumbMenuDto> bcmDtoList = new ArrayList<>();
         Long parentId = _structure.getParentStructure();
-        List<Structure> structures = structureRepository.findBreadcumb2ById(parentId);
+        List<Structure> structures = structureRepository.findBreadcumbById(parentId);
         structures.forEach(e-> {
             BreadcumbMenuDto bcDto = new BreadcumbMenuDto();
             bcDto.setId(e.getId());
@@ -851,15 +853,6 @@ public class StructureServiceImp implements StructureService {
             bcDto.setLevel(e.getLevel());
             bcmDtoList.add(bcDto);
         });
-
-        // sorting bread crumb
-        Collections.sort(bcmDtoList, new Comparator<BreadcumbMenuDto>() {
-            @Override
-            public int compare(BreadcumbMenuDto o1, BreadcumbMenuDto o2) {
-                return o1.getLevel().intValue() - o2.getLevel().intValue();
-            }
-        });
-
         return bcmDtoList;
     }
 }
