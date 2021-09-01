@@ -7,10 +7,13 @@
     padding-inline-start: 17px;
   }
 
-  button.close {
-    font-size: xx-large;
-    font-weight: lighter;
-    color: black;
+}
+
+i {
+  color: #201F1E !important;
+
+  &:hover {
+    color: #0078D4 !important;
   }
 }
 
