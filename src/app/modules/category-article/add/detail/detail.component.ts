@@ -48,6 +48,7 @@ export class DetailComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
 
   locations: any[] = [];
+  locationParents: any[] = [];
   dataForm: FormGroup;
   section: StrukturDTO;
   tree_id = "#struktur-tree";
@@ -99,11 +100,13 @@ export class DetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  open(reset: boolean = true) {
+  open(reset: boolean = true, isSection: boolean = false) {
     if (reset) {
       this.resetForm();
       this.isEdit = false;
     }
+    if (isSection)
+      this.updateLocationParents(this.section);
     this.modalService.open(this.formModal);
   }
 
@@ -157,17 +160,14 @@ export class DetailComponent implements OnInit, OnDestroy {
 
     fd.append('parent', this.dataForm.value.parent);
     fd.append('location', this.dataForm.value.location);
-    console.log({ id, location });
     if (location) {
       const split = location.split(",");
       let locationId: number = split.pop();
       if (locationId == id) { // locationId adalah item itu sendiri
         locationId = split.pop();
       }
-      console.log('locationId', locationId);
       const _parent = this.locations.find(d => d.id == locationId);
-      console.log('_parent', _parent);
-      if (_parent) {
+      if (_parent && this.dataForm.value.parent != _parent.id) {
         fd.delete('parent');
         fd.delete('sort');
         fd.delete('level');
@@ -542,6 +542,14 @@ export class DetailComponent implements OnInit, OnDestroy {
     return datasource;
   }
 
+  private updateLocationParents(node, isAdd: boolean = true) {
+    this.locationParents = this.locations.filter(d => {
+      if (d.level > node.level) return false;
+      if (!isAdd && d.id == node.id) return false;
+      return true;
+    });
+  }
+
   private initJsTree() {
     const $that = this;
     $(this.tree_id).on("create_node.jstree", function (e, data) {
@@ -595,6 +603,7 @@ export class DetailComponent implements OnInit, OnDestroy {
           if ($that.moved) return alert('Silahkan Melakukan Simpan atau Batal terlebih dahulu');
           const node = $that.findNode(parseInt(selected[0]));
           const myLocation = $that.findLocation(node);
+          $that.updateLocationParents(node);
           const defaultValue = Object.assign({}, $that.defaultValue, { level: node.level + 1, parent: node.id, location: myLocation._value });
           $that.setTxtLevelName(node.level + 1);
           $that.dataForm.reset(defaultValue);
@@ -609,6 +618,7 @@ export class DetailComponent implements OnInit, OnDestroy {
           if ($that.moved) return alert('Silahkan Melakukan Simpan atau Batal terlebih dahulu');
           const node = $that.findNode(parseInt(selected[0]));
           if (node) {
+            $that.updateLocationParents(node, false);
             $that.setTxtLevelName(node.level);
             $that.edit(node);
           } else {
