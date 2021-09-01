@@ -100,12 +100,13 @@ export class DetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  open(reset: boolean = true) {
+  open(reset: boolean = true, isSection: boolean = false) {
     if (reset) {
       this.resetForm();
       this.isEdit = false;
     }
-    this.updateLocationParents(this.section);
+    if (isSection)
+      this.updateLocationParents(this.section);
     this.modalService.open(this.formModal);
   }
 

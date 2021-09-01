@@ -1,7 +1,7 @@
 <div class="detail-header d-flex flex-row justify-content-between" *ngIf="section.id; else emptyData">
     <span class="pakar-text-header-18">{{section.title}} </span>
     <div class="node-buttons">
-        <div class="btn btn-sm btn-clean btn-blue btn-my" (click)="open()"><i class="fas fa-plus-circle"></i></div>
+        <div class="btn btn-sm btn-clean btn-blue btn-my" (click)="open(true, true)"><i class="fas fa-plus-circle"></i></div>
         <div class="btn btn-sm btn-clean btn-blue btn-my" (click)="editSection()"><i class="fas fa-pen"></i></div>
         <div class="btn btn-sm btn-clean btn-blue btn-my" (click)="deleteSection()"><i class="far fa-trash-alt"></i>
         </div>
