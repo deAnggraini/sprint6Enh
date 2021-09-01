@@ -9,7 +9,7 @@
     <div class="d-flex flex-grow-1">
         <input type="text" class="input-multi-select" [placeholder]="placeholder || ''" required autocomplete="off"
             [(ngModel)]="search" maxlength="50" [ngbTypeahead]="onChangeKeyword" (click)="onFocusSearch($event)"
-            (keyup.enter)="keyEnter($event)">
+            (keyup.enter)="keyEnter($event)" [disabled]="maxSelected && value && value.length >= maxSelected">
     </div>
 </div>
 <div ngbDropdown #multiSelectDropDown="ngbDropdown" class="multi-select-drop-down" style="width: 100%;" display="static"

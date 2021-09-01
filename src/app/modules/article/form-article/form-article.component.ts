@@ -1505,7 +1505,6 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   private setArticle(article: ArticleDTO) {
     if (article) {
-      console.log('setArticle', { article });
       this.getUserEditing(article.id);
       const { structureParentList, structureId } = article;
       article.structureOption = {
@@ -1616,7 +1615,6 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
         image.onload = function (_) {
           const { width, height } = image;
           const { size } = file;
-          console.log({ width, height, size });
           if (width < 307 || height < 425) {
             $this.hasImageError = true;
             $this.errorImageMsg = 'Resolusi gambar minimal 307x425 px';
@@ -1693,21 +1691,26 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
       })
     );
   }
+  private _uniq(arr: any[]): any[] {
+    return arr.filter((value, index, self) => {
+      return self.indexOf(value) === index;
+    })
+  }
   getDataSuggestionArticle(keyword: string) {
-    const exclude = [this.dataForm.value.id].concat(this.dataForm.value.suggestions.map(d => d.id));
+    const exclude = this._uniq([this.dataForm.value.id].concat(this.dataForm.value.suggestions.map(d => d.id)));
     const structureId = this.dataForm.value.structureId;
     this.subscriptions.push(
-      this.article.suggestionArticle(keyword, structureId, exclude).subscribe(resp => {
+      this.article.suggestionArticle(keyword, structureId, exclude, 1, 3).subscribe(resp => {
         if (resp) this.suggestionArticle$.next(this.convertArticleToOption(resp.list));
       })
     );
   }
   onSelectSuggestionArticle(arg: { item: any, keyword: string }) {
     const { keyword, item } = arg;
-    const exclude = [this.dataForm.value.id].concat(this.dataForm.value.suggestions.map(d => d.id)).concat([item.id]);
+    const exclude = this._uniq([this.dataForm.value.id].concat(this.dataForm.value.suggestions.map(d => d.id)).concat([item.id]));
     const structureId = this.dataForm.value.structureId;
     this.subscriptions.push(
-      this.article.suggestionArticle(keyword, structureId, exclude).subscribe(resp => {
+      this.article.suggestionArticle(keyword, structureId, exclude, 1, 3).subscribe(resp => {
         if (resp) this.suggestionArticle$.next(this.convertArticleToOption(resp.list));
       })
     );
