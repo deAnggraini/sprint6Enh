@@ -518,38 +518,41 @@ public class StructureServiceImp implements StructureService {
             /*
             get destination structure
              */
-            Optional<Structure> destinationParentStructureOp = structureRepository.findById(dto.getParent());
-            if (destinationParentStructureOp.isEmpty()) {
-                logger.info("undefined parent id {}", dto.getParent());
-                throw new UndefinedStructureException("undefined parent id " + dto.getParent());
-            }
-            Structure destinationParentStructure = destinationParentStructureOp.get();
-
-			/*
-			validate if request level smaller then destination parent level
-			*/
-            Long destinationlevel = destinationParentStructure.getLevel();
-            if (dto.getLevel().longValue() < destinationlevel.longValue()) {
-                logger.info("level from request invalid, cause new level value {} < than from parent level {}", dto.getLevel(), destinationlevel);
-                throw new InvalidLevelException("invalid new level " + dto.getId());
-            }
-
-            // validate parent structure value from request if level > 1
-            if (dto.getLevel().longValue() > 1) {
-                if (structureRepository.existsById(dto.getParent())) {
-                    structure.setParentStructure(dto.getParent());
-                } else {
-                    logger.info("parent id {} not found in database, update failed ", dto.getParent());
-                    throw new DataNotFoundException("not found data with parent id " + dto.getParent());
+            Long destinationlevel = 0L;
+            if(dto.getParent().longValue() != 0 ) {
+                Optional<Structure> destinationParentStructureOp = structureRepository.findById(dto.getParent());
+                if (destinationParentStructureOp.isEmpty()) {
+                    logger.info("undefined parent id {}", dto.getParent());
+                    throw new UndefinedStructureException("undefined parent id " + dto.getParent());
                 }
-            }
+                Structure destinationParentStructure = destinationParentStructureOp.get();
 
-            /*
-            validate if sort value destination <> sort value of dto
-             */
-            if (destinationParentStructure.getSort().longValue() == dto.getSort().longValue()) {
-                logger.info("parent sort value same as with request sort value {} ", dto.getSort());
-                throw new InvalidSortException("parent sort value same as with dto stor value " + dto.getSort());
+                /*
+                validate if request level smaller then destination parent level
+                */
+                destinationlevel = destinationParentStructure.getLevel();
+                if (dto.getLevel().longValue() < destinationlevel.longValue()) {
+                    logger.info("level from request invalid, cause new level value {} < than from parent level {}", dto.getLevel(), destinationlevel);
+                    throw new InvalidLevelException("invalid new level " + dto.getId());
+                }
+
+                // validate parent structure value from request if level > 1
+                if (dto.getLevel().longValue() > 1) {
+                    if (structureRepository.existsById(dto.getParent())) {
+                        structure.setParentStructure(dto.getParent());
+                    } else {
+                        logger.info("parent id {} not found in database, update failed ", dto.getParent());
+                        throw new DataNotFoundException("not found data with parent id " + dto.getParent());
+                    }
+                }
+
+                /*
+                validate if sort value destination <> sort value of dto
+                 */
+                if (destinationParentStructure.getSort().longValue() == dto.getSort().longValue()) {
+                    logger.info("parent sort value same as with request sort value {} ", dto.getSort());
+                    throw new InvalidSortException("parent sort value same as with dto stor value " + dto.getSort());
+                }
             }
 
             structure.setParentStructure(dto.getParent());
@@ -665,8 +668,10 @@ public class StructureServiceImp implements StructureService {
             /*
             verify child structures
              */
-            Long deltaLevel = destinationlevel.longValue() - existingLevel + 1;
-            verifyAndUpdateLevelChildStructures(childStructures, deltaLevel, username);
+            if(dto.getParent().longValue() != 0) {
+                Long deltaLevel = destinationlevel.longValue() - existingLevel + 1;
+                verifyAndUpdateLevelChildStructures(childStructures, deltaLevel, username);
+            }
 
             _dto.setId(_structure.getId());
             _dto.setEdit(_structure.getEdit());
