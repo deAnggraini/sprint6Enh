@@ -78,6 +78,11 @@ public class StructureValidator implements Validator {
             return;
         }
 
+        if(dto.getParent().longValue() == dto.getId().longValue()) {
+            errors.rejectValue("parent", "same.structureid.and.parentid","structure id dan parent id sama");
+            return;
+        }
+
         boolean validFileType = false;
         logger.debug("icon value {}", dto.getIcon());
         if(dto.getIcon() != null) {
