@@ -771,7 +771,7 @@ public class StructureServiceImp implements StructureService {
             menuDto.setParent(structure.getParentStructure());
             menuDto.setMenuName(structure.getStructureName());
             menuDto.setMenuDescription(structure.getStructureDescription());
-            menuDto.setLocation(structure.getLocation());
+            menuDto.setLocation(structureRepository.getLocationId(structure.getParentStructure()));
             menuDto.setLocation_text(structureRepository.getLocationText(structure.getParentStructure()));
 //            menuDto.setLocation_text(structure.getLocation_text());
             menuDto.setHasArticle(structure.getHasArticle());
