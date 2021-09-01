@@ -50,11 +50,13 @@ spring:
     username: pakar3
     password: pakar123
     hikari:
-      minimumIdle: 5
-      maximumPoolSize: 20
-      idleTimeout: 30000
-      maxLifetime: 2000000
-      connectionTimeout: 20000
+      type: com.zaxxer.hikari.HikariDataSource
+      pool-name: pakar-oauth-pool
+      maximum-pool-size: 20
+      max-lifetime: 1800000
+      idle-timeout: 30000
+      minimum-idle: 5
+      connection-timeout: 20000
 ---
 spring:
   profiles: dev-local-docker
@@ -84,8 +86,13 @@ spring:
     username: pakar3
     password: pakar123
     hikari:
-      connectionTimeout: 20000
-      maximumPoolSize: 5
+      type: com.zaxxer.hikari.HikariDataSource
+      pool-name: pakar-oauth-pool
+      maximum-pool-size: 20
+      max-lifetime: 1800000
+      idle-timeout: 30000
+      minimum-idle: 5
+      connection-timeout: 20000
 ---
 spring:
   profiles: dev-ogya
@@ -113,11 +120,13 @@ spring:
     username: pakar3
     password: pakar123
     hikari:
-      minimumIdle: 5
-      maximumPoolSize: 20
-      idleTimeout: 30000
-      maxLifetime: 2000000
-      connectionTimeout: 20000
+      type: com.zaxxer.hikari.HikariDataSource
+      pool-name: pakar-oauth-pool
+      maximum-pool-size: 20
+      max-lifetime: 1800000
+      idle-timeout: 30000
+      minimum-idle: 5
+      connection-timeout: 20000
 ---
 spring:
   profiles: dev-ogya4
@@ -145,11 +154,13 @@ spring:
     username: pakar4
     password: pakar123
     hikari:
-      minimumIdle: 5
-      maximumPoolSize: 20
-      idleTimeout: 30000
-      maxLifetime: 2000000
-      connectionTimeout: 20000
+      type: com.zaxxer.hikari.HikariDataSource
+      pool-name: pakar-oauth-pool
+      maximum-pool-size: 20
+      max-lifetime: 1800000
+      idle-timeout: 30000
+      minimum-idle: 5
+      connection-timeout: 20000
 ---
   spring:
     profiles: dev-bca
@@ -177,9 +188,11 @@ spring:
       username: pakar2
       password: pakar123
       hikari:
-        minimumIdle: 5
-        maximumPoolSize: 20
-        idleTimeout: 30000
-        maxLifetime: 2000000
-        connectionTimeout: 20000
+        type: com.zaxxer.hikari.HikariDataSource
+        pool-name: pakar-oauth-pool
+        maximum-pool-size: 20
+        max-lifetime: 1800000
+        idle-timeout: 30000
+        minimum-idle: 5
+        connection-timeout: 20000
 
