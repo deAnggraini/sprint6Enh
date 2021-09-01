@@ -4,10 +4,7 @@ import id.co.bca.pakar.be.doc.client.ApiClient;
 import id.co.bca.pakar.be.doc.common.Constant;
 import id.co.bca.pakar.be.doc.dao.*;
 import id.co.bca.pakar.be.doc.dto.*;
-import id.co.bca.pakar.be.doc.exception.DataNotActiveException;
-import id.co.bca.pakar.be.doc.exception.DataNotFoundException;
-import id.co.bca.pakar.be.doc.exception.InvalidLevelException;
-import id.co.bca.pakar.be.doc.exception.InvalidSortException;
+import id.co.bca.pakar.be.doc.exception.*;
 import id.co.bca.pakar.be.doc.model.*;
 import id.co.bca.pakar.be.doc.service.StructureService;
 import id.co.bca.pakar.be.doc.util.FileUploadUtil;
@@ -16,17 +13,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.transaction.Transactional;
+//import javax.transaction.Transactional;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
@@ -67,7 +59,7 @@ public class StructureServiceImp implements StructureService {
      * @throws Exception
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {Exception.class})
     public StructureDto add(String username, StructureDto dto, MultipartFile image, MultipartFile icon) throws Exception {
         try {
             logger.info("add category");
@@ -161,7 +153,10 @@ public class StructureServiceImp implements StructureService {
      * @throws Exception
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {DataNotFoundException.class,
+            InvalidLevelException.class,
+            InvalidSortException.class,
+            Exception.class})
     public StructureResponseDto add(String username, StructureWithFileDto dto) throws Exception {
         try {
             logger.info("add category");
@@ -314,9 +309,9 @@ public class StructureServiceImp implements StructureService {
 
             int i = 0;
             StringBuffer sbfBc = new StringBuffer();
-            for(BreadcumbStructureDto dtoBc : _dto.getBreadcumbStructureDtoList()) {
+            for (BreadcumbStructureDto dtoBc : _dto.getBreadcumbStructureDtoList()) {
                 sbfBc.append(dtoBc.getName());
-                if(i != _dto.getBreadcumbStructureDtoList().size() - 1)
+                if (i != _dto.getBreadcumbStructureDtoList().size() - 1)
                     sbfBc.append(" > ");
                 i++;
             }
@@ -374,7 +369,7 @@ public class StructureServiceImp implements StructureService {
      * @throws Exception
      */
     @Override
-    @Transactional(rollbackOn = {Exception.class, InvalidLevelException.class, DataNotFoundException.class})
+    @Transactional(rollbackFor = {Exception.class, InvalidLevelException.class, DataNotFoundException.class})
     public List<StructureResponseDto> saveBatchStructures(String username, List<StructureWithFileDto> dtoList) throws Exception {
         // looping save
         try {
@@ -494,12 +489,16 @@ public class StructureServiceImp implements StructureService {
      * @throws Exception
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {DataNotFoundException.class,
+            UndefinedStructureException.class,
+            InvalidLevelException.class,
+            InvalidSortException.class,
+            Exception.class})
     public StructureResponseDto update(String username, StructureWithFileDto dto) throws Exception {
         try {
             StructureResponseDto _dto = new StructureResponseDto();
 
-            logger.info("get structure by structure id {}", dto.getId());
+            logger.info("get current structure by structure id {}", dto.getId());
 			/*
 			get existing structure from db with param structure id
 			 */
@@ -507,16 +506,31 @@ public class StructureServiceImp implements StructureService {
             logger.debug("structure result from db {}", structureOp);
             if (structureOp.isEmpty()) {
                 logger.info("not found structure with id {}", dto.getId());
-                throw new DataNotFoundException("not found data with structure id " + dto.getId());
+                throw new UndefinedStructureException("not found data with structure id " + dto.getId());
             }
             Structure structure = structureOp.get();
+            Long existingLevel = structure.getLevel();
+            /*
+             * get current all child structures
+             */
+            List<Structure> childStructures = structureRepository.findChildsById(structure.getId());
+
+            /*
+            get destination structure
+             */
+            Optional<Structure> destinationParentStructureOp = structureRepository.findById(dto.getParent());
+            if (destinationParentStructureOp.isEmpty()) {
+                logger.info("undefined parent id {}", dto.getParent());
+                throw new UndefinedStructureException("undefined parent id " + dto.getParent());
+            }
+            Structure destinationParentStructure = destinationParentStructureOp.get();
 
 			/*
-			validate parent with level, if request level <
+			validate if request level smaller then destination parent level
 			*/
-            Long parentLevel = structure.getLevel();
-            if (dto.getLevel().longValue() < parentLevel.longValue()) {
-                logger.info("level from request invalid, cause new level value {} < than from parent level {}", dto.getLevel(), parentLevel);
+            Long destinationlevel = destinationParentStructure.getLevel();
+            if (dto.getLevel().longValue() < destinationlevel.longValue()) {
+                logger.info("level from request invalid, cause new level value {} < than from parent level {}", dto.getLevel(), destinationlevel);
                 throw new InvalidLevelException("invalid new level " + dto.getId());
             }
 
@@ -529,6 +543,15 @@ public class StructureServiceImp implements StructureService {
                     throw new DataNotFoundException("not found data with parent id " + dto.getParent());
                 }
             }
+
+            /*
+            validate if sort value destination <> sort value of dto
+             */
+            if (destinationParentStructure.getSort().longValue() == dto.getSort().longValue()) {
+                logger.info("parent sort value same as with dto stor value {} ", dto.getSort());
+                throw new InvalidSortException("parent sort value same as with dto stor value " + dto.getSort());
+            }
+
             structure.setParentStructure(dto.getParent());
 
             _dto.setName(dto.getName());
@@ -639,6 +662,12 @@ public class StructureServiceImp implements StructureService {
                 structureIconRepository.save(sic);
             }
 
+            /*
+            verify child structures
+             */
+            Long deltaLevel = destinationlevel.longValue() - existingLevel;
+            verifyAndUpdateLevelChildStructures(childStructures, deltaLevel, username);
+
             _dto.setId(_structure.getId());
             _dto.setEdit(_structure.getEdit());
             _dto.setParent(_structure.getParentStructure());
@@ -650,9 +679,15 @@ public class StructureServiceImp implements StructureService {
         } catch (DataNotFoundException e) {
             logger.error("data not found", e);
             throw new DataNotFoundException("data not found", e);
+        } catch (UndefinedStructureException e) {
+            logger.error("Undefined structure", e);
+            throw new UndefinedStructureException("Undefined structure", e);
         } catch (InvalidLevelException e) {
             logger.error("invalid new level", e);
             throw new InvalidLevelException("invalid new level", e);
+        } catch (InvalidSortException e) {
+            logger.error("invalid new level", e);
+            throw new InvalidSortException("invalid new level", e);
         } catch (Exception e) {
             logger.error("exception", e);
             throw new Exception("exception", e);
@@ -795,7 +830,6 @@ public class StructureServiceImp implements StructureService {
     }
 
     /**
-     *
      * @param _structure
      * @return
      */
@@ -837,7 +871,6 @@ public class StructureServiceImp implements StructureService {
     }
 
     /**
-     *
      * @param _structure
      * @return
      */
@@ -846,7 +879,7 @@ public class StructureServiceImp implements StructureService {
         List<BreadcumbMenuDto> bcmDtoList = new ArrayList<>();
         Long parentId = _structure.getParentStructure();
         List<Structure> structures = structureRepository.findBreadcumbById(parentId);
-        structures.forEach(e-> {
+        structures.forEach(e -> {
             BreadcumbMenuDto bcDto = new BreadcumbMenuDto();
             bcDto.setId(e.getId());
             bcDto.setName(e.getStructureName());
@@ -854,5 +887,21 @@ public class StructureServiceImp implements StructureService {
             bcmDtoList.add(bcDto);
         });
         return bcmDtoList;
+    }
+    
+    /**
+     *
+     * @param childs
+     * @param deltaLevel
+     * @param loginName
+     */
+    private void verifyAndUpdateLevelChildStructures(List<Structure> childs, Long deltaLevel, String loginName) {
+        childs.forEach(e->{
+            Long newLevel = e.getLevel() + deltaLevel;
+            e.setLevel(newLevel);
+            e.setModifyBy(loginName);
+            e.setModifyDate(new Date());
+            structureRepository.save(e);
+        });
     }
 }
