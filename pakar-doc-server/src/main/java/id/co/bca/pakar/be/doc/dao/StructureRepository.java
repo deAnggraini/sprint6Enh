@@ -127,6 +127,34 @@ public interface StructureRepository extends CrudRepository<Structure, Long> {
             nativeQuery = true)
     String getLocationText(@Param("id") Long id);
 
+    @Query(value = "SELECT string_agg(CAST (TBL.id AS text), ',' ) AS location" +
+            "           FROM ( WITH RECURSIVE rec AS (" +
+            "                         SELECT tree.id," +
+            "                            tree.name," +
+            "                            tree.parent," +
+            "                            tree.level" +
+            "                           FROM r_structure tree" +
+            "                          WHERE tree.id = :id" +
+            "                        UNION ALL" +
+            "                         SELECT tree.id," +
+            "                            tree.name," +
+            "                            tree.parent," +
+            "                            tree.level" +
+            "                           FROM rec rec_1," +
+            "                            r_structure tree" +
+            "                          WHERE tree.id = rec_1.parent" +
+            "                        )" +
+            "                 SELECT rec.id," +
+            "                    rec.name," +
+            "                    rec.level," +
+            "                    1 AS grouper" +
+            "                   FROM rec" +
+            "                  ORDER BY rec.level" +
+            "                  ASC " +
+            " ) AS tbl",
+            nativeQuery = true)
+    String getLocationId(@Param("id") Long id);
+
     @CacheEvict
     @Query("SELECT m FROM Structure m " +
             "WHERE m.deleted IS FALSE " +
