@@ -1,5 +1,0 @@
-name.maximum.length=maximum name structure 50 characters
-description.required=description is required
-description.maximum.length=maximum length of description 200 characters
-sort.minimum=minimum sort value 1
-level.parent.invalid=invalid level parent, cause level > but parent value 0
