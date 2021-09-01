@@ -198,10 +198,14 @@ export class PreviewComponent implements OnInit, AfterViewInit, OnDestroy {
       this.slides = resp.slice(0, 6);
       setTimeout(() => this.changeDetectorRef.detectChanges(), 0);
     });
-
   }
 
   ngAfterViewInit(): void {
+    document.querySelectorAll('a').forEach(element => {
+      if (element.attributes.getNamedItem('target') && element.attributes.getNamedItem('rel')) {
+        element.removeAttribute('target')
+      }
+    })
   }
 
   private loadData() {

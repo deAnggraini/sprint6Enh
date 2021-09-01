@@ -477,6 +477,10 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
         },
       ],
       columns: 5
+    },
+    link: {
+      addTargetToExternalLinks: true,
+      defaultProtocol: 'http://'
     }
   };
 
@@ -898,6 +902,10 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
         },
       ],
       columns: 5
+    },
+    link: {
+      addTargetToExternalLinks: true,
+      defaultProtocol: 'http://'
     }
   };
 
