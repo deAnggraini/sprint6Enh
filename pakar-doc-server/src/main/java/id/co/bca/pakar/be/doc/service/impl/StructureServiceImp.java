@@ -545,14 +545,6 @@ public class StructureServiceImp implements StructureService {
                         throw new DataNotFoundException("not found data with parent id " + dto.getParent());
                     }
                 }
-
-                /*
-                validate if sort value destination <> sort value of dto
-                 */
-                if (destinationParentStructure.getSort().longValue() == dto.getSort().longValue()) {
-                    logger.info("parent sort value same as with request sort value {} ", dto.getSort());
-                    throw new InvalidSortException("parent sort value same as with dto stor value " + dto.getSort());
-                }
             }
 
             structure.setParentStructure(dto.getParent());
@@ -690,9 +682,6 @@ public class StructureServiceImp implements StructureService {
         } catch (InvalidLevelException e) {
             logger.error("invalid new level", e);
             throw new InvalidLevelException("invalid new level", e);
-        } catch (InvalidSortException e) {
-            logger.error("invalid new level", e);
-            throw new InvalidSortException("invalid new level", e);
         } catch (Exception e) {
             logger.error("exception", e);
             throw new Exception("exception", e);

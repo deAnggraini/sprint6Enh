@@ -181,6 +181,19 @@ public class ArticleServiceImpl implements ArticleService {
             Article article = new Article();
             article.setCreatedBy(generateArticleDto.getUsername());
             article.setModifyBy(generateArticleDto.getUsername());
+
+            // get user profile from oauth server
+            ResponseEntity<ApiResponseWrapper.RestResponse<UserProfileDto>> restResponse = null;
+            try {
+                restResponse = pakarOauthClient.getUser(BEARER + articleDto.getToken(), articleDto.getUsername());
+                if (!restResponse.getBody().getApiStatus().getCode().equalsIgnoreCase(Constant.OK_ACK)) {
+                    throw new OauthApiClientException("call oauth api client is failed");
+                }
+            } catch (Exception e) {
+                logger.error("call oauth server failed", e);
+            }
+
+            article.setFullNameModifier(restResponse.getBody() != null ? restResponse.getBody().getData().getFullname() : "");
             article.setJudulArticle(generateArticleDto.getTitle());
             article.setArticleTemplate(template.getId());
             article.setArticleUsedBy(generateArticleDto.getUsedBy());
