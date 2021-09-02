@@ -16,7 +16,8 @@
                     <span [inlineSVG]="'./assets/media/svg/bca/icon/page.svg'" class="svg-icon mr-2"></span>
                     <div class="pakar-text-header my-2">My Pages</div>
                 </div>
-                <div class="input-group inner" [ngStyle]="{'border' : keyword ?  '1px solid #0F5EA9' :  '1px solid #C8C6C4'}">
+                <div class="input-group inner"
+                    [ngStyle]="{'border' : keyword ?  '1px solid #0F5EA9' :  '1px solid #C8C6C4'}">
                     <input type="text" class="form-control" placeholder="Cari artikel, virtual page atau formulir"
                         [(ngModel)]="keyword" style="height: 34px;" (keyup.enter)="onSearch(keyword)">
                     <div class="form-control-clear btn btn-icon btn-clean" *ngIf="keyword"
@@ -75,7 +76,9 @@
 
                                         <ng-container *ngIf="key == 'pending'">
                                             <th scope="col" sortable="modified_date" (sort)="onSort($event)"
-                                                class="bothside-padding width-table-180">
+                                                class="bothside-padding width-table-180"
+                                                direction="asc"
+                                                [class.asc]="dataForm[key].sort.column == 'modified_date' && dataForm[key].sort.direction == 'asc'">
                                                 <span
                                                     class="text-title font-scale-header">{{tableHeader[key][3]}}</span><i
                                                     class="sortable"></i>
@@ -90,16 +93,18 @@
 
                                         <ng-container *ngIf="key == 'draft'">
                                             <th scope="col" sortable="modified_date" (sort)="onSort($event)"
-                                                class="bothside-padding width-table-180">
-                                                <span
-                                                    class="text-title font-scale-header">{{tableHeader[key][3]}}</span><i
-                                                    class="sortable"></i>
+                                                class="bothside-padding width-table-180"
+                                                direction="asc"
+                                                [class.asc]="dataForm[key].sort.column == 'modified_date' && dataForm[key].sort.direction == 'asc'">
+                                                <span class="text-title font-scale-header">
+                                                    {{tableHeader[key][3]}}</span>
+                                                <i class="sortable"></i>
                                             </th>
                                             <th scope="col" sortable="modified_by" (sort)="onSort($event)"
                                                 class="bothside-padding width-table-160">
                                                 <span
-                                                    class="text-title font-scale-header">{{tableHeader[key][4]}}</span><i
-                                                    class="sortable"></i>
+                                                    class="text-title font-scale-header">{{tableHeader[key][4]}}</span>
+                                                <i class="sortable"></i>
                                             </th>
                                         </ng-container>
 

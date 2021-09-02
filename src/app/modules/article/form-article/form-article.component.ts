@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy, ChangeDetectorRef, TemplateRef, Inject } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy, ChangeDetectorRef, TemplateRef, Inject, OnChanges } from '@angular/core';
 import * as CustomEditor from './../../../ckeditor/build/ckeditor';
 import { ArticleService } from '../../_services/article.service';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -11,7 +11,7 @@ import { AuthService, UserModel } from '../../auth';
 import { ArticleDTO, ArticleContentDTO, ArticleParentDTO, ArticleSenderDTO } from '../../_model/article.dto';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { StrukturService } from '../../_services/struktur.service';
-import { catchError, debounceTime, distinctUntilChanged, map, first } from 'rxjs/operators';
+import { catchError, debounceTime, distinctUntilChanged, map, first, elementAt } from 'rxjs/operators';
 import { ConfirmService } from 'src/app/utils/_services/confirm.service';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { UserService } from '../../_services/user.service';
@@ -49,7 +49,7 @@ const defaultValue: ArticleDTO = {
   templateUrl: './form-article.component.html',
   styleUrls: ['./form-article.component.scss']
 })
-export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
+export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges {
 
   @ViewChild('editorDesc') editorComponent: CKEditorComponent;
   @ViewChild('formSaveAndSend') formSaveAndSend: TemplateRef<any>;
@@ -1094,6 +1094,12 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
           this.scroll(this.openFragment);
         }
       });
+  }
+  ngOnChanges(): void {
+    console.log('change')
+    this.document.querySelectorAll('ckeditor.ul').forEach(element => {
+      console.log(element)
+    })
   }
 
 }

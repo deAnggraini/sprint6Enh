@@ -46,17 +46,17 @@ const EMPTY_FORM_BEAN: FormBean = {
   approved: {
     dataList: [],
     pagination: new PaginationModel(1, 0),
-    sort: { column: 'modified_date', direction: 'desc' }
+    sort: { column: 'modified_date', direction: 'asc' }
   },
   pending: {
     dataList: [],
     pagination: new PaginationModel(1, 0),
-    sort: { column: 'modified_date', direction: 'desc' }
+    sort: { column: 'modified_date', direction: 'asc' }
   },
   draft: {
     dataList: [],
     pagination: new PaginationModel(1, 0),
-    sort: { column: 'modified_date', direction: 'desc' }
+    sort: { column: 'modified_date', direction: 'asc' }
   },
 }
 
