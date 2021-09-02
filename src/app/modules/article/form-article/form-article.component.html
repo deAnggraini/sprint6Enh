@@ -140,7 +140,8 @@
                                         </div>
                                     </div>
                                     <div *ngIf="!content.isEdit && content.topicContent"
-                                        class="fs11pt p-3 drop-area-accordion" style="padding-bottom: 0px !important;"
+                                        class="fs11pt p-3 drop-area-accordion ckeditor-page-view"
+                                        style="padding-bottom: 0px !important;"
                                         [innerHTML]="content.topicContent | sanitizeHtml" [attr.data-id]="content.id">
                                     </div>
                                     <input *ngIf="!content.isEdit && !content.topicContent" type="text"
@@ -294,7 +295,7 @@
                                             (click)="accSaveAddEdit(content)">Simpan</button>
                                     </div>
                                 </div>
-                                <div class="fs11pt" *ngIf="!content.isEdit"
+                                <div class="fs11pt ckeditor-page-view" *ngIf="!content.isEdit"
                                     [innerHTML]="(content.topicContent || '&nbsp;') | sanitizeHtml"></div>
                             </div>
                             <ng-container [ngTemplateOutlet]="accordionChild"
@@ -332,8 +333,7 @@
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-outline-light btn-sm rounded-lg px-5" (click)="c('Batal')">Batal</button>
-        <button type="button" class="btn btn-sm btn-blue rounded-lg px-5"
-            [disabled]="!(saveAndSend.sendTo.username)"
+        <button type="button" class="btn btn-sm btn-blue rounded-lg px-5" [disabled]="!(saveAndSend.sendTo.username)"
             (click)="doSaveAndSend($event)">Kirim</button>
     </div>
 </ng-template>

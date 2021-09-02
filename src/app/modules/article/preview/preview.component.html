@@ -107,7 +107,7 @@ height: 184px;
             <div class="row d-flex flex-wrap justify-content-between">
                 <!-- left side -->
                 <div class="col">
-                    <span class="pakar-text-header-desc"
+                    <span class="pakar-text-header-desc ckeditor-page-view"
                         [innerHTML]="(articleDTO.desc || '&nbsp;') | sanitizeHtml">&nbsp;</span>
                     <div class="my-3" *ngIf="!hideTable">
                         <table class="table table-bordered">
@@ -164,7 +164,7 @@ height: 184px;
                                     </ng-container>
                                 </mat-expansion-panel-header>
                                 <div class="content">
-                                    <div class="p-3" [innerHTML]="(content.topicContent || '&nbsp;') | sanitizeHtml">
+                                    <div class="p-3 ckeditor-page-view" [innerHTML]="(content.topicContent || '&nbsp;') | sanitizeHtml">
                                     </div>
                                     <ng-container *ngIf="content.children.length" [ngTemplateOutlet]="accordionChild"
                                         [ngTemplateOutletContext]="{ children: content.children, level:2, parents:[]}">
@@ -257,7 +257,7 @@ height: 184px;
                 </mat-expansion-panel-header>
                 <ng-template matExpansionPanelContent>
                     <div class="content">
-                        <div class="p-3">
+                        <div class="p-3 ckeditor-page-view">
                             <div>
                                 <span [innerHTML]="(content.topicContent || '&nbsp;') | sanitizeHtml">&nbsp;</span>
                             </div>

@@ -89,11 +89,20 @@ body {
 .ck[role="textbox"] {
   font-family: "Calibri" !important;
   font-size: 1.045em !important;
+  a {
+    text-decoration: underline;
+  }
+}
+
+.ckeditor-page-view {
+  a {
+    text-decoration: underline;
+  }
 }
 
 .mat-expansion-panel-content {
   font-family: "Calibri" !important;
-  font-size: 1.045em  !important;
+  font-size: 1.045em !important;
 }
 
 .ck-placeholder {
@@ -101,7 +110,7 @@ body {
   font-family: Segoe UI;
   font-style: normal;
   font-weight: normal;
-  font-size: 1em ;
+  font-size: 1em;
   color: #a19f9d;
 }
 
