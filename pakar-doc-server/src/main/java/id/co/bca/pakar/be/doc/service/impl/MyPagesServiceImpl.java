@@ -87,7 +87,7 @@ public class MyPagesServiceImpl implements MyPagesService {
                 throw new MinValuePageNumberException("page number smaller than 0");
             String reqSortColumnName = searchDto.getSorting().getColumn();
             searchDto.getSorting().setColumn(new TodoMapperMyPages().convertColumnNameforSort(reqSortColumnName));
-            Sort sort = searchDto.getSorting().getSort().equals("asc") ? Sort.by(searchDto.getSorting().getColumn()).ascending() : Sort.by(searchDto.getSorting().getColumn()).descending();
+            Sort sort = searchDto.getSorting().getSort().equals("asc") ? Sort.by(searchDto.getSorting().getColumn()).descending() : Sort.by(searchDto.getSorting().getColumn()).ascending();
             Pageable pageable = PageRequest.of(pageNum, searchDto.getSize().intValue(), sort);
             RequestTaskDto requestTaskDto = new RequestTaskDto();
             requestTaskDto.setAssigne(searchDto.getUsername());
