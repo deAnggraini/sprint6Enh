@@ -77,13 +77,13 @@ public class MyPages extends EntityBase {
     private Boolean isClone = Boolean.TRUE;
 
     @Column(name = "effective_date")
-    private Date effective_date;
+    private Date effectiveDate;
 
     @Column(name = "approved_date")
-    private Date approved_date;
+    private Date approvedDate;
 
     @Column(name = "approved_by")
-    private String approved_by;
+    private String approvedBy;
 
     public Long getId() {
         return id;
@@ -261,27 +261,27 @@ public class MyPages extends EntityBase {
         isClone = clone;
     }
 
-    public Date getEffective_date() {
-        return effective_date;
+    public Date getEffectiveDate() {
+        return effectiveDate;
     }
 
-    public void setEffective_date(Date effective_date) {
-        this.effective_date = effective_date;
+    public void setEffectiveDate(Date effectiveDate) {
+        this.effectiveDate = effectiveDate;
     }
 
-    public Date getApproved_date() {
-        return approved_date;
+    public Date getApprovedDate() {
+        return approvedDate;
     }
 
-    public void setApproved_date(Date approved_date) {
-        this.approved_date = approved_date;
+    public void setApprovedDate(Date approvedDate) {
+        this.approvedDate = approvedDate;
     }
 
-    public String getApproved_by() {
-        return approved_by;
+    public String getApprovedBy() {
+        return approvedBy;
     }
 
-    public void setApproved_by(String approved_by) {
-        this.approved_by = approved_by;
+    public void setApprovedBy(String approvedBy) {
+        this.approvedBy = approvedBy;
     }
 }
