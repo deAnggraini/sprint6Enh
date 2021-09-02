@@ -84,7 +84,7 @@ public class ArticleContentServiceImpl implements ArticleContentService {
             String reqSortColumnName = searchDto.getSorting().getColumn();
             logger.debug("sort column {}", searchDto.getSorting().getColumn());
             searchDto.getSorting().setColumn(new TodoMapperMyPages().convertColumnNameforSort(reqSortColumnName));
-            Sort sort = searchDto.getSorting().getSort().equals("asc") ? Sort.by(searchDto.getSorting().getColumn()).ascending() : Sort.by(searchDto.getSorting().getColumn()).descending();
+            Sort sort = searchDto.getSorting().getSort().equals("asc") ? Sort.by(searchDto.getSorting().getColumn()).descending() : Sort.by(searchDto.getSorting().getColumn()).ascending();
             Pageable pageable = PageRequest.of(pageNum, searchDto.getSize().intValue(), sort);
 
             if (searchDto.getType().equals(Constant.DocumentType.All)
