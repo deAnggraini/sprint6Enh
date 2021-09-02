@@ -326,7 +326,6 @@
                 placeholder="Masukkan Nama" (onSearch)="searchUser($event)" (onChange)="userChange($event)"
                 [selected]="selectedSaveAndSend">
             </pakar-auto-complete>
-            {{saveAndSend.sendTo.username}}
             <textarea rows="4" class="form-control" placeholder="Catatan" [(ngModel)]="saveAndSend.sendNote"
                 style="margin-top:3px" maxlength="200"></textarea>
         </div>
