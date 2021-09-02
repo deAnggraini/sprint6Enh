@@ -88,7 +88,7 @@ public interface StructureRepository extends CrudRepository<Structure, Long> {
             nativeQuery = true)
     List<Structure> findChildsById(@Param("id") Long id);
 
-    @Query("SELECT COUNT(tmp.level) FROM " +
+    @Query(value = "SELECT COUNT(tmp.level) FROM " +
             "( " +
             "SELECT rs2.level FROM ( " +
             "WITH RECURSIVE rec as " +
@@ -103,7 +103,8 @@ public interface StructureRepository extends CrudRepository<Structure, Long> {
             "group by rs2.level " +
             "order by rs2.level " +
             "asc " +
-            ") tmp ")
+            ") tmp ",
+    nativeQuery = true)
     Long totalChildsLevel(@Param("id") Long id);
 
     @Query(value = "SELECT rs3.* FROM (  " +
