@@ -87,7 +87,7 @@ public class MyPagesServiceImpl implements MyPagesService {
                 throw new MinValuePageNumberException("page number smaller than 0");
             String reqSortColumnName = searchDto.getSorting().getColumn();
             Sort sort = null;
-            if(reqSortColumnName.equalsIgnoreCase("modified_date")) {
+            if(reqSortColumnName.equalsIgnoreCase("modified_date") || reqSortColumnName.equalsIgnoreCase("approved_date")) {
                 searchDto.getSorting().setColumn(new TodoMapperMyPages().convertColumnNameforSort(reqSortColumnName));
                 sort = searchDto.getSorting().getSort().equals("asc") ? Sort.by(searchDto.getSorting().getColumn()).descending() : Sort.by(searchDto.getSorting().getColumn()).ascending();
             } else {
@@ -196,15 +196,9 @@ public class MyPagesServiceImpl implements MyPagesService {
             dto.setCurrentBy(currentEdit.toString());
             dto.setSendTo(entity.getFullNameReceiver());
             dto.setReceiver(entity.getReceiver());
-
-            if (entity.getSenderState() != null) {
-                if (entity.getSenderState().equalsIgnoreCase(Constant.ArticleWfState.PUBLISHED)) {
-                    dto.setApproved_by(entity.getFullNameReceiver());
-//                dto.setApprovedDate(entity.getModifyDate());
-//                dto.setEffectiveDate();
-                }
-            }
-
+            dto.setApproved_by(entity.getApprovedBy());
+            dto.setApprovedDate(entity.getApprovedDate());
+            dto.setEffectiveDate(entity.getEffectiveDate());
             dto.setIsClone(entity.getIsClone());
             dto.setIsAdd(entity.getIsAdd());
             dto.setIsPublished(entity.getIsPublished());
@@ -230,6 +224,12 @@ public class MyPagesServiceImpl implements MyPagesService {
                 return "fullNameModifier";
             } else if (reqColumn.equals("location")) {
                 return "location";
+            } else if (reqColumn.equals("send_to")) {
+                return "fullNameReceiver";
+            } else if (reqColumn.equals("approved_date")) {
+                return "approvedDate";
+            } else if (reqColumn.equals("approved_by")) {
+                return "approvedBy";
             }
             return "judulArticle";
         }

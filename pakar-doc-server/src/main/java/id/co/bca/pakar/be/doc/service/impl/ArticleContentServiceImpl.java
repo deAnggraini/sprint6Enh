@@ -84,7 +84,7 @@ public class ArticleContentServiceImpl implements ArticleContentService {
             String reqSortColumnName = searchDto.getSorting().getColumn();
             logger.debug("sort column {}", searchDto.getSorting().getColumn());
             Sort sort = null;
-            if(reqSortColumnName.equalsIgnoreCase("effective_date")) {
+            if(reqSortColumnName.equalsIgnoreCase("effective_date") || reqSortColumnName.equalsIgnoreCase("modified_date") ) {
                 searchDto.getSorting().setColumn(new TodoMapperMyPages().convertColumnNameforSort(reqSortColumnName));
                 sort = searchDto.getSorting().getSort().equals("asc") ? Sort.by(searchDto.getSorting().getColumn()).descending() : Sort.by(searchDto.getSorting().getColumn()).ascending();
             } else {
@@ -141,7 +141,7 @@ public class ArticleContentServiceImpl implements ArticleContentService {
             dto.setType(Constant.JenisHalaman.Artikel);
             dto.setTitle(entity.getJudulArticle());
             dto.setLocation(entity.getLocation());
-            dto.setEffectiveDate(null);
+            dto.setEffectiveDate(entity.getEffectiveDate());
             dto.setModifiedBy(entity.getFullNameModifier());
             dto.setModifiedDate(entity.getModifyDate());
             int i = 0;
