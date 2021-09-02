@@ -2,6 +2,7 @@ package id.co.bca.pakar.be.doc.model;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -61,6 +62,15 @@ public class Article extends EntityBase {
 
     @Column(name = "is_clone")
     private Boolean isClone = Boolean.TRUE;
+
+    @Column(name = "effective_date")
+    private Date effective_date;
+
+    @Column(name = "approved_date")
+    private Date approved_date;
+
+    @Column(name = "approved_by")
+    private String approved_by;
 
     public Long getId() {
         return id;
@@ -196,5 +206,29 @@ public class Article extends EntityBase {
 
     public void setIsClone(Boolean clone) {
         isClone = clone;
+    }
+
+    public Date getEffective_date() {
+        return effective_date;
+    }
+
+    public void setEffective_date(Date effective_date) {
+        this.effective_date = effective_date;
+    }
+
+    public Date getApproved_date() {
+        return approved_date;
+    }
+
+    public void setApproved_date(Date approved_date) {
+        this.approved_date = approved_date;
+    }
+
+    public String getApproved_by() {
+        return approved_by;
+    }
+
+    public void setApproved_by(String approved_by) {
+        this.approved_by = approved_by;
     }
 }
