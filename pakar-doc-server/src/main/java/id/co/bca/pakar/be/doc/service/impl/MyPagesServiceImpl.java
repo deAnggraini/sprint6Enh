@@ -170,8 +170,11 @@ public class MyPagesServiceImpl implements MyPagesService {
 
             dto.setId(entity.getId());
             dto.setTitle(entity.getJudulArticle());
+
             dto.setIsNew(entity.getNewArticle());
             dto.setState(entity.getArticleState());
+            dto.setCreatedBy(entity.getCreatedBy());
+            dto.setCreatedDate(entity.getCreatedDate());
             dto.setModifiedBy(entity.getFullNameModifier());
             dto.setModifiedDate(entity.getModifyDate());
             dto.setType(Constant.JenisHalaman.Artikel);
@@ -196,6 +199,9 @@ public class MyPagesServiceImpl implements MyPagesService {
                 }
             }
 
+            dto.setIsClone(entity.getIsClone());
+            dto.setIsAdd(entity.getIsAdd());
+            dto.setIsPublished(entity.getIsPublished());
             return dto;
         }
 

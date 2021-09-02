@@ -15,6 +15,10 @@ public class MyPageDto extends BaseDto {
     private String location;
     @JsonProperty("isNew")
     private Boolean isNew;
+    @JsonProperty("created_by")
+    private String createdBy;
+    @JsonProperty("created_date")
+    private Date createdDate;
     @JsonProperty("modified_by")
     private String modifiedBy;
     @JsonProperty("modified_date")
@@ -35,6 +39,10 @@ public class MyPageDto extends BaseDto {
     private String receiver;
     @JsonProperty("isClone")
     private Boolean isClone;
+    @JsonProperty("isPublished")
+    private Boolean isPublished;
+    @JsonProperty("isAdd")
+    private Boolean isAdd;
 
     public Long getId() {
         return id;
@@ -74,6 +82,22 @@ public class MyPageDto extends BaseDto {
 
     public void setIsNew(Boolean aNew) {
         isNew = aNew;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
     }
 
     public String getModifiedBy() {
@@ -154,5 +178,21 @@ public class MyPageDto extends BaseDto {
 
     public void setIsClone(Boolean clone) {
         isClone = clone;
+    }
+
+    public Boolean getIsPublished() {
+        return isPublished;
+    }
+
+    public void setIsPublished(Boolean published) {
+        isPublished = published;
+    }
+
+    public Boolean getIsAdd() {
+        return isAdd;
+    }
+
+    public void setIsAdd(Boolean add) {
+        isAdd = add;
     }
 }

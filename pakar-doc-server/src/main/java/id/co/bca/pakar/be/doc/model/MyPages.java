@@ -66,6 +66,15 @@ public class MyPages extends EntityBase {
     @Column(name = "location")
     private String location;
 
+    @Column(name = "is_published")
+    private Boolean isPublished = Boolean.FALSE;
+
+    @Column(name = "is_add")
+    private Boolean isAdd = Boolean.TRUE;
+
+    @Column(name = "is_clone")
+    private Boolean isClone = Boolean.TRUE;
+
     public Long getId() {
         return id;
     }
@@ -216,5 +225,29 @@ public class MyPages extends EntityBase {
 
     public void setFullNameSender(String fullNameSender) {
         this.fullNameSender = fullNameSender;
+    }
+
+    public Boolean getIsPublished() {
+        return isPublished;
+    }
+
+    public void setIsPublished(Boolean published) {
+        isPublished = published;
+    }
+
+    public Boolean getIsAdd() {
+        return isAdd;
+    }
+
+    public void setIsAdd(Boolean add) {
+        isAdd = add;
+    }
+
+    public Boolean getIsClone() {
+        return isClone;
+    }
+
+    public void setIsClone(Boolean clone) {
+        isClone = clone;
     }
 }

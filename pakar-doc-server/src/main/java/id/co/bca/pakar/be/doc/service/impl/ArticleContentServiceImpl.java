@@ -1,35 +1,30 @@
 package id.co.bca.pakar.be.doc.service.impl;
 
 import id.co.bca.pakar.be.doc.client.ApiClient;
-import id.co.bca.pakar.be.doc.client.ApiResponseWrapper;
 import id.co.bca.pakar.be.doc.client.PakarOauthClient;
 import id.co.bca.pakar.be.doc.client.PakarWfClient;
 import id.co.bca.pakar.be.doc.common.Constant;
-import id.co.bca.pakar.be.doc.dao.*;
+import id.co.bca.pakar.be.doc.dao.ArticleEditRepository;
+import id.co.bca.pakar.be.doc.dao.ArticleMyPagesRepository;
+import id.co.bca.pakar.be.doc.dao.ArticleRepository;
+import id.co.bca.pakar.be.doc.dao.MyPagesRepository;
 import id.co.bca.pakar.be.doc.dto.MyPageDto;
-import id.co.bca.pakar.be.doc.dto.RequestTaskDto;
 import id.co.bca.pakar.be.doc.dto.SearchMyPageDto;
-import id.co.bca.pakar.be.doc.dto.TaskDto;
-import id.co.bca.pakar.be.doc.exception.AccesDeniedDeleteContentException;
 import id.co.bca.pakar.be.doc.exception.AccesDeniedViewContentsException;
 import id.co.bca.pakar.be.doc.exception.MinValuePageNumberException;
-import id.co.bca.pakar.be.doc.model.Article;
 import id.co.bca.pakar.be.doc.model.ArticleEdit;
-import id.co.bca.pakar.be.doc.model.ArticleState;
 import id.co.bca.pakar.be.doc.model.MyPages;
 import id.co.bca.pakar.be.doc.service.ArticleContentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static id.co.bca.pakar.be.doc.common.Constant.Headers.BEARER;
 import static id.co.bca.pakar.be.doc.common.Constant.Roles.ROLE_ADMIN;
 import static id.co.bca.pakar.be.doc.common.Constant.Roles.ROLE_READER;
 
@@ -57,6 +52,7 @@ public class ArticleContentServiceImpl implements ArticleContentService {
 
     @Autowired
     private MyPagesRepository myPagesRepository;
+
     /**
      * @param searchDto
      * @return
@@ -93,9 +89,9 @@ public class ArticleContentServiceImpl implements ArticleContentService {
 
             if (searchDto.getType().equals(Constant.DocumentType.All)
                     || searchDto.getType().equals(Constant.DocumentType.Artikel)) {
-                if(role.equals(ROLE_ADMIN)) {
+                if (role.equals(ROLE_ADMIN)) {
                     searchResultPage = myPagesRepository.findContentArticleForAdmin(searchDto.getKeyword(), pageable);
-                } else if (role.equals(Constant.Roles.ROLE_EDITOR) || role.equals(Constant.Roles.ROLE_PUBLISHER)){
+                } else if (role.equals(Constant.Roles.ROLE_EDITOR) || role.equals(Constant.Roles.ROLE_PUBLISHER)) {
                     searchResultPage = myPagesRepository.findContentArticle(searchDto.getKeyword(), pageable);
                 }
             } else {
@@ -107,7 +103,7 @@ public class ArticleContentServiceImpl implements ArticleContentService {
         } catch (AccesDeniedViewContentsException e) {
             logger.error("exception", e);
             throw new AccesDeniedViewContentsException("exception", e);
-        } catch(MinValuePageNumberException e) {
+        } catch (MinValuePageNumberException e) {
             logger.error("exception", e);
             throw new MinValuePageNumberException("exception", e);
         } catch (Exception e) {
@@ -144,9 +140,9 @@ public class ArticleContentServiceImpl implements ArticleContentService {
             dto.setModifiedDate(entity.getModifyDate());
             int i = 0;
             StringBuffer currentEdit = new StringBuffer();
-            for(ArticleEdit articleEdit : articleEdits) {
+            for (ArticleEdit articleEdit : articleEdits) {
                 currentEdit.append(articleEdit.getEditorName());
-                if(i < articleEdits.size() - 1)
+                if (i < articleEdits.size() - 1)
                     currentEdit.append(",");
                 i++;
             }

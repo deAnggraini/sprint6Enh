@@ -65,7 +65,7 @@ public class ArticleDto extends BaseArticleDto {
     private String timestampVersion;
 
     @JsonProperty("isPublished")
-    private Boolean published = Boolean.FALSE;
+    private Boolean isPublished = Boolean.FALSE;
 
     /**
      * jika artikel belum pernah save atau kirim, maka isAdd = true
@@ -197,11 +197,11 @@ public class ArticleDto extends BaseArticleDto {
     }
 
     public Boolean getIsPublished() {
-        return published;
+        return isPublished;
     }
 
-    public void setPublished(Boolean published) {
-        this.published = published;
+    public void setPublished(Boolean isPublished) {
+        this.isPublished = isPublished;
     }
 
     public String getModifiedBy() {
