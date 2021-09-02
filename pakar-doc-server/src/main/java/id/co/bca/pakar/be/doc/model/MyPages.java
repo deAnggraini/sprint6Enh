@@ -43,9 +43,6 @@ public class MyPages extends EntityBase {
     @Column(name = "title", unique = true, nullable = false)
     private String judulArticle;
 
-//    @Lob
-//    @Basic(fetch = FetchType.LAZY)
-//    @Column(name = "short_desc")
     @Column(name = "short_desc", columnDefinition = "TEXT", length = Integer.MAX_VALUE, nullable = false)
     private String shortDescription = new String();
 
@@ -84,6 +81,9 @@ public class MyPages extends EntityBase {
 
     @Column(name = "approved_by")
     private String approvedBy;
+
+    @Column(name = "fn_approver")
+    private String fullNameApprover;
 
     public Long getId() {
         return id;
@@ -283,5 +283,13 @@ public class MyPages extends EntityBase {
 
     public void setApprovedBy(String approvedBy) {
         this.approvedBy = approvedBy;
+    }
+
+    public String getFullNameApprover() {
+        return fullNameApprover;
+    }
+
+    public void setFullNameApprover(String fullNameApprover) {
+        this.fullNameApprover = fullNameApprover;
     }
 }

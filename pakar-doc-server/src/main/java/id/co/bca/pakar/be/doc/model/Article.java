@@ -72,6 +72,9 @@ public class Article extends EntityBase {
     @Column(name = "approved_by")
     private String approvedBy;
 
+    @Column(name = "fn_approver")
+    private String fullNameApprover;
+
     public Long getId() {
         return id;
     }
@@ -230,5 +233,13 @@ public class Article extends EntityBase {
 
     public void setApprovedBy(String approvedBy) {
         this.approvedBy = approvedBy;
+    }
+
+    public String getFullNameApprover() {
+        return fullNameApprover;
+    }
+
+    public void setFullNameApprover(String fullNameApprover) {
+        this.fullNameApprover = fullNameApprover;
     }
 }
