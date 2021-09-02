@@ -10,8 +10,8 @@
         <div class="my-7">
             <pakar-search></pakar-search>
         </div>
-        <div class="card card-custom d-flex flex-fill px-10 pt-5 mb-5">
-            <div class="d-flex flex-row  align-items-center justify-content-between mb-3">
+        <div class="card card-custom d-flex flex-fill px-7 pt-5 mb-5">
+            <div class="d-flex flex-row  align-items-center justify-content-between">
                 <div class="d-flex flex-row align-items-center">
                     <span [inlineSVG]="'./assets/media/svg/bca/icon/page.svg'" class="svg-icon mr-2"></span>
                     <div class="pakar-text-header my-2">My Pages</div>
@@ -39,7 +39,7 @@
                         <b>{{key}} ({{dataForm[key].pagination.totalData || 0}})</b>
                     </a>
                     <ng-template ngbNavContent>
-                        <div class="d-flex flex-column flex-fill" style="height: 100%;">
+                        <div class="d-flex flex-column flex-fill justify-content-between" style="height: 100%;">
                             <table [id]="'table-'+key" class="table table-head-borderless">
                                 <thead>
                                     <tr>
@@ -163,7 +163,7 @@
                                                 <td (click)="showArticle(item.id)"
                                                     class="cursor-pointer bothside-padding font-scale-header"
                                                     placement="top auto" [ngbTooltip]="item.current_by" container="body"
-                                                    tooltipClass="fs12">>
+                                                    tooltipClass="fs12">
                                                     <div class="te-3">{{(item.current_by | maxLength:130) || '-'}}</div>
                                                 </td>
                                             </ng-container>
