@@ -32,6 +32,7 @@ export class AutoCompleteComponent implements OnInit, ControlValueAccessor {
   _onTouched: (_) => {};
   _onChange: (_) => {};
 
+  keyword: string = '';
   value: string;
   disabled: boolean = false;
   hasError: boolean = false;
@@ -83,6 +84,7 @@ export class AutoCompleteComponent implements OnInit, ControlValueAccessor {
             this.isEnter = true;
             return '';
           }
+          this.keyword = event.target.value;
           return event.target.value;
         }),
         debounceTime(500),
