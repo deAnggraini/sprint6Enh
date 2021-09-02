@@ -3,6 +3,8 @@ package id.co.bca.pakar.be.doc.common;
 public class Constant {
 	public static final String OK_ACK = "00";
 
+	public static final Long MAX_STRUCTURE_LEVEL = 4L;
+
 	public static enum ApiResponseCode {
 		// This will call enum constructor with one
 		// String argument

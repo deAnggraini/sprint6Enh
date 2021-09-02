@@ -18,10 +18,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-//import javax.transaction.Transactional;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+
+import static id.co.bca.pakar.be.doc.common.Constant.MAX_STRUCTURE_LEVEL;
 
 @Service
 public class StructureServiceImp implements StructureService {
@@ -514,6 +515,7 @@ public class StructureServiceImp implements StructureService {
              * get current all child structures
              */
             List<Structure> childStructures = structureRepository.findChildsById(structure.getId());
+            Long maxChildsLevel = structureRepository.totalChildsLevel(structure.getId());
 
             /*
             get destination structure
@@ -533,7 +535,16 @@ public class StructureServiceImp implements StructureService {
                 destinationlevel = destinationParentStructure.getLevel();
                 if (dto.getLevel().longValue() < destinationlevel.longValue()) {
                     logger.info("level from request invalid, cause new level value {} < than from parent level {}", dto.getLevel(), destinationlevel);
-                    throw new InvalidLevelException("invalid new level " + dto.getId());
+                    throw new InvalidLevelException("level from request invalid, cause new level value "+ dto.getLevel() + " < than from parent level "+ destinationlevel);
+                }
+
+                /*
+                validate maximum level after add childs, if maximum reached then
+                 */
+                Long levelAfterAddChilds = destinationlevel.longValue() + maxChildsLevel.longValue();
+                if(levelAfterAddChilds > MAX_STRUCTURE_LEVEL) {
+                    logger.info("maximum level after add childs exceeded {}", levelAfterAddChilds);
+                    throw new InvalidLevelException("maximum level after add childs exceeded " + levelAfterAddChilds);
                 }
 
                 // validate parent structure value from request if level > 1

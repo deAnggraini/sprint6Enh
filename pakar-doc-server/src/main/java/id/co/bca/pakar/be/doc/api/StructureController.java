@@ -39,6 +39,14 @@ public class StructureController extends BaseController {
     @Autowired
     private MultiStructureValidator multiStructureValidator;
 
+    private Locale DEFAULT_LOCALE = null;
+
+    private Locale locale = DEFAULT_LOCALE;
+
+    public Locale getLocale() {
+        return locale;
+    }
+
     /**
      * add method add structure menu
      * for mutilpart/form-data, validator must using custom validator
@@ -56,28 +64,28 @@ public class StructureController extends BaseController {
                 logger.info("binding result " + bindingResult.getAllErrors());
                 String errorMessage = "";
                 for (Object object : bindingResult.getAllErrors()) {
-                    if(object instanceof FieldError) {
+                    if (object instanceof FieldError) {
                         FieldError fieldError = (FieldError) object;
-                        errorMessage = messageSource.getMessage(fieldError.getCode(),null, new Locale("en", "US"));
+                        errorMessage = messageSource.getMessage(fieldError.getCode(), null, getLocale());
                     }
                 }
                 return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], errorMessage);
             }
             logger.info("name structure >> {}", structure.getName());
             StructureResponseDto responseDto = structureService.add(username, structure);
-            return createResponse(responseDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
+            return createResponse(responseDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));
         } catch (DataNotFoundException e) {
             logger.error("exception", e);
-            return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, new Locale("en", "US")));
+            return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, getLocale()));
         } catch (InvalidLevelException e) {
             logger.error("exception", e);
-            return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("level.structure.invalid", null, new Locale("en", "US")));
+            return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("level.structure.invalid", null, getLocale()));
         } catch (InvalidSortException e) {
             logger.error("exception", e);
-            return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("sort.same.parent", null, new Locale("en", "US")));
+            return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("sort.same.parent", null, getLocale()));
         } catch (Exception e) {
             logger.error("exception", e);
-            return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
+            return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
         }
     }
 
@@ -95,27 +103,27 @@ public class StructureController extends BaseController {
                 logger.info("binding result " + bindingResult.getAllErrors());
                 String errorMessage = "";
                 for (Object object : bindingResult.getAllErrors()) {
-                    if(object instanceof FieldError) {
+                    if (object instanceof FieldError) {
                         FieldError fieldError = (FieldError) object;
-                        errorMessage = messageSource.getMessage(fieldError.getCode(),null, new Locale("en", "US"));
+                        errorMessage = messageSource.getMessage(fieldError.getCode(), null, getLocale());
                     }
                 }
                 return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], errorMessage);
             }
             StructureResponseDto responseDto = structureService.update(username, structure);
-            return createResponse(responseDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
+            return createResponse(responseDto, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));
         } catch (DataNotFoundException e) {
             logger.error("exception", e);
-            return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, new Locale("en", "US")));
+            return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, getLocale()));
         } catch (UndefinedStructureException e) {
             logger.error("exception", e);
-            return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("undefined.structure", null, new Locale("en", "US")));
+            return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("undefined.structure", null, getLocale()));
         } catch (InvalidLevelException e) {
             logger.error("exception", e);
-            return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("level.structure.invalid", null, new Locale("en", "US")));
+            return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("level.structure.invalid", null, getLocale()));
         } catch (Exception e) {
             logger.error("exception", e);
-            return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
+            return createResponse(new StructureResponseDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
         }
     }
 
@@ -130,13 +138,13 @@ public class StructureController extends BaseController {
         try {
             logger.info("deleting structure process");
             DeleteStructureDto response = structureService.delete(username, structures);
-            return createResponse(response, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
+            return createResponse(response, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));
         } catch (DataNotFoundException e) {
             logger.error("exception", e);
-            return createResponse(new DeleteStructureDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, new Locale("en", "US")));
+            return createResponse(new DeleteStructureDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, getLocale()));
         } catch (Exception e) {
             logger.error("exception", e);
-            return createResponse(new DeleteStructureDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
+            return createResponse(new DeleteStructureDto(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
         }
     }
 
@@ -157,24 +165,24 @@ public class StructureController extends BaseController {
                 logger.info("binding result " + bindingResult.getAllErrors());
                 String errorMessage = "";
                 for (Object object : bindingResult.getAllErrors()) {
-                    if(object instanceof FieldError) {
+                    if (object instanceof FieldError) {
                         FieldError fieldError = (FieldError) object;
-                        errorMessage = messageSource.getMessage(fieldError.getCode(),null, new Locale("en", "US"));
+                        errorMessage = messageSource.getMessage(fieldError.getCode(), null, getLocale());
                     }
                 }
                 return createResponse(new ArrayList<StructureResponseDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], errorMessage);
             }
             List<StructureResponseDto> response = structureService.saveBatchStructures(username, structures);
-            return createResponse(response, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
+            return createResponse(response, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));
         } catch (DataNotFoundException e) {
             logger.error("exception", e);
-            return createResponse(new ArrayList<StructureResponseDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, new Locale("en", "US")));
+            return createResponse(new ArrayList<StructureResponseDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("data.not.found", null, getLocale()));
         } catch (InvalidLevelException e) {
             logger.error("exception", e);
-            return createResponse(new ArrayList<StructureResponseDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("level.structure.invalid", null, new Locale("en", "US")));
+            return createResponse(new ArrayList<StructureResponseDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("level.structure.invalid", null, getLocale()));
         } catch (Exception e) {
             logger.error("exception", e);
-            return createResponse(new ArrayList<StructureResponseDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
+            return createResponse(new ArrayList<StructureResponseDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
         }
     }
 
@@ -188,10 +196,10 @@ public class StructureController extends BaseController {
         logger.info("get all structure/category");
         try {
             List<MenuDto> menus = structureService.getCategories(username, getTokenFromHeader(authorization));
-            return createResponse(menus, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
+            return createResponse(menus, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));
         } catch (Exception e) {
             logger.error("exception", e);
-            return createResponse(new ArrayList<MenuDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
+            return createResponse(new ArrayList<MenuDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
         }
     }
 }

@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -26,6 +27,14 @@ public class ArticleNotificationController extends BaseController {
 
     @Autowired
     private ArticleNotificationService articleNotificationService;
+
+    private Locale DEFAULT_LOCALE = null;
+
+    private Locale locale = DEFAULT_LOCALE;
+
+    public Locale getLocale() {
+        return locale;
+    }
 
     /**
      *
@@ -50,10 +59,10 @@ public class ArticleNotificationController extends BaseController {
             long totalUnRead = articleNotificationService.totalReadUnread(username, false);
             maps.put("total_read", totalRead);
             maps.put("total_unread", totalUnRead);
-            return createResponse(maps, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, null));
+            return createResponse(maps, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));
         } catch (Exception e) {
             logger.error("exception", e);
-            return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, null));
+            return createResponse(new HashMap<>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
         }
     }
 
@@ -70,12 +79,12 @@ public class ArticleNotificationController extends BaseController {
             logger.info("update notification");
             long ret = articleNotificationService.updateReadNotification(username, reqDto);
             if(ret != -1 )
-                return createResponse(ret, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, null));
+                return createResponse(ret, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));
             else
-                return createResponse(-1L, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, null));
+                return createResponse(-1L, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
         } catch (Exception e) {
             logger.error("exception", e);
-            return createResponse(-1L, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, null));
+            return createResponse(-1L, Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
         }
     }
 }

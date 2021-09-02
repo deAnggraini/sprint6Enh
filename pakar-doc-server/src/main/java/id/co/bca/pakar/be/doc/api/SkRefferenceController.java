@@ -25,16 +25,24 @@ public class SkRefferenceController extends BaseController {
     @Autowired
     private SkRefferenceService skRefferenceService;
 
+    private Locale DEFAULT_LOCALE = null;
+
+    private Locale locale = DEFAULT_LOCALE;
+
+    public Locale getLocale() {
+        return locale;
+    }
+
     @PostMapping(value = "/api/doc/searchSkRefference", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
             MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<RestResponse<List<SkReffDto>>> getSkRefferences(@RequestHeader("Authorization") String authorization, @RequestHeader(name = "X-USERNAME") String username, @RequestBody RequestSkReffDto requestSkReffDto) {
         logger.info("search sk refference process");
         try {
             List<SkReffDto> skReffDtos = skRefferenceService.findSkReffs(requestSkReffDto.getKeyword());
-            return this.createResponse(skReffDtos, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, new Locale("en", "US")));
+            return this.createResponse(skReffDtos, Constant.ApiResponseCode.OK.getAction()[0], messageSource.getMessage("success.response", null, getLocale()));
         } catch (Exception e) {
             logger.error("exception", e);
-            return createResponse(new ArrayList<SkReffDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, new Locale("en", "US")));
+            return createResponse(new ArrayList<SkReffDto>(), Constant.ApiResponseCode.GENERAL_ERROR.getAction()[0], messageSource.getMessage("general.error", null, getLocale()));
         }
     }
 }

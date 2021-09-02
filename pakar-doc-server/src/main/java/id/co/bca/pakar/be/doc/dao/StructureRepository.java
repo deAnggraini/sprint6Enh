@@ -77,9 +77,9 @@ public interface StructureRepository extends CrudRepository<Structure, Long> {
             "SELECT rs2.* FROM ( " +
             "WITH RECURSIVE rec as " +
             "( " +
-            "  SELECT rs.* FROM r_structure rs WHERE rs.id=:id " +
+            "  SELECT rs.* FROM r_structure rs WHERE rs.id=:id AND rs.deleted IS FALSE" +
             "  UNION ALL " +
-            "  SELECT rs.* FROM rec rec1, r_structure rs WHERE rs.parent = rec1.id " +
+            "  SELECT rs.* FROM rec rec1, r_structure rs WHERE rs.parent = rec1.id AND rs.deleted IS FALSE " +
             "  ) " +
             "SELECT * " +
             "FROM rec " +
@@ -88,16 +88,36 @@ public interface StructureRepository extends CrudRepository<Structure, Long> {
             nativeQuery = true)
     List<Structure> findChildsById(@Param("id") Long id);
 
+    @Query("SELECT COUNT(tmp.level) FROM " +
+            "( " +
+            "SELECT rs2.level FROM ( " +
+            "WITH RECURSIVE rec as " +
+            "( " +
+            "  SELECT rs.* FROM r_structure rs WHERE rs.id=:id AND rs.deleted IS FALSE " +
+            "  UNION ALL " +
+            "  SELECT rs.* FROM rec rec1, r_structure rs WHERE rs.parent = rec1.id AND rs.deleted IS FALSE " +
+            "  ) " +
+            "SELECT * " +
+            "FROM rec " +
+            ") rs2 " +
+            "group by rs2.level " +
+            "order by rs2.level " +
+            "asc " +
+            ") tmp ")
+    Long totalChildsLevel(@Param("id") Long id);
+
     @Query(value = "SELECT rs3.* FROM (  " +
             " WITH RECURSIVE rec AS ( " +
             "     SELECT rs.* " +
             "                           FROM r_structure rs " +
             "                          WHERE rs.id = :id " +
+            "                           AND rs.deleted IS FALSE " +
             "                        UNION ALL " +
             "                         SELECT rs.* " +
             "                           FROM rec rec1, " +
             "                            r_structure rs " +
             "                          WHERE rs.id = rec1.parent " +
+            "                           AND rs.deleted IS FALSE " +
             "                        ) " +
             "                 SELECT rec.* " +
             "                 FROM rec " +
@@ -110,26 +130,24 @@ public interface StructureRepository extends CrudRepository<Structure, Long> {
     @Query(value = "select public.find_bc_structure_by_id(:id)", nativeQuery = true)
     List<Structure> findBreadcumb2ById(@Param("id") Long id);
 
-//    @Query(value = "select getStructureLocation(:id)", nativeQuery = true)
-//    String getLocationText(@Param("id") Long id);
-
-    //    @Query(value = "select getStructureLocation(?1)", nativeQuery = true)
     @Query(value = "SELECT string_agg(tbl.name, ' > ' ) AS location_text" +
             "           FROM ( WITH RECURSIVE rec AS (" +
-            "                         SELECT tree.id," +
-            "                            tree.name," +
-            "                            tree.parent," +
-            "                            tree.level" +
-            "                           FROM r_structure tree" +
-            "                          WHERE tree.id = :id" +
+            "                         SELECT  rs.id," +
+            "                             rs.name," +
+            "                             rs.parent," +
+            "                             rs.level" +
+            "                           FROM r_structure  rs" +
+            "                          WHERE  rs.id = :id " +
+            "                           AND rs.deleted IS FALSE" +
             "                        UNION ALL" +
-            "                         SELECT tree.id," +
-            "                            tree.name," +
-            "                            tree.parent," +
-            "                            tree.level" +
+            "                         SELECT  rs.id," +
+            "                             rs.name," +
+            "                             rs.parent," +
+            "                             rs.level" +
             "                           FROM rec rec_1," +
-            "                            r_structure tree" +
-            "                          WHERE tree.id = rec_1.parent" +
+            "                            r_structure  rs" +
+            "                          WHERE  rs.id = rec_1.parent " +
+            "                           AND rs.deleted IS FALSE" +
             "                        )" +
             "                 SELECT rec.id," +
             "                    rec.name," +
@@ -144,20 +162,22 @@ public interface StructureRepository extends CrudRepository<Structure, Long> {
 
     @Query(value = "SELECT string_agg(CAST (TBL.id AS text), ',' ) AS location" +
             "           FROM ( WITH RECURSIVE rec AS (" +
-            "                         SELECT tree.id," +
-            "                            tree.name," +
-            "                            tree.parent," +
-            "                            tree.level" +
-            "                           FROM r_structure tree" +
-            "                          WHERE tree.id = :id" +
+            "                         SELECT  rs.id," +
+            "                             rs.name," +
+            "                             rs.parent," +
+            "                             rs.level" +
+            "                           FROM r_structure  rs" +
+            "                          WHERE  rs.id = :id " +
+            "                           AND rs.deleted IS FALSE " +
             "                        UNION ALL" +
-            "                         SELECT tree.id," +
-            "                            tree.name," +
-            "                            tree.parent," +
-            "                            tree.level" +
+            "                         SELECT rs.id," +
+            "                             rs.name," +
+            "                             rs.parent," +
+            "                             rs.level" +
             "                           FROM rec rec_1," +
-            "                            r_structure tree" +
-            "                          WHERE tree.id = rec_1.parent" +
+            "                            r_structure  rs" +
+            "                          WHERE  rs.id = rec_1.parent " +
+            "                           AND rs.deleted IS FALSE" +
             "                        )" +
             "                 SELECT rec.id," +
             "                    rec.name," +
