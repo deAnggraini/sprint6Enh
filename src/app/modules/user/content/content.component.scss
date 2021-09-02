@@ -87,7 +87,8 @@
 
   .my-table {
 
-    &.table tr.is-click td {
+    &.table tr.is-click td,
+    &.table tr:hover {
       background-color: #F3F2F1;
 
       &.td-dot3 {

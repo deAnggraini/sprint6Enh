@@ -16,7 +16,8 @@
                     <span [inlineSVG]="'./assets/media/svg/bca/icon/content.svg'" class="svg-icon mr-2"></span>
                     <div class="pakar-text-header my-2">Contents</div>
                 </div>
-                <div class="input-group inner" [ngStyle]="{'border' : keyword ?  '1px solid #0F5EA9' :  '1px solid #C8C6C4'}">
+                <div class="input-group inner"
+                    [ngStyle]="{'border' : keyword ?  '1px solid #0F5EA9' :  '1px solid #C8C6C4'}">
                     <input type="text" class="form-control" placeholder="Cari artikel, virtual page atau formulir"
                         [(ngModel)]="keyword" style="height: 34px;" (keyup.enter)="onSearch(keyword)">
                     <div class="form-control-clear btn btn-icon btn-clean" *ngIf="keyword"
@@ -54,10 +55,10 @@
                                             style="width: 320px;">
                                             <span class="text-title">Lokasi</span><i class="sortable"></i>
                                         </th>
-                                        <th scope="col" sortable="modified_date" (sort)="onSort($event)"
+                                        <th scope="col" sortable="effective_date" direction="asc" (sort)="onSort($event)"
                                             style="width: 180px;">
-                                            <span class="text-title">{{tableHeader[key][3]}}</span><i
-                                                class="sortable"></i>
+                                            <span class="text-title">{{tableHeader[key][3]}}</span>
+                                            <i class="sortable"></i>
                                         </th>
                                         <th scope="col" sortable="modified_by" (sort)="onSort($event)"
                                             style="width: 180px;">
@@ -91,7 +92,7 @@
                                                 {{item.effective_date | date:'dd/MM/yyyy hh:mm a'}}</td>
                                             <td (click)="showArticle(item.id)" class="cursor-pointer">
                                                 {{item.modified_by | maxLength:40}}</td>
-                                            <td (click)="showArticle(item.id)" class="te-3 cursor-pointer"
+                                            <td (click)="showArticle(item.id)" class="cursor-pointer"
                                                 placement="top auto" [ngbTooltip]="item.current_by" container="body"
                                                 tooltipClass="fs12">
                                                 <div class="te-3">{{(item.current_by | maxLength:130) || '-'}}</div>
@@ -190,8 +191,8 @@
 <ng-template #riwayatVersiModal let-c="close" let-d="dismiss">
     <div class="modal-header">
         <h4 class="modal-title" id="modal-basic-title">Riwayat Versi - {{selectedItem.title}}</h4>
-        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-            <i aria-hidden="true">&times;</i>
+        <button type="button" class="close font-weight-lighter" aria-label="Close" (click)="d('Cross click')">
+            <i aria-hidden="true" class="icon-2x">&times;</i>
         </button>
     </div>
     <div class="modal-body pt-0" style="min-height: 400px;">
@@ -215,8 +216,8 @@
 <ng-template #formConfirmDelete let-c="close" let-d="dismiss">
     <div class="modal-header">
         <h4 class="modal-title" id="modal-basic-title">Hapus Artikel</h4>
-        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-            <i aria-hidden="true">&times;</i>
+        <button type="button" class="close font-weight-lighter" aria-label="Close" (click)="d('Cross click')">
+            <i aria-hidden="true" class="icon-2x">&times;</i>
         </button>
     </div>
     <div class="modal-body pt-0">
