@@ -83,8 +83,14 @@ public class ArticleContentServiceImpl implements ArticleContentService {
                 throw new MinValuePageNumberException("page number smaller than 0");
             String reqSortColumnName = searchDto.getSorting().getColumn();
             logger.debug("sort column {}", searchDto.getSorting().getColumn());
-            searchDto.getSorting().setColumn(new TodoMapperMyPages().convertColumnNameforSort(reqSortColumnName));
-            Sort sort = searchDto.getSorting().getSort().equals("asc") ? Sort.by(searchDto.getSorting().getColumn()).descending() : Sort.by(searchDto.getSorting().getColumn()).ascending();
+            Sort sort = null;
+            if(reqSortColumnName.equalsIgnoreCase("effective_date")) {
+                searchDto.getSorting().setColumn(new TodoMapperMyPages().convertColumnNameforSort(reqSortColumnName));
+                sort = searchDto.getSorting().getSort().equals("asc") ? Sort.by(searchDto.getSorting().getColumn()).descending() : Sort.by(searchDto.getSorting().getColumn()).ascending();
+            } else {
+                searchDto.getSorting().setColumn(new TodoMapperMyPages().convertColumnNameforSort(reqSortColumnName));
+                sort = searchDto.getSorting().getSort().equals("asc") ? Sort.by(searchDto.getSorting().getColumn()).ascending() : Sort.by(searchDto.getSorting().getColumn()).descending();
+            }
             Pageable pageable = PageRequest.of(pageNum, searchDto.getSize().intValue(), sort);
 
             if (searchDto.getType().equals(Constant.DocumentType.All)
