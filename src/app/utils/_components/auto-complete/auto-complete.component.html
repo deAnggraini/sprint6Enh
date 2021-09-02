@@ -5,16 +5,16 @@
     <button *ngIf="selected.text" type="button" class="btn btn-xs btn-clean" (click)="onReset();">
         <i class="ki ki-close icon-xs"></i>
     </button>
-    <button type="button" class="btn btn-xs btn-clean" (click)="$event.stopPropagation(); comboBoxDrop.open();"
+    <!-- <button type="button" class="btn btn-xs btn-clean" (click)="$event.stopPropagation(); comboBoxDrop.open();"
         [disabled]="disabled || selected.text">
         <i class="ki ki-arrow-down icon-xs" [ngClass]="{'text-primary' : !disabled && !selected.text}"></i>
-    </button>
+    </button> -->
 </div>
 <div ngbDropdown #autocompleteDrop="ngbDropdown" style="width: 100%; left:0px; top:-3px"
     (openChange)="openChange($event)" display="static">
     <button style="display: none;" ngbDropdownAnchor (focus)="comboBoxDrop.open()"></button>
     <div ngbDropdownMenu class="combo-box-dropdown">
-        <div *ngIf="options.length < 1" class="px-3">
+        <div *ngIf="options.length < 1 && keyword" class="px-3">
             ({{keyword}}) tidak ditemukan
         </div>
         <button type="button" ngbDropdownItem *ngFor="let item of options"
