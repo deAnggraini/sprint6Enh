@@ -16,7 +16,7 @@
                     <span [inlineSVG]="'./assets/media/svg/bca/icon/page.svg'" class="svg-icon mr-2"></span>
                     <div class="pakar-text-header my-2">My Pages</div>
                 </div>
-                <div class="input-group inner">
+                <div class="input-group inner" [ngStyle]="{'border' : keyword ?  '1px solid #0F5EA9' :  '1px solid #C8C6C4'}">
                     <input type="text" class="form-control" placeholder="Cari artikel, virtual page atau formulir"
                         [(ngModel)]="keyword" style="height: 34px;">
                     <div class="form-control-clear btn btn-icon btn-clean" *ngIf="keyword"
