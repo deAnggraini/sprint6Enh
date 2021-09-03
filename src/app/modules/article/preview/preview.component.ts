@@ -348,7 +348,7 @@ export class PreviewComponent implements OnInit, AfterViewInit, OnDestroy {
     if (image) {
       if (typeof (image) == "string") { // image string artinya sudah diupload
         this.imageSrc = `${environment.backend_img}/${image}`;
-        this.imageTitle = image.split(".")[0];
+        this.imageTitle = image.split("/")[2].split(".")[0];
       } else { // image bukan string, kemungkinan object file
         const reader = new FileReader();
         reader.readAsDataURL(image);
