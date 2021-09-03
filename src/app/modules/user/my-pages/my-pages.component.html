@@ -19,7 +19,7 @@
                 <div class="input-group inner"
                     [ngStyle]="{'border' : keyword ?  '1px solid #0F5EA9' :  '1px solid #C8C6C4'}">
                     <input type="text" class="form-control" placeholder="Cari artikel, virtual page atau formulir"
-                        [(ngModel)]="keyword" style="height: 34px;" (keyup.enter)="onSearch(keyword)">
+                        [(ngModel)]="keyword" style="height: 34px;  padding-top: 6px;" (keyup.enter)="onSearch(keyword)">
                     <div class="form-control-clear btn btn-icon btn-clean" *ngIf="keyword"
                         (click)="keyword =''; onSearch($event)" style="height: 34px;">
                         <span [inlineSVG]="'./assets/media/svg/bca/icon/close.svg'" cacheSVG="true"
@@ -27,7 +27,7 @@
                     </div>
                     <span class="input-group-btn" style="height: 34px;">
                         <button class="btn btn-outline-secondary btn-success btn-sm" type="button"
-                            (click)="onSearch($event)">
+                            (click)="onSearch($event)" style="padding-top: 6px;">
                             <i class="fa fa-search"></i>
                         </button>
                     </span>

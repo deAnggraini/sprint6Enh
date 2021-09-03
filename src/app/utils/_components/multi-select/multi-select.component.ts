@@ -50,8 +50,13 @@ export class MultiSelectComponent implements OnInit, ControlValueAccessor, OnDes
       debounceTime(300),
       distinctUntilChanged(),
       tap((keyword) => {
-        this.searching = true;
-        this.search = keyword;
+        if (keyword) {
+          this.searching = true;
+          this.search = keyword;
+          this.dropDown.open();
+        } else {
+          this.dropDown.close();
+        }
       }),
       switchMap(term => {
         if (term) {
@@ -153,7 +158,6 @@ export class MultiSelectComponent implements OnInit, ControlValueAccessor, OnDes
     this.subscriptions.push(
       this.dataList.subscribe(resp => {
         this.searching = false;
-        if (this.dropDown) this.dropDown.open();
         this.cdr.detectChanges();
       })
     );
