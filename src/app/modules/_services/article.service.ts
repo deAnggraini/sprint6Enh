@@ -128,8 +128,9 @@ export class ArticleService {
     return this.apiService.post(`${this._base_url}/checkUnique`, { title, exclude }, this.apiService.getHeaders(true), false);
   }
 
-  getById(id: any, isEdit: boolean) {
-    const params = { id: parseInt(id), isEdit: isEdit ? true : false }; // convert isEdit to boolean, js mabok
+  getById(id: any, isEdit: boolean, needClone: boolean = false) {
+    console.log('getById', { id, isEdit, needClone });
+    const params = { id: parseInt(id), isEdit: isEdit ? true : false, needClone }; // convert isEdit to boolean, js mabok
     return this.apiService.post(`${this._base_url}/getArticle`, params);
   }
 

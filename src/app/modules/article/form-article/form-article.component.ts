@@ -226,6 +226,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   isCompare: boolean = false;
 
   // save and send
+  needClone: boolean = false;
   userOptions: Option[] = [];
   isHasSend: boolean = false;
   saveAndSend = {
@@ -737,7 +738,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   private getArticle(id: number, isEdit: boolean) {
     this.subscriptions.push(
-      this.article.getById(id, isEdit).subscribe((resp: ArticleDTO) => {
+      this.article.getById(id, isEdit, this.needClone).subscribe((resp: ArticleDTO) => {
         this.setArticle(resp);
       })
     );
@@ -793,14 +794,8 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     return found;
   }
-  private setUserEditing(id: number) {
-    this.article.checkArticleEditing(id).subscribe(resp => {
-
-    });
-  }
   private setArticle(article: ArticleDTO) {
     if (article) {
-      this.getUserEditing(article.id);
       const { structureParentList, structureId } = article;
       article.structureOption = {
         id: `${structureId}`,
@@ -844,7 +839,8 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.isEdit = !article.isAdd;
       if (this.isEdit) {
-        this.setUserEditing(article.id);
+        // this.setUserEditing(article.id);
+        this.getUserEditing(article.id);
         this.isCompare = true;
       }
 
@@ -1040,6 +1036,10 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
   public onChange({ editor }: ChangeEvent) {
   }
 
+  private parseToBool(_): boolean {
+    return _ === "1" || _ === "true" || _ === true || _ === 1;
+  }
+
   // Angular
   private initForm() {
     this.dataForm = this.fb.group({
@@ -1063,6 +1063,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
     this.subscriptions.push(this.route.params.subscribe(params => {
       const isEdit: boolean = params.isEdit;
       if (params.contentId) { this.editContentId = parseInt(params.contentId); }
+      if (params['needClone']) { this.needClone = this.parseToBool(params['needClone']) }
       if (params['id']) {
         this.getArticle(parseInt(params['id']), isEdit);
       } else {
