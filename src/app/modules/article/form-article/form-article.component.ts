@@ -49,7 +49,7 @@ const defaultValue: ArticleDTO = {
   templateUrl: './form-article.component.html',
   styleUrls: ['./form-article.component.scss']
 })
-export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges {
+export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('editorDesc') editorComponent: CKEditorComponent;
   @ViewChild('formSaveAndSend') formSaveAndSend: TemplateRef<any>;
@@ -197,6 +197,7 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy, O
       supportAllValues: false
     },
     placeholder: 'Masukkan kalimat pengantar terkait Ketentuan disini.',
+    wordCount: { maxLimit: 2147483647 }
   };
 
   // error manual
@@ -1094,12 +1095,6 @@ export class FormArticleComponent implements OnInit, AfterViewInit, OnDestroy, O
           this.scroll(this.openFragment);
         }
       });
-  }
-  ngOnChanges(): void {
-    console.log('change')
-    this.document.querySelectorAll('ckeditor.ul').forEach(element => {
-      console.log(element)
-    })
   }
 
 }
