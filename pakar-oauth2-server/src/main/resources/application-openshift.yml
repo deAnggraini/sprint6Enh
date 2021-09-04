@@ -22,7 +22,7 @@ spring:
     locking-time-failed-login : 30
   eai:
     ad:
-      loginUri: http://36.89.25.220:13085/ad-gateways/verify1
+      loginUri: http://dev-bca-pakar-auth-service-d3wiaccred-dev.apps.sandbox-m2.ll9k.p1.openshiftapps.com/ad-gateways/verify1
       clientId: 8C21EBEEB1AA3FBFE05400144FFBD319
       applicationID: PRJ1
       key: 123456789013245678901234
