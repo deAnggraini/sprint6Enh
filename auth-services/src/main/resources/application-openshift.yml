@@ -12,4 +12,4 @@ spring:
       maximumPoolSize: 5
     json:
       file:
-        user: /var/bca/file/user.json
+        user: classpath:user.json
