@@ -10,6 +10,6 @@ spring:
     hikari:
       connectionTimeout: 20000
       maximumPoolSize: 5
-    json:
-      file:
-        user: classpath:user.json
+  json:
+    file:
+      user: classpath:user.json
