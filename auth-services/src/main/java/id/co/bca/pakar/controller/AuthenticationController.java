@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.MediaType;
@@ -47,7 +48,7 @@ public class AuthenticationController {
        /*String file = "src/main/resources/user.json";
 		String json = readFileAsString(file);*/
 
-        Resource resource = resourceLoader.getResource("classpath:user.json");
+        /*Resource resource = resourceLoader.getResource("classpath:user.json");
         InputStream input = resource.getInputStream();
         logger.info("resource  "+resource);
         logger.info("input  "+input);
@@ -56,6 +57,13 @@ public class AuthenticationController {
         File file = resource.getFile();
         String json = readFileAsString(file.toString());
         logger.info("file "+file);
+        logger.info("json "+json);*/
+
+        File resource = new ClassPathResource("user.json").getFile();
+        logger.info("resource "+resource);
+        String file = new String(Files.readAllBytes(resource.toPath()));
+        logger.info("file "+file);
+        String json = readFileAsString(file);
         logger.info("json "+json);
 
         AuthenticationDto[] authDtos = (AuthenticationDto[]) JSONMapperAdapter.jsonToListObject(json, AuthenticationDto[].class);
