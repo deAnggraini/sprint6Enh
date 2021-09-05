@@ -1,12 +1,17 @@
 package id.co.bca.pakar.controller;
 
+import java.io.File;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,8 +33,11 @@ public class AuthenticationController {
 	
 	static String keyAlgorithm = "123456789013245678901234";
 	
-	@Value("${spring.json.file.user}")
-	private String userPath;
+	/*@Value("${spring.json.file.user}")
+	private String userPath;*/
+
+	@Autowired
+	ResourceLoader resourceLoader;
 
 	@PostMapping(value = "/ad-gateways/verify1", consumes = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE,
@@ -40,7 +48,15 @@ public class AuthenticationController {
 		});
 		logger.info("client request " + credential.toString());
 
-		String json = readFileAsString(userPath);
+		Resource resource = resourceLoader.getResource("classpath:user.json");
+
+		InputStream input = resource.getInputStream();
+
+		File file = resource.getFile();
+		logger.info("file " + file);
+		logger.info("file " + file.toString());
+
+		String json = readFileAsString(file.toString());
         AuthenticationDto[] authDtos = (AuthenticationDto[]) JSONMapperAdapter.jsonToListObject(json, AuthenticationDto[].class);	
 		EaiLoginResponse response = new EaiLoginResponse();
 		boolean loginStatus = false;
