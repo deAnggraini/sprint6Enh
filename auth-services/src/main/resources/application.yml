@@ -15,7 +15,9 @@ spring:
         dialect: org.hibernate.dialect.H2Dialect
 ---
 spring:
-  profiles: dev-local
+  config:
+    activate:
+      on-profile: dev-local
   dataSource:
     driver-class-name: org.h2.Driver
     url: jdbc:h2:mem:testdb
@@ -26,10 +28,12 @@ spring:
       maximumPoolSize: 5
   json:
     file:
-      user: D:\\\var\\bca\\file\\user.json
+      user: /var/bca/file/user.json
 ---
 spring:
-  profiles: dev-ogya
+  config:
+    activate:
+      on-profile: dev-ogya
   dataSource:
     driver-class-name: org.h2.Driver
     url: jdbc:h2:mem:testdb

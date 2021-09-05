@@ -1,10 +1,13 @@
 package id.co.bca.pakar.controller;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,9 +39,6 @@ public class AuthenticationController {
 	/*@Value("${spring.json.file.user}")
 	private String userPath;*/
 
-	@Autowired
-	ResourceLoader resourceLoader;
-
 	@PostMapping(value = "/ad-gateways/verify1", consumes = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE,
 					MediaType.APPLICATION_XML_VALUE })
@@ -48,16 +48,10 @@ public class AuthenticationController {
 		});
 		logger.info("client request " + credential.toString());
 
-		Resource resource = resourceLoader.getResource("classpath:user.json");
+        String file = "src/main/resources/user.json";
+        String json = readFileAsString(file);
 
-		InputStream input = resource.getInputStream();
-
-		File file = resource.getFile();
-		logger.info("file " + file);
-		logger.info("file " + file.toString());
-
-		String json = readFileAsString(file.toString());
-        AuthenticationDto[] authDtos = (AuthenticationDto[]) JSONMapperAdapter.jsonToListObject(json, AuthenticationDto[].class);	
+        AuthenticationDto[] authDtos = (AuthenticationDto[]) JSONMapperAdapter.jsonToListObject(json, AuthenticationDto[].class);
 		EaiLoginResponse response = new EaiLoginResponse();
 		boolean loginStatus = false;
 		for (AuthenticationDto dto : authDtos) {
